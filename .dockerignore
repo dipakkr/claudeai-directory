@@ -1,0 +1,12 @@
+node_modules
+.next
+.git
+.gitignore
+.env*
+server
+nginx
+skills
+scripts
+*.md
+deploy.sh
+docker-compose.yml

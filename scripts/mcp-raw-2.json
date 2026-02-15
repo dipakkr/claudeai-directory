@@ -1,0 +1,2177 @@
+{
+    "servers": [
+        {
+            "server": {
+                "name": "com.udemy.api/udemy-business",
+                "version": "1.0.0",
+                "description": "Udemy Business MCP brings our comprehensive AI-powered skills development platform directly into your AI tools. Employees discover and access expertly curated courses via personalized search and recommendations. This enables just-in-time learning in the flow of work with enterprise-grade security and scalability.",
+                "title": "Udemy Business",
+                "remotes": [
+                    {
+                        "type": "streamable-http",
+                        "url": "https://api.udemy.com/mcp"
+                    }
+                ]
+            },
+            "_meta": {
+                "com.anthropic.api/mcp-registry": {
+                    "uuid": "d4ba36c1-89dd-49ee-aea3-2317efccc424",
+                    "type": "remote",
+                    "toolNames": [
+                        "search_courses",
+                        "search_learning_paths",
+                        "search_lectures",
+                        "search_labs",
+                        "get_course_curriculum"
+                    ],
+                    "promptNames": [],
+                    "isAuthless": false,
+                    "displayName": "Udemy Business",
+                    "oneLiner": "Search and explore skill-building resources",
+                    "iconUrl": "https://www.udemy.com",
+                    "documentation": "https://business-support.udemy.com/hc/en-us/articles/34213384429335-How-to-Integrate-the-Udemy-Business-MCP-Server-With-Your-AI-Tool#h_01K9CA42YGCV1AVXPY1RKABKP1",
+                    "support": "https://support.udemy.com/",
+                    "privacyPolicy": "https://www.udemy.com/terms/privacy/",
+                    "url": "https://api.udemy.com/mcp",
+                    "author": {
+                        "name": "Udemy, Inc.",
+                        "url": "https://www.udemy.com"
+                    },
+                    "worksWith": [
+                        "claude",
+                        "claude-api",
+                        "claude-code"
+                    ],
+                    "source": "auto-sync",
+                    "visibility": [
+                        "commercial"
+                    ]
+                },
+                "io.modelcontextprotocol.registry/official": {
+                    "status": "active",
+                    "isLatest": true
+                }
+            }
+        },
+        {
+            "server": {
+                "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+                "name": "com.vercel/vercel-mcp",
+                "description": "Vercel MCP is Vercel’s official MCP server, allowing you to search and navigate documentation, manage projects and deployments, and analyze deployment logs—all in one place.",
+                "repository": {
+                    "url": "https://github.com/vercel/vercel-mcp-overview",
+                    "source": "github"
+                },
+                "version": "0.0.3",
+                "remotes": [
+                    {
+                        "type": "streamable-http",
+                        "url": "https://mcp.vercel.com/"
+                    }
+                ],
+                "title": "Vercel"
+            },
+            "_meta": {
+                "io.modelcontextprotocol.registry/official": {
+                    "status": "active",
+                    "publishedAt": "2026-01-14T18:38:33.404454Z",
+                    "updatedAt": "2026-01-14T18:38:33.404454Z",
+                    "isLatest": true
+                },
+                "com.anthropic.api/mcp-registry": {
+                    "uuid": "7eb42afe-0087-4493-a105-da2b021d5c03",
+                    "type": "remote",
+                    "toolNames": [
+                        "search_vercel_documentation",
+                        "list_projects",
+                        "get_project",
+                        "list_deployments",
+                        "get_deployment",
+                        "get_deployment_events",
+                        "list_teams"
+                    ],
+                    "promptNames": [
+                        "explain_vercel_concept"
+                    ],
+                    "isAuthless": false,
+                    "displayName": "Vercel",
+                    "oneLiner": "Analyze, debug, and manage projects and deployments",
+                    "iconUrl": "https://mcp.vercel.com/",
+                    "documentation": "https://vercel.com/docs/mcp/vercel-mcp",
+                    "support": "https://vercel.com/help",
+                    "privacyPolicy": "https://vercel.com/legal/privacy-policy",
+                    "url": "https://mcp.vercel.com/",
+                    "author": {
+                        "name": "Vercel",
+                        "url": "https://vercel.com/"
+                    },
+                    "slug": "vercel",
+                    "directoryUrl": "https://claude.ai/directory/7eb42afe-0087-4493-a105-da2b021d5c03",
+                    "claudeCodeCopyText": "\nclaude mcp add --transport http vercel https://mcp.vercel.com",
+                    "permissions": "Read and write",
+                    "useCases": [
+                        "code"
+                    ],
+                    "worksWith": [
+                        "claude",
+                        "claude-api",
+                        "claude-code"
+                    ],
+                    "publishedOn": "Fri Jan 16 2026 19:33:48 GMT+0000 (Coordinated Universal Time)",
+                    "createdOn": "Thu Aug 28 2025 14:02:57 GMT+0000 (Coordinated Universal Time)",
+                    "updatedOn": "Fri Jan 16 2026 19:32:02 GMT+0000 (Coordinated Universal Time)",
+                    "logo": "vercel",
+                    "backgroundPattern": "Line 1",
+                    "serverLabel": "mcp.vercel.com",
+                    "itemId": "68b061919322dd7b59a5f261",
+                    "collectionId": "68b05e2de975b4de7dd02d9d",
+                    "localeId": "68a44d4040f98a4adf2207b5",
+                    "htmlContent": "<p id=\"\">The Vercel connector allows you to search and navigate documentation, manage projects and deployments, and analyze deployment logs—all in one place.</p><p id=\"\">You can use the Vercel connector to:<br><br>Search Vercel documentation:<br>\"What is Vercel Fluid compute?\"</p><p id=\"\">Manage projects and deployments:<br>\"List all my Vercel projects and show their latest deployments\"</p><p id=\"\">Fix failed deployments:<br>\"Show me the build logs for deployment dpl_123abc and suggest how to fix the error\"</p><p id=\"\">Analyze deployment logs:<br>\"Analyze the logs for my latest production deployment\"</p>",
+                    "source": "auto-sync",
+                    "visibility": [
+                        "commercial"
+                    ]
+                }
+            }
+        },
+        {
+            "server": {
+                "name": "com.visier.www/visier",
+                "version": "1.0.0",
+                "description": "Ask Vee questions about your people and work data in Visier. Get insights on work performance, employee satisfaction, attrition predictions, and retention of key team members. Requires a Vee subscription.",
+                "title": "Visier",
+                "remotes": [
+                    {
+                        "type": "streamable-http",
+                        "url": "{url}"
+                    }
+                ]
+            },
+            "_meta": {
+                "com.anthropic.api/mcp-registry": {
+                    "uuid": "269911aa-9456-45c8-839f-c8d079fe0a5d",
+                    "type": "remote",
+                    "toolNames": [
+                        "search_metrics",
+                        "search_analytic_objects",
+                        "search_dimensions_for_metric",
+                        "search_dimensions_for_analytic_object",
+                        "search_filter_dimension_members",
+                        "search_analytic_object_properties",
+                        "aggregate_metric_values",
+                        "list_analytic_object_property_values"
+                    ],
+                    "promptNames": [],
+                    "urlRegex": "^https://[\\w-]+\\.app\\.visier\\.com/visier-query-mcp$",
+                    "requiredFields": [
+                        {
+                            "field": "url",
+                            "sourceUrl": "https://docs.visier.com/developer/agents/mcp/mcp-server-set-up.htm"
+                        },
+                        {
+                            "field": "custom_oauth_client_id",
+                            "sourceUrl": "https://docs.visier.com/developer/agents/mcp/mcp-server-set-up.htm"
+                        },
+                        {
+                            "field": "custom_oauth_client_secret",
+                            "sourceUrl": "https://docs.visier.com/developer/agents/mcp/mcp-server-set-up.htm"
+                        }
+                    ],
+                    "isAuthless": false,
+                    "displayName": "Visier",
+                    "oneLiner": "Find people, productivity and business impact insights",
+                    "iconUrl": "https://www.visier.com",
+                    "documentation": "https://docs.visier.com/developer/agents/mcp/mcp-server.htm",
+                    "support": "https://www.visier.com/portal-login/",
+                    "privacyPolicy": "https://www.visier.com/privacy/",
+                    "author": {
+                        "name": "Visier",
+                        "url": "https://www.visier.com"
+                    },
+                    "worksWith": [
+                        "claude",
+                        "claude-api",
+                        "claude-code"
+                    ],
+                    "source": "auto-sync",
+                    "visibility": [
+                        "commercial"
+                    ]
+                },
+                "io.modelcontextprotocol.registry/official": {
+                    "status": "active",
+                    "isLatest": true
+                }
+            }
+        },
+        {
+            "server": {
+                "name": "com.webflow/mcp",
+                "version": "2.0.0",
+                "description": "Webflow MCP lets AI tools design pages, manage CMS content. Browse and update collections, create and edit pages, modify layouts and styles, and automate site-level tasks through natural language prompts. Bring Webflow into your AI workflow with a structured, secure interface that translates AI actions into real changes across your site—helping teams build, update, and scale Webflow projects faster with less manual work.",
+                "title": "Webflow",
+                "remotes": [
+                    {
+                        "type": "streamable-http",
+                        "url": "https://mcp.webflow.com/mcp"
+                    }
+                ]
+            },
+            "_meta": {
+                "com.anthropic.api/mcp-registry": {
+                    "uuid": "092d0ef3-9fc6-4101-8f7e-c2b80e58a065",
+                    "type": "remote",
+                    "toolNames": [
+                        "webflow_guide_tool",
+                        "ask_webflow_ai",
+                        "data_cms_tool",
+                        "data_components_tool",
+                        "data_pages_tool",
+                        "data_scripts_tool",
+                        "data_sites_tool",
+                        "data_comments_tool",
+                        "data_enterprise_tool",
+                        "asset_tool",
+                        "get_image_preview",
+                        "de_component_tool",
+                        "element_builder",
+                        "element_tool",
+                        "element_snapshot_tool",
+                        "de_page_tool",
+                        "style_tool",
+                        "de_learn_more_about_styles",
+                        "variable_tool"
+                    ],
+                    "promptNames": [],
+                    "isAuthless": false,
+                    "displayName": "Webflow",
+                    "oneLiner": "Manage Webflow CMS, pages, assets and sites",
+                    "iconUrl": "https://webflow.com/",
+                    "documentation": "https://developers.webflow.com/mcp/v1.0.0/reference/overview",
+                    "support": "https://support.webflow.com/",
+                    "privacyPolicy": "https://webflow.com/legal/privacy",
+                    "url": "https://mcp.webflow.com/mcp",
+                    "author": {
+                        "name": "Webflow",
+                        "url": "https://webflow.com/"
+                    },
+                    "slug": "webflow",
+                    "directoryUrl": "https://claude.ai/directory/092d0ef3-9fc6-4101-8f7e-c2b80e58a065",
+                    "claudeCodeCopyText": "claude mcp add --transport http webflow https://mcp.webflow.com/mcp\n",
+                    "worksWith": [
+                        "claude",
+                        "claude-api",
+                        "claude-code"
+                    ],
+                    "source": "manual",
+                    "visibility": [
+                        "commercial"
+                    ]
+                },
+                "io.modelcontextprotocol.registry/official": {
+                    "status": "active",
+                    "isLatest": true
+                }
+            }
+        },
+        {
+            "server": {
+                "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+                "name": "com.wix/mcp",
+                "description": "The Wix MCP provides users with the ability to manage their account's websites and apps (Stores, Bookings, Blog etc.). In addition, the MCP also helps devs create new sites using Wix Headless, the Wix Design system and more.",
+                "repository": {
+                    "url": "https://github.com/wix/wix-mcp",
+                    "source": "github"
+                },
+                "version": "1.0.2",
+                "remotes": [
+                    {
+                        "type": "streamable-http",
+                        "url": "https://mcp.wix.com/mcp"
+                    }
+                ],
+                "title": "Wix"
+            },
+            "_meta": {
+                "io.modelcontextprotocol.registry/official": {
+                    "status": "active",
+                    "publishedAt": "2025-12-22T10:15:22.208079Z",
+                    "updatedAt": "2025-12-22T10:15:22.208079Z",
+                    "isLatest": true
+                },
+                "com.anthropic.api/mcp-registry": {
+                    "uuid": "780a3621-8271-4822-bd0b-b9cab309375d",
+                    "type": "remote",
+                    "toolNames": [
+                        "WixREADME",
+                        "SearchWixWDSDocumentation",
+                        "SearchWixRESTDocumentation",
+                        "SearchWixSDKDocumentation",
+                        "SearchBuildAppsDocumentation",
+                        "SearchWixHeadlessDocumentation",
+                        "ReadFullDocsArticle",
+                        "ReadFullDocsMethodSchema",
+                        "CallWixSiteAPI",
+                        "ListWixSites",
+                        "ManageWixSite",
+                        "SupportAndFeedback"
+                    ],
+                    "promptNames": [],
+                    "isAuthless": false,
+                    "displayName": "Wix",
+                    "oneLiner": "Manage and build sites and apps on Wix",
+                    "iconUrl": "https://www.wix.com",
+                    "documentation": "https://dev.wix.com/docs/sdk/articles/use-the-wix-mcp/about-the-wix-mcp",
+                    "support": "https://support.wix.com/",
+                    "privacyPolicy": "https://www.wix.com/about/privacy",
+                    "url": "https://mcp.wix.com/mcp",
+                    "author": {
+                        "name": "Wix",
+                        "url": "https://www.wix.com"
+                    },
+                    "worksWith": [
+                        "claude",
+                        "claude-api",
+                        "claude-code"
+                    ],
+                    "source": "auto-sync",
+                    "visibility": [
+                        "commercial"
+                    ]
+                }
+            }
+        },
+        {
+            "server": {
+                "name": "com.wordpress.public-api/wordpress-com",
+                "version": "1.0.0",
+                "description": "The WordPress.com MCP server allows AI assistants to securely interact with your WordPress.com sites. It exposes tools for listing, searching, and viewing posts, pages, and comments, managing users and site settings, and retrieving statistics. By leveraging OAuth 2.1, it ensures that agents only access resources you've approved, making it easy to integrate AI-driven workflows into your publishing experience.",
+                "title": "WordPress.com",
+                "remotes": [
+                    {
+                        "type": "streamable-http",
+                        "url": "https://public-api.wordpress.com/wpcom/v2/mcp/v1"
+                    }
+                ]
+            },
+            "_meta": {
+                "com.anthropic.api/mcp-registry": {
+                    "uuid": "e6fc4c18-ea48-4752-9912-7a13bf9999ed",
+                    "type": "remote",
+                    "toolNames": [
+                        "user-profile",
+                        "user-sites",
+                        "user-domains",
+                        "user-achievements",
+                        "user-connections",
+                        "user-notifications",
+                        "user-notifications-inbox",
+                        "user-security",
+                        "user-subscriptions",
+                        "site-users",
+                        "posts-search",
+                        "post-get",
+                        "site-comments-search",
+                        "site-plugins",
+                        "site-settings",
+                        "site-statistics"
+                    ],
+                    "promptNames": [],
+                    "isAuthless": false,
+                    "oneLiner": "Secure AI access to manage your WordPress.com sites",
+                    "iconUrl": "https://wordpress.com",
+                    "documentation": "https://developer.wordpress.com/docs/mcp/",
+                    "support": "https://wordpress.com/support",
+                    "privacyPolicy": "https://automattic.com/privacy",
+                    "author": {
+                        "name": "Automattic (WordPress.com)",
+                        "url": "https://wordpress.com"
+                    },
+                    "worksWith": [
+                        "claude",
+                        "claude-api",
+                        "claude-code"
+                    ],
+                    "source": "manual",
+                    "visibility": [
+                        "commercial"
+                    ]
+                },
+                "io.modelcontextprotocol.registry/official": {
+                    "status": "active",
+                    "isLatest": true
+                }
+            }
+        },
+        {
+            "server": {
+                "name": "com.workato.www/workato",
+                "version": "1.0.0",
+                "description": "Execute enterprise automation recipes, manage integrations between business applications, monitor workflow performance, and create complex data transformations through Workato’s enterprise automation platform. Build and deploy sophisticated business process automations using natural language commands for streamlined operations.",
+                "title": "Workato",
+                "remotes": [
+                    {
+                        "type": "streamable-http",
+                        "url": "{url}"
+                    }
+                ]
+            },
+            "_meta": {
+                "com.anthropic.api/mcp-registry": {
+                    "uuid": "7c57d0b0-7fe0-4ca9-9ead-932fcb929e57",
+                    "type": "remote",
+                    "toolNames": [],
+                    "promptNames": [],
+                    "urlRegex": "mcp\\.workato\\.com",
+                    "requiredFields": [
+                        {
+                            "field": "url",
+                            "sourceUrl": "https://app.workato.com/ai_hub/mcp"
+                        }
+                    ],
+                    "isAuthless": false,
+                    "displayName": "Workato",
+                    "oneLiner": "Automate workflows and connect your business apps",
+                    "iconUrl": "https://mcp.workato.com",
+                    "documentation": "https://docs.workato.com/en/mcp.html",
+                    "support": "https://support.workato.com/en/support/home",
+                    "privacyPolicy": "https://www.workato.com/legal/services-privacy-policy",
+                    "author": {
+                        "name": "Workato",
+                        "url": "https://www.workato.com"
+                    },
+                    "worksWith": [
+                        "claude",
+                        "claude-api",
+                        "claude-code"
+                    ],
+                    "source": "auto-sync",
+                    "visibility": [
+                        "commercial"
+                    ]
+                },
+                "io.modelcontextprotocol.registry/official": {
+                    "status": "active",
+                    "isLatest": true
+                }
+            }
+        },
+        {
+            "server": {
+                "name": "com.wyndhamhotels/mcp",
+                "version": "1.0.0",
+                "description": "Finding the right place to stay shouldn't be complicated. With Claude, you can explore and compare Wyndham Hotels & Resorts just by asking. Search hotels by city and travel dates, narrow options by amenities like pools or pet-friendly, and get quick, easy answers to your questions. Whether you're planning a weekend getaway, a family vacation, or a work trip, find the right Wyndham hotel for you faster using natural language and personalized results.",
+                "title": "Wyndham Hotels and Resorts",
+                "remotes": [
+                    {
+                        "type": "streamable-http",
+                        "url": "https://mcp.wyndhamhotels.com/claude/mcp"
+                    }
+                ]
+            },
+            "_meta": {
+                "com.anthropic.api/mcp-registry": {
+                    "uuid": "3f8511ea-9906-414b-9b0a-34fcbd1f5587",
+                    "type": "remote",
+                    "toolNames": [
+                        "search-wyndham-hotels",
+                        "get-wyndham-hotel-details"
+                    ],
+                    "promptNames": [],
+                    "isAuthless": true,
+                    "displayName": "Wyndham Hotels and Resorts",
+                    "oneLiner": "Discover the right Wyndham Hotel for you, faster",
+                    "iconUrl": "https://www.wyndhamhotels.com",
+                    "documentation": "https://www.wyndhamhotels.com/mcp-doc",
+                    "support": "https://www.wyndhamhotels.com/contact-us",
+                    "privacyPolicy": "https://www.wyndhamhotels.com/content/whg-ecomm-responsive/en-us/whg/about-us/privacy-notice-more-info.display.html",
+                    "url": "https://mcp.wyndhamhotels.com/claude/mcp",
+                    "author": {
+                        "name": "Wyndham Hotels and Resorts",
+                        "url": "https://www.wyndhamhotels.com"
+                    },
+                    "slug": "wyndham-hotels",
+                    "directoryUrl": "https://claude.ai/directory/3f8511ea-9906-414b-9b0a-34fcbd1f5587",
+                    "claudeCodeCopyText": "claude mcp add --transport http wyndham-hotels https://mcp.wyndhamhotels.com/claude/mcp\n",
+                    "worksWith": [
+                        "claude",
+                        "claude-api",
+                        "claude-code"
+                    ],
+                    "logo": "wyndham-hotels",
+                    "backgroundPattern": "Line 1",
+                    "serverLabel": "mcp.wyndhamhotels.com/claude/mcp",
+                    "source": "manual",
+                    "visibility": [
+                        "commercial"
+                    ]
+                },
+                "io.modelcontextprotocol.registry/official": {
+                    "status": "active",
+                    "isLatest": true
+                }
+            }
+        },
+        {
+            "server": {
+                "name": "com.yardi/virtuoso",
+                "version": "1.0.0",
+                "description": "Yardi Virtuoso provides secure, real-time access to Yardi data and tools through Claude. It enables investment, property and asset management professionals to query financial models, predictive maintenance insights, market analysis, and portfolio data using natural language. Users can ask complex operational questions, explore strategic scenarios, and perform analysis without manual data extraction, all grounded in accurate, enterprise-grade Yardi data.",
+                "title": "Yardi Virtuoso",
+                "remotes": [
+                    {
+                        "type": "streamable-http",
+                        "url": "https://mcp.virtuoso.ai/mcp"
+                    }
+                ]
+            },
+            "_meta": {
+                "com.anthropic.api/mcp-registry": {
+                    "uuid": "01953ddd-4139-40c5-bbf9-47c1e2499623",
+                    "type": "remote",
+                    "toolNames": [
+                        "rfm_connectai_create_work_order",
+                        "rfm_connectai_search_work_orders",
+                        "rfm_workorder_mark_work_order_as_complete",
+                        "vn_mcpframework_get_autocomplete",
+                        "vn_mcpframework_list_autocomplete_types"
+                    ],
+                    "promptNames": [],
+                    "isAuthless": false,
+                    "displayName": "Yardi Virtuoso",
+                    "oneLiner": "Real-time Yardi data & insights",
+                    "iconUrl": "https://yardi.com",
+                    "documentation": "https://help.virtuoso.ai/en/articles/13679727-yardi-virtuoso-mcp-technical-documentation-guide",
+                    "support": "https://www.yardi.com/company/technical-support/",
+                    "privacyPolicy": "https://resources.yardi.com/legal/privacy-statement/",
+                    "url": "https://mcp.virtuoso.ai/mcp",
+                    "author": {
+                        "name": "Yardi",
+                        "url": "https://yardi.com"
+                    },
+                    "slug": "yardi-virtuoso",
+                    "directoryUrl": "https://claude.ai/directory/01953ddd-4139-40c5-bbf9-47c1e2499623",
+                    "worksWith": [
+                        "claude",
+                        "claude-api"
+                    ],
+                    "logo": "yardi-virtuoso",
+                    "backgroundPattern": "Line 1",
+                    "serverLabel": "mcp.virtuoso.ai/mcp",
+                    "source": "manual",
+                    "visibility": [
+                        "commercial"
+                    ],
+                    "useCases": [
+                        "financial-services"
+                    ],
+                    "permissions": "Read and write"
+                },
+                "io.modelcontextprotocol.registry/official": {
+                    "status": "active",
+                    "isLatest": true
+                }
+            }
+        },
+        {
+            "server": {
+                "name": "com.zapier/zapier",
+                "version": "1.0.0",
+                "description": "Search knowledge across your apps and execute real-world actions by connecting Claude with the 8,000 apps on Zapier. Run workflows like sending emails, updating CRMs, scheduling meetings, and more, all within Claude.",
+                "title": "Zapier",
+                "remotes": [
+                    {
+                        "type": "streamable-http",
+                        "url": "{url}"
+                    }
+                ]
+            },
+            "_meta": {
+                "com.anthropic.api/mcp-registry": {
+                    "uuid": "1f6f271e-3d29-4241-b35e-8abe6def4891",
+                    "type": "remote",
+                    "toolNames": [],
+                    "promptNames": [],
+                    "urlRegex": "^https://mcp\\.zapier\\.com/api/mcp",
+                    "requiredFields": [
+                        {
+                            "field": "url",
+                            "sourceUrl": "https://mcp.zapier.com/mcp/servers?client=claudeai"
+                        }
+                    ],
+                    "isAuthless": false,
+                    "displayName": "Zapier",
+                    "oneLiner": "Automate workflows across thousands of apps via conversation",
+                    "iconUrl": "https://mcp.zapier.com/",
+                    "documentation": "https://docs.zapier.com/mcp/home",
+                    "support": "https://docs.zapier.com/mcp/home",
+                    "privacyPolicy": "https://zapier.com/privacy",
+                    "author": {
+                        "name": "Zapier",
+                        "url": "https://zapier.com"
+                    },
+                    "worksWith": [
+                        "claude",
+                        "claude-api",
+                        "claude-code"
+                    ],
+                    "source": "auto-sync",
+                    "visibility": [
+                        "commercial"
+                    ]
+                },
+                "io.modelcontextprotocol.registry/official": {
+                    "status": "active",
+                    "isLatest": true
+                }
+            }
+        },
+        {
+            "server": {
+                "name": "com.zoominfo.mcp/zoominfo",
+                "version": "1.0.0",
+                "description": "Access ZoomInfo's GTM intelligence to ground your AI workflows with verified B2B data. Search companies and identify key stakeholders with natural language. Enrich with 300+ data points, build targeted account lists, and drive momentum from first touch to renewal.",
+                "title": "ZoomInfo",
+                "remotes": [
+                    {
+                        "type": "streamable-http",
+                        "url": "https://mcp.zoominfo.com/mcp"
+                    }
+                ]
+            },
+            "_meta": {
+                "com.anthropic.api/mcp-registry": {
+                    "uuid": "f2cdf1b8-2f75-48a4-8d8c-8d9cce1b8643",
+                    "type": "remote",
+                    "toolNames": [
+                        "search_contacts",
+                        "enrich_contact",
+                        "search_companies",
+                        "enrich_company",
+                        "lookup"
+                    ],
+                    "promptNames": [],
+                    "isAuthless": false,
+                    "displayName": "ZoomInfo",
+                    "oneLiner": "Enrich contacts & accounts with GTM intelligence",
+                    "iconUrl": "https://www.zoominfo.com/",
+                    "documentation": "https://docs.zoominfo.com/docs/zi-api-mcp-overview/",
+                    "support": "mailto:integrationsupport@zoominfo.com",
+                    "privacyPolicy": "https://www.zoominfo.com/legal/privacy-policy",
+                    "url": "https://mcp.zoominfo.com/mcp",
+                    "author": {
+                        "name": "ZoomInfo Technologies Inc.",
+                        "url": "https://www.zoominfo.com/"
+                    },
+                    "slug": "zoominfo",
+                    "directoryUrl": "https://claude.ai/directory/f2cdf1b8-2f75-48a4-8d8c-8d9cce1b8643",
+                    "claudeCodeCopyText": "claude mcp add --transport http zoominfo https://mcp.zoominfo.com/mcp",
+                    "permissions": "Read and write",
+                    "useCases": [
+                        "sales-and-marketing"
+                    ],
+                    "worksWith": [
+                        "claude",
+                        "claude-api",
+                        "claude-code"
+                    ],
+                    "publishedOn": "Mon Jan 12 2026 16:21:41 GMT+0000 (Coordinated Universal Time)",
+                    "createdOn": "Wed Sep 24 2025 23:50:18 GMT+0000 (Coordinated Universal Time)",
+                    "updatedOn": "Mon Jan 12 2026 16:20:17 GMT+0000 (Coordinated Universal Time)",
+                    "logo": "zoominfo",
+                    "serverLabel": "mcp.zoominfo.com/mcp",
+                    "itemId": "68d483baad18a21c45f63df0",
+                    "collectionId": "68b05e2de975b4de7dd02d9d",
+                    "localeId": "68a44d4040f98a4adf2207b5",
+                    "htmlContent": "<p id=\"\">Access ZoomInfo's GTM intelligence to ground your AI workflows with verified B2B data. Search companies and identify key stakeholders with natural language. Enrich with 300+ data points, build targeted account lists, and drive momentum from first touch to renewal.</p><p id=\"\">You can use the ZoomInfo connector to:<br><br>Search for target companies:<br>\"Find publicly listed tech companies in the USA with over $1B in revenue, selling primarily to revenue operations and sales leadership\"</p><p id=\"\">Find specific contacts at companies:<br>\"Find me product operations managers at Acme Co who have been with the company more than one year, and enrich with their email addresses\"</p><p id=\"\">Build enriched prospect lists:<br>\"Search for Chief Revenue Officers at fintech companies in the Bay Area between $50M-$250M in revenue, then enrich the top ten candidates with verified email and phone\"</p>",
+                    "source": "auto-sync",
+                    "visibility": [
+                        "commercial"
+                    ]
+                },
+                "io.modelcontextprotocol.registry/official": {
+                    "status": "active",
+                    "isLatest": true
+                }
+            }
+        },
+        {
+            "server": {
+                "name": "dev.jam.mcp/jam",
+                "version": "1.0.0",
+                "description": "Jam's MCP is the fast lane between Jam recordings and your dev tools. Drop a Jam link into VS Code, Cursor, Windsurf, or Claude and the whole recording – video, console, network, logs – arrives pre-packaged. No hand-typing repro steps, no copy-paste stack traces, no screen-share drama. Your tools get instant context, you stay in flow.",
+                "title": "Jam",
+                "remotes": [
+                    {
+                        "type": "streamable-http",
+                        "url": "https://mcp.jam.dev/mcp"
+                    }
+                ]
+            },
+            "_meta": {
+                "com.anthropic.api/mcp-registry": {
+                    "uuid": "923fb14b-ed65-4e41-8dd5-4c2c38c00457",
+                    "type": "remote",
+                    "toolNames": [
+                        "getDetails",
+                        "getConsoleLogs",
+                        "getNetworkRequests",
+                        "getScreenshot",
+                        "getUserEvents",
+                        "analyzeVideo"
+                    ],
+                    "promptNames": [],
+                    "isAuthless": false,
+                    "displayName": "Jam",
+                    "oneLiner": "Record screen and collect automatic context for issues",
+                    "iconUrl": "https://mcp.jam.dev/mcp",
+                    "documentation": "https://jam.dev/docs/debug-a-jam/mcp",
+                    "support": "mailto:hello@jam.dev",
+                    "privacyPolicy": "https://jam.dev/privacy",
+                    "url": "https://mcp.jam.dev/mcp",
+                    "author": {
+                        "name": "Jam",
+                        "url": "https://jam.dev/"
+                    },
+                    "slug": "jam",
+                    "directoryUrl": "https://claude.ai/directory/923fb14b-ed65-4e41-8dd5-4c2c38c00457",
+                    "claudeCodeCopyText": "claude mcp add --transport http jam https://mcp.jam.dev/mcp\n",
+                    "permissions": "Read",
+                    "useCases": [
+                        "code"
+                    ],
+                    "worksWith": [
+                        "claude",
+                        "claude-api",
+                        "claude-code"
+                    ],
+                    "publishedOn": "Mon Jan 12 2026 16:21:41 GMT+0000 (Coordinated Universal Time)",
+                    "createdOn": "Thu Aug 28 2025 14:02:56 GMT+0000 (Coordinated Universal Time)",
+                    "updatedOn": "Mon Jan 12 2026 16:20:15 GMT+0000 (Coordinated Universal Time)",
+                    "logo": "jam",
+                    "backgroundPattern": "Line 1",
+                    "serverLabel": "mcp.jam.dev/mcp",
+                    "itemId": "68b0619097a6a7e363bef1e0",
+                    "collectionId": "68b05e2de975b4de7dd02d9d",
+                    "localeId": "68a44d4040f98a4adf2207b5",
+                    "htmlContent": "<p id=\"\">The fast lane between Jam recordings and your dev tools. Drop a Jam link into Claude and the whole recording – video, console, network, logs – arrives pre-packaged. No hand-typing repro steps, no copy-paste stack traces, no screen-share drama. Claude gets instant context, you stay in flow.</p><p id=\"\">You can use the Jam connector to:<br><br>Analyze bugs and create implementation plans:<br>\"Review this Jam &lt;Jam Link&gt; and analyze the problem, cross-reference it with the existing codebase, and prepare a detailed plan for implementation\"</p><p id=\"\">Perform root-cause analysis and organize work:<br>\"Analyze these Jams, perform root-cause analysis, and organize them into efficient work packages to minimize engineers' context switching; create Linear tickets from the analysis. &lt;Jam Link&gt;\"</p><p id=\"\">Turn product feedback into action plans:<br>\"I recorded product feedback in a Jam. Create an implementation plan for the changes requested in this Jam: &lt;Jam Link&gt;\"</p>",
+                    "source": "auto-sync",
+                    "visibility": [
+                        "commercial"
+                    ]
+                },
+                "io.modelcontextprotocol.registry/official": {
+                    "status": "active",
+                    "isLatest": true
+                }
+            }
+        },
+        {
+            "server": {
+                "name": "dev.sentry.mcp/sentry",
+                "version": "1.0.0",
+                "description": "Access Sentry Issue and Error details, create projects and query for project information, trigger Seer Issue Fix run to generate root cause analysis, and retrieve solutions. Access Sentry context to debug applications faster.",
+                "title": "Sentry",
+                "remotes": [
+                    {
+                        "type": "streamable-http",
+                        "url": "https://mcp.sentry.dev/mcp"
+                    }
+                ]
+            },
+            "_meta": {
+                "com.anthropic.api/mcp-registry": {
+                    "uuid": "46d6322a-5f75-4822-b739-f49261805e9c",
+                    "type": "remote",
+                    "toolNames": [
+                        "whoami",
+                        "find_organizations",
+                        "find_teams",
+                        "find_projects",
+                        "find_issues",
+                        "find_releases",
+                        "find_tags",
+                        "get_issue_details",
+                        "get_event_attachment",
+                        "update_issue",
+                        "find_errors",
+                        "find_transactions",
+                        "create_team",
+                        "create_project",
+                        "update_project",
+                        "create_dsn",
+                        "find_dsns",
+                        "analyze_issue_with_seer",
+                        "search_docs",
+                        "get_doc"
+                    ],
+                    "promptNames": [],
+                    "isAuthless": false,
+                    "displayName": "Sentry",
+                    "oneLiner": "Search, query, and debug errors intelligently",
+                    "iconUrl": "https://sentry.io/",
+                    "documentation": "https://docs.sentry.io/product/sentry-mcp/",
+                    "support": "https://discord.gg/qXWtYzfu",
+                    "privacyPolicy": "https://sentry.io/privacy/",
+                    "url": "https://mcp.sentry.dev/mcp",
+                    "author": {
+                        "name": "Sentry.io",
+                        "url": "https://sentry.io"
+                    },
+                    "slug": "sentry",
+                    "directoryUrl": "http://claude.ai/directory/46d6322a-5f75-4822-b739-f49261805e9c",
+                    "claudeCodeCopyText": "claude mcp add --transport http sentry https://mcp.sentry.dev/mcp",
+                    "permissions": "Read and write",
+                    "useCases": [
+                        "code"
+                    ],
+                    "worksWith": [
+                        "claude-api",
+                        "claude",
+                        "claude-code"
+                    ],
+                    "publishedOn": "Fri Jan 16 2026 19:33:48 GMT+0000 (Coordinated Universal Time)",
+                    "createdOn": "Thu Aug 28 2025 14:02:57 GMT+0000 (Coordinated Universal Time)",
+                    "updatedOn": "Fri Jan 16 2026 19:32:16 GMT+0000 (Coordinated Universal Time)",
+                    "logo": "sentry",
+                    "backgroundPattern": "Line 1",
+                    "serverLabel": "mcp.sentry.dev",
+                    "itemId": "68b0619151de5479549f83bb",
+                    "collectionId": "68b05e2de975b4de7dd02d9d",
+                    "localeId": "68a44d4040f98a4adf2207b5",
+                    "htmlContent": "<p>Retrieve and analyze issues and errors from your Sentry.io projects. Create and retrieve projects, query issue details, trigger Seer issue fix runs and query their status. Get application debugging context quickly and improve application reliability.</p><p>‍</p><p>‍</p><p>‍</p><p>‍</p>",
+                    "source": "auto-sync",
+                    "visibility": [
+                        "commercial"
+                    ]
+                },
+                "io.modelcontextprotocol.registry/official": {
+                    "status": "active",
+                    "isLatest": true
+                }
+            }
+        },
+        {
+            "server": {
+                "name": "dev.stytch.mcp/stytch",
+                "version": "1.0.0",
+                "description": "The Stytch MCP Server enables AI assistants to programmatically manage your Stytch Project like Redirect URLs, Email Templates, and more.",
+                "title": "Stytch",
+                "remotes": [
+                    {
+                        "type": "streamable-http",
+                        "url": "https://mcp.stytch.dev/mcp"
+                    }
+                ]
+            },
+            "_meta": {
+                "com.anthropic.api/mcp-registry": {
+                    "uuid": "b873d3db-0781-4a3d-9245-9c6213e6d785",
+                    "type": "remote",
+                    "toolNames": [
+                        "createProject",
+                        "listProjects",
+                        "createRedirectURL",
+                        "getAllRedirectURLs",
+                        "updateRedirectURL",
+                        "deleteRedirectURL",
+                        "createPublicToken",
+                        "getAllPublicTokens",
+                        "deletePublicToken",
+                        "createSecret",
+                        "deleteSecret",
+                        "createEmailTemplate",
+                        "getAllEmailTemplates",
+                        "deleteEmailTemplate",
+                        "updateEmailTemplate",
+                        "getPasswordStrengthConfig",
+                        "setPasswordStrengthConfig",
+                        "getConsumerSDKConfig",
+                        "getB2BSDKConfig",
+                        "updateConsumerSDKConfig",
+                        "updateB2BSDKConfig"
+                    ],
+                    "promptNames": [],
+                    "isAuthless": false,
+                    "displayName": "Stytch",
+                    "oneLiner": "Manage your Stytch Project",
+                    "iconUrl": "https://stytch.com/",
+                    "documentation": "https://stytch.com/docs/workspace-management/stytch-mcp",
+                    "support": "mailto:support@stytch.com",
+                    "privacyPolicy": "https://stytch.com/legal/privacy-policy",
+                    "url": "https://mcp.stytch.dev/mcp",
+                    "author": {
+                        "name": "Stytch",
+                        "url": "https://stytch.com/"
+                    },
+                    "slug": "stytch",
+                    "directoryUrl": "https://claude.ai/directory/b873d3db-0781-4a3d-9245-9c6213e6d785",
+                    "permissions": "Read",
+                    "useCases": [
+                        "code"
+                    ],
+                    "worksWith": [
+                        "claude",
+                        "claude-api"
+                    ],
+                    "publishedOn": "Tue Jan 13 2026 20:19:08 GMT+0000 (Coordinated Universal Time)",
+                    "createdOn": "Thu Aug 28 2025 14:02:57 GMT+0000 (Coordinated Universal Time)",
+                    "updatedOn": "Tue Jan 13 2026 18:42:54 GMT+0000 (Coordinated Universal Time)",
+                    "logo": "stych",
+                    "backgroundPattern": "Line 1",
+                    "serverLabel": "mcp.stytch.dev/mcp",
+                    "itemId": "68b06191bb8faebc4d1db630",
+                    "collectionId": "68b05e2de975b4de7dd02d9d",
+                    "localeId": "68a44d4040f98a4adf2207b5",
+                    "htmlContent": "<p id=\"\">The Stytch connector enables Claude to programmatically manage your Stytch Project like Redirect URLs, Email Templates, and more.</p><p id=\"\">You can use the Stytch connector to:<br><br>Set up new projects with authentication:<br>\"Create a new Stytch consumer project and configure redirect URLs for my web application callback\"</p><p id=\"\">Manage multi-environment configurations:<br>\"List all my Stytch projects and synchronize email templates across development, staging, and production\"</p><p id=\"\">Audit security and compliance settings:<br>\"Review my password strength configuration and check SDK authentication method settings for compliance\"</p><p id=\"\"></p>",
+                    "source": "auto-sync",
+                    "visibility": [
+                        "commercial"
+                    ]
+                },
+                "io.modelcontextprotocol.registry/official": {
+                    "status": "active",
+                    "isLatest": true
+                }
+            }
+        },
+        {
+            "server": {
+                "$schema": "https://static.modelcontextprotocol.io/schemas/2025-09-29/server.schema.json",
+                "name": "io.coupler/remote-mcp-server",
+                "description": "Analyze multi-channel marketing, financial, sales, e-commerce, and other business data within Claude by connecting to your Coupler.io data flows — query marketing, sales, and finance metrics from hundreds of sources. Fetch and transform raw data from platforms like Google Ads, Facebook, HubSpot, and Salesforce into actionable intelligence for smarter, faster decision-making with accurate, up-to-date business information.",
+                "repository": {},
+                "version": "0.0.1",
+                "remotes": [
+                    {
+                        "type": "streamable-http",
+                        "url": "https://mcp.coupler.io/mcp/"
+                    }
+                ],
+                "title": "Coupler.io"
+            },
+            "_meta": {
+                "io.modelcontextprotocol.registry/official": {
+                    "status": "active",
+                    "publishedAt": "2025-09-10T16:12:03.417416Z",
+                    "updatedAt": "2025-09-10T16:12:03.417416Z",
+                    "isLatest": true
+                },
+                "com.anthropic.api/mcp-registry": {
+                    "uuid": "dba65f24-3bd2-4d72-a86c-62b7c5290a5f",
+                    "type": "remote",
+                    "toolNames": [
+                        "get-data",
+                        "get-schema",
+                        "list-dataflows",
+                        "get-dataflow"
+                    ],
+                    "promptNames": [],
+                    "isAuthless": false,
+                    "displayName": "Coupler.io",
+                    "oneLiner": "Access business data from hundreds of sources",
+                    "iconUrl": "https://coupler.io",
+                    "documentation": "https://help.coupler.io/article/592-coupler-local-mcp-server",
+                    "support": "mailto:contact@coupler.io",
+                    "privacyPolicy": "https://www.coupler.io/privacy-policy",
+                    "url": "https://mcp.coupler.io/mcp/",
+                    "author": {
+                        "name": "Coupler.io",
+                        "url": "https://coupler.io"
+                    },
+                    "slug": "coupler-io",
+                    "directoryUrl": "https://claude.ai/directory/dba65f24-3bd2-4d72-a86c-62b7c5290a5f",
+                    "claudeCodeCopyText": "claude mcp add --transport http coupler https://mcp.coupler.io/mcp",
+                    "permissions": "Read",
+                    "useCases": [
+                        "sales-and-marketing"
+                    ],
+                    "worksWith": [
+                        "claude",
+                        "claude-api",
+                        "claude-code"
+                    ],
+                    "publishedOn": "Mon Jan 12 2026 16:21:41 GMT+0000 (Coordinated Universal Time)",
+                    "createdOn": "Tue Sep 23 2025 01:14:49 GMT+0000 (Coordinated Universal Time)",
+                    "updatedOn": "Mon Jan 12 2026 16:20:14 GMT+0000 (Coordinated Universal Time)",
+                    "logo": "coupler",
+                    "backgroundPattern": "Loop 1",
+                    "serverLabel": "mcp.coupler.io/mcp/",
+                    "itemId": "68d1f489072398bee2c4cebb",
+                    "collectionId": "68b05e2de975b4de7dd02d9d",
+                    "localeId": "68a44d4040f98a4adf2207b5",
+                    "htmlContent": "<p id=\"\">Analyze multi-channel marketing, financial, sales, e-commerce, and other business data within Claude by connecting to your Coupler.io data flows — query marketing, sales, and finance metrics from hundreds of sources. Fetch and transform raw data from platforms like Google Ads, Facebook, HubSpot, and Salesforce into actionable intelligence for smarter, faster decision-making with accurate, up-to-date business information.</p><p id=\"\">You can use the Coupler.io connector to:<br><br>Analyze customer acquisition costs:<br>\"What's our overall customer acquisition cost across all paid channels this quarter compared to last quarter? I need this for the board meeting\"</p><p id=\"\">Review marketing ROI:<br>\"Show me the ROI breakdown by marketing channel for the past 6 months. I need to reallocate our annual budget\"</p><p id=\"\">Identify high-performing campaigns:<br>\"Which campaigns are contributing most to our pipeline revenue? I want to double down on what's working\"</p><p id=\"\">Review sales pipeline:<br>\"Can you pull the sales pipeline report for this month? I need to see how many deals are in each stage and the total value at each stage\"</p><p id=\"\">Analyze conversion rates:<br>\"What are our conversion rates from lead to opportunity and from opportunity to closed-won for the last quarter? How do they compare to our targets?\"</p><p id=\"\">Forecast revenue:<br>\"How many deals are expected to close this month based on their probability scores? What's our forecasted revenue vs our monthly target?\"</p><p id=\"\">Compare quarterly profits:<br>\"Check the profit for this quarter, compare it to last quarter, and provide a breakdown by department\"</p><p id=\"\">Generate cash flow reports:<br>\"Could you provide a cash flow report for the last 30 days, including all incoming and outgoing transactions?\"</p><p id=\"\">Review accounts receivable:<br>\"Share the current accounts receivable status and tell me how many overdue invoices we have and which customers owe the most\"</p>",
+                    "source": "auto-sync",
+                    "visibility": [
+                        "commercial"
+                    ]
+                }
+            }
+        },
+        {
+            "server": {
+                "name": "io.github.antonpk1/excalidraw-mcp-app",
+                "version": "1.0.0",
+                "description": "The official Excalidraw MCP app allowing you to build interactive visual applications right in Claude. Ask Claude to create hand-drawn style diagrams using Excalidraw with smooth viewport camera control and interactive fullscreen editing.",
+                "title": "Excalidraw",
+                "remotes": [
+                    {
+                        "type": "streamable-http",
+                        "url": "https://excalidraw-mcp-app.vercel.app/mcp"
+                    }
+                ]
+            },
+            "_meta": {
+                "com.anthropic.api/mcp-registry": {
+                    "uuid": "934bf25a-e0d1-43ff-a488-b2c5567ec956",
+                    "type": "remote",
+                    "toolNames": [
+                        "read_me",
+                        "create_view",
+                        "export_to_excalidraw",
+                        "save_checkpoint",
+                        "read_checkpoint"
+                    ],
+                    "promptNames": [],
+                    "isAuthless": true,
+                    "displayName": "Excalidraw",
+                    "oneLiner": "MCP for creating interactive hand-drawn diagrams in Excalidraw",
+                    "iconUrl": "https://excalidraw.com/",
+                    "documentation": "https://github.com/excalidraw/excalidraw-mcp",
+                    "support": "https://github.com/excalidraw/excalidraw-mcp/issues",
+                    "privacyPolicy": "https://plus.excalidraw.com/privacy-policy",
+                    "url": "https://excalidraw-mcp-app.vercel.app/mcp",
+                    "author": {
+                        "name": "Excalidraw",
+                        "url": "https://github.com/excalidraw"
+                    },
+                    "slug": "excalidraw-app-demo",
+                    "directoryUrl": "https://claude.ai/directory/934bf25a-e0d1-43ff-a488-b2c5567ec956",
+                    "claudeCodeCopyText": "claude mcp add --transport http excalidraw-app-demo https://excalidraw-mcp-app.vercel.app/mcp\n",
+                    "worksWith": [
+                        "claude"
+                    ],
+                    "imageUrls": [
+                        {
+                            "prompt": "Show how a neural network forward pass works",
+                            "imageUrl": "https://storage.googleapis.com/media-assets-299d7136-cb52-d546-ee02-34bc1307c35f/Connectors%20Directory/Carousel%20Prompt%20Images/App%20Excalidraw%20Card%201.png"
+                        },
+                        {
+                            "prompt": "Map out the React component lifecycle",
+                            "imageUrl": "https://storage.googleapis.com/media-assets-299d7136-cb52-d546-ee02-34bc1307c35f/Connectors%20Directory/Carousel%20Prompt%20Images/App%20Excalidraw%20Card%202.png"
+                        },
+                        {
+                            "prompt": "Draw a Git branching strategy with feature, develop, and main",
+                            "imageUrl": "https://storage.googleapis.com/media-assets-299d7136-cb52-d546-ee02-34bc1307c35f/Connectors%20Directory/Carousel%20Prompt%20Images/App%20Excalidraw%20Card%203.png"
+                        },
+                        {
+                            "prompt": "Create a decision tree for choosing a database",
+                            "imageUrl": "https://storage.googleapis.com/media-assets-299d7136-cb52-d546-ee02-34bc1307c35f/Connectors%20Directory/Carousel%20Prompt%20Images/App%20Excalidraw%20Card%204.png"
+                        },
+                        {
+                            "prompt": "Show the architecture of a microservices e-commerce app",
+                            "imageUrl": "https://storage.googleapis.com/media-assets-299d7136-cb52-d546-ee02-34bc1307c35f/Connectors%20Directory/Carousel%20Prompt%20Images/App%20Excalidraw%20Card%205.png"
+                        },
+                        {
+                            "prompt": "Draw a UML sequence diagram for user login with OAuth",
+                            "imageUrl": "https://storage.googleapis.com/media-assets-299d7136-cb52-d546-ee02-34bc1307c35f/Connectors%20Directory/Carousel%20Prompt%20Images/App%20Excalidraw%20Card%206.png"
+                        }
+                    ],
+                    "hasMcpApp": true,
+                    "source": "manual",
+                    "visibility": [
+                        "commercial"
+                    ]
+                },
+                "io.modelcontextprotocol.registry/official": {
+                    "status": "active",
+                    "isLatest": true
+                }
+            }
+        },
+        {
+            "server": {
+                "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+                "name": "io.github.DiceHoldingsInc/dice-mcp",
+                "description": "Access Dice's database of active tech jobs through conversational AI search. With 30+ years of tech-only specialization, Dice offers unparalleled breadth and depth—covering every tech discipline from AI/ML to cybersecurity, across companies of all sizes. Use natural language to search faster and more easily than ever. Ask for what you want conversationally, refine your criteria through chat, and navigate to real opportunities. Skip the complexity of traditional job board filters and narrow down your job search within Claude.",
+                "title": "Dice",
+                "version": "1.0.0",
+                "remotes": [
+                    {
+                        "type": "streamable-http",
+                        "url": "https://mcp.dice.com/mcp"
+                    }
+                ]
+            },
+            "_meta": {
+                "io.modelcontextprotocol.registry/official": {
+                    "status": "active",
+                    "publishedAt": "2026-01-05T21:43:49.734328Z",
+                    "updatedAt": "2026-01-05T21:43:49.734328Z",
+                    "isLatest": true
+                },
+                "com.anthropic.api/mcp-registry": {
+                    "uuid": "3035842b-464b-45f0-b8f0-1ddc01fb2eb2",
+                    "type": "remote",
+                    "toolNames": [
+                        "search_jobs"
+                    ],
+                    "promptNames": [],
+                    "isAuthless": true,
+                    "displayName": "Dice",
+                    "oneLiner": "Find active tech jobs on Dice",
+                    "iconUrl": "https://www.dice.com/",
+                    "documentation": "https://www.dice.com/about/mcp",
+                    "support": "https://www.dice.com/about/contact-us",
+                    "privacyPolicy": "https://www.dice.com/about/privacy-policy",
+                    "url": "https://mcp.dice.com/mcp",
+                    "author": {
+                        "name": "Dice.com",
+                        "url": "https://www.dice.com/"
+                    },
+                    "worksWith": [
+                        "claude",
+                        "claude-api",
+                        "claude-code"
+                    ],
+                    "source": "auto-sync",
+                    "visibility": [
+                        "commercial"
+                    ]
+                }
+            }
+        },
+        {
+            "server": {
+                "name": "io.github.domdomegg/airtable-mcp-server",
+                "version": "1.9.6",
+                "title": "Airtable"
+            },
+            "_meta": {
+                "com.anthropic.api/mcp-registry": {
+                    "uuid": "65d61b4e-9aeb-4336-8369-257455ae36ec",
+                    "type": "local",
+                    "oneLiner": "Read and write Airtable databases",
+                    "iconUrl": "https://airtable.com",
+                    "documentation": "https://github.com/domdomegg/airtable-mcp-server",
+                    "support": "https://github.com/domdomegg/airtable-mcp-server/issues",
+                    "privacyPolicy": "https://github.com/domdomegg/airtable-mcp-server",
+                    "author": {
+                        "name": "Adam Jones",
+                        "url": "https://github.com/domdomegg"
+                    },
+                    "worksWith": [
+                        "claude-desktop",
+                        "claude-code"
+                    ],
+                    "source": "manual",
+                    "visibility": [
+                        "commercial"
+                    ]
+                },
+                "io.modelcontextprotocol.registry/official": {
+                    "status": "active",
+                    "isLatest": true
+                }
+            }
+        },
+        {
+            "server": {
+                "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+                "name": "io.github.miroapp/mcp-server",
+                "description": "Access your board content and create content inside Miro from Claude. Use your teams workshops, technical specs and more in your AI workflows.",
+                "title": "Miro",
+                "repository": {
+                    "url": "https://github.com/miroapp/miro-ai",
+                    "source": "github"
+                },
+                "version": "1.0.1",
+                "remotes": [
+                    {
+                        "type": "streamable-http",
+                        "url": "https://mcp.miro.com/"
+                    }
+                ]
+            },
+            "_meta": {
+                "io.modelcontextprotocol.registry/official": {
+                    "status": "active",
+                    "publishedAt": "2026-01-19T15:50:31.719991Z",
+                    "updatedAt": "2026-01-19T15:50:31.719991Z",
+                    "isLatest": true
+                },
+                "com.anthropic.api/mcp-registry": {
+                    "uuid": "72480fb8-32ed-4075-b1c4-79e09c858b29",
+                    "type": "remote",
+                    "toolNames": [
+                        "board_get_items",
+                        "board_get_image_download_url",
+                        "board_get_image_data",
+                        "context_get_board_docs",
+                        "draft_diagram_new"
+                    ],
+                    "promptNames": [
+                        "code_create_from_board",
+                        "code_explain_on_board"
+                    ],
+                    "isAuthless": false,
+                    "displayName": "Miro",
+                    "oneLiner": "Access and create new content on Miro boards",
+                    "iconUrl": "https://miro.com",
+                    "documentation": "https://developers.miro.com/docs/miro-mcp",
+                    "support": "https://help.miro.com/hc/en-us/",
+                    "privacyPolicy": "https://miro.com/legal/customer-data-processing-addendum/",
+                    "url": "https://mcp.miro.com/",
+                    "author": {
+                        "name": "Miro",
+                        "url": "https://miro.com"
+                    },
+                    "slug": "miro",
+                    "directoryUrl": "https://claude.ai/directory/72480fb8-32ed-4075-b1c4-79e09c858b29",
+                    "claudeCodeCopyText": "claude mcp add --transport http miro https://mcp.miro.com/\n",
+                    "worksWith": [
+                        "claude",
+                        "claude-api",
+                        "claude-code"
+                    ],
+                    "permissions": "Read and write",
+                    "useCases": [
+                        "development",
+                        "productivity"
+                    ],
+                    "logo": "miro",
+                    "backgroundPattern": "Line 1",
+                    "serverLabel": "mcp.miro.com",
+                    "source": "manual",
+                    "visibility": [
+                        "commercial"
+                    ]
+                }
+            }
+        },
+        {
+            "server": {
+                "name": "io.honeycomb.mcp/honeycomb",
+                "version": "1.0.0",
+                "description": "Query and explore observability data from OpenTelemetry or dozens of other sources in your honeycomb.io account.",
+                "title": "Honeycomb",
+                "remotes": [
+                    {
+                        "type": "streamable-http",
+                        "url": "https://mcp.honeycomb.io/mcp"
+                    }
+                ]
+            },
+            "_meta": {
+                "com.anthropic.api/mcp-registry": {
+                    "uuid": "63125588-06e1-4567-8130-f5a26ed1d20f",
+                    "type": "remote",
+                    "toolNames": [
+                        "feedback",
+                        "get_dataset",
+                        "get_dataset_columns",
+                        "get_environment",
+                        "get_query_history",
+                        "get_slos",
+                        "get_team_info",
+                        "get_trace",
+                        "get_triggers",
+                        "list_datasets",
+                        "list_environments",
+                        "run_unsaved_query",
+                        "search_columns"
+                    ],
+                    "promptNames": [],
+                    "isAuthless": false,
+                    "displayName": "Honeycomb",
+                    "oneLiner": "Query and explore observability data and SLOs",
+                    "iconUrl": "https://www.honeycomb.io",
+                    "documentation": "https://docs.honeycomb.io/troubleshoot/product-lifecycle/beta/mcp/",
+                    "support": "https://www.honeycomb.io/support",
+                    "privacyPolicy": "https://www.honeycomb.io/ai-terms",
+                    "url": "https://mcp.honeycomb.io/mcp",
+                    "author": {
+                        "name": "honeycomb.io",
+                        "url": "https://www.honeycomb.io"
+                    },
+                    "slug": "honeycomb",
+                    "directoryUrl": "https://claude.ai/directory/63125588-06e1-4567-8130-f5a26ed1d20f",
+                    "claudeCodeCopyText": "claude mcp add --transport http honeycomb https://mcp.honeycomb.io/mcp",
+                    "permissions": "Read and write",
+                    "useCases": [
+                        "data"
+                    ],
+                    "worksWith": [
+                        "claude",
+                        "claude-api",
+                        "claude-code"
+                    ],
+                    "publishedOn": "Mon Jan 12 2026 16:21:41 GMT+0000 (Coordinated Universal Time)",
+                    "createdOn": "Mon Nov 24 2025 01:35:04 GMT+0000 (Coordinated Universal Time)",
+                    "updatedOn": "Mon Jan 12 2026 16:20:18 GMT+0000 (Coordinated Universal Time)",
+                    "logo": "honeycomb",
+                    "serverLabel": "mcp.honeycomb.io/mcp",
+                    "itemId": "6923b648dad3246a3f347c6a",
+                    "collectionId": "68b05e2de975b4de7dd02d9d",
+                    "localeId": "68a44d4040f98a4adf2207b5",
+                    "htmlContent": "<p id=\"\">Query and explore observability data from OpenTelemetry or dozens of other sources in your honeycomb.io account.<br><br>You can use the Honeycomb connector to:</p><p id=\"\">Analyze SLO Performance:<strong id=\"\"><br>‍</strong>\"Analyze my SLO burn rates and investigate the top three contributing factors\"</p><p id=\"\">Generate Usage Reports:<strong id=\"\"><br>‍</strong>\"Give me a report on usage of my application by iOS version\"</p><p id=\"\">Troubleshoot Performance Issues:<strong id=\"\"><br>‍</strong>\"Why are some users experiencing higher latency and error rate on my API server?\"</p>",
+                    "source": "auto-sync",
+                    "visibility": [
+                        "commercial"
+                    ]
+                },
+                "io.modelcontextprotocol.registry/official": {
+                    "status": "active",
+                    "isLatest": true
+                }
+            }
+        },
+        {
+            "server": {
+                "name": "io.modelcontextprotocol/server-pdf",
+                "version": "1.0.0",
+                "description": "Demo interactive PDF viewer that renders PDFs from a limited set of allowed URLs (e.g., arxiv.org) for security reasons.",
+                "title": "PDF Viewer",
+                "remotes": [
+                    {
+                        "type": "streamable-http",
+                        "url": "https://example-server.modelcontextprotocol.io/pdf/mcp"
+                    }
+                ]
+            },
+            "_meta": {
+                "com.anthropic.api/mcp-registry": {
+                    "uuid": "a6f1af7d-e85f-4775-bbfb-da7a8eb990db",
+                    "type": "remote",
+                    "toolNames": [
+                        "display_pdf"
+                    ],
+                    "promptNames": [],
+                    "isAuthless": false,
+                    "displayName": "PDF Viewer",
+                    "oneLiner": "Demo PDF viewer that renders PDFs from allowed URLs like arxiv.org",
+                    "iconUrl": "https://raw.githubusercontent.com/modelcontextprotocol/modelcontextprotocol/refs/heads/main/blog/static/favicon.svg",
+                    "documentation": "https://github.com/modelcontextprotocol/ext-apps/blob/main/examples/pdf-server/README.md",
+                    "support": "https://github.com/modelcontextprotocol/ext-apps/issues",
+                    "privacyPolicy": "https://lfprojects.org/policies/privacy-policy/",
+                    "url": "https://example-server.modelcontextprotocol.io/pdf/mcp",
+                    "author": {
+                        "name": "Model Context Protocol Community",
+                        "url": "https://modelcontextprotocol.io"
+                    },
+                    "slug": "pdf-viewer",
+                    "directoryUrl": "https://claude.ai/directory/a6f1af7d-e85f-4775-bbfb-da7a8eb990db",
+                    "claudeCodeCopyText": "claude mcp add --transport http pdf-viewer https://example-server.modelcontextprotocol.io/pdf/mcp\n",
+                    "worksWith": [
+                        "claude"
+                    ],
+                    "source": "manual",
+                    "visibility": [
+                        "commercial"
+                    ]
+                },
+                "io.modelcontextprotocol.registry/official": {
+                    "status": "active",
+                    "isLatest": true
+                }
+            }
+        },
+        {
+            "server": {
+                "name": "io.modelcontextprotocol/server-sheet-music",
+                "version": "1.0.0",
+                "description": "Ask Claude to generate and play some sheet music for you with a visual component.",
+                "title": "Play Sheet Music",
+                "remotes": [
+                    {
+                        "type": "streamable-http",
+                        "url": "https://example-server.modelcontextprotocol.io/sheet-music/mcp"
+                    }
+                ]
+            },
+            "_meta": {
+                "com.anthropic.api/mcp-registry": {
+                    "uuid": "96a2cde3-0340-43e9-b293-055f293b346d",
+                    "type": "remote",
+                    "toolNames": [],
+                    "promptNames": [],
+                    "isAuthless": false,
+                    "displayName": "Play Sheet Music",
+                    "oneLiner": "Ask Claude to generate and play some sheet music for you with a visual component",
+                    "iconUrl": "https://raw.githubusercontent.com/modelcontextprotocol/modelcontextprotocol/refs/heads/main/blog/static/favicon.svg",
+                    "documentation": "https://github.com/modelcontextprotocol/ext-apps/tree/main/examples/sheet-music-server",
+                    "support": "https://github.com/modelcontextprotocol/ext-apps/issues",
+                    "privacyPolicy": "https://lfprojects.org/policies/privacy-policy/",
+                    "url": "https://example-server.modelcontextprotocol.io/sheet-music/mcp",
+                    "author": {
+                        "name": "Model Context Protocol Community",
+                        "url": "https://modelcontextprotocol.io"
+                    },
+                    "slug": "play-sheet-music",
+                    "directoryUrl": "https://claude.ai/directory/96a2cde3-0340-43e9-b293-055f293b346d",
+                    "claudeCodeCopyText": "claude mcp add --transport http play-sheet-music https://example-server.modelcontextprotocol.io/sheet-music/mcp\n",
+                    "worksWith": [
+                        "claude"
+                    ],
+                    "hasMcpApp": true,
+                    "source": "manual",
+                    "visibility": [
+                        "commercial"
+                    ]
+                },
+                "io.modelcontextprotocol.registry/official": {
+                    "status": "active",
+                    "isLatest": true
+                }
+            }
+        },
+        {
+            "server": {
+                "name": "io.modelcontextprotocol/server-threejs",
+                "version": "1.0.0",
+                "description": "Demo interactive 3D viewer powered by Three.js, a popular JavaScript library for rendering 3D graphics in the browser. Generates and displays 3D scenes, models, and animations directly in the conversation.",
+                "title": "Three.js 3D Viewer",
+                "remotes": [
+                    {
+                        "type": "streamable-http",
+                        "url": "https://example-server.modelcontextprotocol.io/threejs/mcp"
+                    }
+                ]
+            },
+            "_meta": {
+                "com.anthropic.api/mcp-registry": {
+                    "uuid": "471ca2be-244d-4d9a-955a-3cdbcf76a12b",
+                    "type": "remote",
+                    "toolNames": [],
+                    "promptNames": [],
+                    "isAuthless": false,
+                    "displayName": "Three.js 3D Viewer",
+                    "oneLiner": "Demo 3D viewer that renders interactive 3D scenes and models using Three.js",
+                    "iconUrl": "https://raw.githubusercontent.com/modelcontextprotocol/modelcontextprotocol/refs/heads/main/blog/static/favicon.svg",
+                    "documentation": "https://github.com/modelcontextprotocol/ext-apps/blob/main/examples/pdf-server/README.md",
+                    "support": "https://github.com/modelcontextprotocol/ext-apps/issues",
+                    "privacyPolicy": "https://lfprojects.org/policies/privacy-policy/",
+                    "url": "https://example-server.modelcontextprotocol.io/threejs/mcp",
+                    "author": {
+                        "name": "Model Context Protocol Community",
+                        "url": "https://modelcontextprotocol.io"
+                    },
+                    "slug": "threejs-3d-viewer",
+                    "directoryUrl": "https://claude.ai/directory/471ca2be-244d-4d9a-955a-3cdbcf76a12b",
+                    "claudeCodeCopyText": "claude mcp add --transport http threejs-3d-viewer https://example-server.modelcontextprotocol.io/threejs/mcp\n",
+                    "worksWith": [
+                        "claude"
+                    ],
+                    "source": "manual",
+                    "visibility": [
+                        "commercial"
+                    ]
+                },
+                "io.modelcontextprotocol.registry/official": {
+                    "status": "active",
+                    "isLatest": true
+                }
+            }
+        },
+        {
+            "server": {
+                "name": "io.n8n/n8n",
+                "version": "1.0.0",
+                "description": "Talk to your n8n instance and trigger automations - Search for workflows, get their details, and execute them directly from Claude",
+                "title": "n8n",
+                "remotes": [
+                    {
+                        "type": "streamable-http",
+                        "url": "{url}"
+                    }
+                ]
+            },
+            "_meta": {
+                "com.anthropic.api/mcp-registry": {
+                    "uuid": "d86fa999-100c-4212-ad7f-2fefea661ef1",
+                    "type": "remote",
+                    "toolNames": [
+                        "search_workflows",
+                        "get_workflow_details",
+                        "execute_workflow"
+                    ],
+                    "promptNames": [],
+                    "urlRegex": "/mcp-server/http",
+                    "requiredFields": [
+                        {
+                            "field": "url",
+                            "sourceUrl": "https://docs.n8n.io/advanced-ai/accessing-n8n-mcp-server/"
+                        }
+                    ],
+                    "isAuthless": false,
+                    "displayName": "n8n",
+                    "oneLiner": "Access and run your n8n workflows",
+                    "iconUrl": "https://n8n.io/",
+                    "documentation": "https://docs.n8n.io/advanced-ai/accessing-n8n-mcp-server/",
+                    "support": "mailto:help@n8n.io",
+                    "privacyPolicy": "https://n8n.io/legal/privacy/",
+                    "author": {
+                        "name": "n8n GmbH",
+                        "url": "https://n8n.io/"
+                    },
+                    "worksWith": [
+                        "claude",
+                        "claude-api",
+                        "claude-code"
+                    ],
+                    "source": "auto-sync",
+                    "visibility": [
+                        "commercial"
+                    ]
+                },
+                "io.modelcontextprotocol.registry/official": {
+                    "status": "active",
+                    "isLatest": true
+                }
+            }
+        },
+        {
+            "server": {
+                "name": "io.pendo.www/pendo",
+                "version": "1.0.0",
+                "description": "The Pendo connector for product analytics and behavioral data to AI environments. Access visitor and account metadata, query user behavior, and analyze pages, features, and events. Supports real-time product data integration for tasks like customer call preparation, adoption analysis, churn investigation, and support ticket enrichment.",
+                "title": "Pendo",
+                "remotes": [
+                    {
+                        "type": "streamable-http",
+                        "url": "{url}"
+                    }
+                ]
+            },
+            "_meta": {
+                "com.anthropic.api/mcp-registry": {
+                    "uuid": "2a884a14-5f1e-4742-8ee0-7ebe9cb69ac7",
+                    "type": "remote",
+                    "toolNames": [
+                        "accountMetadataSchema",
+                        "accountQuery",
+                        "activityQuery",
+                        "guideMetrics",
+                        "list_all_applications",
+                        "pes",
+                        "searchEntities",
+                        "segmentList",
+                        "sessionReplayList",
+                        "visitorMetadataSchema",
+                        "visitorQuery"
+                    ],
+                    "promptNames": [],
+                    "urlRegex": "app\\.pendo\\.io|app\\.eu\\.pendo\\.io|app\\.jpn\\.pendo\\.io|app\\.au\\.pendo\\.io|us1\\.app\\.pendo\\.io",
+                    "requiredFields": [
+                        {
+                            "field": "url",
+                            "sourceUrl": "https://support.pendo.io/hc/en-us/articles/41102236924955"
+                        }
+                    ],
+                    "isAuthless": false,
+                    "displayName": "Pendo",
+                    "oneLiner": "Connect to Pendo for product and user insights",
+                    "iconUrl": "https://www.pendo.io/",
+                    "documentation": "https://support.pendo.io/hc/en-us/articles/41102236924955",
+                    "support": "https://support.pendo.io/hc/en-us",
+                    "privacyPolicy": "https://www.pendo.io/legal/privacy-policy/",
+                    "author": {
+                        "name": "Pendo",
+                        "url": "https://www.pendo.io/"
+                    },
+                    "worksWith": [
+                        "claude",
+                        "claude-api",
+                        "claude-code"
+                    ],
+                    "source": "auto-sync",
+                    "visibility": [
+                        "commercial"
+                    ]
+                },
+                "io.modelcontextprotocol.registry/official": {
+                    "status": "active",
+                    "isLatest": true
+                }
+            }
+        },
+        {
+            "server": {
+                "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+                "name": "io.port/Port",
+                "description": "Connect Port's context lake and software catalog directly to Claude. Query services, dependencies, and ownership using natural language. Analyze scorecards and service health. Execute governed self-service actions and workflows with built-in guardrails.",
+                "repository": {
+                    "url": "https://github.com/port-labs/remote-mcp-server",
+                    "source": "github"
+                },
+                "version": "1.0.2",
+                "remotes": [
+                    {
+                        "type": "streamable-http",
+                        "url": "{url}"
+                    }
+                ],
+                "title": "Port IO"
+            },
+            "_meta": {
+                "io.modelcontextprotocol.registry/official": {
+                    "status": "active",
+                    "publishedAt": "2026-01-12T08:41:09.446627Z",
+                    "updatedAt": "2026-01-12T08:41:09.446627Z",
+                    "isLatest": true
+                },
+                "com.anthropic.api/mcp-registry": {
+                    "uuid": "8f5edd1c-c876-465e-a5b9-cc8e6d27dcb7",
+                    "type": "remote",
+                    "toolNames": [
+                        "list_blueprints",
+                        "list_entities",
+                        "list_scorecards",
+                        "list_actions",
+                        "run_action",
+                        "search_port_knowledge_sources",
+                        "load_skill",
+                        "upsert_blueprint",
+                        "upsert_entity",
+                        "upsert_scorecard",
+                        "upsert_action",
+                        "list_integrations"
+                    ],
+                    "promptNames": [],
+                    "urlRegex": "https://mcp(\\.eu|\\.us)?\\.port\\.io/v1",
+                    "requiredFields": [
+                        {
+                            "field": "url",
+                            "sourceUrl": "https://docs.port.io/ai-interfaces/port-mcp-server/overview-and-installation/?mcp-setup=claude&region=eu#installing-port-mcp"
+                        }
+                    ],
+                    "isAuthless": false,
+                    "displayName": "Port IO",
+                    "oneLiner": "Search your context lake and safely run actions",
+                    "iconUrl": "https://www.port.io",
+                    "documentation": "https://docs.port.io/ai-interfaces/port-mcp-server/overview-and-installation",
+                    "support": "https://support@port.io",
+                    "privacyPolicy": "https://www.port.io/legal/privacy-policy",
+                    "url": "{url}",
+                    "author": {
+                        "name": "Port IO",
+                        "url": "https://www.port.io"
+                    },
+                    "worksWith": [
+                        "claude",
+                        "claude-api",
+                        "claude-code"
+                    ],
+                    "source": "auto-sync",
+                    "visibility": [
+                        "commercial"
+                    ]
+                }
+            }
+        },
+        {
+            "server": {
+                "name": "io.starburst/starburst",
+                "version": "1.0.0",
+                "description": "The Starburst MCP server exposes a secure, read-only SQL tool for Claude. It enables governed data discovery, lightweight sampling, and execution of analytical queries across Starburst catalogs, while enforcing existing permissions, timeouts, and result-size limits and returning compact, structured results for effective AI agent workflows.",
+                "title": "Starburst",
+                "remotes": [
+                    {
+                        "type": "streamable-http",
+                        "url": "{url}"
+                    }
+                ]
+            },
+            "_meta": {
+                "com.anthropic.api/mcp-registry": {
+                    "uuid": "2a9d8e2f-f935-4b4a-bd78-ec81ba9f2125",
+                    "type": "remote",
+                    "toolNames": [
+                        "readOnlyQuery"
+                    ],
+                    "promptNames": [],
+                    "urlRegex": "\\.mcp\\.galaxy\\.starburst\\.io(/|$)",
+                    "requiredFields": [
+                        {
+                            "field": "url",
+                            "sourceUrl": "https://docs.starburst.io/starburst-galaxy/ai-workflows/mcp-server.html"
+                        }
+                    ],
+                    "isAuthless": false,
+                    "displayName": "Starburst",
+                    "oneLiner": "Securely retrieve data from your federated data sources",
+                    "iconUrl": "https://www.starburst.io",
+                    "documentation": "https://docs.starburst.io/starburst-galaxy/ai-workflows/mcp-server.html",
+                    "support": "https://www.starburst.io/learn/support/",
+                    "privacyPolicy": "https://www.starburst.io/privacy-policy/",
+                    "author": {
+                        "name": "Starburst Data",
+                        "url": "https://www.starburst.io"
+                    },
+                    "slug": "starburst",
+                    "directoryUrl": "https://claude.ai/directory/2a9d8e2f-f935-4b4a-bd78-ec81ba9f2125",
+                    "worksWith": [
+                        "claude",
+                        "claude-api",
+                        "claude-code"
+                    ],
+                    "logo": "starburst",
+                    "backgroundPattern": "Line 1",
+                    "source": "manual",
+                    "visibility": [
+                        "commercial"
+                    ]
+                },
+                "io.modelcontextprotocol.registry/official": {
+                    "status": "active",
+                    "isLatest": true
+                }
+            }
+        },
+        {
+            "server": {
+                "name": "org.benevity.mcp/benevity",
+                "version": "1.0.0",
+                "description": "Search for trusted causes to donate to or volunteer with from Benevity's database of more than 2.3 million verified nonprofits.",
+                "title": "Benevity",
+                "remotes": [
+                    {
+                        "type": "streamable-http",
+                        "url": "https://mcp.benevity.org/general/v1/nonprofit"
+                    }
+                ]
+            },
+            "_meta": {
+                "com.anthropic.api/mcp-registry": {
+                    "uuid": "de72cab2-21e3-486f-b774-b35b6dded1d8",
+                    "type": "remote",
+                    "toolNames": [
+                        "Benevity Nonprofit Search",
+                        "Benevity Get Nonprofit Details"
+                    ],
+                    "promptNames": [
+                        "benevity nonprofit details guide",
+                        "benevity nonprofit search guide"
+                    ],
+                    "isAuthless": true,
+                    "displayName": "Benevity",
+                    "oneLiner": "Find and engage with verified nonprofits",
+                    "iconUrl": "https://www.benevity.com/",
+                    "documentation": "https://support.claude.com/en/articles/12923227-using-the-benevity-connector-in-claude",
+                    "support": "mailto:support@benevity.com",
+                    "privacyPolicy": "https://benevity.com/privacy-policy/",
+                    "url": "https://mcp.benevity.org/general/v1/nonprofit",
+                    "author": {
+                        "name": "Benevity",
+                        "url": "https://www.benevity.com/"
+                    },
+                    "slug": "benevity",
+                    "directoryUrl": "https://claude.ai/directory/de72cab2-21e3-486f-b774-b35b6dded1d8",
+                    "permissions": "Read",
+                    "worksWith": [
+                        "claude"
+                    ],
+                    "publishedOn": "Mon Jan 12 2026 16:21:41 GMT+0000 (Coordinated Universal Time)",
+                    "createdOn": "Tue Dec 02 2025 01:47:52 GMT+0000 (Coordinated Universal Time)",
+                    "updatedOn": "Mon Jan 12 2026 16:20:14 GMT+0000 (Coordinated Universal Time)",
+                    "logo": "benevity-2",
+                    "itemId": "692e4548c36b068dc2e481be",
+                    "collectionId": "68b05e2de975b4de7dd02d9d",
+                    "localeId": "68a44d4040f98a4adf2207b5",
+                    "htmlContent": "<p id=\"\">Search for trusted causes to donate to or volunteer with from Benevity's database of more than 2.3 million verified nonprofits.<br><br>You can use the Benevity connector to:&nbsp;<br><br>Find nonprofits by location and cause:<br>\"Help me find a verified nonprofit in Thousand Oaks, CA focused on mental health and specifically suicide prevention\"&nbsp;<br><br>Discover local organizations addressing specific needs:<br>\"Help me find a nonprofit close to me that can help with food insecurity\"<br><br>Search for nearby donation opportunities:<br>\"Find animal shelters near me that I can donate to\"<br></p>",
+                    "source": "auto-sync",
+                    "visibility": [
+                        "commercial"
+                    ]
+                },
+                "io.modelcontextprotocol.registry/official": {
+                    "status": "active",
+                    "isLatest": true
+                }
+            }
+        },
+        {
+            "server": {
+                "name": "org.candid.mcp/candid",
+                "version": "1.0.0",
+                "description": "Bring the power of Candid's comprehensive nonprofit and funder data directly into Claude. Search millions of organizations, discover funding opportunities, and access expert knowledge and social sector news—all through natural conversation.",
+                "title": "Candid",
+                "remotes": [
+                    {
+                        "type": "streamable-http",
+                        "url": "https://mcp.candid.org/mcp"
+                    }
+                ]
+            },
+            "_meta": {
+                "com.anthropic.api/mcp-registry": {
+                    "uuid": "875faf93-08c4-469c-980f-6f79f70f10d3",
+                    "type": "remote",
+                    "toolNames": [
+                        "knowledge_resources",
+                        "identify_mentioned_organizations",
+                        "search_organizations",
+                        "taxonomy_terms",
+                        "identify_locations",
+                        "current_date"
+                    ],
+                    "promptNames": [],
+                    "isAuthless": false,
+                    "displayName": "Candid",
+                    "oneLiner": "Research nonprofits and funders using Candid's data",
+                    "iconUrl": "https://cdn.candid.org/images/candid-logo/candid-icon.svg",
+                    "documentation": "https://support.claude.com/en/articles/12923235-using-the-candid-connector-in-claude",
+                    "support": "mailto:onlinelibrarian@candid.org",
+                    "privacyPolicy": "https://candid.org/privacy-policy/",
+                    "url": "https://mcp.candid.org/mcp",
+                    "author": {
+                        "name": "Candid",
+                        "url": "https://candid.org/"
+                    },
+                    "worksWith": [
+                        "claude",
+                        "claude-api",
+                        "claude-code"
+                    ],
+                    "source": "auto-sync",
+                    "visibility": [
+                        "commercial"
+                    ]
+                },
+                "io.modelcontextprotocol.registry/official": {
+                    "status": "active",
+                    "isLatest": true
+                }
+            }
+        },
+        {
+            "server": {
+                "name": "org.learningcommons.mcp.kg/learning-commons-knowledge-graph",
+                "version": "1.0.0",
+                "description": "Align to all 50 states’ academic standards, break them into granular learning components, and trace learning progressions directly from Claude. The Learning Commons Knowledge Graph connects trusted instructional content and learning science into a shared foundation, so Claude can generate more precise, standards-aligned instructional content that supports coherent learning and reflects educational best practices.",
+                "title": "Learning Commons Knowledge Graph",
+                "remotes": [
+                    {
+                        "type": "streamable-http",
+                        "url": "https://kg.mcp.learningcommons.org/mcp"
+                    }
+                ]
+            },
+            "_meta": {
+                "com.anthropic.api/mcp-registry": {
+                    "uuid": "6e94f5fc-5dc8-4f0a-9fcf-741bcab4e034",
+                    "type": "remote",
+                    "toolNames": [
+                        "find_learning_components_from_standard",
+                        "find_standards_progression_from_standard",
+                        "find_standard_statement"
+                    ],
+                    "promptNames": [],
+                    "isAuthless": true,
+                    "displayName": "Learning Commons Knowledge Graph",
+                    "oneLiner": "K-12 standards, skills, and learning progressions",
+                    "iconUrl": "https://kg.mcp.learningcommons.org/mcp",
+                    "documentation": "https://docs.learningcommons.org/knowledge-graph/integrations/claude",
+                    "support": "mailto:support@learningcommons.org",
+                    "privacyPolicy": "https://learningcommons.org/privacy-policy/",
+                    "url": "https://kg.mcp.learningcommons.org/mcp",
+                    "author": {
+                        "name": "Learning Commons Knowledge Graph",
+                        "url": "https://learningcommons.org/"
+                    },
+                    "slug": "learning-commons-knowledge-graph",
+                    "directoryUrl": "https://claude.ai/directory/6e94f5fc-5dc8-4f0a-9fcf-741bcab4e034",
+                    "permissions": "Read",
+                    "worksWith": [
+                        "claude",
+                        "claude-api"
+                    ],
+                    "publishedOn": "Mon Jan 12 2026 16:21:41 GMT+0000 (Coordinated Universal Time)",
+                    "createdOn": "Tue Sep 23 2025 01:00:52 GMT+0000 (Coordinated Universal Time)",
+                    "updatedOn": "Mon Jan 12 2026 16:20:17 GMT+0000 (Coordinated Universal Time)",
+                    "logo": "learning-commons",
+                    "backgroundPattern": "Loop 1",
+                    "serverLabel": "kg.mcp.learningcommons.org/mcp",
+                    "itemId": "68d1f14431c6258a78bdad70",
+                    "collectionId": "68b05e2de975b4de7dd02d9d",
+                    "localeId": "68a44d4040f98a4adf2207b5",
+                    "htmlContent": "<p id=\"\">Align to all 50 states' academic standards, break them into granular learning components, and trace learning progressions directly from Claude. The Learning Commons Knowledge Graph connects trusted instructional content and learning science into a shared foundation, so Claude can generate more precise, standards-aligned instructional content that supports coherent learning and reflects educational best practices.</p><p id=\"\">You can use the Learning Commons connector to:<br><br>Generate standards-aligned project ideas:<br>\"I'm a teacher in Iowa. Generate three project ideas that address W.3.4\"</p><p id=\"\">Create exit tickets for specific standards:<br>\"Today in class we will be covering 111.40.c.3.F. Can you please create an exit ticket for my students?\"</p><p id=\"\">Generate practice problems for learning components:<br>\"I am an 8th grade teacher in Maryland. Please create extra practice problems to address the learning components of 8.F.B.4\"</p><p id=\"\">Identify prerequisite skills:<br>\"I am a 4th grade teacher in California. A student in my new class is struggling with the concepts related to 4.OA.A.3. Which prerequisites should I focus on with them?\"<br><br>This connector is designed for K-12 educators and curriculum developers.</p>",
+                    "source": "auto-sync",
+                    "visibility": [
+                        "commercial"
+                    ]
+                },
+                "io.modelcontextprotocol.registry/official": {
+                    "status": "active",
+                    "isLatest": true
+                }
+            }
+        },
+        {
+            "server": {
+                "name": "org.opentargets.platform.mcp/open-targets",
+                "version": "1.0.0",
+                "description": "This MCP provides a purpose-built interface and instructions to access and interpret the data and analyses in the Open Targets Platform. The Open Targets Platform is a comprehensive tool that supports systematic identification and prioritisation of potential therapeutic drug targets, integrating publicly available datasets to build and score target-disease associations. It also integrates relevant annotation information about targets, diseases/phenotypes, drugs, variants, GWAS and molecular QTL studies, and credible sets, as well as their most relevant relationships.",
+                "title": "Open Targets",
+                "remotes": [
+                    {
+                        "type": "streamable-http",
+                        "url": "https://mcp.platform.opentargets.org/mcp"
+                    }
+                ]
+            },
+            "_meta": {
+                "com.anthropic.api/mcp-registry": {
+                    "uuid": "097ab77c-338a-421c-8ba7-3960c928a540",
+                    "type": "remote",
+                    "toolNames": [
+                        "get_open_targets_graphql_schema",
+                        "search_entities",
+                        "query_open_targets_graphql",
+                        "batch_query_open_targets_graphql"
+                    ],
+                    "promptNames": [],
+                    "isAuthless": true,
+                    "displayName": "Open Targets",
+                    "oneLiner": "Drug target discovery and prioritisation platform",
+                    "iconUrl": "https://www.opentargets.org",
+                    "documentation": "https://github.com/opentargets/open-targets-platform-mcp",
+                    "support": "https://github.com/opentargets/open-targets-platform-mcp/issues",
+                    "privacyPolicy": "https://github.com/opentargets/open-targets-platform-mcp/blob/main/PRIVACY.md",
+                    "url": "https://mcp.platform.opentargets.org/mcp",
+                    "author": {
+                        "name": "OpenTargets",
+                        "url": "https://www.opentargets.org"
+                    },
+                    "worksWith": [
+                        "claude",
+                        "claude-api",
+                        "claude-code"
+                    ],
+                    "source": "auto-sync",
+                    "visibility": [
+                        "commercial"
+                    ]
+                },
+                "io.modelcontextprotocol.registry/official": {
+                    "status": "active",
+                    "isLatest": true
+                }
+            }
+        },
+        {
+            "server": {
+                "name": "org.synapse.mcp/synapse-org",
+                "version": "1.0.0",
+                "description": "Discover and explore scientific datasets from collaborative research projects. Search Synapse for genomics, imaging, clinical data on cancer, neurodegenerative diseases, rare diseases, and more. Navigate project hierarchies and get detailed metadata and provenance to understand what datasets contain before you download.\n\nWhen using an MCP server with Claude, please review Anthropic's data handling policies to understand how your data is processed:\n• [Consumer accounts](https://privacy.claude.com/en/collections/10672565-data-handling-retention)\n• [Commercial accounts](https://privacy.claude.com/en/collections/10672411-data-handling-retention)\n\nYou remain responsible for compliance with any data use restrictions and Synapse [Terms of Service](https://www.synapse.org/TrustCenter:TermsOfService)",
+                "title": "Synapse.org",
+                "remotes": [
+                    {
+                        "type": "streamable-http",
+                        "url": "https://mcp.synapse.org/mcp"
+                    }
+                ]
+            },
+            "_meta": {
+                "com.anthropic.api/mcp-registry": {
+                    "uuid": "81cc5080-a204-4aa1-a694-fa868a3c8719",
+                    "type": "remote",
+                    "toolNames": [
+                        "get_entity",
+                        "get_entity_annotations",
+                        "get_entity_provenance",
+                        "get_entity_children",
+                        "search_synapse"
+                    ],
+                    "promptNames": [],
+                    "isAuthless": false,
+                    "displayName": "Synapse.org",
+                    "oneLiner": "Search and metadata tools for Synapse scientific data",
+                    "iconUrl": "https://sagebionetworks.org/",
+                    "documentation": "https://github.com/susheel/synapse-mcp?tab=readme-ov-file#synapse-mcp-server",
+                    "support": "https://github.com/susheel/synapse-mcp/issues",
+                    "privacyPolicy": "https://s3.amazonaws.com/static.synapse.org/governance/SynapsePrivacyPolicy.pdf?v=5",
+                    "url": "https://mcp.synapse.org/mcp",
+                    "author": {
+                        "name": "Sage Bionetworks",
+                        "url": "https://sagebionetworks.org/"
+                    },
+                    "slug": "synapse-org",
+                    "directoryUrl": "https://claude.ai/directory/81cc5080-a204-4aa1-a694-fa868a3c8719",
+                    "claudeCodeExternalLink": "https://support.claude.com/en/articles/12614798-using-the-synapse-org-connector-in-claude",
+                    "permissions": "Read",
+                    "useCases": [
+                        "life-sciences"
+                    ],
+                    "worksWith": [
+                        "claude",
+                        "claude-api",
+                        "claude-code"
+                    ],
+                    "publishedOn": "Mon Jan 12 2026 16:21:41 GMT+0000 (Coordinated Universal Time)",
+                    "createdOn": "Fri Oct 17 2025 23:13:11 GMT+0000 (Coordinated Universal Time)",
+                    "updatedOn": "Mon Jan 12 2026 16:20:15 GMT+0000 (Coordinated Universal Time)",
+                    "logo": "synapse",
+                    "backgroundPattern": "Loop 3",
+                    "serverLabel": "mcp.synapse.org/mcp",
+                    "itemId": "68f2cd8765beadf8905381b3",
+                    "collectionId": "68b05e2de975b4de7dd02d9d",
+                    "localeId": "68a44d4040f98a4adf2207b5",
+                    "htmlContent": "<p id=\"\">Discover and explore scientific datasets from collaborative research projects. Search Synapse for genomics, imaging, clinical data on cancer, neurodegenerative diseases, rare diseases, and more. Navigate project hierarchies and get detailed metadata and provenance to understand what datasets contain before you download.<br><br>You can use the Synapse.org connector to:<br><br>Search for datasets and projects:<br>\"Search Synapse for genomics datasets related to Alzheimer's disease\"</p><p id=\"\">Retrieve entity metadata:<br>\"Get the metadata and provenance information for project syn12345678\"</p><p id=\"\">Traverse project hierarchies:<br>\"Show me all the folders and files within the Cancer Research project\"</p>",
+                    "source": "auto-sync",
+                    "visibility": [
+                        "commercial"
+                    ]
+                },
+                "io.modelcontextprotocol.registry/official": {
+                    "status": "active",
+                    "isLatest": true
+                }
+            }
+        },
+        {
+            "server": {
+                "name": "pe.chronograph.ai/chronograph",
+                "version": "1.0.0",
+                "description": "The Chronograph MCP server allows users to query portfolio data, analyze investments, search for entities, retrieve performance metrics, and access Chronograph's help documentation. The connector is designed for private investment workflows, providing programmatic access to portfolio analytics and reporting data.",
+                "title": "Chronograph",
+                "remotes": [
+                    {
+                        "type": "streamable-http",
+                        "url": "https://ai.chronograph.pe/mcp"
+                    }
+                ]
+            },
+            "_meta": {
+                "com.anthropic.api/mcp-registry": {
+                    "uuid": "01744591-790c-471b-9452-f338eff230af",
+                    "type": "remote",
+                    "toolNames": [
+                        "query-help-center-documentation",
+                        "get-help-center-article",
+                        "top-exposures",
+                        "run-query",
+                        "entity-search",
+                        "commitment-history",
+                        "investment-metrics"
+                    ],
+                    "promptNames": [],
+                    "isAuthless": false,
+                    "displayName": "Chronograph",
+                    "oneLiner": "Interact with your Chronograph data directly in Claude",
+                    "iconUrl": "https://www.chronograph.pe/",
+                    "documentation": "https://lp-help.chronograph.pe/article/735-chronograph-mcp",
+                    "support": "mailto:client.services@chronograph.pe",
+                    "privacyPolicy": "https://www.chronograph.pe/legal/privacy-policy/",
+                    "url": "https://ai.chronograph.pe/mcp",
+                    "author": {
+                        "name": "Chronograph",
+                        "url": "https://www.chronograph.pe/"
+                    },
+                    "slug": "chronograph",
+                    "directoryUrl": "https://claude.ai/directory/01744591-790c-471b-9452-f338eff230af",
+                    "claudeCodeCopyText": "claude mcp add --transport http chronograph https://ai.chronograph.pe/mcp",
+                    "claudeApiCopyText": "https://ai.chronograph.pe/mcp",
+                    "permissions": "Read",
+                    "useCases": [
+                        "financial-services"
+                    ],
+                    "worksWith": [
+                        "claude",
+                        "claude-api",
+                        "claude-code"
+                    ],
+                    "publishedOn": "Mon Jan 12 2026 16:21:41 GMT+0000 (Coordinated Universal Time)",
+                    "createdOn": "Fri Oct 24 2025 19:48:42 GMT+0000 (Coordinated Universal Time)",
+                    "updatedOn": "Mon Jan 12 2026 16:20:15 GMT+0000 (Coordinated Universal Time)",
+                    "logo": "chronograph",
+                    "serverLabel": "ai.chronograph.pe/mcp",
+                    "itemId": "68fbd81a3d569c900eca5a2f",
+                    "collectionId": "68b05e2de975b4de7dd02d9d",
+                    "localeId": "68a44d4040f98a4adf2207b5",
+                    "htmlContent": "<p id=\"\">The Chronograph connector allows users to query portfolio data, analyze investments, search for entities, retrieve performance metrics, and access Chronograph's help documentation. The connector is designed for private investment workflows, providing programmatic access to portfolio analytics and reporting data.</p><p id=\"\">You can use the Chronograph connector to do:<br><br>Portfolio Exposure Analysis:<br>\"What are my top exposures to Health Care within the Client A portfolio?\"</p><p id=\"\">Sector-Based Fund Search:<br>\"Which of my funds have exposure to Consumer Finance?\"</p><p id=\"\">Fund Performance Analysis:<br>\"What is the performance track record of Huron Oak Equity V?\"<br></p>",
+                    "source": "auto-sync",
+                    "visibility": [
+                        "commercial"
+                    ]
+                },
+                "io.modelcontextprotocol.registry/official": {
+                    "status": "active",
+                    "isLatest": true
+                }
+            }
+        },
+        {
+            "server": {
+                "name": "tech.hex/hex",
+                "version": "1.0.0",
+                "description": "Connect to your Hex workspace to get data insights directly in Claude. Find Hex projects and answer questions with the Hex agent.",
+                "title": "Hex",
+                "remotes": [
+                    {
+                        "type": "streamable-http",
+                        "url": "{url}"
+                    }
+                ]
+            },
+            "_meta": {
+                "com.anthropic.api/mcp-registry": {
+                    "uuid": "7ac6a583-508e-45fe-91c5-8eb3238d0a8f",
+                    "type": "remote",
+                    "toolNames": [
+                        "search_projects",
+                        "create_thread",
+                        "get_thread",
+                        "continue_thread"
+                    ],
+                    "promptNames": [],
+                    "urlRegex": "\\.(hex\\.tech)(/|$)",
+                    "requiredFields": [
+                        {
+                            "field": "url",
+                            "sourceUrl": "https://learn.hex.tech/docs/administration/mcp-server#connect-to-claude"
+                        }
+                    ],
+                    "isAuthless": false,
+                    "displayName": "Hex",
+                    "oneLiner": "Answer questions with the Hex agent",
+                    "iconUrl": "https://hex.tech",
+                    "documentation": "https://learn.hex.tech/docs/administration/mcp-server",
+                    "support": "mailto:support@hex.tech",
+                    "privacyPolicy": "https://learn.hex.tech/docs/trust/data-privacy-and-usage-faq",
+                    "author": {
+                        "name": "Hex",
+                        "url": "https://hex.tech"
+                    },
+                    "worksWith": [
+                        "claude",
+                        "claude-api",
+                        "claude-code"
+                    ],
+                    "imageUrls": [
+                        {
+                            "prompt": "Show me all my customer related dashboards",
+                            "imageUrl": "https://storage.googleapis.com/media-assets-299d7136-cb52-d546-ee02-34bc1307c35f/Connectors%20Directory/Carousel%20Prompt%20Images/App%20Hex%20Card%201.png"
+                        },
+                        {
+                            "prompt": "Start a thread analyzing last month’s Sales data",
+                            "imageUrl": "https://storage.googleapis.com/media-assets-299d7136-cb52-d546-ee02-34bc1307c35f/Connectors%20Directory/Carousel%20Prompt%20Images/App%20Hex%20Card%202.png"
+                        }
+                    ],
+                    "hasMcpApp": true,
+                    "source": "auto-sync",
+                    "visibility": [
+                        "commercial"
+                    ]
+                },
+                "io.modelcontextprotocol.registry/official": {
+                    "status": "active",
+                    "isLatest": true
+                }
+            }
+        }
+    ],
+    "metadata": {
+        "count": 34
+    }
+}
