@@ -1,36 +1,44 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Claude Collective Frontend
+
+Discover skills, MCP servers, prompts, jobs, and showcase projects. Everything you need to build with Claude.
+
+![](./public/demo.png)
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+
+Ensure you have Node.js 18.17.0+ installed. This project uses `npm` for package management.
+
+
+### Running Development Server
+
+To start the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Tech Stack & Features
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+-   **Framework**: [Next.js 15](https://nextjs.org/) (App Router, Server Actions)
+-   **Styling**: [Tailwind CSS v4](https://tailwindcss.com/)
+-   **UI Library**: [Radix UI](https://www.radix-ui.com/) primitives
+-   **Components**: Based on [shadcn/ui](https://ui.shadcn.com/) patterns
+-   **Icons**: [Lucide React](https://lucide.dev/)
+-   **State Management**: React Query (TanStack Query) / Context API
+-   **Forms**: React Hook Form + Zod validation
 
-## Learn More
+## Claude AI Directory Features
 
-To learn more about Next.js, take a look at the following resources:
+- **MCP Servers Directory**: Discover and share Model Context Protocol servers to extend Claude's capabilities.
+- **Prompts Library**: A collection of optimized system prompts and user prompts for various use cases.
+- **Skills & Capabilities**: Explore agentic skills that allow Claude to interact with external tools and APIs.
+- **Showcase Projects**: See what the community is building with Claude and get inspiration.
+- **Job Board**: Find the latest opportunities in the AI and LLM space.
+- **Learning Resources**: Guides, tutorials, and documentation to help you master Claude.
+- **Community Submission**: Easily submit your own resources, projects, and findings to the directory. 
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
