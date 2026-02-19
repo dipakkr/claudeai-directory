@@ -14,10 +14,16 @@ interface MCPServersParams {
   limit?: number;
 }
 
+interface MCPServersListResponse {
+  data: MCPServer[];
+  isCache: boolean;
+}
+
 export function useMCPServers(params?: MCPServersParams) {
   return useQuery({
     queryKey: ["mcp-servers", params],
-    queryFn: () => api.get<MCPServer[]>("/mcp-servers", params as Record<string, string | number | boolean | undefined>),
+    queryFn: () => api.get<MCPServersListResponse>("/mcp-servers", params as Record<string, string | number | boolean | undefined>),
+    select: (res) => res.data,
   });
 }
 

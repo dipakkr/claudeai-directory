@@ -13,10 +13,16 @@ interface SkillsParams {
   limit?: number;
 }
 
+interface SkillsListResponse {
+  data: Skill[];
+  isCache: boolean;
+}
+
 export function useSkills(params?: SkillsParams) {
   return useQuery({
     queryKey: ["skills", params],
-    queryFn: () => api.get<Skill[]>("/skills", params as Record<string, string | number | boolean | undefined>),
+    queryFn: () => api.get<SkillsListResponse>("/skills", params as Record<string, string | number | boolean | undefined>),
+    select: (res) => res.data,
   });
 }
 

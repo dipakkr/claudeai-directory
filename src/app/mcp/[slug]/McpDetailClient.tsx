@@ -28,6 +28,7 @@ import {
 import { useMCPServer, useMCPServers } from "@/hooks/use-mcp-servers";
 import { toast } from "sonner";
 import PageBreadcrumb from "@/components/layout/PageBreadcrumb";
+import ReactMarkdown from "react-markdown";
 
 function getFaviconUrl(iconUrl?: string): string | null {
   if (!iconUrl) return null;
@@ -170,7 +171,15 @@ export default function MCPServerDetail() {
                 <div className="flex items-start gap-4 mb-4">
                   <ServerIcon iconUrl={server.branding?.icon_url} name={server.name} size={48} />
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 flex-wrap mb-1">
+                    <h1 className="text-2xl md:text-3xl font-medium text-foreground mb-1">
+                      {server.name}
+                    </h1>
+                    {server.one_liner && (
+                      <p className="text-sm text-muted-foreground mb-2">
+                        {server.one_liner}
+                      </p>
+                    )}
+                    <div className="flex items-center gap-2 flex-wrap">
                       {server.category && (
                         <Badge variant="secondary" className="text-xs">
                           {server.category}
@@ -194,20 +203,17 @@ export default function MCPServerDetail() {
                         </Badge>
                       )}
                     </div>
-                    <h1 className="text-2xl md:text-3xl font-medium text-foreground mb-1">
-                      {server.name}
-                    </h1>
-                    {server.one_liner && (
-                      <p className="text-sm text-muted-foreground">
-                        {server.one_liner}
-                      </p>
-                    )}
                   </div>
                 </div>
 
-                <p className="text-base text-muted-foreground leading-relaxed">
-                  {server.description}
-                </p>
+                <div className="text-sm text-muted-foreground leading-relaxed prose prose-invert prose-sm max-w-none prose-p:text-muted-foreground prose-strong:text-foreground prose-li:text-muted-foreground prose-a:text-primary prose-headings:text-foreground">
+                  <ReactMarkdown>
+                    {(server.description || "")
+                      .replace(/\s*•\s*/g, "\n- ")
+                      .replace(/\*\*Note:\*\*/g, "\n\n**Note:**")
+                    }
+                  </ReactMarkdown>
+                </div>
 
                 {/* Works with */}
                 {worksWithList.length > 0 && (
@@ -330,12 +336,12 @@ export default function MCPServerDetail() {
                         const actionColor = isDelete
                           ? "text-red-400 bg-red-400/10"
                           : isWrite
-                          ? "text-emerald-400 bg-emerald-400/10"
-                          : isUpdate
-                          ? "text-yellow-400 bg-yellow-400/10"
-                          : isRead
-                          ? "text-blue-400 bg-blue-400/10"
-                          : "text-muted-foreground bg-muted/50";
+                            ? "text-emerald-400 bg-emerald-400/10"
+                            : isUpdate
+                              ? "text-yellow-400 bg-yellow-400/10"
+                              : isRead
+                                ? "text-blue-400 bg-blue-400/10"
+                                : "text-muted-foreground bg-muted/50";
                         const actionLabel = isDelete ? "DELETE" : isWrite ? "CREATE" : isUpdate ? "UPDATE" : isRead ? "READ" : "ACTION";
 
                         return (
@@ -356,10 +362,10 @@ export default function MCPServerDetail() {
                         const n = typeof t === "string" ? t : (t as { name: string }).name;
                         return !n.toLowerCase().includes(toolSearch.toLowerCase());
                       }) && (
-                        <div className="px-4 py-6 text-center text-xs text-muted-foreground">
-                          No tools matching &ldquo;{toolSearch}&rdquo;
-                        </div>
-                      )}
+                          <div className="px-4 py-6 text-center text-xs text-muted-foreground">
+                            No tools matching &ldquo;{toolSearch}&rdquo;
+                          </div>
+                        )}
                     </div>
                   </div>
                   <Separator />

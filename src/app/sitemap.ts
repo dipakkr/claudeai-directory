@@ -9,7 +9,9 @@ async function fetchSlugs(endpoint: string, slugField = "id"): Promise<string[]>
       next: { revalidate: 3600 },
     });
     if (!res.ok) return [];
-    const data = await res.json();
+    const json = await res.json();
+    // Handle both wrapped { data: [...] } and plain array responses
+    const data = Array.isArray(json) ? json : (json.data ?? []);
     return (data as Record<string, unknown>[]).map(
       (item) => String(item[slugField] || item._id || "")
     ).filter(Boolean);

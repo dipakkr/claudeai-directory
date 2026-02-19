@@ -127,29 +127,29 @@
   :root {
     /* Forest Night Theme - Deep greens with emerald accents */
     --background: 160 15% 6%;
-    --foreground: 140 10% 92%;
+    --foreground: 140 10% 82%;
 
     --card: 160 12% 9%;
-    --card-foreground: 140 10% 92%;
+    --card-foreground: 140 10% 82%;
 
     --popover: 160 12% 9%;
-    --popover-foreground: 140 10% 92%;
+    --popover-foreground: 140 10% 82%;
 
     /* Updated primary to Claude Orange/Terracotta */
     --primary: 18 85% 60%;
     --primary-foreground: 160 15% 6%;
 
     --secondary: 160 10% 14%;
-    --secondary-foreground: 140 10% 85%;
+    --secondary-foreground: 140 10% 78%;
 
     --muted: 160 10% 14%;
     --muted-foreground: 150 8% 50%;
 
     --accent: 160 12% 18%;
-    --accent-foreground: 140 10% 92%;
+    --accent-foreground: 140 10% 82%;
 
     --destructive: 0 72% 51%;
-    --destructive-foreground: 140 10% 92%;
+    --destructive-foreground: 140 10% 82%;
 
     --border: 160 10% 16%;
     --input: 160 10% 12%;
@@ -158,40 +158,40 @@
     --radius: 0.5rem;
 
     --sidebar-background: 160 15% 6%;
-    --sidebar-foreground: 140 10% 92%;
+    --sidebar-foreground: 140 10% 82%;
     --sidebar-primary: 18 85% 60%;
     --sidebar-primary-foreground: 160 15% 6%;
     --sidebar-accent: 160 10% 14%;
-    --sidebar-accent-foreground: 140 10% 92%;
+    --sidebar-accent-foreground: 140 10% 82%;
     --sidebar-border: 160 10% 16%;
     --sidebar-ring: 18 85% 60%;
   }
 
   .dark {
     --background: 160 15% 6%;
-    --foreground: 140 10% 92%;
+    --foreground: 140 10% 82%;
 
     --card: 160 12% 9%;
-    --card-foreground: 140 10% 92%;
+    --card-foreground: 140 10% 82%;
 
     --popover: 160 12% 9%;
-    --popover-foreground: 140 10% 92%;
+    --popover-foreground: 140 10% 82%;
 
     /* Updated primary to Claude Orange/Terracotta */
     --primary: 18 85% 60%;
     --primary-foreground: 160 15% 6%;
 
     --secondary: 160 10% 14%;
-    --secondary-foreground: 140 10% 85%;
+    --secondary-foreground: 140 10% 78%;
 
     --muted: 160 10% 14%;
     --muted-foreground: 150 8% 50%;
 
     --accent: 160 12% 18%;
-    --accent-foreground: 140 10% 92%;
+    --accent-foreground: 140 10% 82%;
 
     --destructive: 0 72% 51%;
-    --destructive-foreground: 140 10% 92%;
+    --destructive-foreground: 140 10% 82%;
 
     --border: 160 10% 16%;
     --input: 160 10% 12%;

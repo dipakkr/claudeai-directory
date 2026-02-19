@@ -78,6 +78,7 @@ const categories = [
 const MCPServers = () => {
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("All");
+  const [noAuthOnly, setNoAuthOnly] = useState(false);
   const { data: servers, isLoading } = useMCPServers({
     search: search || undefined,
     category: category === "All" ? undefined : category.toLowerCase(),
@@ -128,6 +129,17 @@ const MCPServers = () => {
                 {c}
               </button>
             ))}
+            <div className="w-px h-5 bg-border shrink-0 mx-1" />
+            <button
+              onClick={() => setNoAuthOnly((v) => !v)}
+              className={`flex items-center gap-1 px-2.5 py-1 text-[11px] rounded-md border transition-colors whitespace-nowrap ${noAuthOnly
+                ? "bg-emerald-500/15 text-emerald-400 border-emerald-500/30"
+                : "bg-card border-border text-muted-foreground hover:text-foreground"
+                }`}
+            >
+              <Unlock className="h-3 w-3" />
+              No Auth
+            </button>
           </div>
 
           {isLoading ? (
@@ -138,76 +150,85 @@ const MCPServers = () => {
             </div>
           ) : (
             <>
-              <p className="mb-4 text-xs text-muted-foreground">
-                {servers?.length ?? 0} connectors found
-              </p>
-              <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-                {(servers ?? []).map((server) => (
-                  <Link
-                    key={server.id}
-                    href={`/mcp/${server.slug || server.id}`}
-                    className="group rounded-lg border border-border bg-card p-4 hover:bg-accent/50 hover:border-primary/20 transition-all"
-                  >
-                    <div className="flex items-start justify-between mb-2">
-                      <div className="flex items-center gap-2.5">
-                        <ServerIcon iconUrl={server.branding?.icon_url} name={server.name} size={36} />
-                        <div className="min-w-0">
-                          <h3 className="text-sm font-medium text-foreground flex items-center gap-1.5">
-                            <span className="truncate">{server.name}</span>
-                            {server.official && (
-                              <Shield className="h-3 w-3 text-primary shrink-0" />
-                            )}
-                          </h3>
-                          <p className="text-[11px] text-muted-foreground truncate">
-                            {(typeof server.author === "object" ? server.author?.name : server.author) || "Community"}
-                          </p>
-                        </div>
-                      </div>
-                      <ArrowUpRight className="h-3.5 w-3.5 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity shrink-0" />
-                    </div>
-
-                    <p className="text-xs text-muted-foreground line-clamp-2 mb-3">
-                      {server.one_liner || server.description}
+              {(() => {
+                const filtered = noAuthOnly
+                  ? (servers ?? []).filter((s) => s.connection?.is_authless)
+                  : (servers ?? []);
+                return (
+                  <>
+                    <p className="mb-4 text-xs text-muted-foreground">
+                      {filtered.length} connectors found
                     </p>
-
-                    <div className="flex items-center gap-1.5 flex-wrap">
-                      {(server.capabilities?.tools?.length ?? 0) > 0 && (
-                        <span className="flex items-center gap-1 text-[10px] text-muted-foreground bg-muted/50 px-1.5 py-0.5 rounded">
-                          <Wrench className="h-2.5 w-2.5" />
-                          {server.capabilities.tools.length} tools
-                        </span>
-                      )}
-                      {server.connection?.is_authless && (
-                        <span className="flex items-center gap-1 text-[10px] text-emerald-400 bg-emerald-400/10 px-1.5 py-0.5 rounded">
-                          <Unlock className="h-2.5 w-2.5" />
-                          No auth
-                        </span>
-                      )}
-                      {server.capabilities?.has_mcp_app && (
-                        <span className="flex items-center gap-1 text-[10px] text-primary bg-primary/10 px-1.5 py-0.5 rounded">
-                          <Plug className="h-2.5 w-2.5" />
-                          App
-                        </span>
-                      )}
-                      {server.category && (
-                        <Badge
-                          variant="secondary"
-                          className="text-[10px] px-1.5 py-0"
+                    <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                      {filtered.map((server) => (
+                        <Link
+                          key={server.id}
+                          href={`/mcp/${server.slug || server.id}`}
+                          className="group rounded-lg border border-border bg-card p-4 hover:bg-accent/50 hover:border-primary/20 transition-all"
                         >
-                          {server.category}
-                        </Badge>
-                      )}
+                          <div className="flex items-start justify-between mb-2">
+                            <div className="flex items-center gap-2.5">
+                              <ServerIcon iconUrl={server.branding?.icon_url} name={server.name} size={36} />
+                              <div className="min-w-0">
+                                <h3 className="text-sm font-medium text-foreground flex items-center gap-1.5">
+                                  <span className="truncate">{server.name}</span>
+                                  {server.official && (
+                                    <Shield className="h-3 w-3 text-primary shrink-0" />
+                                  )}
+                                </h3>
+                                <p className="text-[11px] text-muted-foreground truncate">
+                                  {(typeof server.author === "object" ? server.author?.name : server.author) || "Community"}
+                                </p>
+                              </div>
+                            </div>
+                            <ArrowUpRight className="h-3.5 w-3.5 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity shrink-0" />
+                          </div>
+
+                          <p className="text-xs text-muted-foreground line-clamp-2 mb-3">
+                            {server.one_liner || server.description}
+                          </p>
+
+                          <div className="flex items-center gap-1.5 flex-wrap">
+                            {(server.capabilities?.tools?.length ?? 0) > 0 && (
+                              <span className="flex items-center gap-1 text-[10px] text-muted-foreground bg-muted/50 px-1.5 py-0.5 rounded">
+                                <Wrench className="h-2.5 w-2.5" />
+                                {server.capabilities.tools.length} tools
+                              </span>
+                            )}
+                            {server.connection?.is_authless && (
+                              <span className="flex items-center gap-1 text-[10px] text-emerald-400 bg-emerald-400/10 px-1.5 py-0.5 rounded">
+                                <Unlock className="h-2.5 w-2.5" />
+                                No auth
+                              </span>
+                            )}
+                            {server.capabilities?.has_mcp_app && (
+                              <span className="flex items-center gap-1 text-[10px] text-primary bg-primary/10 px-1.5 py-0.5 rounded">
+                                <Plug className="h-2.5 w-2.5" />
+                                App
+                              </span>
+                            )}
+                            {server.category && (
+                              <Badge
+                                variant="secondary"
+                                className="text-[10px] px-1.5 py-0"
+                              >
+                                {server.category}
+                              </Badge>
+                            )}
+                          </div>
+                        </Link>
+                      ))}
                     </div>
-                  </Link>
-                ))}
-              </div>
-              {(servers ?? []).length === 0 && (
-                <div className="py-16 text-center">
-                  <p className="text-sm text-muted-foreground">
-                    No connectors found.
-                  </p>
-                </div>
-              )}
+                    {filtered.length === 0 && (
+                      <div className="py-16 text-center">
+                        <p className="text-sm text-muted-foreground">
+                          No connectors found.
+                        </p>
+                      </div>
+                    )}
+                  </>
+                );
+              })()}
             </>
           )}
 
