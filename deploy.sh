@@ -25,10 +25,7 @@ case "${1:-deploy}" in
     echo "   cp .env.production .env"
     echo "   # Edit the file with real values"
     echo ""
-    echo "4. Get SSL certificate:"
-    echo "   ./nginx/certbot-init.sh"
-    echo ""
-    echo "5. Start the stack:"
+    echo "4. Start the stack:"
     echo "   docker compose up -d --build"
     ;;
 

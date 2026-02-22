@@ -1,25 +1,4 @@
 services:
-  nginx:
-    image: nginx:alpine
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
-      - certbot_certs:/etc/letsencrypt:ro
-      - certbot_www:/var/www/certbot:ro
-    depends_on:
-      - frontend
-    restart: unless-stopped
-
-  certbot:
-    image: certbot/certbot
-    volumes:
-      - certbot_certs:/etc/letsencrypt
-      - certbot_www:/var/www/certbot
-    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
-    restart: unless-stopped
-
   frontend:
     build:
       context: .
@@ -28,10 +7,6 @@ services:
         NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL}
         NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL}
         NEXT_PUBLIC_GOOGLE_CLIENT_ID: ${NEXT_PUBLIC_GOOGLE_CLIENT_ID}
-    expose:
-      - "3000"
+    ports:
+      - "3000:3000" # Expose for manual host Nginx
     restart: unless-stopped
-
-volumes:
-  certbot_certs:
-  certbot_www:
