@@ -33,11 +33,11 @@ export default function LessonPage() {
   const lockedCount =
     guide && !isProUser
       ? guide.chapters.reduce(
-          (acc, ch) =>
-            acc +
-            ch.lessons.filter((l) => !l.is_free && !guide.is_free).length,
-          0
-        )
+        (acc, ch) =>
+          acc +
+          ch.lessons.filter((l) => !l.is_free && !guide.is_free).length,
+        0
+      )
       : 0;
 
   // Check if lesson is locked — either API returned 403 or client-side check
@@ -65,7 +65,7 @@ export default function LessonPage() {
       <div className="flex flex-1">
         {/* Left sidebar — sticky, scrolls independently */}
         <aside className="hidden md:block w-64 shrink-0 border-r border-border">
-          <div className="sticky top-0 h-[calc(100vh-3.5rem)] overflow-y-auto">
+          <div className="sticky top-14 h-[calc(100vh-3.5rem)] overflow-y-auto">
             {guideLoading || !guide ? (
               <div className="p-4 space-y-3">
                 <Skeleton className="h-5 w-3/4" />

@@ -9,7 +9,6 @@ import CategorySection from "@/components/home/CategorySection";
 import FeaturedResources from "@/components/home/FeaturedResources";
 import FeedSection from "@/components/home/FeedSection";
 import MCPSection from "@/components/home/MCPSection";
-import CommunitySection from "@/components/home/CommunitySection";
 import CTASection from "@/components/home/CTASection";
 import { OrganizationSchema, WebSiteSchema } from "@/components/seo/JsonLd";
 
@@ -26,7 +25,6 @@ function HomeContent() {
           <FeaturedResources />
           <MCPSection />
           <FeedSection />
-          <CommunitySection />
           <CTASection />
         </>
       )}
