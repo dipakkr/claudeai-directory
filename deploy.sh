@@ -4,7 +4,6 @@
 # Usage:
 #   First time:  ./deploy.sh init
 #   Update:      ./deploy.sh
-#   Seed DB:     ./deploy.sh seed
 
 set -e
 
@@ -24,23 +23,13 @@ case "${1:-deploy}" in
     echo ""
     echo "3. Copy and fill in environment files:"
     echo "   cp .env.production .env"
-    echo "   cp server/.env.example server/.env  # (or create server/.env)"
-    echo "   # Edit both files with real values"
+    echo "   # Edit the file with real values"
     echo ""
     echo "4. Get SSL certificate:"
     echo "   ./nginx/certbot-init.sh"
     echo ""
     echo "5. Start the stack:"
     echo "   docker compose up -d --build"
-    echo ""
-    echo "6. Seed the database (optional):"
-    echo "   ./deploy.sh seed"
-    ;;
-
-  seed)
-    echo "==> Seeding database..."
-    docker compose exec api python -m app.seed.seed_data
-    echo "==> Done!"
     ;;
 
   deploy|"")
@@ -57,6 +46,6 @@ case "${1:-deploy}" in
     ;;
 
   *)
-    echo "Usage: ./deploy.sh [init|deploy|seed|logs [service]]"
+    echo "Usage: ./deploy.sh [init|deploy|logs [service]]"
     ;;
 esac
