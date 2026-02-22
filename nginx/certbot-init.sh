@@ -3,7 +3,7 @@
 # Run this ONCE on the server before starting the full stack.
 #
 # Prerequisites:
-#   - Domain DNS A record pointing to this server's IP
+#   - Domain DNS A/AAAA record pointing to this server's IP
 #   - Ports 80 and 443 open in firewall
 #
 # Usage: ./nginx/certbot-init.sh
@@ -15,11 +15,12 @@ EMAIL="${CERTBOT_EMAIL:-admin@claudeai.directory}"
 
 echo "==> Obtaining SSL certificate for $DOMAIN..."
 
-docker run --rm \
-  -v certbot_certs:/etc/letsencrypt \
-  -v certbot_www:/var/www/certbot \
-  -p 80:80 \
-  certbot/certbot certonly \
+# 1. Stop components that might be holding port 80
+echo "==> Stopping existing services to free port 80..."
+docker compose down || true
+
+# 2. Use 'docker compose run' mapped to port 80 so it shares the SAME volume names as docker-compose
+docker compose run --rm -p 80:80 certbot certonly \
     --standalone \
     --non-interactive \
     --agree-tos \
@@ -27,4 +28,6 @@ docker run --rm \
     -d "$DOMAIN"
 
 echo "==> Certificate obtained successfully!"
-echo "==> You can now start the full stack with: docker compose up -d"
+echo "==> You can now start the full stack with:"
+echo "    docker compose up -d --build"
+
