@@ -11,7 +11,7 @@ interface GuideParams {
   limit?: number;
 }
 
-export function useGuides(params?: GuideParams) {
+export function useGuides(params?: GuideParams, options?: { initialData?: Guide[] }) {
   return useQuery({
     queryKey: ["guides", params],
     queryFn: () =>
@@ -19,6 +19,8 @@ export function useGuides(params?: GuideParams) {
         "/guides",
         params as Record<string, string | number | boolean | undefined>
       ),
+    initialData: options?.initialData,
+    initialDataUpdatedAt: options?.initialData ? Date.now() : undefined,
   });
 }
 

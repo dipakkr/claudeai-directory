@@ -13,10 +13,12 @@ interface BlogParams {
   limit?: number;
 }
 
-export function useBlogPosts(params?: BlogParams) {
+export function useBlogPosts(params?: BlogParams, options?: { initialData?: BlogPost[] }) {
   return useQuery({
     queryKey: ["blog", params],
     queryFn: () => api.get<BlogPost[]>("/blog", params as Record<string, string | number | boolean | undefined>),
+    initialData: options?.initialData,
+    initialDataUpdatedAt: options?.initialData ? Date.now() : undefined,
   });
 }
 

@@ -1,14 +1,12 @@
 "use client";
 
 import { useEffect } from "react";
-import { useParams, useRouter } from "next/navigation";
-import { useGuide } from "@/hooks/use-guides";
+import { useRouter } from "next/navigation";
 import { Skeleton } from "@/components/ui/skeleton";
+import type { GuideDetail } from "@/types";
 
-export default function GuideDetailPage() {
-  const { slug } = useParams<{ slug: string }>();
+export default function GuideDetailPage({ guide, slug }: { guide: GuideDetail | null; slug: string }) {
   const router = useRouter();
-  const { data: guide, isLoading, isError } = useGuide(slug);
 
   useEffect(() => {
     if (guide && guide.chapters.length > 0) {
@@ -19,7 +17,7 @@ export default function GuideDetailPage() {
     }
   }, [guide, slug, router]);
 
-  if (isError) {
+  if (!guide) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <p className="text-sm text-muted-foreground">Guide not found.</p>

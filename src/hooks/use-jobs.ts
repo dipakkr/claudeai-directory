@@ -12,10 +12,12 @@ interface JobsParams {
   limit?: number;
 }
 
-export function useJobs(params?: JobsParams) {
+export function useJobs(params?: JobsParams, options?: { initialData?: Job[] }) {
   return useQuery({
     queryKey: ["jobs", params],
     queryFn: () => api.get<Job[]>("/jobs", params as Record<string, string | number | boolean | undefined>),
+    initialData: options?.initialData,
+    initialDataUpdatedAt: options?.initialData ? Date.now() : undefined,
   });
 }
 

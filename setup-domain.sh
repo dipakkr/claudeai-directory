@@ -16,7 +16,7 @@
 set -euo pipefail
 
 DOMAIN="claudeai.directory"
-EMAIL="admin@claudeai.directory"
+EMAIL="${CERTBOT_EMAIL:-}"
 APP_PORT="3000"
 NGINX_CONF="/etc/nginx/sites-available/${DOMAIN}"
 CERTBOT_WEBROOT="/var/www/certbot"
@@ -40,6 +40,7 @@ echo ""
 
 # ---- 1. Must run as root ----
 [[ $EUID -ne 0 ]] && fail "Run as root: sudo bash setup-domain.sh"
+[[ -z "$EMAIL" ]] && fail "Set CERTBOT_EMAIL before running: CERTBOT_EMAIL=you@example.com sudo bash setup-domain.sh"
 
 # ---- 2. Install required packages ----
 log "Installing nginx, certbot, and tools..."

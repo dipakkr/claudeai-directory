@@ -42,3 +42,9 @@ next-env.d.ts
 
 # browser data
 scripts/browser_data/
+
+# claude code
+.claude/
+
+# nginx (managed by setup-domain.sh)
+nginx/

@@ -70,7 +70,7 @@ export default async function JobDetailPage({
           />
         </>
       )}
-      <JobDetailClient params={params} />
+      <JobDetailClient job={job} />
     </>
   );
 }

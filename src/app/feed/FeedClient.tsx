@@ -1,8 +1,22 @@
 "use client";
 
+import { useCallback } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { ArrowUpRight, ChevronUp, Wrench, Server, FileText, Briefcase, Rocket, BookOpen, LinkIcon, Newspaper } from "lucide-react";
+import { useRouter, useSearchParams } from "next/navigation";
+import Header from "@/components/layout/Header";
+import Footer from "@/components/layout/Footer";
+import {
+  ChevronUp,
+  Wrench,
+  Server,
+  FileText,
+  Briefcase,
+  Rocket,
+  BookOpen,
+  LinkIcon,
+  Newspaper,
+} from "lucide-react";
+import PageBreadcrumb from "@/components/layout/PageBreadcrumb";
 import { useFeed, useUpvoteFeedItem } from "@/hooks/use-feed";
 import { useAuth } from "@/lib/auth";
 import { toast } from "sonner";
@@ -18,6 +32,12 @@ const typeConfig: Record<string, { label: string; icon: typeof Wrench; href: (id
   post: { label: "Post", icon: LinkIcon, href: (id) => `/feed#${id}`, color: "text-emerald-500" },
   news: { label: "News", icon: Newspaper, href: () => "#", color: "text-red-500/70 text-[9px]" },
 };
+
+const typeFilters = [
+  { label: "All", key: undefined },
+  { label: "News", key: "news" },
+  { label: "Posts", key: "post" },
+];
 
 function timeAgo(dateStr: string): string {
   const now = Date.now();
@@ -104,38 +124,74 @@ function FeedRow({ item, rank }: { item: FeedItem; rank: number }) {
   );
 }
 
-const FeedSection = ({ initialItems = [] }: { initialItems?: FeedItem[] }) => {
-  const { data: items } = useFeed({ limit: 10 }, { initialData: initialItems });
+export default function FeedClient({
+  initialItems,
+  initialType,
+}: {
+  initialItems: FeedItem[];
+  initialType: string | undefined;
+}) {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const typeFilter = searchParams.get("type") ?? undefined;
+
+  const { data: items } = useFeed(
+    { limit: 50, type: typeFilter },
+    { initialData: initialItems }
+  );
+
+  const setTypeFilter = useCallback((key: string | undefined) => {
+    if (key) {
+      router.push(`/feed?type=${key}`);
+    } else {
+      router.push("/feed");
+    }
+  }, [router]);
 
   return (
-    <section className="py-10">
-      <div className="container">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-base font-medium text-foreground">Latest</h2>
-          <Link
-            href="/feed"
-            className="text-sm text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1"
-          >
-            View all <ArrowUpRight className="h-3.5 w-3.5" />
-          </Link>
-        </div>
+    <div className="min-h-screen bg-background flex flex-col">
+      <Header />
+      <main className="flex-1">
+        <div className="container py-10">
+          <PageBreadcrumb items={[{ label: "Feed" }]} />
+          <h1 className="text-2xl font-semibold text-foreground mb-1">Latest</h1>
+          <p className="text-sm text-muted-foreground mb-6">
+            Everything new across the Claude ecosystem.
+          </p>
 
-        <div className="rounded-lg border border-border bg-card">
-          {(items ?? []).length > 0 ? (
-            <div className="divide-y divide-border px-4">
-              {(items ?? []).map((item, i) => (
-                <FeedRow key={`${item.type}-${item.id}`} item={item} rank={i + 1} />
-              ))}
-            </div>
-          ) : (
-            <div className="py-10 text-center">
-              <p className="text-sm text-muted-foreground">No items yet.</p>
-            </div>
-          )}
+          {/* Type filter pills */}
+          <div className="flex items-center gap-2 mb-6 overflow-x-auto">
+            {typeFilters.map((filter) => (
+              <button
+                key={filter.label}
+                onClick={() => setTypeFilter(filter.key)}
+                className={`px-3 py-1 rounded-full text-xs font-medium transition-colors whitespace-nowrap ${typeFilter === filter.key
+                    ? "bg-primary text-primary-foreground"
+                    : "bg-muted/50 text-muted-foreground hover:text-foreground hover:bg-muted"
+                  }`}
+              >
+                {filter.label}
+              </button>
+            ))}
+          </div>
+
+          {/* Feed list */}
+          <div className="rounded-lg border border-border bg-card">
+            {(items ?? []).length > 0 ? (
+              <div className="divide-y divide-border px-4">
+                {(items ?? []).map((item, i) => (
+                  <FeedRow key={`${item.type}-${item.id}`} item={item} rank={i + 1} />
+                ))}
+              </div>
+            ) : (
+              <div className="py-16 text-center">
+                <p className="text-sm text-muted-foreground">No items yet.</p>
+              </div>
+            )}
+          </div>
         </div>
-      </div>
-    </section>
+      </main>
+      <Footer />
+    </div>
   );
-};
-
-export default FeedSection;
+}

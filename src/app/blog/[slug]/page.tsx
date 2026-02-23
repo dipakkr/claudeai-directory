@@ -1,18 +1,8 @@
 import type { Metadata } from "next";
 import { fetchApi } from "@/lib/api-server";
+import type { BlogPost } from "@/types";
 import { ArticleSchema, BreadcrumbSchema } from "@/components/seo/JsonLd";
 import BlogDetailClient from "./BlogDetailClient";
-
-interface BlogPost {
-  id: string;
-  title: string;
-  content: string;
-  author: string;
-  category: string;
-  seo_description?: string;
-  published_at?: string;
-  tags: string[];
-}
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -69,7 +59,7 @@ export default async function BlogDetailPage({ params }: Props) {
           />
         </>
       )}
-      <BlogDetailClient />
+      <BlogDetailClient post={post} />
     </>
   );
 }

@@ -3,9 +3,9 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Search, Wrench, Server, FileText, Briefcase, Rocket, BookOpen, X } from "lucide-react";
-import { useStats } from "@/hooks/use-stats";
 import { useSearch } from "@/hooks/use-search";
 import { useDebounce } from "@/hooks/use-debounce";
+import type { Stat } from "@/types";
 
 const typeIcons: Record<string, React.ReactNode> = {
   skill: <Wrench className="h-4 w-4 text-blue-500" />,
@@ -34,9 +34,8 @@ const typeRoutes: Record<string, string> = {
   blog: "/blog",
 };
 
-const HeroSection = ({ initialQuery = "" }: { initialQuery?: string }) => {
-  const { data: stats } = useStats();
-  const memberCount = stats?.find((s) => s.label === "Community Members")?.value ?? "2K+";
+const HeroSection = ({ initialQuery = "", initialStats = [] }: { initialQuery?: string; initialStats?: Stat[] }) => {
+  const memberCount = initialStats?.find((s) => s.label === "Community Members")?.value ?? "2K+";
 
   const [query, setQuery] = useState(initialQuery);
   const debouncedQuery = useDebounce(query, 300);

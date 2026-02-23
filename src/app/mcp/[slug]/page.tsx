@@ -68,7 +68,7 @@ export default async function MCPDetailPage({
           />
         </>
       )}
-      <MCPServerDetail />
+      <MCPServerDetail server={server} />
     </>
   );
 }

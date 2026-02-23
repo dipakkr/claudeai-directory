@@ -33,6 +33,7 @@ const footerLinks = [
       { label: "About", href: "/about" },
       { label: "Privacy", href: "/privacy" },
       { label: "Terms", href: "/terms" },
+      { label: "Support", href: "mailto:axivionlabs@gmail.com" },
     ],
   },
 ];

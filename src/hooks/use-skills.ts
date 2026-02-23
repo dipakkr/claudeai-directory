@@ -18,11 +18,13 @@ interface SkillsListResponse {
   isCache: boolean;
 }
 
-export function useSkills(params?: SkillsParams) {
+export function useSkills(params?: SkillsParams, options?: { initialData?: Skill[] }) {
   return useQuery({
     queryKey: ["skills", params],
     queryFn: () => api.get<SkillsListResponse>("/skills", params as Record<string, string | number | boolean | undefined>),
     select: (res) => res.data,
+    initialData: options?.initialData ? { data: options.initialData, isCache: false } : undefined,
+    initialDataUpdatedAt: options?.initialData ? Date.now() : undefined,
   });
 }
 

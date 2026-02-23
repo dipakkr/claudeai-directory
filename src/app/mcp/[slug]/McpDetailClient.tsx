@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useParams } from "next/navigation";
 import Link from "next/link";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
@@ -9,7 +8,6 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Skeleton } from "@/components/ui/skeleton";
 import {
   ExternalLink,
   BookOpen,
@@ -25,10 +23,11 @@ import {
   Terminal,
   Search,
 } from "lucide-react";
-import { useMCPServer, useMCPServers } from "@/hooks/use-mcp-servers";
+import { useMCPServers } from "@/hooks/use-mcp-servers";
 import { toast } from "sonner";
 import PageBreadcrumb from "@/components/layout/PageBreadcrumb";
 import ReactMarkdown from "react-markdown";
+import type { MCPServer } from "@/types";
 
 function getFaviconUrl(iconUrl?: string): string | null {
   if (!iconUrl) return null;
@@ -68,10 +67,7 @@ function ServerIcon({ iconUrl, name, size = 48 }: { iconUrl?: string; name: stri
   );
 }
 
-export default function MCPServerDetail() {
-  const params = useParams();
-  const id = (params?.slug ?? params?.id) as string | undefined;
-  const { data: server, isLoading } = useMCPServer(id ?? "");
+export default function MCPServerDetail({ server }: { server: MCPServer | null }) {
   const { data: relatedServers } = useMCPServers({
     category: server?.category || undefined,
     limit: 7,
@@ -83,36 +79,7 @@ export default function MCPServerDetail() {
     toast.success("Copied to clipboard!");
   };
 
-  const related = (relatedServers ?? []).filter((s) => s.slug !== server?.slug && s.id !== id).slice(0, 6);
-
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-background flex flex-col">
-        <Header />
-        <main className="flex-1">
-          <div className="border-b border-border">
-            <div className="container py-4">
-              <Skeleton className="h-4 w-32" />
-            </div>
-          </div>
-          <div className="container py-8">
-            <div className="grid gap-8 lg:grid-cols-3">
-              <div className="lg:col-span-2 space-y-6">
-                <Skeleton className="h-8 w-64" />
-                <Skeleton className="h-4 w-full" />
-                <Skeleton className="h-4 w-3/4" />
-                <Skeleton className="h-32 w-full" />
-              </div>
-              <div>
-                <Skeleton className="h-48 w-full" />
-              </div>
-            </div>
-          </div>
-        </main>
-        <Footer />
-      </div>
-    );
-  }
+  const related = (relatedServers ?? []).filter((s) => s.slug !== server?.slug && s.id !== server?.id).slice(0, 6);
 
   if (!server) {
     return (

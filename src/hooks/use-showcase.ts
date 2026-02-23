@@ -10,10 +10,12 @@ interface ShowcaseParams {
   limit?: number;
 }
 
-export function useShowcaseProjects(params?: ShowcaseParams) {
+export function useShowcaseProjects(params?: ShowcaseParams, options?: { initialData?: ShowcaseProject[] }) {
   return useQuery({
     queryKey: ["showcase", params],
     queryFn: () => api.get<ShowcaseProject[]>("/showcase", params as Record<string, string | number | boolean | undefined>),
+    initialData: options?.initialData,
+    initialDataUpdatedAt: options?.initialData ? Date.now() : undefined,
   });
 }
 

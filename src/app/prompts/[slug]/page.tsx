@@ -104,7 +104,7 @@ export default async function PromptDetailPage({
           />
         </>
       )}
-      <PromptDetailClient params={params} />
+      <PromptDetailClient prompt={prompt} />
     </>
   );
 }

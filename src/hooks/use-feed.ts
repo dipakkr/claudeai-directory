@@ -9,7 +9,7 @@ interface FeedParams {
   limit?: number;
 }
 
-export function useFeed(params?: FeedParams) {
+export function useFeed(params?: FeedParams, options?: { initialData?: FeedItem[] }) {
   return useQuery({
     queryKey: ["feed", params],
     queryFn: () =>
@@ -17,6 +17,8 @@ export function useFeed(params?: FeedParams) {
         "/feed",
         params as Record<string, string | number | boolean | undefined>
       ),
+    initialData: options?.initialData,
+    initialDataUpdatedAt: options?.initialData ? Date.now() : undefined,
   });
 }
 

@@ -48,7 +48,7 @@ export default async function GuidePage({
           ]}
         />
       )}
-      <GuideDetailPage />
+      <GuideDetailPage guide={guide} slug={slug} />
     </>
   );
 }

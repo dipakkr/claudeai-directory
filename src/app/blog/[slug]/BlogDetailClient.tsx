@@ -1,15 +1,13 @@
 "use client";
 
-import { useParams } from "next/navigation";
 import Link from "next/link";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { Badge } from "@/components/ui/badge";
-import { Skeleton } from "@/components/ui/skeleton";
 import { Clock, User, Calendar } from "lucide-react";
 import PageBreadcrumb from "@/components/layout/PageBreadcrumb";
-import { useBlogPost } from "@/hooks/use-blog";
 import { useMemo, useEffect, useState } from "react";
+import type { BlogPost } from "@/types";
 
 interface TOCItem {
   id: string;
@@ -98,10 +96,7 @@ function escapeHtml(str: string): string {
     .replace(/"/g, "&quot;");
 }
 
-const BlogDetailClient = () => {
-  const params = useParams();
-  const slug = params.slug as string;
-  const { data: post, isLoading } = useBlogPost(slug);
+const BlogDetailClient = ({ post }: { post: BlogPost | null }) => {
   const [activeId, setActiveId] = useState("");
 
   const toc = useMemo(() => (post ? extractTOC(post.content) : []), [post]);
@@ -129,22 +124,6 @@ const BlogDetailClient = () => {
 
     return () => observer.disconnect();
   }, [toc]);
-
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-background flex flex-col">
-        <Header />
-        <main className="flex-1">
-          <div className="container py-10 max-w-4xl">
-            <Skeleton className="h-8 w-3/4 mb-4" />
-            <Skeleton className="h-4 w-1/2 mb-8" />
-            <Skeleton className="h-96 w-full" />
-          </div>
-        </main>
-        <Footer />
-      </div>
-    );
-  }
 
   if (!post) {
     return (

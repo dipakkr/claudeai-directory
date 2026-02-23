@@ -19,11 +19,13 @@ interface MCPServersListResponse {
   isCache: boolean;
 }
 
-export function useMCPServers(params?: MCPServersParams) {
+export function useMCPServers(params?: MCPServersParams, options?: { initialData?: MCPServer[] }) {
   return useQuery({
     queryKey: ["mcp-servers", params],
     queryFn: () => api.get<MCPServersListResponse>("/mcp-servers", params as Record<string, string | number | boolean | undefined>),
     select: (res) => res.data,
+    initialData: options?.initialData ? { data: options.initialData, isCache: false } : undefined,
+    initialDataUpdatedAt: options?.initialData ? Date.now() : undefined,
   });
 }
 

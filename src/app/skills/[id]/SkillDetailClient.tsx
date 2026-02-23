@@ -1,6 +1,5 @@
 "use client";
 
-import { use } from "react";
 import Link from "next/link";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -9,15 +8,11 @@ import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Download, CheckCircle, ExternalLink, Github, Wrench, Server, FileText } from "lucide-react";
+import { CheckCircle, ExternalLink, Github, Wrench, Server, FileText } from "lucide-react";
 import PageBreadcrumb from "@/components/layout/PageBreadcrumb";
-import { useSkill } from "@/hooks/use-skills";
+import type { Skill } from "@/types";
 
-export default function SkillDetail({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = use(params);
-  const { data: skill, isLoading } = useSkill(id);
-
+export default function SkillDetail({ skill }: { skill: Skill | null }) {
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <Header />
@@ -25,69 +20,58 @@ export default function SkillDetail({ params }: { params: Promise<{ id: string }
         <div className="container py-10">
           <PageBreadcrumb items={[
             { label: "Skills", href: "/skills" },
-            { label: skill?.title || "..." },
+            { label: skill?.title || skill?.name || "..." },
           ]} />
 
-          {isLoading ? (
-            <div className="flex gap-8">
-              <div className="flex-1 space-y-4">
-                <div className="flex items-start gap-4">
-                  <Skeleton className="h-12 w-12 rounded-lg" />
-                  <div className="flex-1 space-y-2">
-                    <Skeleton className="h-6 w-64" />
-                    <Skeleton className="h-4 w-full" />
-                  </div>
-                </div>
-                <Skeleton className="h-4 w-3/4" />
-                <Skeleton className="h-32 w-full" />
-              </div>
-              <div className="hidden lg:block w-72 shrink-0">
-                <Skeleton className="h-48 rounded-xl" />
-              </div>
-            </div>
-          ) : skill ? (
+          {skill ? (
             <div className="flex gap-8">
               {/* Main content */}
               <div className="flex-1 min-w-0">
-                <div className="flex items-start gap-4 mb-6">
-                  <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center text-primary text-lg font-medium shrink-0">
-                    {skill.name[0]?.toUpperCase()}
-                  </div>
-                  <div className="flex-1">
-                    <h1 className="text-lg font-semibold text-foreground flex items-center gap-2">
+                <div className="mb-8">
+                  <div className="flex items-center gap-4 mb-4">
+                    <div className="h-14 w-14 rounded-xl bg-primary/10 flex items-center justify-center text-primary text-xl font-medium shrink-0">
+                      {skill.name[0]?.toUpperCase()}
+                    </div>
+                    <h1 className="text-2xl font-semibold text-foreground flex items-center gap-2">
                       {skill.title || skill.name}
-                      {skill.verified && <CheckCircle className="h-4 w-4 text-primary" />}
+                      {skill.verified && <CheckCircle className="h-5 w-5 text-primary" />}
                     </h1>
-                    <p className="text-sm text-muted-foreground mt-1">{skill.description}</p>
                   </div>
+                  <p className="text-base text-muted-foreground leading-relaxed">
+                    {skill.description}
+                  </p>
                 </div>
 
                 {skill.tags.length > 0 && (
-                  <div className="mb-6">
-                    <h3 className="text-xs font-medium text-foreground mb-2 uppercase tracking-wider">Tags</h3>
-                    <div className="flex flex-wrap gap-1.5">
+                  <div className="mb-8">
+                    <h3 className="text-xs font-bold text-foreground/80 mb-3 uppercase tracking-wider">Tags</h3>
+                    <div className="flex flex-wrap gap-2">
                       {skill.tags.map((tag) => (
-                        <Badge key={tag} variant="outline" className="text-xs">{tag}</Badge>
+                        <Badge key={tag} variant="outline" className="text-xs bg-background hover:bg-muted font-normal rounded-full px-3 py-1">
+                          {tag}
+                        </Badge>
                       ))}
                     </div>
                   </div>
                 )}
 
                 {skill.triggers.length > 0 && (
-                  <div>
-                    <h3 className="text-xs font-medium text-foreground mb-2 uppercase tracking-wider">Triggers</h3>
-                    <div className="flex flex-wrap gap-1.5">
+                  <div className="mb-10">
+                    <h3 className="text-xs font-bold text-foreground/80 mb-3 uppercase tracking-wider">Triggers</h3>
+                    <div className="flex flex-wrap gap-2">
                       {skill.triggers.map((t) => (
-                        <code key={t} className="px-2 py-1 rounded bg-muted text-xs font-mono text-foreground">{t}</code>
+                        <code key={t} className="px-2.5 py-1.5 rounded-md bg-muted/50 border border-border/50 text-xs font-mono text-foreground/90">
+                          {t}
+                        </code>
                       ))}
                     </div>
                   </div>
                 )}
 
                 {skill.content && (
-                  <div className="mt-8">
-                    <h3 className="text-xs font-medium text-foreground mb-3 uppercase tracking-wider">Skill Documentation</h3>
-                    <div className="rounded-xl border border-border bg-card p-6 sm:p-8">
+                  <div className="mb-8">
+                    <h3 className="text-xs font-bold text-foreground/80 mb-4 uppercase tracking-wider">Skill Documentation</h3>
+                    <div className="rounded-2xl border border-border bg-card p-6 sm:p-8">
                       <article className="guide-prose">
                         <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeSlug]}>
                           {skill.content}

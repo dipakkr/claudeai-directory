@@ -12,10 +12,12 @@ interface PromptsParams {
   limit?: number;
 }
 
-export function usePrompts(params?: PromptsParams) {
+export function usePrompts(params?: PromptsParams, options?: { initialData?: Prompt[] }) {
   return useQuery({
     queryKey: ["prompts", params],
     queryFn: () => api.get<Prompt[]>("/prompts", params as Record<string, string | number | boolean | undefined>),
+    initialData: options?.initialData,
+    initialDataUpdatedAt: options?.initialData ? Date.now() : undefined,
   });
 }
 

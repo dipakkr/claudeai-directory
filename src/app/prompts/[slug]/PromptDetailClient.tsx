@@ -1,12 +1,10 @@
 "use client";
 
-import { use } from "react";
 import Link from "next/link";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
 import { Separator } from "@/components/ui/separator";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -22,12 +20,11 @@ import {
   Calendar,
 } from "lucide-react";
 import PageBreadcrumb from "@/components/layout/PageBreadcrumb";
-import { usePrompt, usePrompts, useUpvotePrompt } from "@/hooks/use-prompts";
+import { usePrompts, useUpvotePrompt } from "@/hooks/use-prompts";
 import { toast } from "sonner";
+import type { Prompt } from "@/types";
 
-export default function PromptDetail({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = use(params);
-  const { data: prompt, isLoading } = usePrompt(slug);
+export default function PromptDetail({ prompt }: { prompt: Prompt | null }) {
   const upvote = useUpvotePrompt();
   const { data: relatedPrompts } = usePrompts({
     category: prompt?.category || undefined,
@@ -40,32 +37,6 @@ export default function PromptDetail({ params }: { params: Promise<{ slug: strin
   };
 
   const related = (relatedPrompts ?? []).filter((p) => p.id !== prompt?.id).slice(0, 6);
-
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-background flex flex-col">
-        <Header />
-        <main className="flex-1">
-          <div className="container py-8">
-            <Skeleton className="h-4 w-32 mb-6" />
-            <div className="grid gap-8 lg:grid-cols-3">
-              <div className="lg:col-span-2 space-y-6">
-                <Skeleton className="h-8 w-64" />
-                <Skeleton className="h-4 w-full" />
-                <Skeleton className="h-4 w-3/4" />
-                <Skeleton className="h-48 w-full" />
-                <Skeleton className="h-32 w-full" />
-              </div>
-              <div>
-                <Skeleton className="h-48 w-full" />
-              </div>
-            </div>
-          </div>
-        </main>
-        <Footer />
-      </div>
-    );
-  }
 
   if (!prompt) {
     return (
@@ -304,7 +275,7 @@ export default function PromptDetail({ params }: { params: Promise<{ slug: strin
                   <Button
                     variant="outline"
                     className="w-full text-sm"
-                    onClick={() => upvote.mutate(slug, { onError: () => toast.error("Sign in to upvote") })}
+                    onClick={() => upvote.mutate(prompt.id, { onError: () => toast.error("Sign in to upvote") })}
                   >
                     <ThumbsUp className="mr-1.5 h-3.5 w-3.5" />
                     Upvote ({prompt.upvotes})
