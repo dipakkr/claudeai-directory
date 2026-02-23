@@ -119,8 +119,12 @@
 /* Custom Utilities */
 @utility container {
   margin-inline: auto;
-  padding-inline: 2rem;
+  padding-inline: 1rem;
   max-width: 1400px;
+
+  @media (min-width: 768px) {
+    padding-inline: 2rem;
+  }
 }
 
 @layer base {
@@ -216,9 +220,11 @@
   & h1 {
     @apply text-2xl font-semibold text-foreground mt-10 mb-4 scroll-mt-20;
   }
+
   & h2 {
     @apply text-xl font-semibold text-foreground mt-8 mb-3 scroll-mt-20 pb-2 border-b border-border;
   }
+
   & h3 {
     @apply text-lg font-medium text-foreground mt-6 mb-2 scroll-mt-20;
   }
@@ -232,9 +238,11 @@
   & ul {
     @apply my-4 ml-6 list-disc space-y-2;
   }
+
   & ol {
     @apply my-4 ml-6 list-decimal space-y-2;
   }
+
   & li {
     @apply text-sm text-muted-foreground leading-7;
   }
@@ -250,10 +258,12 @@
   }
 
   /* Inline code */
-  & :not(pre) > code {
+  & :not(pre)>code {
     @apply text-primary bg-muted px-1.5 py-0.5 rounded text-xs font-mono;
   }
-  & code::before, & code::after {
+
+  & code::before,
+  & code::after {
     content: none;
   }
 
@@ -261,6 +271,7 @@
   & pre {
     @apply bg-muted border border-border rounded-lg p-4 my-4 overflow-x-auto;
   }
+
   & pre code {
     @apply text-xs leading-6 bg-transparent p-0;
   }
@@ -269,6 +280,7 @@
   & blockquote {
     @apply border-l-2 border-primary/50 pl-4 my-4 italic;
   }
+
   & blockquote p {
     @apply text-muted-foreground;
   }
@@ -277,15 +289,19 @@
   & table {
     @apply w-full my-6 text-sm;
   }
+
   & thead {
     @apply border-b border-border;
   }
+
   & th {
     @apply text-left text-foreground font-medium px-3 py-2.5 bg-muted/50;
   }
+
   & td {
     @apply text-muted-foreground px-3 py-2.5 border-b border-border/50;
   }
+
   & tr:hover td {
     @apply bg-muted/30;
   }
