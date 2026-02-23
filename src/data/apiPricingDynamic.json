@@ -1,0 +1,4175 @@
+[
+  {
+    "id": "google/gemini-3.1-pro-preview",
+    "provider": "Google",
+    "model": "Google: Gemini 3.1 Pro Preview",
+    "inputPrice": 2,
+    "outputPrice": 12,
+    "contextWindow": 1048576,
+    "features": [
+      "Tool Choice",
+      "Vision Capabilities",
+      "Reasoning",
+      "Audio Input"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "anthropic/claude-sonnet-4.6",
+    "provider": "Anthropic",
+    "model": "Anthropic: Claude Sonnet 4.6",
+    "inputPrice": 3,
+    "outputPrice": 15,
+    "contextWindow": 1000000,
+    "features": [
+      "Tool Choice",
+      "Vision Capabilities",
+      "Reasoning"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "qwen/qwen3.5-plus-02-15",
+    "provider": "Qwen",
+    "model": "Qwen: Qwen3.5 Plus 2026-02-15",
+    "inputPrice": 0.39999999999999997,
+    "outputPrice": 2.4,
+    "contextWindow": 1000000,
+    "features": [
+      "Tool Choice",
+      "Vision Capabilities",
+      "Reasoning"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "qwen/qwen3.5-397b-a17b",
+    "provider": "Qwen",
+    "model": "Qwen: Qwen3.5 397B A17B",
+    "inputPrice": 0.15,
+    "outputPrice": 1,
+    "contextWindow": 262144,
+    "features": [
+      "Tool Choice",
+      "Vision Capabilities",
+      "Reasoning"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "minimax/minimax-m2.5",
+    "provider": "Minimax",
+    "model": "MiniMax: MiniMax M2.5",
+    "inputPrice": 0.3,
+    "outputPrice": 1.1,
+    "contextWindow": 196608,
+    "features": [
+      "Tool Choice",
+      "Reasoning"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "z-ai/glm-5",
+    "provider": "Z Ai",
+    "model": "Z.ai: GLM 5",
+    "inputPrice": 0.95,
+    "outputPrice": 2.5500000000000003,
+    "contextWindow": 204800,
+    "features": [
+      "Tool Choice",
+      "Reasoning"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "qwen/qwen3-max-thinking",
+    "provider": "Qwen",
+    "model": "Qwen: Qwen3 Max Thinking",
+    "inputPrice": 1.2,
+    "outputPrice": 6,
+    "contextWindow": 262144,
+    "features": [
+      "Tool Choice",
+      "Reasoning"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "anthropic/claude-opus-4.6",
+    "provider": "Anthropic",
+    "model": "Anthropic: Claude Opus 4.6",
+    "inputPrice": 5,
+    "outputPrice": 25,
+    "contextWindow": 1000000,
+    "features": [
+      "Tool Choice",
+      "Vision Capabilities",
+      "Reasoning"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "qwen/qwen3-coder-next",
+    "provider": "Qwen",
+    "model": "Qwen: Qwen3 Coder Next",
+    "inputPrice": 0.12,
+    "outputPrice": 0.75,
+    "contextWindow": 262144,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "stepfun/step-3.5-flash",
+    "provider": "Stepfun",
+    "model": "StepFun: Step 3.5 Flash",
+    "inputPrice": 0.09999999999999999,
+    "outputPrice": 0.3,
+    "contextWindow": 256000,
+    "features": [
+      "Tool Choice",
+      "Reasoning"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "moonshotai/kimi-k2.5",
+    "provider": "Moonshotai",
+    "model": "MoonshotAI: Kimi K2.5",
+    "inputPrice": 0.44999999999999996,
+    "outputPrice": 2.2,
+    "contextWindow": 262144,
+    "features": [
+      "Tool Choice",
+      "Vision Capabilities",
+      "Reasoning"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "minimax/minimax-m2-her",
+    "provider": "Minimax",
+    "model": "MiniMax: MiniMax M2-her",
+    "inputPrice": 0.3,
+    "outputPrice": 1.2,
+    "contextWindow": 65536,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "writer/palmyra-x5",
+    "provider": "Writer",
+    "model": "Writer: Palmyra X5",
+    "inputPrice": 0.6,
+    "outputPrice": 6,
+    "contextWindow": 1040000,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "openai/gpt-audio",
+    "provider": "Openai",
+    "model": "OpenAI: GPT Audio",
+    "inputPrice": 2.5,
+    "outputPrice": 10,
+    "contextWindow": 128000,
+    "features": [
+      "Tool Choice",
+      "Audio Input"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "openai/gpt-audio-mini",
+    "provider": "Openai",
+    "model": "OpenAI: GPT Audio Mini",
+    "inputPrice": 0.6,
+    "outputPrice": 2.4,
+    "contextWindow": 128000,
+    "features": [
+      "Tool Choice",
+      "Audio Input"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "z-ai/glm-4.7-flash",
+    "provider": "Z Ai",
+    "model": "Z.ai: GLM 4.7 Flash",
+    "inputPrice": 0.06,
+    "outputPrice": 0.39999999999999997,
+    "contextWindow": 202752,
+    "features": [
+      "Tool Choice",
+      "Reasoning"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "openai/gpt-5.2-codex",
+    "provider": "Openai",
+    "model": "OpenAI: GPT-5.2-Codex",
+    "inputPrice": 1.75,
+    "outputPrice": 14,
+    "contextWindow": 400000,
+    "features": [
+      "Tool Choice",
+      "Vision Capabilities",
+      "Reasoning"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "allenai/molmo-2-8b",
+    "provider": "Allenai",
+    "model": "AllenAI: Molmo2 8B",
+    "inputPrice": 0.19999999999999998,
+    "outputPrice": 0.19999999999999998,
+    "contextWindow": 36864,
+    "features": [
+      "Tool Choice",
+      "Vision Capabilities"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "allenai/olmo-3.1-32b-instruct",
+    "provider": "Allenai",
+    "model": "AllenAI: Olmo 3.1 32B Instruct",
+    "inputPrice": 0.19999999999999998,
+    "outputPrice": 0.6,
+    "contextWindow": 65536,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "bytedance-seed/seed-1.6-flash",
+    "provider": "Bytedance Seed",
+    "model": "ByteDance Seed: Seed 1.6 Flash",
+    "inputPrice": 0.075,
+    "outputPrice": 0.3,
+    "contextWindow": 262144,
+    "features": [
+      "Tool Choice",
+      "Vision Capabilities",
+      "Reasoning"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "bytedance-seed/seed-1.6",
+    "provider": "Bytedance Seed",
+    "model": "ByteDance Seed: Seed 1.6",
+    "inputPrice": 0.25,
+    "outputPrice": 2,
+    "contextWindow": 262144,
+    "features": [
+      "Tool Choice",
+      "Vision Capabilities",
+      "Reasoning"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "minimax/minimax-m2.1",
+    "provider": "Minimax",
+    "model": "MiniMax: MiniMax M2.1",
+    "inputPrice": 0.27,
+    "outputPrice": 0.95,
+    "contextWindow": 196608,
+    "features": [
+      "Tool Choice",
+      "Reasoning"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "z-ai/glm-4.7",
+    "provider": "Z Ai",
+    "model": "Z.ai: GLM 4.7",
+    "inputPrice": 0.38,
+    "outputPrice": 1.7,
+    "contextWindow": 202752,
+    "features": [
+      "Tool Choice",
+      "Reasoning"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "google/gemini-3-flash-preview",
+    "provider": "Google",
+    "model": "Google: Gemini 3 Flash Preview",
+    "inputPrice": 0.5,
+    "outputPrice": 3,
+    "contextWindow": 1048576,
+    "features": [
+      "Tool Choice",
+      "Vision Capabilities",
+      "Reasoning",
+      "Audio Input"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "mistralai/mistral-small-creative",
+    "provider": "Mistralai",
+    "model": "Mistral: Mistral Small Creative",
+    "inputPrice": 0.09999999999999999,
+    "outputPrice": 0.3,
+    "contextWindow": 32768,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "allenai/olmo-3.1-32b-think",
+    "provider": "Allenai",
+    "model": "AllenAI: Olmo 3.1 32B Think",
+    "inputPrice": 0.15,
+    "outputPrice": 0.5,
+    "contextWindow": 65536,
+    "features": [
+      "Tool Choice",
+      "Reasoning"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "xiaomi/mimo-v2-flash",
+    "provider": "Xiaomi",
+    "model": "Xiaomi: MiMo-V2-Flash",
+    "inputPrice": 0.09,
+    "outputPrice": 0.29,
+    "contextWindow": 262144,
+    "features": [
+      "Tool Choice",
+      "Reasoning"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "nvidia/nemotron-3-nano-30b-a3b",
+    "provider": "Nvidia",
+    "model": "NVIDIA: Nemotron 3 Nano 30B A3B",
+    "inputPrice": 0.049999999999999996,
+    "outputPrice": 0.19999999999999998,
+    "contextWindow": 262144,
+    "features": [
+      "Tool Choice",
+      "Reasoning"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "openai/gpt-5.2-chat",
+    "provider": "Openai",
+    "model": "OpenAI: GPT-5.2 Chat",
+    "inputPrice": 1.75,
+    "outputPrice": 14,
+    "contextWindow": 128000,
+    "features": [
+      "Tool Choice",
+      "Vision Capabilities"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "openai/gpt-5.2-pro",
+    "provider": "Openai",
+    "model": "OpenAI: GPT-5.2 Pro",
+    "inputPrice": 21,
+    "outputPrice": 168,
+    "contextWindow": 400000,
+    "features": [
+      "Tool Choice",
+      "Vision Capabilities",
+      "Reasoning"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "openai/gpt-5.2",
+    "provider": "Openai",
+    "model": "OpenAI: GPT-5.2",
+    "inputPrice": 1.75,
+    "outputPrice": 14,
+    "contextWindow": 400000,
+    "features": [
+      "Tool Choice",
+      "Vision Capabilities",
+      "Reasoning"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "mistralai/devstral-2512",
+    "provider": "Mistralai",
+    "model": "Mistral: Devstral 2 2512",
+    "inputPrice": 0.39999999999999997,
+    "outputPrice": 2,
+    "contextWindow": 262144,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "relace/relace-search",
+    "provider": "Relace",
+    "model": "Relace: Relace Search",
+    "inputPrice": 1,
+    "outputPrice": 3,
+    "contextWindow": 256000,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "z-ai/glm-4.6v",
+    "provider": "Z Ai",
+    "model": "Z.ai: GLM 4.6V",
+    "inputPrice": 0.3,
+    "outputPrice": 0.8999999999999999,
+    "contextWindow": 131072,
+    "features": [
+      "Tool Choice",
+      "Vision Capabilities",
+      "Reasoning"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "nex-agi/deepseek-v3.1-nex-n1",
+    "provider": "Nex Agi",
+    "model": "Nex AGI: DeepSeek V3.1 Nex N1",
+    "inputPrice": 0.27,
+    "outputPrice": 1,
+    "contextWindow": 131072,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "essentialai/rnj-1-instruct",
+    "provider": "Essentialai",
+    "model": "EssentialAI: Rnj 1 Instruct",
+    "inputPrice": 0.15,
+    "outputPrice": 0.15,
+    "contextWindow": 32768,
+    "features": [
+      "Tool Choice",
+      "Reasoning"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "openai/gpt-5.1-codex-max",
+    "provider": "Openai",
+    "model": "OpenAI: GPT-5.1-Codex-Max",
+    "inputPrice": 1.25,
+    "outputPrice": 10,
+    "contextWindow": 400000,
+    "features": [
+      "Tool Choice",
+      "Vision Capabilities",
+      "Reasoning"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "amazon/nova-2-lite-v1",
+    "provider": "Amazon",
+    "model": "Amazon: Nova 2 Lite",
+    "inputPrice": 0.3,
+    "outputPrice": 2.5,
+    "contextWindow": 1000000,
+    "features": [
+      "Tool Choice",
+      "Vision Capabilities",
+      "Reasoning"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "mistralai/ministral-14b-2512",
+    "provider": "Mistralai",
+    "model": "Mistral: Ministral 3 14B 2512",
+    "inputPrice": 0.19999999999999998,
+    "outputPrice": 0.19999999999999998,
+    "contextWindow": 262144,
+    "features": [
+      "Tool Choice",
+      "Vision Capabilities"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "mistralai/ministral-8b-2512",
+    "provider": "Mistralai",
+    "model": "Mistral: Ministral 3 8B 2512",
+    "inputPrice": 0.15,
+    "outputPrice": 0.15,
+    "contextWindow": 262144,
+    "features": [
+      "Tool Choice",
+      "Vision Capabilities"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "mistralai/ministral-3b-2512",
+    "provider": "Mistralai",
+    "model": "Mistral: Ministral 3 3B 2512",
+    "inputPrice": 0.09999999999999999,
+    "outputPrice": 0.09999999999999999,
+    "contextWindow": 131072,
+    "features": [
+      "Tool Choice",
+      "Vision Capabilities"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "mistralai/mistral-large-2512",
+    "provider": "Mistralai",
+    "model": "Mistral: Mistral Large 3 2512",
+    "inputPrice": 0.5,
+    "outputPrice": 1.5,
+    "contextWindow": 262144,
+    "features": [
+      "Tool Choice",
+      "Vision Capabilities"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "arcee-ai/trinity-mini",
+    "provider": "Arcee Ai",
+    "model": "Arcee AI: Trinity Mini",
+    "inputPrice": 0.045,
+    "outputPrice": 0.15,
+    "contextWindow": 131072,
+    "features": [
+      "Tool Choice",
+      "Reasoning"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "deepseek/deepseek-v3.2-speciale",
+    "provider": "Deepseek",
+    "model": "DeepSeek: DeepSeek V3.2 Speciale",
+    "inputPrice": 0.39999999999999997,
+    "outputPrice": 1.2,
+    "contextWindow": 163840,
+    "features": [
+      "Tool Choice",
+      "Reasoning"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "deepseek/deepseek-v3.2",
+    "provider": "Deepseek",
+    "model": "DeepSeek: DeepSeek V3.2",
+    "inputPrice": 0.26,
+    "outputPrice": 0.38,
+    "contextWindow": 163840,
+    "features": [
+      "Tool Choice",
+      "Reasoning"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "prime-intellect/intellect-3",
+    "provider": "Prime Intellect",
+    "model": "Prime Intellect: INTELLECT-3",
+    "inputPrice": 0.19999999999999998,
+    "outputPrice": 1.1,
+    "contextWindow": 131072,
+    "features": [
+      "Tool Choice",
+      "Reasoning"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "anthropic/claude-opus-4.5",
+    "provider": "Anthropic",
+    "model": "Anthropic: Claude Opus 4.5",
+    "inputPrice": 5,
+    "outputPrice": 25,
+    "contextWindow": 200000,
+    "features": [
+      "Tool Choice",
+      "Vision Capabilities",
+      "Reasoning"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "allenai/olmo-3-32b-think",
+    "provider": "Allenai",
+    "model": "AllenAI: Olmo 3 32B Think",
+    "inputPrice": 0.15,
+    "outputPrice": 0.5,
+    "contextWindow": 65536,
+    "features": [
+      "Tool Choice",
+      "Reasoning"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "allenai/olmo-3-7b-instruct",
+    "provider": "Allenai",
+    "model": "AllenAI: Olmo 3 7B Instruct",
+    "inputPrice": 0.09999999999999999,
+    "outputPrice": 0.19999999999999998,
+    "contextWindow": 65536,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "allenai/olmo-3-7b-think",
+    "provider": "Allenai",
+    "model": "AllenAI: Olmo 3 7B Think",
+    "inputPrice": 0.12,
+    "outputPrice": 0.19999999999999998,
+    "contextWindow": 65536,
+    "features": [
+      "Tool Choice",
+      "Reasoning"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "google/gemini-3-pro-image-preview",
+    "provider": "Google",
+    "model": "Google: Nano Banana Pro (Gemini 3 Pro Image Preview)",
+    "inputPrice": 2,
+    "outputPrice": 12,
+    "contextWindow": 65536,
+    "features": [
+      "Tool Choice",
+      "Vision Capabilities",
+      "Reasoning",
+      "Audio Input"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "x-ai/grok-4.1-fast",
+    "provider": "X Ai",
+    "model": "xAI: Grok 4.1 Fast",
+    "inputPrice": 0.19999999999999998,
+    "outputPrice": 0.5,
+    "contextWindow": 2000000,
+    "features": [
+      "Tool Choice",
+      "Vision Capabilities",
+      "Reasoning"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "google/gemini-3-pro-preview",
+    "provider": "Google",
+    "model": "Google: Gemini 3 Pro Preview",
+    "inputPrice": 2,
+    "outputPrice": 12,
+    "contextWindow": 1048576,
+    "features": [
+      "Tool Choice",
+      "Vision Capabilities",
+      "Reasoning",
+      "Audio Input"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "thenlper/gte-base",
+    "provider": "Thenlper",
+    "model": "Thenlper: GTE-Base",
+    "inputPrice": 0.005,
+    "outputPrice": 0,
+    "contextWindow": 512,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "thenlper/gte-large",
+    "provider": "Thenlper",
+    "model": "Thenlper: GTE-Large",
+    "inputPrice": 0.01,
+    "outputPrice": 0,
+    "contextWindow": 512,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "intfloat/e5-large-v2",
+    "provider": "Intfloat",
+    "model": "Intfloat: E5-Large-v2",
+    "inputPrice": 0.01,
+    "outputPrice": 0,
+    "contextWindow": 512,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "intfloat/e5-base-v2",
+    "provider": "Intfloat",
+    "model": "Intfloat: E5-Base-v2",
+    "inputPrice": 0.005,
+    "outputPrice": 0,
+    "contextWindow": 512,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "intfloat/multilingual-e5-large",
+    "provider": "Intfloat",
+    "model": "Intfloat: Multilingual-E5-Large",
+    "inputPrice": 0.01,
+    "outputPrice": 0,
+    "contextWindow": 512,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "sentence-transformers/paraphrase-minilm-l6-v2",
+    "provider": "Sentence Transformers",
+    "model": "Sentence Transformers: paraphrase-MiniLM-L6-v2",
+    "inputPrice": 0.005,
+    "outputPrice": 0,
+    "contextWindow": 512,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "sentence-transformers/all-minilm-l12-v2",
+    "provider": "Sentence Transformers",
+    "model": "Sentence Transformers: all-MiniLM-L12-v2",
+    "inputPrice": 0.005,
+    "outputPrice": 0,
+    "contextWindow": 512,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "baai/bge-base-en-v1.5",
+    "provider": "Baai",
+    "model": "BAAI: bge-base-en-v1.5",
+    "inputPrice": 0.005,
+    "outputPrice": 0,
+    "contextWindow": 512,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "sentence-transformers/multi-qa-mpnet-base-dot-v1",
+    "provider": "Sentence Transformers",
+    "model": "Sentence Transformers: multi-qa-mpnet-base-dot-v1",
+    "inputPrice": 0.005,
+    "outputPrice": 0,
+    "contextWindow": 512,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "baai/bge-large-en-v1.5",
+    "provider": "Baai",
+    "model": "BAAI: bge-large-en-v1.5",
+    "inputPrice": 0.01,
+    "outputPrice": 0,
+    "contextWindow": 512,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "baai/bge-m3",
+    "provider": "Baai",
+    "model": "BAAI: bge-m3",
+    "inputPrice": 0.01,
+    "outputPrice": 0,
+    "contextWindow": 8192,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "sentence-transformers/all-mpnet-base-v2",
+    "provider": "Sentence Transformers",
+    "model": "Sentence Transformers: all-mpnet-base-v2",
+    "inputPrice": 0.005,
+    "outputPrice": 0,
+    "contextWindow": 512,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "sentence-transformers/all-minilm-l6-v2",
+    "provider": "Sentence Transformers",
+    "model": "Sentence Transformers: all-MiniLM-L6-v2",
+    "inputPrice": 0.005,
+    "outputPrice": 0,
+    "contextWindow": 512,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "deepcogito/cogito-v2.1-671b",
+    "provider": "Deepcogito",
+    "model": "Deep Cogito: Cogito v2.1 671B",
+    "inputPrice": 1.25,
+    "outputPrice": 1.25,
+    "contextWindow": 128000,
+    "features": [
+      "Tool Choice",
+      "Reasoning"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "openai/gpt-5.1",
+    "provider": "Openai",
+    "model": "OpenAI: GPT-5.1",
+    "inputPrice": 1.25,
+    "outputPrice": 10,
+    "contextWindow": 400000,
+    "features": [
+      "Tool Choice",
+      "Vision Capabilities",
+      "Reasoning"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "openai/gpt-5.1-chat",
+    "provider": "Openai",
+    "model": "OpenAI: GPT-5.1 Chat",
+    "inputPrice": 1.25,
+    "outputPrice": 10,
+    "contextWindow": 128000,
+    "features": [
+      "Tool Choice",
+      "Vision Capabilities"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "openai/gpt-5.1-codex",
+    "provider": "Openai",
+    "model": "OpenAI: GPT-5.1-Codex",
+    "inputPrice": 1.25,
+    "outputPrice": 10,
+    "contextWindow": 400000,
+    "features": [
+      "Tool Choice",
+      "Vision Capabilities",
+      "Reasoning"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "openai/gpt-5.1-codex-mini",
+    "provider": "Openai",
+    "model": "OpenAI: GPT-5.1-Codex-Mini",
+    "inputPrice": 0.25,
+    "outputPrice": 2,
+    "contextWindow": 400000,
+    "features": [
+      "Tool Choice",
+      "Vision Capabilities",
+      "Reasoning"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "kwaipilot/kat-coder-pro",
+    "provider": "Kwaipilot",
+    "model": "Kwaipilot: KAT-Coder-Pro V1",
+    "inputPrice": 0.207,
+    "outputPrice": 0.828,
+    "contextWindow": 256000,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "moonshotai/kimi-k2-thinking",
+    "provider": "Moonshotai",
+    "model": "MoonshotAI: Kimi K2 Thinking",
+    "inputPrice": 0.47,
+    "outputPrice": 2,
+    "contextWindow": 131072,
+    "features": [
+      "Tool Choice",
+      "Reasoning"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "amazon/nova-premier-v1",
+    "provider": "Amazon",
+    "model": "Amazon: Nova Premier 1.0",
+    "inputPrice": 2.5,
+    "outputPrice": 12.5,
+    "contextWindow": 1000000,
+    "features": [
+      "Tool Choice",
+      "Vision Capabilities"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "mistralai/mistral-embed-2312",
+    "provider": "Mistralai",
+    "model": "Mistral: Mistral Embed 2312",
+    "inputPrice": 0.09999999999999999,
+    "outputPrice": 0,
+    "contextWindow": 8192,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "google/gemini-embedding-001",
+    "provider": "Google",
+    "model": "Google: Gemini Embedding 001",
+    "inputPrice": 0.15,
+    "outputPrice": 0,
+    "contextWindow": 20000,
+    "features": [
+      "Tool Choice",
+      "Audio Input"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "openai/text-embedding-ada-002",
+    "provider": "Openai",
+    "model": "OpenAI: Text Embedding Ada 002",
+    "inputPrice": 0.09999999999999999,
+    "outputPrice": 0,
+    "contextWindow": 8192,
+    "features": [
+      "Tool Choice",
+      "Reasoning"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "mistralai/codestral-embed-2505",
+    "provider": "Mistralai",
+    "model": "Mistral: Codestral Embed 2505",
+    "inputPrice": 0.15,
+    "outputPrice": 0,
+    "contextWindow": 8192,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "openai/text-embedding-3-large",
+    "provider": "Openai",
+    "model": "OpenAI: Text Embedding 3 Large",
+    "inputPrice": 0.13,
+    "outputPrice": 0,
+    "contextWindow": 8192,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "openai/text-embedding-3-small",
+    "provider": "Openai",
+    "model": "OpenAI: Text Embedding 3 Small",
+    "inputPrice": 0.02,
+    "outputPrice": 0,
+    "contextWindow": 8192,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "perplexity/sonar-pro-search",
+    "provider": "Perplexity",
+    "model": "Perplexity: Sonar Pro Search",
+    "inputPrice": 3,
+    "outputPrice": 15,
+    "contextWindow": 200000,
+    "features": [
+      "Tool Choice",
+      "Vision Capabilities",
+      "Reasoning"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "mistralai/voxtral-small-24b-2507",
+    "provider": "Mistralai",
+    "model": "Mistral: Voxtral Small 24B 2507",
+    "inputPrice": 0.09999999999999999,
+    "outputPrice": 0.3,
+    "contextWindow": 32000,
+    "features": [
+      "Tool Choice",
+      "Audio Input"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "openai/gpt-oss-safeguard-20b",
+    "provider": "Openai",
+    "model": "OpenAI: gpt-oss-safeguard-20b",
+    "inputPrice": 0.075,
+    "outputPrice": 0.3,
+    "contextWindow": 131072,
+    "features": [
+      "Tool Choice",
+      "Reasoning"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "qwen/qwen3-embedding-8b",
+    "provider": "Qwen",
+    "model": "Qwen: Qwen3 Embedding 8B",
+    "inputPrice": 0.01,
+    "outputPrice": 0,
+    "contextWindow": 32000,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "nvidia/nemotron-nano-12b-v2-vl",
+    "provider": "Nvidia",
+    "model": "NVIDIA: Nemotron Nano 12B 2 VL",
+    "inputPrice": 0.07,
+    "outputPrice": 0.19999999999999998,
+    "contextWindow": 131072,
+    "features": [
+      "Tool Choice",
+      "Vision Capabilities",
+      "Reasoning"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "qwen/qwen3-embedding-4b",
+    "provider": "Qwen",
+    "model": "Qwen: Qwen3 Embedding 4B",
+    "inputPrice": 0.02,
+    "outputPrice": 0,
+    "contextWindow": 32768,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "minimax/minimax-m2",
+    "provider": "Minimax",
+    "model": "MiniMax: MiniMax M2",
+    "inputPrice": 0.255,
+    "outputPrice": 1,
+    "contextWindow": 196608,
+    "features": [
+      "Tool Choice",
+      "Reasoning"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "qwen/qwen3-vl-32b-instruct",
+    "provider": "Qwen",
+    "model": "Qwen: Qwen3 VL 32B Instruct",
+    "inputPrice": 0.10400000000000001,
+    "outputPrice": 0.41600000000000004,
+    "contextWindow": 131072,
+    "features": [
+      "Tool Choice",
+      "Vision Capabilities"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "liquid/lfm2-8b-a1b",
+    "provider": "Liquid",
+    "model": "LiquidAI: LFM2-8B-A1B",
+    "inputPrice": 0.01,
+    "outputPrice": 0.02,
+    "contextWindow": 32768,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "liquid/lfm-2.2-6b",
+    "provider": "Liquid",
+    "model": "LiquidAI: LFM2-2.6B",
+    "inputPrice": 0.01,
+    "outputPrice": 0.02,
+    "contextWindow": 32768,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "ibm-granite/granite-4.0-h-micro",
+    "provider": "Ibm Granite",
+    "model": "IBM: Granite 4.0 Micro",
+    "inputPrice": 0.017,
+    "outputPrice": 0.11,
+    "contextWindow": 131000,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "openai/gpt-5-image-mini",
+    "provider": "Openai",
+    "model": "OpenAI: GPT-5 Image Mini",
+    "inputPrice": 2.5,
+    "outputPrice": 2,
+    "contextWindow": 400000,
+    "features": [
+      "Tool Choice",
+      "Vision Capabilities",
+      "Reasoning"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "anthropic/claude-haiku-4.5",
+    "provider": "Anthropic",
+    "model": "Anthropic: Claude Haiku 4.5",
+    "inputPrice": 1,
+    "outputPrice": 5,
+    "contextWindow": 200000,
+    "features": [
+      "Tool Choice",
+      "Vision Capabilities",
+      "Reasoning"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "qwen/qwen3-vl-8b-thinking",
+    "provider": "Qwen",
+    "model": "Qwen: Qwen3 VL 8B Thinking",
+    "inputPrice": 0.117,
+    "outputPrice": 1.365,
+    "contextWindow": 131072,
+    "features": [
+      "Tool Choice",
+      "Vision Capabilities",
+      "Reasoning"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "qwen/qwen3-vl-8b-instruct",
+    "provider": "Qwen",
+    "model": "Qwen: Qwen3 VL 8B Instruct",
+    "inputPrice": 0.08,
+    "outputPrice": 0.5,
+    "contextWindow": 131072,
+    "features": [
+      "Tool Choice",
+      "Vision Capabilities"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "openai/gpt-5-image",
+    "provider": "Openai",
+    "model": "OpenAI: GPT-5 Image",
+    "inputPrice": 10,
+    "outputPrice": 10,
+    "contextWindow": 400000,
+    "features": [
+      "Tool Choice",
+      "Vision Capabilities",
+      "Reasoning"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "openai/o3-deep-research",
+    "provider": "Openai",
+    "model": "OpenAI: o3 Deep Research",
+    "inputPrice": 10,
+    "outputPrice": 40,
+    "contextWindow": 200000,
+    "features": [
+      "Tool Choice",
+      "Vision Capabilities",
+      "Reasoning"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "openai/o4-mini-deep-research",
+    "provider": "Openai",
+    "model": "OpenAI: o4 Mini Deep Research",
+    "inputPrice": 2,
+    "outputPrice": 8,
+    "contextWindow": 200000,
+    "features": [
+      "Tool Choice",
+      "Vision Capabilities",
+      "Reasoning"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "nvidia/llama-3.3-nemotron-super-49b-v1.5",
+    "provider": "Nvidia",
+    "model": "NVIDIA: Llama 3.3 Nemotron Super 49B V1.5",
+    "inputPrice": 0.09999999999999999,
+    "outputPrice": 0.39999999999999997,
+    "contextWindow": 131072,
+    "features": [
+      "Tool Choice",
+      "Reasoning"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "baidu/ernie-4.5-21b-a3b-thinking",
+    "provider": "Baidu",
+    "model": "Baidu: ERNIE 4.5 21B A3B Thinking",
+    "inputPrice": 0.07,
+    "outputPrice": 0.28,
+    "contextWindow": 131072,
+    "features": [
+      "Tool Choice",
+      "Reasoning"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "google/gemini-2.5-flash-image",
+    "provider": "Google",
+    "model": "Google: Gemini 2.5 Flash Image (Nano Banana)",
+    "inputPrice": 0.3,
+    "outputPrice": 2.5,
+    "contextWindow": 32768,
+    "features": [
+      "Tool Choice",
+      "Vision Capabilities",
+      "Reasoning",
+      "Audio Input"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "qwen/qwen3-vl-30b-a3b-instruct",
+    "provider": "Qwen",
+    "model": "Qwen: Qwen3 VL 30B A3B Instruct",
+    "inputPrice": 0.13,
+    "outputPrice": 0.52,
+    "contextWindow": 131072,
+    "features": [
+      "Tool Choice",
+      "Vision Capabilities"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "openai/gpt-5-pro",
+    "provider": "Openai",
+    "model": "OpenAI: GPT-5 Pro",
+    "inputPrice": 15,
+    "outputPrice": 120,
+    "contextWindow": 400000,
+    "features": [
+      "Tool Choice",
+      "Vision Capabilities",
+      "Reasoning"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "z-ai/glm-4.6",
+    "provider": "Z Ai",
+    "model": "Z.ai: GLM 4.6",
+    "inputPrice": 0.35,
+    "outputPrice": 1.71,
+    "contextWindow": 202752,
+    "features": [
+      "Tool Choice",
+      "Reasoning"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "z-ai/glm-4.6",
+    "provider": "Z Ai",
+    "model": "Z.ai: GLM 4.6 (exacto)",
+    "inputPrice": 0.44,
+    "outputPrice": 1.76,
+    "contextWindow": 204800,
+    "features": [
+      "Tool Choice",
+      "Reasoning"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "anthropic/claude-sonnet-4.5",
+    "provider": "Anthropic",
+    "model": "Anthropic: Claude Sonnet 4.5",
+    "inputPrice": 3,
+    "outputPrice": 15,
+    "contextWindow": 1000000,
+    "features": [
+      "Tool Choice",
+      "Vision Capabilities",
+      "Reasoning"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "deepseek/deepseek-v3.2-exp",
+    "provider": "Deepseek",
+    "model": "DeepSeek: DeepSeek V3.2 Exp",
+    "inputPrice": 0.27,
+    "outputPrice": 0.41,
+    "contextWindow": 163840,
+    "features": [
+      "Tool Choice",
+      "Reasoning"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "thedrummer/cydonia-24b-v4.1",
+    "provider": "Thedrummer",
+    "model": "TheDrummer: Cydonia 24B V4.1",
+    "inputPrice": 0.3,
+    "outputPrice": 0.5,
+    "contextWindow": 131072,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "relace/relace-apply-3",
+    "provider": "Relace",
+    "model": "Relace: Relace Apply 3",
+    "inputPrice": 0.85,
+    "outputPrice": 1.25,
+    "contextWindow": 256000,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "google/gemini-2.5-flash-lite-preview-09-2025",
+    "provider": "Google",
+    "model": "Google: Gemini 2.5 Flash Lite Preview 09-2025",
+    "inputPrice": 0.09999999999999999,
+    "outputPrice": 0.39999999999999997,
+    "contextWindow": 1048576,
+    "features": [
+      "Tool Choice",
+      "Vision Capabilities",
+      "Reasoning",
+      "Audio Input"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "qwen/qwen3-vl-235b-a22b-instruct",
+    "provider": "Qwen",
+    "model": "Qwen: Qwen3 VL 235B A22B Instruct",
+    "inputPrice": 0.19999999999999998,
+    "outputPrice": 0.88,
+    "contextWindow": 262144,
+    "features": [
+      "Tool Choice",
+      "Vision Capabilities"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "qwen/qwen3-max",
+    "provider": "Qwen",
+    "model": "Qwen: Qwen3 Max",
+    "inputPrice": 1.2,
+    "outputPrice": 6,
+    "contextWindow": 262144,
+    "features": [
+      "Tool Choice",
+      "Reasoning"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "qwen/qwen3-coder-plus",
+    "provider": "Qwen",
+    "model": "Qwen: Qwen3 Coder Plus",
+    "inputPrice": 1,
+    "outputPrice": 5,
+    "contextWindow": 1000000,
+    "features": [
+      "Tool Choice",
+      "Reasoning"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "openai/gpt-5-codex",
+    "provider": "Openai",
+    "model": "OpenAI: GPT-5 Codex",
+    "inputPrice": 1.25,
+    "outputPrice": 10,
+    "contextWindow": 400000,
+    "features": [
+      "Tool Choice",
+      "Vision Capabilities",
+      "Reasoning"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "deepseek/deepseek-v3.1-terminus",
+    "provider": "Deepseek",
+    "model": "DeepSeek: DeepSeek V3.1 Terminus (exacto)",
+    "inputPrice": 0.21,
+    "outputPrice": 0.7899999999999999,
+    "contextWindow": 163840,
+    "features": [
+      "Tool Choice",
+      "Reasoning"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "deepseek/deepseek-v3.1-terminus",
+    "provider": "Deepseek",
+    "model": "DeepSeek: DeepSeek V3.1 Terminus",
+    "inputPrice": 0.21,
+    "outputPrice": 0.7899999999999999,
+    "contextWindow": 163840,
+    "features": [
+      "Tool Choice",
+      "Reasoning"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "x-ai/grok-4-fast",
+    "provider": "X Ai",
+    "model": "xAI: Grok 4 Fast",
+    "inputPrice": 0.19999999999999998,
+    "outputPrice": 0.5,
+    "contextWindow": 2000000,
+    "features": [
+      "Tool Choice",
+      "Vision Capabilities",
+      "Reasoning"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "alibaba/tongyi-deepresearch-30b-a3b",
+    "provider": "Alibaba",
+    "model": "Tongyi DeepResearch 30B A3B",
+    "inputPrice": 0.09,
+    "outputPrice": 0.44999999999999996,
+    "contextWindow": 131072,
+    "features": [
+      "Tool Choice",
+      "Reasoning"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "qwen/qwen3-coder-flash",
+    "provider": "Qwen",
+    "model": "Qwen: Qwen3 Coder Flash",
+    "inputPrice": 0.3,
+    "outputPrice": 1.5,
+    "contextWindow": 1000000,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "opengvlab/internvl3-78b",
+    "provider": "Opengvlab",
+    "model": "OpenGVLab: InternVL3 78B",
+    "inputPrice": 0.15,
+    "outputPrice": 0.6,
+    "contextWindow": 32768,
+    "features": [
+      "Tool Choice",
+      "Vision Capabilities"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "qwen/qwen3-next-80b-a3b-thinking",
+    "provider": "Qwen",
+    "model": "Qwen: Qwen3 Next 80B A3B Thinking",
+    "inputPrice": 0.15,
+    "outputPrice": 1.2,
+    "contextWindow": 128000,
+    "features": [
+      "Tool Choice",
+      "Reasoning"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "qwen/qwen3-next-80b-a3b-instruct",
+    "provider": "Qwen",
+    "model": "Qwen: Qwen3 Next 80B A3B Instruct",
+    "inputPrice": 0.09,
+    "outputPrice": 1.1,
+    "contextWindow": 262144,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "meituan/longcat-flash-chat",
+    "provider": "Meituan",
+    "model": "Meituan: LongCat Flash Chat",
+    "inputPrice": 0.19999999999999998,
+    "outputPrice": 0.7999999999999999,
+    "contextWindow": 131072,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "qwen/qwen-plus-2025-07-28",
+    "provider": "Qwen",
+    "model": "Qwen: Qwen Plus 0728",
+    "inputPrice": 0.39999999999999997,
+    "outputPrice": 1.2,
+    "contextWindow": 1000000,
+    "features": [
+      "Tool Choice",
+      "Reasoning"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "qwen/qwen-plus-2025-07-28",
+    "provider": "Qwen",
+    "model": "Qwen: Qwen Plus 0728 (thinking)",
+    "inputPrice": 0.39999999999999997,
+    "outputPrice": 1.2,
+    "contextWindow": 1000000,
+    "features": [
+      "Tool Choice",
+      "Reasoning"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "nvidia/nemotron-nano-9b-v2",
+    "provider": "Nvidia",
+    "model": "NVIDIA: Nemotron Nano 9B V2",
+    "inputPrice": 0.04,
+    "outputPrice": 0.16,
+    "contextWindow": 131072,
+    "features": [
+      "Tool Choice",
+      "Reasoning"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "moonshotai/kimi-k2-0905",
+    "provider": "Moonshotai",
+    "model": "MoonshotAI: Kimi K2 0905",
+    "inputPrice": 0.39999999999999997,
+    "outputPrice": 2,
+    "contextWindow": 131072,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "moonshotai/kimi-k2-0905",
+    "provider": "Moonshotai",
+    "model": "MoonshotAI: Kimi K2 0905 (exacto)",
+    "inputPrice": 0.6,
+    "outputPrice": 2.5,
+    "contextWindow": 262144,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "qwen/qwen3-30b-a3b-thinking-2507",
+    "provider": "Qwen",
+    "model": "Qwen: Qwen3 30B A3B Thinking 2507",
+    "inputPrice": 0.051,
+    "outputPrice": 0.33999999999999997,
+    "contextWindow": 32768,
+    "features": [
+      "Tool Choice",
+      "Reasoning"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "x-ai/grok-code-fast-1",
+    "provider": "X Ai",
+    "model": "xAI: Grok Code Fast 1",
+    "inputPrice": 0.19999999999999998,
+    "outputPrice": 1.5,
+    "contextWindow": 256000,
+    "features": [
+      "Tool Choice",
+      "Reasoning"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "nousresearch/hermes-4-70b",
+    "provider": "Nousresearch",
+    "model": "Nous: Hermes 4 70B",
+    "inputPrice": 0.13,
+    "outputPrice": 0.39999999999999997,
+    "contextWindow": 131072,
+    "features": [
+      "Tool Choice",
+      "Reasoning"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "nousresearch/hermes-4-405b",
+    "provider": "Nousresearch",
+    "model": "Nous: Hermes 4 405B",
+    "inputPrice": 1,
+    "outputPrice": 3,
+    "contextWindow": 131072,
+    "features": [
+      "Tool Choice",
+      "Reasoning"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "deepseek/deepseek-chat-v3.1",
+    "provider": "Deepseek",
+    "model": "DeepSeek: DeepSeek V3.1",
+    "inputPrice": 0.15,
+    "outputPrice": 0.75,
+    "contextWindow": 32768,
+    "features": [
+      "Tool Choice",
+      "Reasoning"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "openai/gpt-4o-audio-preview",
+    "provider": "Openai",
+    "model": "OpenAI: GPT-4o Audio",
+    "inputPrice": 2.5,
+    "outputPrice": 10,
+    "contextWindow": 128000,
+    "features": [
+      "Tool Choice",
+      "Audio Input"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "mistralai/mistral-medium-3.1",
+    "provider": "Mistralai",
+    "model": "Mistral: Mistral Medium 3.1",
+    "inputPrice": 0.39999999999999997,
+    "outputPrice": 2,
+    "contextWindow": 131072,
+    "features": [
+      "Tool Choice",
+      "Vision Capabilities"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "baidu/ernie-4.5-21b-a3b",
+    "provider": "Baidu",
+    "model": "Baidu: ERNIE 4.5 21B A3B",
+    "inputPrice": 0.07,
+    "outputPrice": 0.28,
+    "contextWindow": 120000,
+    "features": [
+      "Tool Choice",
+      "Reasoning"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "baidu/ernie-4.5-vl-28b-a3b",
+    "provider": "Baidu",
+    "model": "Baidu: ERNIE 4.5 VL 28B A3B",
+    "inputPrice": 0.14,
+    "outputPrice": 0.56,
+    "contextWindow": 30000,
+    "features": [
+      "Tool Choice",
+      "Vision Capabilities",
+      "Reasoning"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "z-ai/glm-4.5v",
+    "provider": "Z Ai",
+    "model": "Z.ai: GLM 4.5V",
+    "inputPrice": 0.6,
+    "outputPrice": 1.7999999999999998,
+    "contextWindow": 65536,
+    "features": [
+      "Tool Choice",
+      "Vision Capabilities",
+      "Reasoning"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "ai21/jamba-large-1.7",
+    "provider": "Ai21",
+    "model": "AI21: Jamba Large 1.7",
+    "inputPrice": 2,
+    "outputPrice": 8,
+    "contextWindow": 256000,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "openai/gpt-5-chat",
+    "provider": "Openai",
+    "model": "OpenAI: GPT-5 Chat",
+    "inputPrice": 1.25,
+    "outputPrice": 10,
+    "contextWindow": 128000,
+    "features": [
+      "Tool Choice",
+      "Vision Capabilities"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "openai/gpt-5",
+    "provider": "Openai",
+    "model": "OpenAI: GPT-5",
+    "inputPrice": 1.25,
+    "outputPrice": 10,
+    "contextWindow": 400000,
+    "features": [
+      "Tool Choice",
+      "Vision Capabilities",
+      "Reasoning"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "openai/gpt-5-mini",
+    "provider": "Openai",
+    "model": "OpenAI: GPT-5 Mini",
+    "inputPrice": 0.25,
+    "outputPrice": 2,
+    "contextWindow": 400000,
+    "features": [
+      "Tool Choice",
+      "Vision Capabilities",
+      "Reasoning"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "openai/gpt-5-nano",
+    "provider": "Openai",
+    "model": "OpenAI: GPT-5 Nano",
+    "inputPrice": 0.049999999999999996,
+    "outputPrice": 0.39999999999999997,
+    "contextWindow": 400000,
+    "features": [
+      "Tool Choice",
+      "Vision Capabilities",
+      "Reasoning"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "openai/gpt-oss-120b",
+    "provider": "Openai",
+    "model": "OpenAI: gpt-oss-120b",
+    "inputPrice": 0.039,
+    "outputPrice": 0.19,
+    "contextWindow": 131072,
+    "features": [
+      "Tool Choice",
+      "Reasoning"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "openai/gpt-oss-120b",
+    "provider": "Openai",
+    "model": "OpenAI: gpt-oss-120b (exacto)",
+    "inputPrice": 0.039,
+    "outputPrice": 0.19,
+    "contextWindow": 131072,
+    "features": [
+      "Tool Choice",
+      "Reasoning"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "openai/gpt-oss-20b",
+    "provider": "Openai",
+    "model": "OpenAI: gpt-oss-20b",
+    "inputPrice": 0.03,
+    "outputPrice": 0.14,
+    "contextWindow": 131072,
+    "features": [
+      "Tool Choice",
+      "Reasoning"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "anthropic/claude-opus-4.1",
+    "provider": "Anthropic",
+    "model": "Anthropic: Claude Opus 4.1",
+    "inputPrice": 15,
+    "outputPrice": 75,
+    "contextWindow": 200000,
+    "features": [
+      "Tool Choice",
+      "Vision Capabilities",
+      "Reasoning"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "mistralai/codestral-2508",
+    "provider": "Mistralai",
+    "model": "Mistral: Codestral 2508",
+    "inputPrice": 0.3,
+    "outputPrice": 0.8999999999999999,
+    "contextWindow": 256000,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "qwen/qwen3-coder-30b-a3b-instruct",
+    "provider": "Qwen",
+    "model": "Qwen: Qwen3 Coder 30B A3B Instruct",
+    "inputPrice": 0.07,
+    "outputPrice": 0.27,
+    "contextWindow": 160000,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "qwen/qwen3-30b-a3b-instruct-2507",
+    "provider": "Qwen",
+    "model": "Qwen: Qwen3 30B A3B Instruct 2507",
+    "inputPrice": 0.09,
+    "outputPrice": 0.3,
+    "contextWindow": 262144,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "z-ai/glm-4.5",
+    "provider": "Z Ai",
+    "model": "Z.ai: GLM 4.5",
+    "inputPrice": 0.55,
+    "outputPrice": 2,
+    "contextWindow": 131000,
+    "features": [
+      "Tool Choice",
+      "Reasoning"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "z-ai/glm-4.5-air",
+    "provider": "Z Ai",
+    "model": "Z.ai: GLM 4.5 Air",
+    "inputPrice": 0.13,
+    "outputPrice": 0.85,
+    "contextWindow": 131072,
+    "features": [
+      "Tool Choice",
+      "Reasoning"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "z-ai/glm-4-32b",
+    "provider": "Z Ai",
+    "model": "Z.ai: GLM 4 32B ",
+    "inputPrice": 0.09999999999999999,
+    "outputPrice": 0.09999999999999999,
+    "contextWindow": 128000,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "qwen/qwen3-coder",
+    "provider": "Qwen",
+    "model": "Qwen: Qwen3 Coder 480B A35B",
+    "inputPrice": 0.22,
+    "outputPrice": 1,
+    "contextWindow": 262144,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "qwen/qwen3-coder",
+    "provider": "Qwen",
+    "model": "Qwen: Qwen3 Coder 480B A35B (exacto)",
+    "inputPrice": 0.22,
+    "outputPrice": 1.7999999999999998,
+    "contextWindow": 262144,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "bytedance/ui-tars-1.5-7b",
+    "provider": "Bytedance",
+    "model": "ByteDance: UI-TARS 7B ",
+    "inputPrice": 0.09999999999999999,
+    "outputPrice": 0.19999999999999998,
+    "contextWindow": 128000,
+    "features": [
+      "Tool Choice",
+      "Vision Capabilities"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "google/gemini-2.5-flash-lite",
+    "provider": "Google",
+    "model": "Google: Gemini 2.5 Flash Lite",
+    "inputPrice": 0.09999999999999999,
+    "outputPrice": 0.39999999999999997,
+    "contextWindow": 1048576,
+    "features": [
+      "Tool Choice",
+      "Vision Capabilities",
+      "Reasoning",
+      "Audio Input"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "qwen/qwen3-235b-a22b-2507",
+    "provider": "Qwen",
+    "model": "Qwen: Qwen3 235B A22B Instruct 2507",
+    "inputPrice": 0.071,
+    "outputPrice": 0.09999999999999999,
+    "contextWindow": 262144,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "switchpoint/router",
+    "provider": "Switchpoint",
+    "model": "Switchpoint Router",
+    "inputPrice": 0.85,
+    "outputPrice": 3.4,
+    "contextWindow": 131072,
+    "features": [
+      "Tool Choice",
+      "Reasoning"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "moonshotai/kimi-k2",
+    "provider": "Moonshotai",
+    "model": "MoonshotAI: Kimi K2 0711",
+    "inputPrice": 0.5,
+    "outputPrice": 2.4,
+    "contextWindow": 131072,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "mistralai/devstral-medium",
+    "provider": "Mistralai",
+    "model": "Mistral: Devstral Medium",
+    "inputPrice": 0.39999999999999997,
+    "outputPrice": 2,
+    "contextWindow": 131072,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "mistralai/devstral-small",
+    "provider": "Mistralai",
+    "model": "Mistral: Devstral Small 1.1",
+    "inputPrice": 0.09999999999999999,
+    "outputPrice": 0.3,
+    "contextWindow": 131072,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "x-ai/grok-4",
+    "provider": "X Ai",
+    "model": "xAI: Grok 4",
+    "inputPrice": 3,
+    "outputPrice": 15,
+    "contextWindow": 256000,
+    "features": [
+      "Tool Choice",
+      "Vision Capabilities",
+      "Reasoning"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "tencent/hunyuan-a13b-instruct",
+    "provider": "Tencent",
+    "model": "Tencent: Hunyuan A13B Instruct",
+    "inputPrice": 0.14,
+    "outputPrice": 0.5700000000000001,
+    "contextWindow": 131072,
+    "features": [
+      "Tool Choice",
+      "Reasoning"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "tngtech/deepseek-r1t2-chimera",
+    "provider": "Tngtech",
+    "model": "TNG: DeepSeek R1T2 Chimera",
+    "inputPrice": 0.25,
+    "outputPrice": 0.85,
+    "contextWindow": 163840,
+    "features": [
+      "Tool Choice",
+      "Reasoning"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "morph/morph-v3-large",
+    "provider": "Morph",
+    "model": "Morph: Morph V3 Large",
+    "inputPrice": 0.8999999999999999,
+    "outputPrice": 1.9,
+    "contextWindow": 262144,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "morph/morph-v3-fast",
+    "provider": "Morph",
+    "model": "Morph: Morph V3 Fast",
+    "inputPrice": 0.7999999999999999,
+    "outputPrice": 1.2,
+    "contextWindow": 81920,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "baidu/ernie-4.5-vl-424b-a47b",
+    "provider": "Baidu",
+    "model": "Baidu: ERNIE 4.5 VL 424B A47B ",
+    "inputPrice": 0.42,
+    "outputPrice": 1.25,
+    "contextWindow": 123000,
+    "features": [
+      "Tool Choice",
+      "Vision Capabilities",
+      "Reasoning"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "baidu/ernie-4.5-300b-a47b",
+    "provider": "Baidu",
+    "model": "Baidu: ERNIE 4.5 300B A47B ",
+    "inputPrice": 0.28,
+    "outputPrice": 1.1,
+    "contextWindow": 123000,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "inception/mercury",
+    "provider": "Inception",
+    "model": "Inception: Mercury",
+    "inputPrice": 0.25,
+    "outputPrice": 1,
+    "contextWindow": 128000,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "mistralai/mistral-small-3.2-24b-instruct",
+    "provider": "Mistralai",
+    "model": "Mistral: Mistral Small 3.2 24B",
+    "inputPrice": 0.06,
+    "outputPrice": 0.18,
+    "contextWindow": 131072,
+    "features": [
+      "Tool Choice",
+      "Vision Capabilities"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "minimax/minimax-m1",
+    "provider": "Minimax",
+    "model": "MiniMax: MiniMax M1",
+    "inputPrice": 0.39999999999999997,
+    "outputPrice": 2.2,
+    "contextWindow": 1000000,
+    "features": [
+      "Tool Choice",
+      "Reasoning"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "google/gemini-2.5-flash",
+    "provider": "Google",
+    "model": "Google: Gemini 2.5 Flash",
+    "inputPrice": 0.3,
+    "outputPrice": 2.5,
+    "contextWindow": 1048576,
+    "features": [
+      "Tool Choice",
+      "Vision Capabilities",
+      "Reasoning",
+      "Audio Input"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "google/gemini-2.5-pro",
+    "provider": "Google",
+    "model": "Google: Gemini 2.5 Pro",
+    "inputPrice": 1.25,
+    "outputPrice": 10,
+    "contextWindow": 1048576,
+    "features": [
+      "Tool Choice",
+      "Vision Capabilities",
+      "Reasoning",
+      "Audio Input"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "openai/o3-pro",
+    "provider": "Openai",
+    "model": "OpenAI: o3 Pro",
+    "inputPrice": 20,
+    "outputPrice": 80,
+    "contextWindow": 200000,
+    "features": [
+      "Tool Choice",
+      "Vision Capabilities",
+      "Reasoning"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "x-ai/grok-3-mini",
+    "provider": "X Ai",
+    "model": "xAI: Grok 3 Mini",
+    "inputPrice": 0.3,
+    "outputPrice": 0.5,
+    "contextWindow": 131072,
+    "features": [
+      "Tool Choice",
+      "Reasoning"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "x-ai/grok-3",
+    "provider": "X Ai",
+    "model": "xAI: Grok 3",
+    "inputPrice": 3,
+    "outputPrice": 15,
+    "contextWindow": 131072,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "google/gemini-2.5-pro-preview",
+    "provider": "Google",
+    "model": "Google: Gemini 2.5 Pro Preview 06-05",
+    "inputPrice": 1.25,
+    "outputPrice": 10,
+    "contextWindow": 1048576,
+    "features": [
+      "Tool Choice",
+      "Vision Capabilities",
+      "Reasoning",
+      "Audio Input"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "deepseek/deepseek-r1-0528",
+    "provider": "Deepseek",
+    "model": "DeepSeek: R1 0528",
+    "inputPrice": 0.39999999999999997,
+    "outputPrice": 1.75,
+    "contextWindow": 163840,
+    "features": [
+      "Tool Choice",
+      "Reasoning"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "anthropic/claude-opus-4",
+    "provider": "Anthropic",
+    "model": "Anthropic: Claude Opus 4",
+    "inputPrice": 15,
+    "outputPrice": 75,
+    "contextWindow": 200000,
+    "features": [
+      "Tool Choice",
+      "Vision Capabilities",
+      "Reasoning"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "anthropic/claude-sonnet-4",
+    "provider": "Anthropic",
+    "model": "Anthropic: Claude Sonnet 4",
+    "inputPrice": 3,
+    "outputPrice": 15,
+    "contextWindow": 1000000,
+    "features": [
+      "Tool Choice",
+      "Vision Capabilities",
+      "Reasoning"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "google/gemma-3n-e4b-it",
+    "provider": "Google",
+    "model": "Google: Gemma 3n 4B",
+    "inputPrice": 0.02,
+    "outputPrice": 0.04,
+    "contextWindow": 32768,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "mistralai/mistral-medium-3",
+    "provider": "Mistralai",
+    "model": "Mistral: Mistral Medium 3",
+    "inputPrice": 0.39999999999999997,
+    "outputPrice": 2,
+    "contextWindow": 131072,
+    "features": [
+      "Tool Choice",
+      "Vision Capabilities"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "google/gemini-2.5-pro-preview-05-06",
+    "provider": "Google",
+    "model": "Google: Gemini 2.5 Pro Preview 05-06",
+    "inputPrice": 1.25,
+    "outputPrice": 10,
+    "contextWindow": 1048576,
+    "features": [
+      "Tool Choice",
+      "Vision Capabilities",
+      "Reasoning",
+      "Audio Input"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "arcee-ai/spotlight",
+    "provider": "Arcee Ai",
+    "model": "Arcee AI: Spotlight",
+    "inputPrice": 0.18,
+    "outputPrice": 0.18,
+    "contextWindow": 131072,
+    "features": [
+      "Tool Choice",
+      "Vision Capabilities"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "arcee-ai/maestro-reasoning",
+    "provider": "Arcee Ai",
+    "model": "Arcee AI: Maestro Reasoning",
+    "inputPrice": 0.8999999999999999,
+    "outputPrice": 3.3000000000000003,
+    "contextWindow": 131072,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "arcee-ai/virtuoso-large",
+    "provider": "Arcee Ai",
+    "model": "Arcee AI: Virtuoso Large",
+    "inputPrice": 0.75,
+    "outputPrice": 1.2,
+    "contextWindow": 131072,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "arcee-ai/coder-large",
+    "provider": "Arcee Ai",
+    "model": "Arcee AI: Coder Large",
+    "inputPrice": 0.5,
+    "outputPrice": 0.7999999999999999,
+    "contextWindow": 32768,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "inception/mercury-coder",
+    "provider": "Inception",
+    "model": "Inception: Mercury Coder",
+    "inputPrice": 0.25,
+    "outputPrice": 1,
+    "contextWindow": 128000,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "meta-llama/llama-guard-4-12b",
+    "provider": "Meta Llama",
+    "model": "Meta: Llama Guard 4 12B",
+    "inputPrice": 0.18,
+    "outputPrice": 0.18,
+    "contextWindow": 163840,
+    "features": [
+      "Tool Choice",
+      "Vision Capabilities"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "qwen/qwen3-30b-a3b",
+    "provider": "Qwen",
+    "model": "Qwen: Qwen3 30B A3B",
+    "inputPrice": 0.08,
+    "outputPrice": 0.28,
+    "contextWindow": 40960,
+    "features": [
+      "Tool Choice",
+      "Reasoning"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "qwen/qwen3-8b",
+    "provider": "Qwen",
+    "model": "Qwen: Qwen3 8B",
+    "inputPrice": 0.049999999999999996,
+    "outputPrice": 0.39999999999999997,
+    "contextWindow": 32000,
+    "features": [
+      "Tool Choice",
+      "Reasoning"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "qwen/qwen3-14b",
+    "provider": "Qwen",
+    "model": "Qwen: Qwen3 14B",
+    "inputPrice": 0.06,
+    "outputPrice": 0.24,
+    "contextWindow": 40960,
+    "features": [
+      "Tool Choice",
+      "Reasoning"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "qwen/qwen3-32b",
+    "provider": "Qwen",
+    "model": "Qwen: Qwen3 32B",
+    "inputPrice": 0.08,
+    "outputPrice": 0.24,
+    "contextWindow": 40960,
+    "features": [
+      "Tool Choice",
+      "Reasoning"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "qwen/qwen3-235b-a22b",
+    "provider": "Qwen",
+    "model": "Qwen: Qwen3 235B A22B",
+    "inputPrice": 0.45499999999999996,
+    "outputPrice": 1.8199999999999998,
+    "contextWindow": 131072,
+    "features": [
+      "Tool Choice",
+      "Reasoning"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "openai/o4-mini-high",
+    "provider": "Openai",
+    "model": "OpenAI: o4 Mini High",
+    "inputPrice": 1.1,
+    "outputPrice": 4.4,
+    "contextWindow": 200000,
+    "features": [
+      "Tool Choice",
+      "Vision Capabilities",
+      "Reasoning"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "openai/o3",
+    "provider": "Openai",
+    "model": "OpenAI: o3",
+    "inputPrice": 2,
+    "outputPrice": 8,
+    "contextWindow": 200000,
+    "features": [
+      "Tool Choice",
+      "Vision Capabilities",
+      "Reasoning"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "openai/o4-mini",
+    "provider": "Openai",
+    "model": "OpenAI: o4 Mini",
+    "inputPrice": 1.1,
+    "outputPrice": 4.4,
+    "contextWindow": 200000,
+    "features": [
+      "Tool Choice",
+      "Vision Capabilities",
+      "Reasoning"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "qwen/qwen2.5-coder-7b-instruct",
+    "provider": "Qwen",
+    "model": "Qwen: Qwen2.5 Coder 7B Instruct",
+    "inputPrice": 0.03,
+    "outputPrice": 0.09,
+    "contextWindow": 32768,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "openai/gpt-4.1",
+    "provider": "Openai",
+    "model": "OpenAI: GPT-4.1",
+    "inputPrice": 2,
+    "outputPrice": 8,
+    "contextWindow": 1047576,
+    "features": [
+      "Tool Choice",
+      "Vision Capabilities"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "openai/gpt-4.1-mini",
+    "provider": "Openai",
+    "model": "OpenAI: GPT-4.1 Mini",
+    "inputPrice": 0.39999999999999997,
+    "outputPrice": 1.5999999999999999,
+    "contextWindow": 1047576,
+    "features": [
+      "Tool Choice",
+      "Vision Capabilities"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "openai/gpt-4.1-nano",
+    "provider": "Openai",
+    "model": "OpenAI: GPT-4.1 Nano",
+    "inputPrice": 0.09999999999999999,
+    "outputPrice": 0.39999999999999997,
+    "contextWindow": 1047576,
+    "features": [
+      "Tool Choice",
+      "Vision Capabilities"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "eleutherai/llemma_7b",
+    "provider": "Eleutherai",
+    "model": "EleutherAI: Llemma 7b",
+    "inputPrice": 0.7999999999999999,
+    "outputPrice": 1.2,
+    "contextWindow": 4096,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "alfredpros/codellama-7b-instruct-solidity",
+    "provider": "Alfredpros",
+    "model": "AlfredPros: CodeLLaMa 7B Instruct Solidity",
+    "inputPrice": 0.7999999999999999,
+    "outputPrice": 1.2,
+    "contextWindow": 4096,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "x-ai/grok-3-mini-beta",
+    "provider": "X Ai",
+    "model": "xAI: Grok 3 Mini Beta",
+    "inputPrice": 0.3,
+    "outputPrice": 0.5,
+    "contextWindow": 131072,
+    "features": [
+      "Tool Choice",
+      "Reasoning"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "x-ai/grok-3-beta",
+    "provider": "X Ai",
+    "model": "xAI: Grok 3 Beta",
+    "inputPrice": 3,
+    "outputPrice": 15,
+    "contextWindow": 131072,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "nvidia/llama-3.1-nemotron-ultra-253b-v1",
+    "provider": "Nvidia",
+    "model": "NVIDIA: Llama 3.1 Nemotron Ultra 253B v1",
+    "inputPrice": 0.6,
+    "outputPrice": 1.7999999999999998,
+    "contextWindow": 131072,
+    "features": [
+      "Tool Choice",
+      "Reasoning"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "meta-llama/llama-4-maverick",
+    "provider": "Meta Llama",
+    "model": "Meta: Llama 4 Maverick",
+    "inputPrice": 0.15,
+    "outputPrice": 0.6,
+    "contextWindow": 1048576,
+    "features": [
+      "Tool Choice",
+      "Vision Capabilities"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "meta-llama/llama-4-scout",
+    "provider": "Meta Llama",
+    "model": "Meta: Llama 4 Scout",
+    "inputPrice": 0.08,
+    "outputPrice": 0.3,
+    "contextWindow": 327680,
+    "features": [
+      "Tool Choice",
+      "Vision Capabilities"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "qwen/qwen2.5-vl-32b-instruct",
+    "provider": "Qwen",
+    "model": "Qwen: Qwen2.5 VL 32B Instruct",
+    "inputPrice": 0.19999999999999998,
+    "outputPrice": 0.6,
+    "contextWindow": 128000,
+    "features": [
+      "Tool Choice",
+      "Vision Capabilities"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "deepseek/deepseek-chat-v3-0324",
+    "provider": "Deepseek",
+    "model": "DeepSeek: DeepSeek V3 0324",
+    "inputPrice": 0.19,
+    "outputPrice": 0.87,
+    "contextWindow": 163840,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "openai/o1-pro",
+    "provider": "Openai",
+    "model": "OpenAI: o1-pro",
+    "inputPrice": 150,
+    "outputPrice": 600,
+    "contextWindow": 200000,
+    "features": [
+      "Tool Choice",
+      "Vision Capabilities",
+      "Reasoning"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "mistralai/mistral-small-3.1-24b-instruct",
+    "provider": "Mistralai",
+    "model": "Mistral: Mistral Small 3.1 24B",
+    "inputPrice": 0.35,
+    "outputPrice": 0.56,
+    "contextWindow": 128000,
+    "features": [
+      "Tool Choice",
+      "Vision Capabilities"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "allenai/olmo-2-0325-32b-instruct",
+    "provider": "Allenai",
+    "model": "AllenAI: Olmo 2 32B Instruct",
+    "inputPrice": 0.049999999999999996,
+    "outputPrice": 0.19999999999999998,
+    "contextWindow": 128000,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "google/gemma-3-4b-it",
+    "provider": "Google",
+    "model": "Google: Gemma 3 4B",
+    "inputPrice": 0.04,
+    "outputPrice": 0.08,
+    "contextWindow": 131072,
+    "features": [
+      "Tool Choice",
+      "Vision Capabilities"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "google/gemma-3-12b-it",
+    "provider": "Google",
+    "model": "Google: Gemma 3 12B",
+    "inputPrice": 0.04,
+    "outputPrice": 0.13,
+    "contextWindow": 131072,
+    "features": [
+      "Tool Choice",
+      "Vision Capabilities"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "cohere/command-a",
+    "provider": "Cohere",
+    "model": "Cohere: Command A",
+    "inputPrice": 2.5,
+    "outputPrice": 10,
+    "contextWindow": 256000,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "openai/gpt-4o-mini-search-preview",
+    "provider": "Openai",
+    "model": "OpenAI: GPT-4o-mini Search Preview",
+    "inputPrice": 0.15,
+    "outputPrice": 0.6,
+    "contextWindow": 128000,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "openai/gpt-4o-search-preview",
+    "provider": "Openai",
+    "model": "OpenAI: GPT-4o Search Preview",
+    "inputPrice": 2.5,
+    "outputPrice": 10,
+    "contextWindow": 128000,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "google/gemma-3-27b-it",
+    "provider": "Google",
+    "model": "Google: Gemma 3 27B",
+    "inputPrice": 0.04,
+    "outputPrice": 0.15,
+    "contextWindow": 128000,
+    "features": [
+      "Tool Choice",
+      "Vision Capabilities"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "thedrummer/skyfall-36b-v2",
+    "provider": "Thedrummer",
+    "model": "TheDrummer: Skyfall 36B V2",
+    "inputPrice": 0.55,
+    "outputPrice": 0.7999999999999999,
+    "contextWindow": 32768,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "perplexity/sonar-reasoning-pro",
+    "provider": "Perplexity",
+    "model": "Perplexity: Sonar Reasoning Pro",
+    "inputPrice": 2,
+    "outputPrice": 8,
+    "contextWindow": 128000,
+    "features": [
+      "Tool Choice",
+      "Vision Capabilities",
+      "Reasoning"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "perplexity/sonar-pro",
+    "provider": "Perplexity",
+    "model": "Perplexity: Sonar Pro",
+    "inputPrice": 3,
+    "outputPrice": 15,
+    "contextWindow": 200000,
+    "features": [
+      "Tool Choice",
+      "Vision Capabilities"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "perplexity/sonar-deep-research",
+    "provider": "Perplexity",
+    "model": "Perplexity: Sonar Deep Research",
+    "inputPrice": 2,
+    "outputPrice": 8,
+    "contextWindow": 128000,
+    "features": [
+      "Tool Choice",
+      "Reasoning"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "qwen/qwq-32b",
+    "provider": "Qwen",
+    "model": "Qwen: QwQ 32B",
+    "inputPrice": 0.15,
+    "outputPrice": 0.39999999999999997,
+    "contextWindow": 32768,
+    "features": [
+      "Tool Choice",
+      "Reasoning"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "google/gemini-2.0-flash-lite-001",
+    "provider": "Google",
+    "model": "Google: Gemini 2.0 Flash Lite",
+    "inputPrice": 0.075,
+    "outputPrice": 0.3,
+    "contextWindow": 1048576,
+    "features": [
+      "Tool Choice",
+      "Vision Capabilities",
+      "Reasoning",
+      "Audio Input"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "anthropic/claude-3.7-sonnet",
+    "provider": "Anthropic",
+    "model": "Anthropic: Claude 3.7 Sonnet",
+    "inputPrice": 3,
+    "outputPrice": 15,
+    "contextWindow": 200000,
+    "features": [
+      "Tool Choice",
+      "Vision Capabilities",
+      "Reasoning"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "anthropic/claude-3.7-sonnet",
+    "provider": "Anthropic",
+    "model": "Anthropic: Claude 3.7 Sonnet (thinking)",
+    "inputPrice": 3,
+    "outputPrice": 15,
+    "contextWindow": 200000,
+    "features": [
+      "Tool Choice",
+      "Vision Capabilities",
+      "Reasoning"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "mistralai/mistral-saba",
+    "provider": "Mistralai",
+    "model": "Mistral: Saba",
+    "inputPrice": 0.19999999999999998,
+    "outputPrice": 0.6,
+    "contextWindow": 32768,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "meta-llama/llama-guard-3-8b",
+    "provider": "Meta Llama",
+    "model": "Llama Guard 3 8B",
+    "inputPrice": 0.02,
+    "outputPrice": 0.06,
+    "contextWindow": 131072,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "openai/o3-mini-high",
+    "provider": "Openai",
+    "model": "OpenAI: o3 Mini High",
+    "inputPrice": 1.1,
+    "outputPrice": 4.4,
+    "contextWindow": 200000,
+    "features": [
+      "Tool Choice",
+      "Reasoning"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "google/gemini-2.0-flash-001",
+    "provider": "Google",
+    "model": "Google: Gemini 2.0 Flash",
+    "inputPrice": 0.09999999999999999,
+    "outputPrice": 0.39999999999999997,
+    "contextWindow": 1048576,
+    "features": [
+      "Tool Choice",
+      "Vision Capabilities",
+      "Reasoning",
+      "Audio Input"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "qwen/qwen-vl-plus",
+    "provider": "Qwen",
+    "model": "Qwen: Qwen VL Plus",
+    "inputPrice": 0.21,
+    "outputPrice": 0.63,
+    "contextWindow": 131072,
+    "features": [
+      "Tool Choice",
+      "Vision Capabilities"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "aion-labs/aion-1.0",
+    "provider": "Aion Labs",
+    "model": "AionLabs: Aion-1.0",
+    "inputPrice": 4,
+    "outputPrice": 8,
+    "contextWindow": 131072,
+    "features": [
+      "Tool Choice",
+      "Reasoning"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "aion-labs/aion-1.0-mini",
+    "provider": "Aion Labs",
+    "model": "AionLabs: Aion-1.0-Mini",
+    "inputPrice": 0.7,
+    "outputPrice": 1.4,
+    "contextWindow": 131072,
+    "features": [
+      "Tool Choice",
+      "Reasoning"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "aion-labs/aion-rp-llama-3.1-8b",
+    "provider": "Aion Labs",
+    "model": "AionLabs: Aion-RP 1.0 (8B)",
+    "inputPrice": 0.7999999999999999,
+    "outputPrice": 1.5999999999999999,
+    "contextWindow": 32768,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "qwen/qwen-vl-max",
+    "provider": "Qwen",
+    "model": "Qwen: Qwen VL Max",
+    "inputPrice": 0.7999999999999999,
+    "outputPrice": 3.1999999999999997,
+    "contextWindow": 131072,
+    "features": [
+      "Tool Choice",
+      "Vision Capabilities"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "qwen/qwen-turbo",
+    "provider": "Qwen",
+    "model": "Qwen: Qwen-Turbo",
+    "inputPrice": 0.049999999999999996,
+    "outputPrice": 0.19999999999999998,
+    "contextWindow": 131072,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "qwen/qwen2.5-vl-72b-instruct",
+    "provider": "Qwen",
+    "model": "Qwen: Qwen2.5 VL 72B Instruct",
+    "inputPrice": 0.7999999999999999,
+    "outputPrice": 0.7999999999999999,
+    "contextWindow": 32768,
+    "features": [
+      "Tool Choice",
+      "Vision Capabilities"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "qwen/qwen-plus",
+    "provider": "Qwen",
+    "model": "Qwen: Qwen-Plus",
+    "inputPrice": 0.39999999999999997,
+    "outputPrice": 1.2,
+    "contextWindow": 1000000,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "qwen/qwen-max",
+    "provider": "Qwen",
+    "model": "Qwen: Qwen-Max ",
+    "inputPrice": 1.5999999999999999,
+    "outputPrice": 6.3999999999999995,
+    "contextWindow": 32768,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "openai/o3-mini",
+    "provider": "Openai",
+    "model": "OpenAI: o3 Mini",
+    "inputPrice": 1.1,
+    "outputPrice": 4.4,
+    "contextWindow": 200000,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "mistralai/mistral-small-24b-instruct-2501",
+    "provider": "Mistralai",
+    "model": "Mistral: Mistral Small 3",
+    "inputPrice": 0.049999999999999996,
+    "outputPrice": 0.08,
+    "contextWindow": 32768,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "deepseek/deepseek-r1-distill-qwen-32b",
+    "provider": "Deepseek",
+    "model": "DeepSeek: R1 Distill Qwen 32B",
+    "inputPrice": 0.29,
+    "outputPrice": 0.29,
+    "contextWindow": 32768,
+    "features": [
+      "Tool Choice",
+      "Reasoning"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "perplexity/sonar",
+    "provider": "Perplexity",
+    "model": "Perplexity: Sonar",
+    "inputPrice": 1,
+    "outputPrice": 1,
+    "contextWindow": 127072,
+    "features": [
+      "Tool Choice",
+      "Vision Capabilities"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "deepseek/deepseek-r1-distill-llama-70b",
+    "provider": "Deepseek",
+    "model": "DeepSeek: R1 Distill Llama 70B",
+    "inputPrice": 0.7,
+    "outputPrice": 0.7999999999999999,
+    "contextWindow": 131072,
+    "features": [
+      "Tool Choice",
+      "Reasoning"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "deepseek/deepseek-r1",
+    "provider": "Deepseek",
+    "model": "DeepSeek: R1",
+    "inputPrice": 0.7,
+    "outputPrice": 2.5,
+    "contextWindow": 64000,
+    "features": [
+      "Tool Choice",
+      "Reasoning"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "minimax/minimax-01",
+    "provider": "Minimax",
+    "model": "MiniMax: MiniMax-01",
+    "inputPrice": 0.19999999999999998,
+    "outputPrice": 1.1,
+    "contextWindow": 1000192,
+    "features": [
+      "Tool Choice",
+      "Vision Capabilities"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "microsoft/phi-4",
+    "provider": "Microsoft",
+    "model": "Microsoft: Phi 4",
+    "inputPrice": 0.06,
+    "outputPrice": 0.14,
+    "contextWindow": 16384,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "sao10k/l3.1-70b-hanami-x1",
+    "provider": "Sao10k",
+    "model": "Sao10K: Llama 3.1 70B Hanami x1",
+    "inputPrice": 3,
+    "outputPrice": 3,
+    "contextWindow": 16000,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "deepseek/deepseek-chat",
+    "provider": "Deepseek Ai",
+    "model": "DeepSeek: DeepSeek V3",
+    "inputPrice": 0.32,
+    "outputPrice": 0.8899999999999999,
+    "contextWindow": 163840,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "sao10k/l3.3-euryale-70b",
+    "provider": "Sao10k",
+    "model": "Sao10K: Llama 3.3 Euryale 70B",
+    "inputPrice": 0.65,
+    "outputPrice": 0.75,
+    "contextWindow": 131072,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "openai/o1",
+    "provider": "Openai",
+    "model": "OpenAI: o1",
+    "inputPrice": 15,
+    "outputPrice": 60,
+    "contextWindow": 200000,
+    "features": [
+      "Tool Choice",
+      "Vision Capabilities"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "cohere/command-r7b-12-2024",
+    "provider": "Cohere",
+    "model": "Cohere: Command R7B (12-2024)",
+    "inputPrice": 0.0375,
+    "outputPrice": 0.15,
+    "contextWindow": 128000,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "meta-llama/llama-3.3-70b-instruct",
+    "provider": "Meta Llama",
+    "model": "Meta: Llama 3.3 70B Instruct",
+    "inputPrice": 0.09999999999999999,
+    "outputPrice": 0.32,
+    "contextWindow": 131072,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "amazon/nova-lite-v1",
+    "provider": "Amazon",
+    "model": "Amazon: Nova Lite 1.0",
+    "inputPrice": 0.06,
+    "outputPrice": 0.24,
+    "contextWindow": 300000,
+    "features": [
+      "Tool Choice",
+      "Vision Capabilities"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "amazon/nova-micro-v1",
+    "provider": "Amazon",
+    "model": "Amazon: Nova Micro 1.0",
+    "inputPrice": 0.035,
+    "outputPrice": 0.14,
+    "contextWindow": 128000,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "amazon/nova-pro-v1",
+    "provider": "Amazon",
+    "model": "Amazon: Nova Pro 1.0",
+    "inputPrice": 0.7999999999999999,
+    "outputPrice": 3.1999999999999997,
+    "contextWindow": 300000,
+    "features": [
+      "Tool Choice",
+      "Vision Capabilities"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "openai/gpt-4o-2024-11-20",
+    "provider": "Openai",
+    "model": "OpenAI: GPT-4o (2024-11-20)",
+    "inputPrice": 2.5,
+    "outputPrice": 10,
+    "contextWindow": 128000,
+    "features": [
+      "Tool Choice",
+      "Vision Capabilities"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "mistralai/mistral-large-2411",
+    "provider": "Mistralai",
+    "model": "Mistral Large 2411",
+    "inputPrice": 2,
+    "outputPrice": 6,
+    "contextWindow": 131072,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "mistralai/mistral-large-2407",
+    "provider": "Mistralai",
+    "model": "Mistral Large 2407",
+    "inputPrice": 2,
+    "outputPrice": 6,
+    "contextWindow": 131072,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "mistralai/pixtral-large-2411",
+    "provider": "Mistralai",
+    "model": "Mistral: Pixtral Large 2411",
+    "inputPrice": 2,
+    "outputPrice": 6,
+    "contextWindow": 131072,
+    "features": [
+      "Tool Choice",
+      "Vision Capabilities"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "qwen/qwen-2.5-coder-32b-instruct",
+    "provider": "Qwen",
+    "model": "Qwen2.5 Coder 32B Instruct",
+    "inputPrice": 0.19999999999999998,
+    "outputPrice": 0.19999999999999998,
+    "contextWindow": 32768,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "raifle/sorcererlm-8x22b",
+    "provider": "Raifle",
+    "model": "SorcererLM 8x22B",
+    "inputPrice": 4.5,
+    "outputPrice": 4.5,
+    "contextWindow": 16000,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "thedrummer/unslopnemo-12b",
+    "provider": "Thedrummer",
+    "model": "TheDrummer: UnslopNemo 12B",
+    "inputPrice": 0.39999999999999997,
+    "outputPrice": 0.39999999999999997,
+    "contextWindow": 32768,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "anthropic/claude-3.5-haiku",
+    "provider": "Anthropic",
+    "model": "Anthropic: Claude 3.5 Haiku",
+    "inputPrice": 0.7999999999999999,
+    "outputPrice": 4,
+    "contextWindow": 200000,
+    "features": [
+      "Tool Choice",
+      "Vision Capabilities"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "anthracite-org/magnum-v4-72b",
+    "provider": "Anthracite Org",
+    "model": "Magnum v4 72B",
+    "inputPrice": 3,
+    "outputPrice": 5,
+    "contextWindow": 16384,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "anthropic/claude-3.5-sonnet",
+    "provider": "Anthropic",
+    "model": "Anthropic: Claude 3.5 Sonnet",
+    "inputPrice": 6,
+    "outputPrice": 30,
+    "contextWindow": 200000,
+    "features": [
+      "Tool Choice",
+      "Vision Capabilities"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "qwen/qwen-2.5-7b-instruct",
+    "provider": "Qwen",
+    "model": "Qwen: Qwen2.5 7B Instruct",
+    "inputPrice": 0.04,
+    "outputPrice": 0.09999999999999999,
+    "contextWindow": 32768,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "nvidia/llama-3.1-nemotron-70b-instruct",
+    "provider": "Nvidia",
+    "model": "NVIDIA: Llama 3.1 Nemotron 70B Instruct",
+    "inputPrice": 1.2,
+    "outputPrice": 1.2,
+    "contextWindow": 131072,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "inflection/inflection-3-pi",
+    "provider": "Inflection",
+    "model": "Inflection: Inflection 3 Pi",
+    "inputPrice": 2.5,
+    "outputPrice": 10,
+    "contextWindow": 8000,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "inflection/inflection-3-productivity",
+    "provider": "Inflection",
+    "model": "Inflection: Inflection 3 Productivity",
+    "inputPrice": 2.5,
+    "outputPrice": 10,
+    "contextWindow": 8000,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "thedrummer/rocinante-12b",
+    "provider": "Thedrummer",
+    "model": "TheDrummer: Rocinante 12B",
+    "inputPrice": 0.16999999999999998,
+    "outputPrice": 0.43,
+    "contextWindow": 32768,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "meta-llama/llama-3.2-3b-instruct",
+    "provider": "Meta Llama",
+    "model": "Meta: Llama 3.2 3B Instruct",
+    "inputPrice": 0.02,
+    "outputPrice": 0.02,
+    "contextWindow": 131072,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "meta-llama/llama-3.2-1b-instruct",
+    "provider": "Meta Llama",
+    "model": "Meta: Llama 3.2 1B Instruct",
+    "inputPrice": 0.027,
+    "outputPrice": 0.19999999999999998,
+    "contextWindow": 60000,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "meta-llama/llama-3.2-11b-vision-instruct",
+    "provider": "Meta Llama",
+    "model": "Meta: Llama 3.2 11B Vision Instruct",
+    "inputPrice": 0.049,
+    "outputPrice": 0.049,
+    "contextWindow": 131072,
+    "features": [
+      "Tool Choice",
+      "Vision Capabilities"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "qwen/qwen-2.5-72b-instruct",
+    "provider": "Qwen",
+    "model": "Qwen2.5 72B Instruct",
+    "inputPrice": 0.12,
+    "outputPrice": 0.39,
+    "contextWindow": 32768,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "neversleep/llama-3.1-lumimaid-8b",
+    "provider": "Neversleep",
+    "model": "NeverSleep: Lumimaid v0.2 8B",
+    "inputPrice": 0.09,
+    "outputPrice": 0.6,
+    "contextWindow": 32768,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "cohere/command-r-08-2024",
+    "provider": "Cohere",
+    "model": "Cohere: Command R (08-2024)",
+    "inputPrice": 0.15,
+    "outputPrice": 0.6,
+    "contextWindow": 128000,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "cohere/command-r-plus-08-2024",
+    "provider": "Cohere",
+    "model": "Cohere: Command R+ (08-2024)",
+    "inputPrice": 2.5,
+    "outputPrice": 10,
+    "contextWindow": 128000,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "sao10k/l3.1-euryale-70b",
+    "provider": "Sao10k",
+    "model": "Sao10K: Llama 3.1 Euryale 70B v2.2",
+    "inputPrice": 0.65,
+    "outputPrice": 0.75,
+    "contextWindow": 32768,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "qwen/qwen-2.5-vl-7b-instruct",
+    "provider": "Qwen",
+    "model": "Qwen: Qwen2.5-VL 7B Instruct",
+    "inputPrice": 0.19999999999999998,
+    "outputPrice": 0.19999999999999998,
+    "contextWindow": 32768,
+    "features": [
+      "Tool Choice",
+      "Vision Capabilities"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "nousresearch/hermes-3-llama-3.1-70b",
+    "provider": "Nousresearch",
+    "model": "Nous: Hermes 3 70B Instruct",
+    "inputPrice": 0.3,
+    "outputPrice": 0.3,
+    "contextWindow": 65536,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "nousresearch/hermes-3-llama-3.1-405b",
+    "provider": "Nousresearch",
+    "model": "Nous: Hermes 3 405B Instruct",
+    "inputPrice": 1,
+    "outputPrice": 1,
+    "contextWindow": 131072,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "sao10k/l3-lunaris-8b",
+    "provider": "Sao10k",
+    "model": "Sao10K: Llama 3 8B Lunaris",
+    "inputPrice": 0.04,
+    "outputPrice": 0.049999999999999996,
+    "contextWindow": 8192,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "openai/gpt-4o-2024-08-06",
+    "provider": "Openai",
+    "model": "OpenAI: GPT-4o (2024-08-06)",
+    "inputPrice": 2.5,
+    "outputPrice": 10,
+    "contextWindow": 128000,
+    "features": [
+      "Tool Choice",
+      "Vision Capabilities"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "meta-llama/llama-3.1-405b",
+    "provider": "Meta Llama",
+    "model": "Meta: Llama 3.1 405B (base)",
+    "inputPrice": 4,
+    "outputPrice": 4,
+    "contextWindow": 32768,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "meta-llama/llama-3.1-8b-instruct",
+    "provider": "Meta Llama",
+    "model": "Meta: Llama 3.1 8B Instruct",
+    "inputPrice": 0.02,
+    "outputPrice": 0.049999999999999996,
+    "contextWindow": 16384,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "meta-llama/llama-3.1-405b-instruct",
+    "provider": "Meta Llama",
+    "model": "Meta: Llama 3.1 405B Instruct",
+    "inputPrice": 4,
+    "outputPrice": 4,
+    "contextWindow": 131000,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "meta-llama/llama-3.1-70b-instruct",
+    "provider": "Meta Llama",
+    "model": "Meta: Llama 3.1 70B Instruct",
+    "inputPrice": 0.39999999999999997,
+    "outputPrice": 0.39999999999999997,
+    "contextWindow": 131072,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "mistralai/mistral-nemo",
+    "provider": "Mistralai",
+    "model": "Mistral: Mistral Nemo",
+    "inputPrice": 0.02,
+    "outputPrice": 0.04,
+    "contextWindow": 131072,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "openai/gpt-4o-mini-2024-07-18",
+    "provider": "Openai",
+    "model": "OpenAI: GPT-4o-mini (2024-07-18)",
+    "inputPrice": 0.15,
+    "outputPrice": 0.6,
+    "contextWindow": 128000,
+    "features": [
+      "Tool Choice",
+      "Vision Capabilities"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "openai/gpt-4o-mini",
+    "provider": "Openai",
+    "model": "OpenAI: GPT-4o-mini",
+    "inputPrice": 0.15,
+    "outputPrice": 0.6,
+    "contextWindow": 128000,
+    "features": [
+      "Tool Choice",
+      "Vision Capabilities"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "google/gemma-2-27b-it",
+    "provider": "Google",
+    "model": "Google: Gemma 2 27B",
+    "inputPrice": 0.65,
+    "outputPrice": 0.65,
+    "contextWindow": 8192,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "google/gemma-2-9b-it",
+    "provider": "Google",
+    "model": "Google: Gemma 2 9B",
+    "inputPrice": 0.03,
+    "outputPrice": 0.09,
+    "contextWindow": 8192,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "sao10k/l3-euryale-70b",
+    "provider": "Sao10k",
+    "model": "Sao10k: Llama 3 Euryale 70B v2.1",
+    "inputPrice": 1.48,
+    "outputPrice": 1.48,
+    "contextWindow": 8192,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "nousresearch/hermes-2-pro-llama-3-8b",
+    "provider": "Nousresearch",
+    "model": "NousResearch: Hermes 2 Pro - Llama-3 8B",
+    "inputPrice": 0.14,
+    "outputPrice": 0.14,
+    "contextWindow": 8192,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "mistralai/mistral-7b-instruct",
+    "provider": "Mistralai",
+    "model": "Mistral: Mistral 7B Instruct",
+    "inputPrice": 0.19999999999999998,
+    "outputPrice": 0.19999999999999998,
+    "contextWindow": 32768,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "mistralai/mistral-7b-instruct-v0.3",
+    "provider": "Mistralai",
+    "model": "Mistral: Mistral 7B Instruct v0.3",
+    "inputPrice": 0.19999999999999998,
+    "outputPrice": 0.19999999999999998,
+    "contextWindow": 32768,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "meta-llama/llama-guard-2-8b",
+    "provider": "Meta Llama",
+    "model": "Meta: LlamaGuard 2 8B",
+    "inputPrice": 0.19999999999999998,
+    "outputPrice": 0.19999999999999998,
+    "contextWindow": 8192,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "openai/gpt-4o-2024-05-13",
+    "provider": "Openai",
+    "model": "OpenAI: GPT-4o (2024-05-13)",
+    "inputPrice": 5,
+    "outputPrice": 15,
+    "contextWindow": 128000,
+    "features": [
+      "Tool Choice",
+      "Vision Capabilities"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "openai/gpt-4o",
+    "provider": "Openai",
+    "model": "OpenAI: GPT-4o",
+    "inputPrice": 2.5,
+    "outputPrice": 10,
+    "contextWindow": 128000,
+    "features": [
+      "Tool Choice",
+      "Vision Capabilities"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "openai/gpt-4o",
+    "provider": "Openai",
+    "model": "OpenAI: GPT-4o (extended)",
+    "inputPrice": 6,
+    "outputPrice": 18,
+    "contextWindow": 128000,
+    "features": [
+      "Tool Choice",
+      "Vision Capabilities"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "meta-llama/llama-3-70b-instruct",
+    "provider": "Meta Llama",
+    "model": "Meta: Llama 3 70B Instruct",
+    "inputPrice": 0.51,
+    "outputPrice": 0.74,
+    "contextWindow": 8192,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "meta-llama/llama-3-8b-instruct",
+    "provider": "Meta Llama",
+    "model": "Meta: Llama 3 8B Instruct",
+    "inputPrice": 0.03,
+    "outputPrice": 0.04,
+    "contextWindow": 8192,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "mistralai/mixtral-8x22b-instruct",
+    "provider": "Mistralai",
+    "model": "Mistral: Mixtral 8x22B Instruct",
+    "inputPrice": 2,
+    "outputPrice": 6,
+    "contextWindow": 65536,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "microsoft/wizardlm-2-8x22b",
+    "provider": "Microsoft",
+    "model": "WizardLM-2 8x22B",
+    "inputPrice": 0.62,
+    "outputPrice": 0.62,
+    "contextWindow": 65535,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "openai/gpt-4-turbo",
+    "provider": "Openai",
+    "model": "OpenAI: GPT-4 Turbo",
+    "inputPrice": 10,
+    "outputPrice": 30,
+    "contextWindow": 128000,
+    "features": [
+      "Tool Choice",
+      "Vision Capabilities"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "anthropic/claude-3-haiku",
+    "provider": "Anthropic",
+    "model": "Anthropic: Claude 3 Haiku",
+    "inputPrice": 0.25,
+    "outputPrice": 1.25,
+    "contextWindow": 200000,
+    "features": [
+      "Tool Choice",
+      "Vision Capabilities"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "mistralai/mistral-large",
+    "provider": "Mistralai",
+    "model": "Mistral Large",
+    "inputPrice": 2,
+    "outputPrice": 6,
+    "contextWindow": 128000,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "openai/gpt-3.5-turbo-0613",
+    "provider": "Openai",
+    "model": "OpenAI: GPT-3.5 Turbo (older v0613)",
+    "inputPrice": 1,
+    "outputPrice": 2,
+    "contextWindow": 4095,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "openai/gpt-4-turbo-preview",
+    "provider": "Openai",
+    "model": "OpenAI: GPT-4 Turbo Preview",
+    "inputPrice": 10,
+    "outputPrice": 30,
+    "contextWindow": 128000,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "mistralai/mistral-7b-instruct-v0.2",
+    "provider": "Mistralai",
+    "model": "Mistral: Mistral 7B Instruct v0.2",
+    "inputPrice": 0.19999999999999998,
+    "outputPrice": 0.19999999999999998,
+    "contextWindow": 32768,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "mistralai/mixtral-8x7b-instruct",
+    "provider": "Mistralai",
+    "model": "Mistral: Mixtral 8x7B Instruct",
+    "inputPrice": 0.54,
+    "outputPrice": 0.54,
+    "contextWindow": 32768,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "neversleep/noromaid-20b",
+    "provider": "Neversleep",
+    "model": "Noromaid 20B",
+    "inputPrice": 1,
+    "outputPrice": 1.75,
+    "contextWindow": 4096,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "alpindale/goliath-120b",
+    "provider": "Alpindale",
+    "model": "Goliath 120B",
+    "inputPrice": 3.75,
+    "outputPrice": 7.5,
+    "contextWindow": 6144,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "openai/gpt-4-1106-preview",
+    "provider": "Openai",
+    "model": "OpenAI: GPT-4 Turbo (older v1106)",
+    "inputPrice": 10,
+    "outputPrice": 30,
+    "contextWindow": 128000,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "openai/gpt-3.5-turbo-instruct",
+    "provider": "Openai",
+    "model": "OpenAI: GPT-3.5 Turbo Instruct",
+    "inputPrice": 1.5,
+    "outputPrice": 2,
+    "contextWindow": 4095,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "mistralai/mistral-7b-instruct-v0.1",
+    "provider": "Mistralai",
+    "model": "Mistral: Mistral 7B Instruct v0.1",
+    "inputPrice": 0.11,
+    "outputPrice": 0.19,
+    "contextWindow": 2824,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "openai/gpt-3.5-turbo-16k",
+    "provider": "Openai",
+    "model": "OpenAI: GPT-3.5 Turbo 16k",
+    "inputPrice": 3,
+    "outputPrice": 4,
+    "contextWindow": 16385,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "mancer/weaver",
+    "provider": "Mancer",
+    "model": "Mancer: Weaver (alpha)",
+    "inputPrice": 0.75,
+    "outputPrice": 1,
+    "contextWindow": 8000,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "undi95/remm-slerp-l2-13b",
+    "provider": "Undi95",
+    "model": "ReMM SLERP 13B",
+    "inputPrice": 0.44999999999999996,
+    "outputPrice": 0.65,
+    "contextWindow": 6144,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "gryphe/mythomax-l2-13b",
+    "provider": "Gryphe",
+    "model": "MythoMax 13B",
+    "inputPrice": 0.06,
+    "outputPrice": 0.06,
+    "contextWindow": 4096,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "openai/gpt-4-0314",
+    "provider": "Openai",
+    "model": "OpenAI: GPT-4 (older v0314)",
+    "inputPrice": 30,
+    "outputPrice": 60,
+    "contextWindow": 8191,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "openai/gpt-4",
+    "provider": "Openai",
+    "model": "OpenAI: GPT-4",
+    "inputPrice": 30,
+    "outputPrice": 60,
+    "contextWindow": 8191,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  },
+  {
+    "id": "openai/gpt-3.5-turbo",
+    "provider": "Openai",
+    "model": "OpenAI: GPT-3.5 Turbo",
+    "inputPrice": 0.5,
+    "outputPrice": 1.5,
+    "contextWindow": 16385,
+    "features": [
+      "Tool Choice"
+    ],
+    "bestFor": []
+  }
+]

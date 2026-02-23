@@ -21,8 +21,7 @@ const navLinks = [
   { href: "/prompts", label: "Prompts" },
   { href: "/jobs", label: "Jobs" },
   { href: "/blog", label: "Blog" },
-  { href: "/community", label: "Community" },
-  { href: "/learn", label: "Learn" },
+  { href: "/anthropic-claude-release-timelines", label: "Timeline" },
 ];
 
 const Header = () => {

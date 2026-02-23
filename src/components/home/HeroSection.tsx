@@ -90,11 +90,12 @@ const HeroSection = ({ initialQuery = "", initialStats = [] }: { initialQuery?: 
                       const route = typeRoutes[result._type] ?? "/";
                       const icon = typeIcons[result._type];
                       const label = typeLabels[result._type] ?? result._type;
+                      const itemSlug = result.slug || result._id || result.id;
 
                       return (
                         <Link
-                          key={`${result._type}-${result.id}`}
-                          href={`${route}/${result.id}`}
+                          key={`${result._type}-${itemSlug}`}
+                          href={`${route}/${itemSlug}`}
                           className="flex items-start gap-3 px-4 py-3 hover:bg-accent/50 transition-colors"
                         >
                           <div className="mt-0.5 shrink-0">{icon}</div>

@@ -24,7 +24,7 @@ export default async function Image() {
           style={{
             fontSize: 72,
             fontWeight: 800,
-            color: "#22c55e",
+            color: "#e86e42", // Primary terracotta orange
             marginBottom: 16,
           }}
         >

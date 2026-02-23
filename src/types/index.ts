@@ -273,7 +273,9 @@ export interface FeedItem {
 
 export interface SearchResult {
   _type: string;
-  id: string;
+  id?: string;
+  _id?: string;
+  slug?: string;
   title?: string;
   name?: string;
   description: string;

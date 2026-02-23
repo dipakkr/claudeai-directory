@@ -7,7 +7,7 @@ import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Search, Clock, ArrowUpRight } from "lucide-react";
+import { Search, Clock, ArrowUpRight, Link as LinkIcon, Triangle } from "lucide-react";
 import { useBlogPosts } from "@/hooks/use-blog";
 import { CollectionPageSchema } from "@/components/seo/JsonLd";
 import type { BlogPost } from "@/types";
@@ -60,108 +60,68 @@ export default function BlogClient({
       />
       <Header />
       <main className="flex-1">
-        <div className="container py-10">
-          <div className="mb-8">
-            <h1 className="text-2xl font-semibold text-foreground mb-2">Blog</h1>
-            <p className="text-sm text-muted-foreground">
-              Articles, tutorials, and guides about Claude AI and the ecosystem
-            </p>
+        <div className="container py-16 max-w-4xl mx-auto">
+          <div className="flex items-start sm:items-center justify-between gap-4 mb-12 flex-col sm:flex-row">
+            <div>
+              <h1 className="text-2xl font-medium text-foreground mb-1">Blog</h1>
+              <p className="text-sm text-muted-foreground">
+                Explore what the community is talking about
+              </p>
+            </div>
+            <Link
+              href="/submit"
+              className="px-4 py-1.5 text-sm font-medium rounded-full border border-border/80 text-muted-foreground hover:text-foreground hover:bg-accent/50 transition-colors whitespace-nowrap z-20"
+            >
+              Submit Article
+            </Link>
           </div>
 
-          <div className="relative mb-4">
-            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-            <Input
-              type="search"
-              placeholder="Search articles..."
-              defaultValue={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="h-9 bg-card border-border pl-10 text-sm"
-            />
-          </div>
-
-          <div className="flex items-center gap-1.5 mb-6 overflow-x-auto">
-            {categories.map((c) => (
-              <button
-                key={c}
-                onClick={() => setCategory(c)}
-                className={`px-2.5 py-1 text-[11px] rounded-md border transition-colors whitespace-nowrap ${
-                  category === c
-                    ? "bg-primary text-primary-foreground border-primary"
-                    : "bg-card border-border text-muted-foreground hover:text-foreground"
-                }`}
+          <div className="flex flex-col">
+            {(posts ?? []).map((post) => (
+              <div
+                key={post.id}
+                className="group relative flex items-start gap-4 py-6 border-b border-border/40 hover:bg-white/[0.02] transition-colors -mx-4 px-4 rounded-xl"
               >
-                {c}
-              </button>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 mb-2">
+                    <div className="flex h-4 w-4 shrink-0 items-center justify-center rounded bg-[#1abc9c]/20 text-[9px] font-bold text-[#1abc9c] uppercase">
+                      {post.author?.[0] ?? "C"}
+                    </div>
+                    <span className="text-xs text-muted-foreground font-medium code-font">
+                      {post.author || "Community"}
+                    </span>
+                  </div>
+
+                  <Link href={`/blog/${post.id}`} className="absolute inset-0 z-10">
+                    <span className="sr-only">View {post.title}</span>
+                  </Link>
+
+                  <h3 className="text-base font-medium text-foreground mb-2 flex items-center gap-2 pr-4">
+                    {post.title}
+                    <LinkIcon className="h-3 w-3 shrink-0 text-muted-foreground/40 opacity-0 group-hover:opacity-100 transition-opacity" />
+                  </h3>
+
+                  <p className="text-sm text-muted-foreground line-clamp-2 pr-8 leading-relaxed">
+                    {post.seo_description || post.content.substring(0, 160)}
+                  </p>
+                </div>
+
+                <div className="relative z-20 shrink-0 mt-8">
+                  <div className="flex items-center gap-1.5 rounded-full px-3 py-1 bg-white/5 hover:bg-white/10 text-muted-foreground transition-colors cursor-pointer text-[11px] font-medium border border-border/30">
+                    {post.read_time ?? 5}
+                    <Triangle className="h-2 w-2 mb-[1px]" strokeWidth={2.5} />
+                  </div>
+                </div>
+              </div>
             ))}
           </div>
 
-          <>
-            {featuredPost && !search && category === "All" && (
-              <Link
-                href={`/blog/${featuredPost.id}`}
-                className="group block rounded-lg border border-border bg-card p-6 mb-6 hover:bg-accent/50 hover:border-primary/20 transition-all"
-              >
-                <div className="flex items-center gap-2 mb-3">
-                  <Badge className="text-[10px] px-1.5 py-0 bg-primary/10 text-primary border-0">Featured</Badge>
-                  <Badge variant="secondary" className="text-[10px] px-1.5 py-0">{featuredPost.category}</Badge>
-                </div>
-                <h2 className="text-lg font-semibold text-foreground mb-2 group-hover:text-primary transition-colors">
-                  {featuredPost.title}
-                </h2>
-                <p className="text-sm text-muted-foreground line-clamp-2 mb-4">
-                  {featuredPost.seo_description || featuredPost.content.substring(0, 200)}
-                </p>
-                <div className="flex items-center gap-4 text-xs text-muted-foreground">
-                  <span>{featuredPost.author}</span>
-                  <span className="flex items-center gap-1">
-                    <Clock className="h-3 w-3" />
-                    {featuredPost.read_time} min read
-                  </span>
-                  {featuredPost.published_at && (
-                    <span>{new Date(featuredPost.published_at).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}</span>
-                  )}
-                </div>
-              </Link>
-            )}
-
-            <p className="mb-4 text-xs text-muted-foreground">{otherPosts.length} articles</p>
-
-            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-              {otherPosts.map((post) => (
-                <Link
-                  key={post.id}
-                  href={`/blog/${post.id}`}
-                  className="group rounded-lg border border-border bg-card p-4 hover:bg-accent/50 hover:border-primary/20 transition-all flex flex-col"
-                >
-                  <div className="flex items-center gap-2 mb-2.5">
-                    <Badge variant="secondary" className="text-[10px] px-1.5 py-0">{post.category}</Badge>
-                    <Badge variant="outline" className="text-[10px] px-1.5 py-0">{post.difficulty}</Badge>
-                  </div>
-                  <h3 className="text-sm font-medium text-foreground mb-2 group-hover:text-primary transition-colors">
-                    {post.title}
-                  </h3>
-                  <p className="text-xs text-muted-foreground line-clamp-2 mb-3 flex-1">
-                    {post.seo_description || post.content.substring(0, 150)}
-                  </p>
-                  <div className="flex items-center justify-between text-xs text-muted-foreground">
-                    <div className="flex items-center gap-3">
-                      <span>{post.author}</span>
-                      <span className="flex items-center gap-1">
-                        <Clock className="h-3 w-3" />
-                        {post.read_time} min
-                      </span>
-                    </div>
-                    <ArrowUpRight className="h-3.5 w-3.5 opacity-0 group-hover:opacity-100 transition-opacity" />
-                  </div>
-                </Link>
-              ))}
+          {(posts ?? []).length === 0 && (
+            <div className="py-20 text-center">
+              <p className="text-sm text-muted-foreground">No articles found.</p>
             </div>
-            {(posts ?? []).length === 0 && (
-              <div className="py-16 text-center">
-                <p className="text-sm text-muted-foreground">No articles found.</p>
-              </div>
-            )}
-          </>
+          )}
+
 
           <section className="mt-20 border-t border-border pt-12 max-w-3xl">
             <h2 className="text-lg font-semibold text-foreground mb-4">Claude AI Blog & Resources</h2>

@@ -146,7 +146,7 @@ const BlogDetailClient = ({ post }: { post: BlogPost | null }) => {
     <div className="min-h-screen bg-background flex flex-col">
       <Header />
       <main className="flex-1">
-        <div className="container py-10">
+        <div className="container py-16 max-w-4xl mx-auto">
           <PageBreadcrumb items={[
             { label: "Blog", href: "/blog" },
             { label: post.title },
@@ -240,17 +240,15 @@ const BlogDetailClient = ({ post }: { post: BlogPost | null }) => {
                       <a
                         key={item.id}
                         href={`#${item.id}`}
-                        className={`block text-xs leading-relaxed transition-colors ${
-                          item.level === 1
+                        className={`block text-xs leading-relaxed transition-colors ${item.level === 1
                             ? "pl-0"
                             : item.level === 2
-                            ? "pl-3"
-                            : "pl-6"
-                        } ${
-                          activeId === item.id
+                              ? "pl-3"
+                              : "pl-6"
+                          } ${activeId === item.id
                             ? "text-primary font-medium"
                             : "text-muted-foreground hover:text-foreground"
-                        }`}
+                          }`}
                       >
                         {item.text}
                       </a>

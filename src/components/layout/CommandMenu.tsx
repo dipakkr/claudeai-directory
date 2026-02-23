@@ -41,7 +41,7 @@ const typeRoutes: Record<string, string> = {
   blog: "/blog",
 };
 
-const CommandMenuContext = createContext<{ open: () => void }>({ open: () => {} });
+const CommandMenuContext = createContext<{ open: () => void }>({ open: () => { } });
 
 export function useCommandMenu() {
   return useContext(CommandMenuContext);
@@ -78,11 +78,12 @@ export function CommandMenuProvider({ children }: { children: React.ReactNode })
   }, {});
 
   const handleSelect = useCallback(
-    (result: { _type: string; id: string }) => {
+    (result: { _type: string; id?: string; _id?: string; slug?: string }) => {
       setOpen(false);
       setQuery("");
       const base = typeRoutes[result._type] ?? "/";
-      router.push(`${base}/${result.id}`);
+      const itemSlug = result.slug || result._id || result.id;
+      router.push(`${base}/${itemSlug}`);
     },
     [router]
   );
@@ -106,21 +107,24 @@ export function CommandMenuProvider({ children }: { children: React.ReactNode })
           </CommandEmpty>
           {Object.entries(grouped).map(([type, items]) => (
             <CommandGroup key={type} heading={typeLabels[type] ?? type}>
-              {items?.map((item) => (
-                <CommandItem
-                  key={item.id}
-                  value={`${item.title ?? item.name ?? ""} ${item.description}`}
-                  onSelect={() => handleSelect(item)}
-                >
-                  {typeIcons[type] ?? <Search className="mr-2 h-4 w-4 text-muted-foreground" />}
-                  <div className="flex flex-col">
-                    <span className="text-sm">{item.title ?? item.name}</span>
-                    <span className="text-xs text-muted-foreground line-clamp-1">
-                      {item.description}
-                    </span>
-                  </div>
-                </CommandItem>
-              ))}
+              {items?.map((item) => {
+                const itemSlug = item.slug || item._id || item.id;
+                return (
+                  <CommandItem
+                    key={itemSlug}
+                    value={`${item.title ?? item.name ?? ""} ${item.description}`}
+                    onSelect={() => handleSelect(item)}
+                  >
+                    {typeIcons[type] ?? <Search className="mr-2 h-4 w-4 text-muted-foreground" />}
+                    <div className="flex flex-col">
+                      <span className="text-sm">{item.title ?? item.name}</span>
+                      <span className="text-xs text-muted-foreground line-clamp-1">
+                        {item.description}
+                      </span>
+                    </div>
+                  </CommandItem>
+                );
+              })}
             </CommandGroup>
           ))}
         </CommandList>
