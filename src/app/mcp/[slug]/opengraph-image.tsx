@@ -1,19 +1,22 @@
 import { ImageResponse } from "next/og";
 import { fetchApi } from "@/lib/api-server";
-import type { Job } from "@/types";
+import type { MCPServer } from "@/types";
 
-export const alt = "AI Job";
+export const alt = "MCP Server";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
 export default async function Image({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const job = await fetchApi<Job>(`/jobs/${slug}`);
+  const server = await fetchApi<MCPServer>(`/mcp-servers/${slug}`);
 
-  const title = job?.title || "AI Job";
-  const company = job?.company || "";
-  const location = job?.location || "Remote";
-  const salary = job?.salary_range || "";
+  const title = server?.name || "MCP Server";
+  const description = server?.one_liner || server?.description?.slice(0, 100) || "";
+  const author =
+    server?.author && typeof server.author === "object"
+      ? (server.author as { name?: string }).name || ""
+      : String(server?.author || "");
+  const toolCount = server?.capabilities?.tools?.length || 0;
 
   return new ImageResponse(
     (
@@ -32,24 +35,28 @@ export default async function Image({ params }: { params: Promise<{ slug: string
         <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 8 }}>
           <div
             style={{
-              background: "#f9731620",
-              color: "#f97316",
+              background: "#22c55e20",
+              color: "#22c55e",
               padding: "4px 12px",
               borderRadius: 6,
               fontSize: 16,
               fontWeight: 600,
             }}
           >
-            AI Job
+            MCP Server
           </div>
-          <div style={{ color: "#64748b", fontSize: 16 }}>{location}</div>
+          {toolCount > 0 && (
+            <div style={{ color: "#64748b", fontSize: 16 }}>{toolCount} tools</div>
+          )}
         </div>
-        <div style={{ fontSize: 52, fontWeight: 700, color: "#f8fafc", marginBottom: 12 }}>
+        <div style={{ fontSize: 56, fontWeight: 700, color: "#f8fafc", marginBottom: 16 }}>
           {title}
         </div>
-        <div style={{ fontSize: 28, color: "#94a3b8" }}>{company}</div>
-        {salary && (
-          <div style={{ fontSize: 22, color: "#64748b", marginTop: 12 }}>{salary}</div>
+        <div style={{ fontSize: 24, color: "#94a3b8", maxWidth: 900, lineHeight: 1.4 }}>
+          {description}
+        </div>
+        {author && (
+          <div style={{ fontSize: 18, color: "#64748b", marginTop: 24 }}>by {author}</div>
         )}
         <div style={{ position: "absolute", bottom: 40, right: 60, fontSize: 18, color: "#475569" }}>
           Claude Directory

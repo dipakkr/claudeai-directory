@@ -251,15 +251,6 @@ export default function TimelineClient({ initialEvents }: { initialEvents: Timel
     return sortedEvents.filter((e) => e.category === activeFilter);
   }, [activeFilter, sortedEvents]);
 
-  // Map event id → isLeft (alternates globally across all years)
-  const eventSideMap = useMemo(() => {
-    const map: Record<string, boolean> = {};
-    filtered.forEach((e, i) => {
-      map[e.id] = i % 2 === 0;
-    });
-    return map;
-  }, [filtered]);
-
   const filteredYears = useMemo(() => {
     const present = new Set(filtered.map((e) => new Date(e.date).getFullYear()));
     return years.filter((y) => present.has(y));
@@ -335,71 +326,33 @@ export default function TimelineClient({ initialEvents }: { initialEvents: Timel
           )}
 
           {/* Timeline */}
-          <div className="max-w-5xl mx-auto">
+          <div className="max-w-3xl">
             {filteredYears.map((year) => {
               const eventsForYear = eventsByYear[year];
               const count = eventsForYear.length;
 
               return (
-                <div key={year} className="mb-8">
-                  {/* Year heading — centered with lines on both sides */}
-                  <div className="flex items-center gap-3 mb-6">
-                    <div className="flex-1 h-px bg-border" />
-                    <div className="flex items-center gap-2 px-2">
-                      <span className="text-base font-bold text-foreground">{year}</span>
-                      <span className="text-xs text-muted-foreground">· {count} events</span>
-                    </div>
-                    <div className="flex-1 h-px bg-border" />
+                <div key={year} className="mb-10">
+                  {/* Year heading */}
+                  <div className="flex items-center gap-2 mb-5">
+                    <span className="text-sm font-bold text-foreground">{year}</span>
+                    <span className="text-xs text-muted-foreground">· {count} events</span>
+                    <div className="flex-1 h-px bg-border ml-1" />
                   </div>
 
-                  {/* ── MOBILE: left-aligned single column ── */}
-                  <div className="relative md:hidden pl-5">
-                    <div className="absolute left-[8px] top-0 bottom-8 w-px bg-border" />
+                  {/* Left-aligned timeline */}
+                  <div className="relative pl-6">
+                    <div className="absolute left-[9px] top-0 bottom-6 w-px bg-border" />
                     {eventsForYear.map((event) => {
                       const dot = CATEGORY_STYLES[event.category].dot;
                       return (
-                        <div key={event.id} className="group relative flex gap-4 pb-7">
-                          <div className="flex-shrink-0 -ml-[13px] mt-3.5 z-10">
+                        <div key={event.id} className="group relative flex gap-4 pb-6">
+                          <div className="flex-shrink-0 -ml-[13px] mt-4 z-10">
                             <div
-                              className={`h-3 w-3 rounded-full ${dot} ring-4 ring-background transition-transform group-hover:scale-125`}
+                              className={`h-2.5 w-2.5 rounded-full ${dot} ring-[3px] ring-background transition-transform group-hover:scale-125`}
                             />
                           </div>
                           <EventCardContent event={event} />
-                        </div>
-                      );
-                    })}
-                  </div>
-
-                  {/* ── DESKTOP: alternating left / right ── */}
-                  <div className="relative hidden md:block">
-                    {/* Center vertical line */}
-                    <div className="absolute left-1/2 top-0 bottom-8 w-px bg-border -translate-x-1/2" />
-
-                    {eventsForYear.map((event) => {
-                      const isLeft = eventSideMap[event.id];
-                      const dot = CATEGORY_STYLES[event.category].dot;
-
-                      return (
-                        <div
-                          key={event.id}
-                          className="group relative grid grid-cols-[1fr_40px_1fr] items-start mb-7"
-                        >
-                          {/* Left slot */}
-                          <div className="pr-6 flex justify-end">
-                            {isLeft && <EventCardContent event={event} />}
-                          </div>
-
-                          {/* Center dot */}
-                          <div className="flex justify-center mt-[18px] z-10">
-                            <div
-                              className={`h-3 w-3 rounded-full ${dot} ring-4 ring-background transition-transform group-hover:scale-125`}
-                            />
-                          </div>
-
-                          {/* Right slot */}
-                          <div className="pl-6">
-                            {!isLeft && <EventCardContent event={event} />}
-                          </div>
                         </div>
                       );
                     })}
@@ -411,7 +364,7 @@ export default function TimelineClient({ initialEvents }: { initialEvents: Timel
 
           {/* Footer note */}
           {filtered.length > 0 && (
-            <p className="text-xs text-muted-foreground mt-4 max-w-5xl mx-auto">
+            <p className="text-xs text-muted-foreground mt-4 max-w-3xl">
               Based on publicly available Anthropic announcements. Dates reflect original release
               dates. Curated by{" "}
               <Link href="/" className="text-primary hover:underline">

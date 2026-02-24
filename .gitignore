@@ -48,3 +48,6 @@ scripts/browser_data/
 
 # nginx (managed by setup-domain.sh)
 nginx/
+
+# planning
+todo.md

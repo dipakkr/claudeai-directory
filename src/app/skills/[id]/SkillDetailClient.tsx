@@ -10,9 +10,12 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { CheckCircle, ExternalLink, Github, Wrench, Server, FileText } from "lucide-react";
 import PageBreadcrumb from "@/components/layout/PageBreadcrumb";
+import { useSkill } from "@/hooks/use-skills";
 import type { Skill } from "@/types";
 
-export default function SkillDetail({ skill }: { skill: Skill | null }) {
+export default function SkillDetail({ skill: initialSkill, id }: { skill: Skill | null; id: string }) {
+  const { data: fetchedSkill } = useSkill(initialSkill ? "" : id);
+  const skill = initialSkill ?? fetchedSkill ?? null;
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <Header />

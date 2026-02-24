@@ -17,9 +17,12 @@ import {
   Calendar,
 } from "lucide-react";
 import PageBreadcrumb from "@/components/layout/PageBreadcrumb";
+import { useJob } from "@/hooks/use-jobs";
 import type { Job } from "@/types";
 
-export default function JobDetail({ job }: { job: Job | null }) {
+export default function JobDetail({ job: initialJob, slug }: { job: Job | null; slug: string }) {
+  const { data: fetchedJob } = useJob(initialJob ? "" : slug);
+  const job = initialJob ?? fetchedJob ?? null;
   if (!job) {
     return (
       <div className="min-h-screen bg-background flex flex-col">

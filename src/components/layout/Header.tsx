@@ -2,9 +2,8 @@
 
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Menu, X, LogOut, User as UserIcon, Bookmark, Search } from "lucide-react";
+import { Menu, X, LogOut, User as UserIcon, Bookmark, ChevronDown } from "lucide-react";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth";
 import {
   DropdownMenu,
@@ -20,30 +19,30 @@ const navLinks = [
   { href: "/mcp", label: "MCPs" },
   { href: "/prompts", label: "Prompts" },
   { href: "/jobs", label: "Jobs" },
+  { href: "/members", label: "Members" },
   { href: "/blog", label: "Blog" },
-  { href: "/anthropic-claude-release-timelines", label: "Timeline" },
+];
+
+const moreLinks = [
+  { href: "/guides", label: "Guides" },
+  { href: "/llm-api-pricing", label: "LLM API Pricing" },
+  { href: "/llm-api-pricing/cost-calculator", label: "Cost Calculator" },
+  { href: "/anthropic-claude-release-timelines", label: "Anthropic Timeline" },
+  { href: "/setup", label: "CLAUDE.md Generator" },
 ];
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
-  const router = useRouter();
   const { user, isAuthenticated, logout } = useAuth();
-
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (searchQuery.trim()) {
-      router.push(`/?q=${encodeURIComponent(searchQuery.trim())}`);
-    }
-  };
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border bg-background/80 backdrop-blur-md">
       <div className="container flex h-14 items-center justify-between">
+
         {/* Logo */}
         <Link
           href="/"
-          className="flex items-center gap-2 text-sm font-semibold text-foreground hover:opacity-80 transition-opacity"
+          className="flex items-center gap-2 text-sm font-semibold text-foreground hover:opacity-80 transition-opacity shrink-0"
         >
           <div className="h-6 w-6 rounded-md bg-primary flex items-center justify-center">
             <span className="text-xs font-bold text-primary-foreground">C</span>
@@ -51,8 +50,8 @@ const Header = () => {
           <span className="hidden sm:inline">Claude Directory</span>
         </Link>
 
-        {/* Desktop Navigation */}
-        <nav className="hidden items-center gap-1 md:flex">
+        {/* Desktop nav */}
+        <nav className="hidden items-center gap-0.5 md:flex">
           {navLinks.map((link) => (
             <Link
               key={link.href}
@@ -62,21 +61,27 @@ const Header = () => {
               {link.label}
             </Link>
           ))}
+
+          {/* More dropdown */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button className="flex items-center gap-1 rounded-md px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-accent transition-colors outline-none">
+                More
+                <ChevronDown className="h-3.5 w-3.5 opacity-60" />
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start" className="w-48">
+              {moreLinks.map((link) => (
+                <DropdownMenuItem key={link.href} asChild className="text-xs py-1.5">
+                  <Link href={link.href}>{link.label}</Link>
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
         </nav>
 
-        {/* Desktop Actions */}
-        <div className="hidden items-center gap-3 md:flex">
-          <form onSubmit={handleSearch} className="relative">
-            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search..."
-              className="h-8 w-44 rounded-lg border border-border bg-card/50 pl-8 pr-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/30 transition-all focus:w-56"
-            />
-          </form>
-
+        {/* Desktop actions */}
+        <div className="hidden items-center gap-2 md:flex">
           {isAuthenticated && user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -123,7 +128,7 @@ const Header = () => {
           )}
         </div>
 
-        {/* Mobile: search + menu */}
+        {/* Mobile hamburger */}
         <div className="flex items-center gap-2 md:hidden">
           <Button
             variant="ghost"
@@ -136,7 +141,7 @@ const Header = () => {
         </div>
       </div>
 
-      {/* Mobile Menu */}
+      {/* Mobile menu */}
       {isMenuOpen && (
         <div className="absolute left-0 right-0 top-14 border-b border-border bg-background p-4 md:hidden">
           <nav className="flex flex-col gap-1">
@@ -150,7 +155,18 @@ const Header = () => {
                 {link.label}
               </Link>
             ))}
-            <hr className="my-2 border-border" />
+            <hr className="my-1 border-border" />
+            {moreLinks.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                onClick={() => setIsMenuOpen(false)}
+                className="rounded-md px-3 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
+              >
+                {link.label}
+              </Link>
+            ))}
+            <hr className="my-1 border-border" />
             {isAuthenticated ? (
               <>
                 <Link href="/dashboard" onClick={() => setIsMenuOpen(false)} className="rounded-md px-3 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-accent">

@@ -5,6 +5,9 @@ export interface User {
   name?: string;
   avatar?: string;
   bio?: string;
+  website?: string;
+  twitter?: string;
+  github?: string;
   role: string;
   plan: string;
   created_at: string;
@@ -16,6 +19,9 @@ export interface PublicProfile {
   name?: string;
   avatar?: string;
   bio?: string;
+  website?: string;
+  twitter?: string;
+  github?: string;
   created_at: string;
 }
 

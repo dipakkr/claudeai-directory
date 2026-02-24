@@ -69,7 +69,7 @@ export default async function SkillDetailPage({
           />
         </>
       )}
-      <SkillDetailClient skill={skill} />
+      <SkillDetailClient skill={skill} id={id} />
     </>
   );
 }

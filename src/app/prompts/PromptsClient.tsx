@@ -5,9 +5,8 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
-import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Search, ThumbsUp, Copy, ArrowUpRight } from "lucide-react";
+import { ThumbsUp, Copy, ArrowUpRight } from "lucide-react";
 import { usePrompts } from "@/hooks/use-prompts";
 import { toast } from "sonner";
 import { CollectionPageSchema } from "@/components/seo/JsonLd";
@@ -40,12 +39,6 @@ export default function PromptsClient({
     toast.success("Prompt copied to clipboard");
   };
 
-  const setSearch = useCallback((value: string) => {
-    const params = new URLSearchParams(searchParams.toString());
-    if (value) params.set("search", value);
-    else params.delete("search");
-    router.push(`/prompts?${params.toString()}`);
-  }, [router, searchParams]);
 
   const setCategory = useCallback((value: string) => {
     const params = new URLSearchParams(searchParams.toString());
@@ -69,16 +62,7 @@ export default function PromptsClient({
             <p className="text-sm text-muted-foreground">Copy-ready prompts for every use case</p>
           </div>
 
-          <div className="relative mb-4">
-            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-            <Input
-              type="search"
-              placeholder="Search prompts..."
-              defaultValue={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="h-9 bg-card border-border pl-10 text-sm"
-            />
-          </div>
+
           <div className="flex items-center gap-1.5 mb-6 overflow-x-auto">
             {categories.map((c) => (
               <button

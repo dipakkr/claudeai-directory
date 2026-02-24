@@ -14,11 +14,20 @@ const NewsletterSection = () => {
     e.preventDefault();
     if (!email) return;
     setIsSubmitting(true);
-    setTimeout(() => {
-      toast.success("Thanks for subscribing!");
+    try {
+      const res = await fetch("https://substackapi.com/api/subscribe", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, domain: "tooljunction.substack.com" }),
+      });
+      if (!res.ok) throw new Error();
+      toast.success("You're subscribed! Check your inbox.");
       setEmail("");
+    } catch {
+      toast.error("Something went wrong. Try subscribing at tooljunction.substack.com");
+    } finally {
       setIsSubmitting(false);
-    }, 1000);
+    }
   };
 
   return (

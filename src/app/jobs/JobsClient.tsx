@@ -6,7 +6,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
-import { Briefcase, Search } from "lucide-react";
+import { Briefcase } from "lucide-react";
 import { useJobs } from "@/hooks/use-jobs";
 import type { Job } from "@/types";
 
@@ -39,12 +39,7 @@ export default function JobsClient({
     router.push(`/jobs?${params.toString()}`);
   }, [router, searchParams]);
 
-  const setSearch = useCallback((value: string) => {
-    const params = new URLSearchParams(searchParams.toString());
-    if (value) params.set("search", value);
-    else params.delete("search");
-    router.push(`/jobs?${params.toString()}`);
-  }, [router, searchParams]);
+
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
@@ -56,25 +51,15 @@ export default function JobsClient({
             <p className="text-sm text-muted-foreground">AI and Claude-related job opportunities</p>
           </div>
 
-          <div className="relative mb-4">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <input
-              type="text"
-              placeholder="Search jobs by title, company, or skills..."
-              defaultValue={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-9 pr-4 py-2 text-sm rounded-lg border border-border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
-            />
-          </div>
 
-          <div className="flex items-center gap-2 mb-6">
+
+          <div className="flex flex-wrap items-center gap-2 mb-6 pb-2 sm:pb-0">
             {types.map((t) => (
               <button
                 key={t}
                 onClick={() => setType(t)}
-                className={`px-2.5 py-0.5 rounded-full text-[11px] font-medium transition-colors ${
-                  type === t ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"
-                }`}
+                className={`px-2.5 py-0.5 rounded-full text-[11px] font-medium transition-colors ${type === t ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"
+                  }`}
               >
                 {t}
               </button>
@@ -87,26 +72,26 @@ export default function JobsClient({
                 <div className="divide-y divide-border border-t border-border">
                   {(jobs ?? []).map((job) => (
                     <div key={job.id} className="py-5 group">
-                      <div className="flex items-center justify-between gap-4 mb-1">
-                        <div className="flex items-center gap-1.5 text-xs text-muted-foreground min-w-0">
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 mb-2">
+                        <div className="flex flex-wrap items-center gap-y-1.5 gap-x-2 text-xs text-muted-foreground min-w-0">
                           <span className="h-5 w-5 rounded bg-primary/10 flex items-center justify-center text-[10px] font-semibold text-primary shrink-0">
                             {job.company[0]?.toUpperCase()}
                           </span>
                           <span className="font-medium text-muted-foreground">{job.company}</span>
-                          <span className="text-border">·</span>
+                          <span className="text-border hidden sm:inline">·</span>
                           <span>{job.location}</span>
-                          <span className="text-border">·</span>
+                          <span className="text-border hidden sm:inline">·</span>
                           <span>{job.type}</span>
                           {job.salary_range && (
                             <>
-                              <span className="text-border">·</span>
+                              <span className="text-border hidden sm:inline">·</span>
                               <span>{job.salary_range}</span>
                             </>
                           )}
                           {job.source === "aggregated" && job.source_url && (
                             <>
-                              <span className="text-border">·</span>
-                              <span className="text-muted-foreground/60">
+                              <span className="text-border hidden sm:inline">·</span>
+                              <span className="text-muted-foreground/60 w-full sm:w-auto">
                                 via {new URL(job.source_url).hostname.replace("www.", "").replace("boards.greenhouse.io", "Greenhouse")}
                               </span>
                             </>

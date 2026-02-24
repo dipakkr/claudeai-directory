@@ -50,6 +50,9 @@ export default function Dashboard() {
   const [editing, setEditing] = useState(false);
   const [username, setUsername] = useState("");
   const [bio, setBio] = useState("");
+  const [website, setWebsite] = useState("");
+  const [twitter, setTwitter] = useState("");
+  const [github, setGithub] = useState("");
   const [saving, setSaving] = useState(false);
   const [availability, setAvailability] = useState<
     "idle" | "checking" | "available" | "taken" | "invalid"
@@ -66,6 +69,9 @@ export default function Dashboard() {
     if (user) {
       setUsername(user.username);
       setBio(user.bio ?? "");
+      setWebsite(user.website ?? "");
+      setTwitter(user.twitter ?? "");
+      setGithub(user.github ?? "");
     }
   }, [user]);
 
@@ -121,6 +127,9 @@ export default function Dashboard() {
       await updateProfile({
         username: username.trim().toLowerCase(),
         bio: bio.trim() || undefined,
+        website: website.trim() || undefined,
+        twitter: twitter.trim().replace(/^@/, "") || undefined,
+        github: github.trim().replace(/^@/, "") || undefined,
       });
       setEditing(false);
       setAvailability("idle");
@@ -136,6 +145,9 @@ export default function Dashboard() {
     if (user) {
       setUsername(user.username);
       setBio(user.bio ?? "");
+      setWebsite(user.website ?? "");
+      setTwitter(user.twitter ?? "");
+      setGithub(user.github ?? "");
     }
     setAvailability("idle");
     setEditing(false);
@@ -243,6 +255,46 @@ export default function Dashboard() {
                 <p className="text-xs text-muted-foreground text-right">
                   {bio.length}/300
                 </p>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="edit-website">Website</Label>
+                <Input
+                  id="edit-website"
+                  type="url"
+                  value={website}
+                  onChange={(e) => setWebsite(e.target.value)}
+                  placeholder="https://yoursite.com"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-2">
+                  <Label htmlFor="edit-twitter">Twitter / X</Label>
+                  <div className="relative">
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground">@</span>
+                    <Input
+                      id="edit-twitter"
+                      value={twitter}
+                      onChange={(e) => setTwitter(e.target.value.replace(/^@/, ""))}
+                      placeholder="handle"
+                      className="pl-7"
+                    />
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="edit-github">GitHub</Label>
+                  <div className="relative">
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground">@</span>
+                    <Input
+                      id="edit-github"
+                      value={github}
+                      onChange={(e) => setGithub(e.target.value.replace(/^@/, ""))}
+                      placeholder="handle"
+                      className="pl-7"
+                    />
+                  </div>
+                </div>
               </div>
 
               <div className="flex items-center gap-2">

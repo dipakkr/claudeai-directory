@@ -18,7 +18,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
-import { MessageSquare, Plus, Users, Search, Eye, Tag } from "lucide-react";
+import { MessageSquare, Plus, Users, Search, Eye, Tag, ArrowRight } from "lucide-react";
 import { useThreads, useCreateThread } from "@/hooks/use-community";
 import { useAuth } from "@/lib/auth";
 import { toast } from "sonner";
@@ -345,6 +345,22 @@ export default function CommunityPage() {
                     New Thread
                   </Button>
                 </div>
+
+                <Link
+                  href="/members"
+                  className="flex items-center justify-between rounded-xl border border-border bg-card p-5 hover:border-primary/40 transition-colors group"
+                >
+                  <div>
+                    <div className="flex items-center gap-2 mb-1">
+                      <Users className="h-4 w-4 text-primary" />
+                      <h3 className="text-sm font-semibold text-foreground">Meet the Members</h3>
+                    </div>
+                    <p className="text-xs text-muted-foreground">
+                      Browse everyone in the community.
+                    </p>
+                  </div>
+                  <ArrowRight className="h-4 w-4 text-muted-foreground/40 group-hover:text-muted-foreground transition-colors shrink-0" />
+                </Link>
               </div>
             </div>
           </div>
