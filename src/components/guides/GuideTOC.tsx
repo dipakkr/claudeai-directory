@@ -52,23 +52,22 @@ export function GuideTOC({ content }: { content: string }) {
   if (headings.length < 2) return null;
 
   return (
-    <aside className="hidden lg:block w-56 shrink-0">
+    <aside className="hidden lg:block w-52 shrink-0">
       <div className="sticky top-20">
-        <h4 className="text-xs font-medium text-foreground mb-3 flex items-center gap-1.5 uppercase tracking-wider">
-          <List className="h-3.5 w-3.5" />
+        <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground/50 mb-3">
           On this page
-        </h4>
-        <nav className="space-y-1">
+        </p>
+        <nav className="border-l border-border space-y-0.5">
           {headings.map((h) => (
             <a
               key={h.id}
               href={`#${h.id}`}
-              className={`block text-xs transition-colors ${
-                h.level > 1 ? "pl-3" : ""
+              className={`block text-[11px] leading-snug py-1 transition-colors border-l -ml-px ${
+                h.level === 1 ? "pl-3" : h.level === 2 ? "pl-3" : "pl-5"
               } ${
                 activeId === h.id
-                  ? "text-primary font-medium"
-                  : "text-muted-foreground hover:text-foreground"
+                  ? "border-primary text-primary font-medium"
+                  : "border-transparent text-muted-foreground hover:text-foreground hover:border-border"
               }`}
             >
               {h.text}
@@ -77,9 +76,9 @@ export function GuideTOC({ content }: { content: string }) {
         </nav>
         <button
           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-          className="mt-4 text-xs text-muted-foreground hover:text-foreground transition-colors"
+          className="mt-4 text-[11px] text-muted-foreground hover:text-foreground transition-colors"
         >
-          Back to top
+          ↑ Back to top
         </button>
       </div>
     </aside>

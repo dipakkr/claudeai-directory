@@ -24,21 +24,29 @@ export function useGuides(params?: GuideParams, options?: { initialData?: Guide[
   });
 }
 
-export function useGuide(slug: string) {
+export function useGuide(slug: string, options?: { initialData?: GuideDetail }) {
   return useQuery({
     queryKey: ["guides", slug],
     queryFn: () => api.get<GuideDetail>(`/guides/${slug}`),
     enabled: !!slug,
+    initialData: options?.initialData,
+    initialDataUpdatedAt: options?.initialData ? Date.now() : undefined,
   });
 }
 
-export function useGuideLesson(guideSlug: string, lessonId: string) {
+export function useGuideLesson(
+  guideSlug: string,
+  lessonId: string,
+  options?: { initialData?: GuideLesson }
+) {
   return useQuery({
     queryKey: ["guides", guideSlug, "lessons", lessonId],
     queryFn: () =>
       api.get<GuideLesson>(`/guides/${guideSlug}/lessons/${lessonId}`),
     enabled: !!guideSlug && !!lessonId,
     retry: false,
+    initialData: options?.initialData,
+    initialDataUpdatedAt: options?.initialData ? Date.now() : undefined,
   });
 }
 

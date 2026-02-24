@@ -11,18 +11,24 @@ import { GuideContent } from "@/components/guides/GuideContent";
 import { GuideTOC } from "@/components/guides/GuideTOC";
 import { GuidePaidOverlay } from "@/components/guides/GuidePaidOverlay";
 import { GuideAccessBar } from "@/components/guides/GuideAccessBar";
+import type { GuideDetail, GuideLesson } from "@/types";
 
-export default function LessonPage() {
+interface LessonPageProps {
+  initialLesson?: GuideLesson;
+  initialGuide?: GuideDetail;
+}
+
+export default function LessonPage({ initialLesson, initialGuide }: LessonPageProps) {
   const { slug, lessonId } = useParams<{ slug: string; lessonId: string }>();
   const { user, isAuthenticated } = useAuth();
 
-  const { data: guide, isLoading: guideLoading } = useGuide(slug);
+  const { data: guide, isLoading: guideLoading } = useGuide(slug, { initialData: initialGuide });
   const {
     data: lesson,
     isLoading: lessonLoading,
     isError: lessonError,
     error,
-  } = useGuideLesson(slug, lessonId);
+  } = useGuideLesson(slug, lessonId, { initialData: initialLesson });
   const { data: progress } = useGuideProgress(slug);
   const completeMutation = useCompleteLesson();
 
@@ -64,7 +70,7 @@ export default function LessonPage() {
 
       <div className="flex flex-1">
         {/* Left sidebar — sticky, scrolls independently */}
-        <aside className="hidden md:block w-64 shrink-0 border-r border-border">
+        <aside className="hidden md:block w-72 shrink-0 border-r border-border">
           <div className="sticky top-14 h-[calc(100vh-3.5rem)] overflow-y-auto">
             {guideLoading || !guide ? (
               <div className="p-4 space-y-3">

@@ -25,12 +25,12 @@ export default function GuidesClient({
               <h1 className="text-2xl font-semibold text-foreground">Guides</h1>
             </div>
             <p className="text-sm text-muted-foreground">
-              Structured courses to master Claude AI — from basics to building production agents.
+              Structured courses to master Claude AI, from basics to building production agents.
             </p>
           </div>
 
           {guides && guides.length > 0 ? (
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
               {guides.map((guide) => (
                 <GuideCard key={guide.id} guide={guide} />
               ))}

@@ -1,55 +1,73 @@
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
-import { Clock, BookOpen, ArrowUpRight } from "lucide-react";
+import { Clock, BookOpen, ArrowRight } from "lucide-react";
 import type { Guide } from "@/types";
 
 export function GuideCard({ guide }: { guide: Guide }) {
   return (
     <Link
       href={`/guides/${guide.id}`}
-      className="group rounded-lg border border-border bg-card overflow-hidden hover:border-primary/20 transition-all"
+      className="group rounded-xl border border-border bg-card overflow-hidden hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5 transition-all flex flex-col"
     >
-      <div className="aspect-[2.5/1] bg-muted/50 flex items-center justify-center relative">
-        <span className="text-4xl text-muted-foreground/20 font-semibold">
-          {guide.title[0]?.toUpperCase()}
-        </span>
+      {/* Thumbnail */}
+      <div className="aspect-[3/1] relative overflow-hidden bg-gradient-to-br from-primary/20 via-primary/5 to-background flex items-center justify-center p-4">
+        <div
+          className="absolute inset-0 opacity-[0.06]"
+          style={{
+            backgroundImage:
+              "radial-gradient(circle, currentColor 1px, transparent 1px)",
+            backgroundSize: "20px 20px",
+          }}
+        />
+        <p className="relative text-sm font-semibold text-foreground/90 leading-snug line-clamp-2 text-center">
+          {guide.title}
+        </p>
         {guide.is_free ? (
           <Badge className="absolute top-3 right-3 bg-green-500/10 text-green-500 border-0 text-[10px]">
             Free
           </Badge>
         ) : (
-          <Badge className="absolute top-3 right-3 bg-primary/10 text-primary border-0 text-[10px]">
+          <Badge className="absolute top-3 right-3 bg-primary/10 text-primary border-0 text-[10px] font-semibold">
             ${guide.price}
           </Badge>
         )}
       </div>
-      <div className="p-4">
-        <div className="flex items-center gap-2 mb-2">
-          <Badge variant="secondary" className="text-[10px] px-1.5 py-0">
+
+      {/* Body */}
+      <div className="p-3 flex flex-col flex-1">
+        {/* Tags */}
+        <div className="flex items-center gap-1.5 mb-2">
+          <Badge variant="secondary" className="text-[10px] px-1.5 py-0 capitalize">
             {guide.difficulty}
           </Badge>
-          <Badge variant="outline" className="text-[10px] px-1.5 py-0">
+          <Badge variant="outline" className="text-[10px] px-1.5 py-0 capitalize">
             {guide.category}
           </Badge>
         </div>
-        <h3 className="text-sm font-medium text-foreground mb-1 group-hover:text-primary transition-colors">
-          {guide.title}
-        </h3>
-        <p className="text-xs text-muted-foreground line-clamp-2 mb-3">
+
+        {/* Description */}
+        <p className="text-[11px] text-muted-foreground line-clamp-2 leading-relaxed flex-1 mb-3">
           {guide.description}
         </p>
-        <div className="flex items-center justify-between text-xs text-muted-foreground">
-          <div className="flex items-center gap-3">
-            <span className="flex items-center gap-1">
-              <BookOpen className="h-3 w-3" />
-              {guide.total_lessons} lessons
-            </span>
-            <span className="flex items-center gap-1">
-              <Clock className="h-3 w-3" />
-              {guide.estimated_time} min
-            </span>
-          </div>
-          <ArrowUpRight className="h-3.5 w-3.5 opacity-0 group-hover:opacity-100 transition-opacity" />
+
+        {/* Stats */}
+        <div className="flex items-center gap-3 text-[11px] text-muted-foreground mb-3">
+          <span className="flex items-center gap-1">
+            <BookOpen className="h-3 w-3" />
+            {guide.total_lessons} lessons
+          </span>
+          <span className="flex items-center gap-1">
+            <Clock className="h-3 w-3" />
+            {guide.estimated_time} min
+          </span>
+        </div>
+
+        {/* CTA */}
+        <div className="flex items-center justify-between rounded-md bg-primary/8 group-hover:bg-primary/15 transition-colors px-2.5 py-2">
+          <span className="text-[11px] font-medium text-primary">
+            {guide.is_free ? "Start Learning" : `Enroll for $${guide.price}`}
+          </span>
+          <ArrowRight className="h-3 w-3 text-primary group-hover:translate-x-0.5 transition-transform" />
         </div>
       </div>
     </Link>

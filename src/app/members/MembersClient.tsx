@@ -8,10 +8,10 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useMembers, type MembersResponse } from "@/hooks/use-members";
-import { Users } from "lucide-react";
+import { useAuth } from "@/lib/auth";
+import { Users, Lock } from "lucide-react";
 import type { PublicProfile } from "@/types";
 
-// Random-ish but stable pastel bg for letter avatars
 const FALLBACK_COLORS = [
   "bg-violet-500",
   "bg-pink-500",
@@ -29,45 +29,63 @@ function avatarColor(username: string) {
   return FALLBACK_COLORS[n % FALLBACK_COLORS.length];
 }
 
-function MemberRow({ member }: { member: PublicProfile }) {
+function MemberCard({ member, blurred }: { member: PublicProfile; blurred?: boolean }) {
   const displayName = member.name || member.username;
-  const initials = displayName.slice(0, 2);
+  const initials = displayName.slice(0, 2).toUpperCase();
   const color = avatarColor(member.username);
 
-  return (
-    <Link
-      href={`/u/${member.username}`}
-      className="flex items-center gap-3 px-4 py-3 border border-border rounded-lg hover:border-primary/40 hover:bg-accent/30 transition-all group"
+  const inner = (
+    <div
+      className={`flex items-center gap-3 px-4 py-3 border border-border rounded-lg transition-all group ${
+        blurred
+          ? "select-none pointer-events-none"
+          : "hover:border-primary/40 hover:bg-accent/30 cursor-pointer"
+      }`}
     >
       <Avatar className="h-10 w-10 shrink-0 rounded-md">
-        {member.avatar && (
-          <AvatarImage
-            src={member.avatar}
-            alt={displayName}
-            className="rounded-md object-cover"
-          />
+        {member.avatar && !blurred && (
+          <AvatarImage src={member.avatar} alt={displayName} className="rounded-md object-cover" />
         )}
-        <AvatarFallback
-          className={`rounded-md text-xs font-bold text-white ${color}`}
-        >
+        <AvatarFallback className={`rounded-md text-xs font-bold text-white ${color}`}>
           {initials}
         </AvatarFallback>
       </Avatar>
-      <span className="text-sm font-mono text-foreground group-hover:text-primary transition-colors truncate">
-        {displayName}
-      </span>
+      <div className="min-w-0">
+        <p className="text-sm font-medium text-foreground group-hover:text-primary transition-colors truncate">
+          {displayName}
+        </p>
+        {member.bio && !blurred && (
+          <p className="text-[11px] text-muted-foreground truncate">{member.bio}</p>
+        )}
+        {blurred && (
+          <p className="text-[11px] text-muted-foreground">@{member.username}</p>
+        )}
+      </div>
+    </div>
+  );
+
+  if (blurred) return inner;
+  return (
+    <Link href={`/u/${member.username}`} className="block">
+      {inner}
     </Link>
   );
 }
 
-function MemberRowSkeleton() {
+function MemberCardSkeleton() {
   return (
     <div className="flex items-center gap-3 px-4 py-3 border border-border rounded-lg">
       <Skeleton className="h-10 w-10 rounded-md shrink-0" />
-      <Skeleton className="h-3.5 w-32" />
+      <div className="space-y-1.5">
+        <Skeleton className="h-3.5 w-28" />
+        <Skeleton className="h-2.5 w-20" />
+      </div>
     </div>
   );
 }
+
+// How many members to show clearly before blurring
+const VISIBLE_COUNT = 12;
 
 export default function MembersClient({
   initialData,
@@ -75,6 +93,7 @@ export default function MembersClient({
   initialData: MembersResponse | null;
 }) {
   const [search, setSearch] = useState("");
+  const { isAuthenticated } = useAuth();
 
   const { data, isLoading } = useMembers(
     { per_page: 200 },
@@ -97,6 +116,10 @@ export default function MembersClient({
     );
   }, [members, search]);
 
+  // Split into visible + locked sections
+  const visibleMembers = isAuthenticated ? filtered : filtered.slice(0, VISIBLE_COUNT);
+  const lockedMembers = isAuthenticated ? [] : filtered.slice(VISIBLE_COUNT);
+
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <Header />
@@ -111,16 +134,18 @@ export default function MembersClient({
               </h1>
               <p className="text-sm text-muted-foreground">
                 {total > 0
-                  ? `Join the Claude community with ${total.toLocaleString()} members.`
+                  ? `${total.toLocaleString()} members in the Claude community.`
                   : "The Claude AI community — builders, researchers, and enthusiasts."}
               </p>
             </div>
-            <Button asChild size="sm" className="shrink-0">
-              <Link href="/login">Join the community</Link>
-            </Button>
+            {!isAuthenticated && (
+              <Button asChild size="sm" className="shrink-0">
+                <Link href="/login">Join the community</Link>
+              </Button>
+            )}
           </div>
 
-          {/* Search — borderless, full-width underline style */}
+          {/* Search */}
           <div className="mb-8 border-b border-border">
             <input
               type="text"
@@ -135,22 +160,54 @@ export default function MembersClient({
           {isLoading && !initialData ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2">
               {Array.from({ length: 18 }).map((_, i) => (
-                <MemberRowSkeleton key={i} />
+                <MemberCardSkeleton key={i} />
               ))}
             </div>
           ) : filtered.length > 0 ? (
-            <>
+            <div className="relative">
+              {/* Visible members */}
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2">
-                {filtered.map((member) => (
-                  <MemberRow key={member.id} member={member} />
+                {visibleMembers.map((member) => (
+                  <MemberCard key={member.id} member={member} />
                 ))}
               </div>
+
+              {/* Blurred locked members */}
+              {lockedMembers.length > 0 && (
+                <div className="relative mt-2">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 blur-sm pointer-events-none select-none opacity-60">
+                    {lockedMembers.slice(0, 16).map((member) => (
+                      <MemberCard key={member.id} member={member} blurred />
+                    ))}
+                  </div>
+
+                  {/* Gradient fade + CTA overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background/60 to-background" />
+                  <div className="absolute inset-0 flex flex-col items-center justify-center gap-4">
+                    <div className="bg-background/90 border border-border rounded-2xl px-8 py-6 text-center shadow-xl backdrop-blur-sm max-w-sm">
+                      <div className="flex items-center justify-center w-10 h-10 rounded-full bg-primary/10 mx-auto mb-3">
+                        <Lock className="h-5 w-5 text-primary" />
+                      </div>
+                      <p className="text-sm font-semibold text-foreground mb-1">
+                        {lockedMembers.length + VISIBLE_COUNT} members and counting
+                      </p>
+                      <p className="text-xs text-muted-foreground mb-4 leading-relaxed">
+                        Sign in to see all members, visit profiles, and connect with the community.
+                      </p>
+                      <Button asChild size="sm" className="w-full">
+                        <Link href="/login">Sign in to unlock</Link>
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              )}
+
               {search && filtered.length !== members.length && (
                 <p className="text-xs text-muted-foreground mt-5">
                   Showing {filtered.length} of {members.length} members
                 </p>
               )}
-            </>
+            </div>
           ) : (
             <div className="py-24 text-center">
               <Users className="h-10 w-10 text-muted-foreground/20 mx-auto mb-3" />

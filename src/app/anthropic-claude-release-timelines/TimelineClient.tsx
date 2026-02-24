@@ -341,18 +341,20 @@ export default function TimelineClient({ initialEvents }: { initialEvents: Timel
                   </div>
 
                   {/* Left-aligned timeline */}
-                  <div className="relative pl-6">
-                    <div className="absolute left-[9px] top-0 bottom-6 w-px bg-border" />
+                  <div className="relative pl-5">
+                    <div className="absolute left-[8px] top-0 bottom-6 w-px bg-border" />
                     {eventsForYear.map((event) => {
                       const dot = CATEGORY_STYLES[event.category].dot;
                       return (
                         <div key={event.id} className="group relative flex gap-4 pb-6">
-                          <div className="flex-shrink-0 -ml-[13px] mt-4 z-10">
+                          <div className="flex-shrink-0 -ml-[13px] mt-[18px] z-10">
                             <div
                               className={`h-2.5 w-2.5 rounded-full ${dot} ring-[3px] ring-background transition-transform group-hover:scale-125`}
                             />
                           </div>
-                          <EventCardContent event={event} />
+                          <div className="flex-1 min-w-0">
+                            <EventCardContent event={event} />
+                          </div>
                         </div>
                       );
                     })}

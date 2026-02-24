@@ -1,7 +1,8 @@
 "use client";
 
+import { Fragment } from "react";
 import Link from "next/link";
-import { ArrowLeft, CheckCircle2, Circle, Lock } from "lucide-react";
+import { ArrowLeft, CheckCircle2, Lock } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import type { GuideDetail, GuideProgress } from "@/types";
@@ -29,10 +30,10 @@ export function GuideSidebar({
   return (
     <div className="flex flex-col h-full">
       {/* Back link */}
-      <div className="px-4 pt-3 pb-1">
+      <div className="px-4 pt-4 pb-2">
         <Link
           href="/guides"
-          className="inline-flex items-center gap-1 text-[11px] text-muted-foreground hover:text-foreground transition-colors"
+          className="inline-flex items-center gap-1.5 text-[11px] text-muted-foreground hover:text-foreground transition-colors"
         >
           <ArrowLeft className="h-3 w-3" />
           All Guides
@@ -41,33 +42,41 @@ export function GuideSidebar({
 
       {/* Guide title + progress */}
       <div className="px-4 pb-4 border-b border-border">
-        <h2 className="text-sm font-semibold text-foreground mb-1 line-clamp-2">
+        <h2 className="text-sm font-semibold text-foreground mb-3 leading-snug">
           {guide.title}
         </h2>
-        <div className="flex items-center justify-between text-xs text-muted-foreground mb-2">
-          <span>Progress</span>
-          <span>
-            {completedCount} / {guide.total_lessons} lessons
+        <Progress value={progressPct} className="h-1 mb-2" />
+        <div className="flex items-center justify-between">
+          <span className="text-[11px] text-muted-foreground">
+            {completedCount} of {guide.total_lessons} lessons
           </span>
+          {completedCount > 0 && (
+            <span className="text-[11px] text-primary font-medium">
+              {Math.round(progressPct)}%
+            </span>
+          )}
         </div>
-        <Progress value={progressPct} className="h-1.5" />
       </div>
 
-      {/* Chapters + Lessons */}
-      <ScrollArea className="flex-1">
-        <div className="py-3 px-3 space-y-4">
-          {guide.chapters.map((chapter, idx) => (
-            <div key={chapter.id}>
-              <div className="flex items-center gap-2 px-1 mb-1.5">
-                <span className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground/60">
-                  Module {idx + 1}
-                </span>
-                <span className="flex-1 h-px bg-border" />
-              </div>
-              <p className="text-xs font-medium text-foreground px-1 mb-2">
-                {chapter.title}
-              </p>
-              <div className="space-y-0.5">
+      {/* Lesson list */}
+      <ScrollArea className="flex-1 min-w-0">
+        <div className="py-3 px-2">
+          {guide.chapters.map((chapter, chIdx) => {
+            const showChapterLabel = chapter.lessons.length > 1;
+
+            return (
+              <Fragment key={chapter.id}>
+                {/* Chapter label — only when multiple lessons */}
+                {showChapterLabel && (
+                  <p
+                    className={`text-[10px] font-semibold uppercase tracking-widest text-muted-foreground/40 px-3 pb-1 ${
+                      chIdx > 0 ? "pt-4" : "pt-2"
+                    }`}
+                  >
+                    {chapter.title}
+                  </p>
+                )}
+
                 {chapter.lessons.map((lesson) => {
                   const isActive = lesson.id === currentLessonId;
                   const isCompleted = completedSet.has(lesson.id);
@@ -78,26 +87,35 @@ export function GuideSidebar({
                     <Link
                       key={lesson.id}
                       href={`/guides/${guide.id}/${lesson.id}`}
-                      className={`flex items-center gap-2 rounded-md px-2 py-1.5 text-xs transition-colors ${
+                      className={`group flex items-start gap-3 px-3 py-2 rounded-lg text-xs transition-all mb-0.5 ${
                         isActive
-                          ? "bg-primary/10 text-primary font-medium"
-                          : "text-muted-foreground hover:text-foreground hover:bg-accent"
+                          ? "bg-primary/10 text-primary"
+                          : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
                       }`}
                     >
-                      {isCompleted ? (
-                        <CheckCircle2 className="h-3.5 w-3.5 text-green-500 shrink-0" />
-                      ) : isLocked ? (
-                        <Lock className="h-3.5 w-3.5 text-muted-foreground/50 shrink-0" />
-                      ) : (
-                        <Circle className="h-3.5 w-3.5 shrink-0" />
-                      )}
-                      <span className="truncate">{lesson.title}</span>
+                      {/* Status icon */}
+                      <span className="shrink-0 mt-[3px] w-3.5 flex items-center justify-center">
+                        {isCompleted ? (
+                          <CheckCircle2 className="h-3.5 w-3.5 text-green-500" />
+                        ) : isLocked ? (
+                          <Lock className="h-3 w-3 text-muted-foreground/30" />
+                        ) : isActive ? (
+                          <span className="flex h-2 w-2 rounded-full bg-primary ring-[3px] ring-primary/20" />
+                        ) : (
+                          <span className="flex h-1.5 w-1.5 rounded-full bg-muted-foreground/25 group-hover:bg-muted-foreground/50 transition-colors" />
+                        )}
+                      </span>
+
+                      {/* Lesson title */}
+                      <span className={`flex-1 min-w-0 leading-snug break-words ${isActive ? "font-medium" : ""}`}>
+                        {lesson.title}
+                      </span>
                     </Link>
                   );
                 })}
-              </div>
-            </div>
-          ))}
+              </Fragment>
+            );
+          })}
         </div>
       </ScrollArea>
     </div>

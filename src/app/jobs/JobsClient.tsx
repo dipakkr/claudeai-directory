@@ -88,14 +88,6 @@ export default function JobsClient({
                               <span>{job.salary_range}</span>
                             </>
                           )}
-                          {job.source === "aggregated" && job.source_url && (
-                            <>
-                              <span className="text-border hidden sm:inline">·</span>
-                              <span className="text-muted-foreground/60 w-full sm:w-auto">
-                                via {new URL(job.source_url).hostname.replace("www.", "").replace("boards.greenhouse.io", "Greenhouse")}
-                              </span>
-                            </>
-                          )}
                         </div>
                         <Link href={`/jobs/${job.id}`} className="shrink-0">
                           <Button size="sm" variant="outline" className="h-7 text-xs px-3">View</Button>
