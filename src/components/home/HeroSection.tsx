@@ -96,9 +96,9 @@ const HeroSection = ({ initialQuery = "", initialStats = [] }: { initialQuery?: 
 
 
   return (
-    <section className="pt-16 pb-14 md:pt-24 md:pb-20 relative overflow-x-clip">
+    <section className="pt-10 pb-8 md:pt-24 md:pb-20 relative overflow-x-clip">
       <div className="container relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center max-w-7xl mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-8 items-center max-w-7xl mx-auto">
 
           {/* Left column */}
           <div className="lg:col-span-6 lg:pr-8">

@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 
 const TrendingResources = () => {
-  const { data: servers, isLoading } = useMCPServers({ trending: true, limit: 6 });
+  const { data: servers, isLoading } = useMCPServers({ trending: true, limit: 9 });
 
   return (
     <section className="py-10">
@@ -27,13 +27,13 @@ const TrendingResources = () => {
 
         {isLoading ? (
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {Array.from({ length: 6 }).map((_, i) => (
+            {Array.from({ length: 9 }).map((_, i) => (
               <Skeleton key={i} className="h-32 rounded-lg" />
             ))}
           </div>
         ) : (
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {(servers ?? []).slice(0, 6).map((server) => (
+            {(servers ?? []).slice(0, 9).map((server) => (
               <Link
                 key={server.id}
                 href={`/mcp/${server.slug || server.id}`}

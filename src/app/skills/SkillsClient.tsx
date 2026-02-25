@@ -98,11 +98,11 @@ export default function SkillsClient({
                 >
                   <div className="flex items-center gap-2.5 mb-2.5 min-w-0">
                     <div className="h-9 w-9 rounded-lg bg-primary/10 flex items-center justify-center text-primary text-sm font-semibold shrink-0">
-                      {skill.name[0]?.toUpperCase()}
+                      {(skill.title || skill.name)[0]?.toUpperCase()}
                     </div>
                     <div className="min-w-0">
                       <h3 className="text-sm font-medium text-foreground flex items-center gap-1">
-                        <span className="truncate">{skill.name}</span>
+                        <span className="truncate">{skill.title || skill.name}</span>
                         {skill.verified && <CheckCircle className="h-3 w-3 text-primary shrink-0" />}
                       </h3>
                       <p className="text-[11px] text-muted-foreground">{skill.category}</p>

@@ -110,19 +110,7 @@ export default function JobsClient({
               )}
             </div>
 
-            <div className="hidden lg:block w-72 shrink-0">
-              <div className="sticky top-20 rounded-xl border border-border bg-card p-6">
-                <h2 className="text-xl font-semibold text-foreground leading-tight mb-3">
-                  Reach thousands of Claude developers.
-                </h2>
-                <p className="text-xs text-muted-foreground mb-5">
-                  Connect with top AI talent and grow your team by reaching a dedicated community of developers.
-                </p>
-                <Link href="/submit">
-                  <Button variant="outline" className="w-full text-sm">Add job listing</Button>
-                </Link>
-              </div>
-            </div>
+
           </div>
         </div>
       </main>

@@ -107,8 +107,22 @@ function escapeHtml(str: string): string {
 const BlogDetailClient = ({ post }: { post: BlogPost | null }) => {
   const [activeId, setActiveId] = useState("");
 
-  const toc = useMemo(() => (post ? extractTOC(post.content) : []), [post]);
-  const renderedContent = useMemo(() => (post ? renderMarkdown(post.content) : ""), [post]);
+  const contentWithoutMainTitle = useMemo(() => {
+    if (!post) return "";
+    let content = post.content.trimStart();
+    if (content.startsWith("# ")) {
+      const firstNewline = content.indexOf("\n");
+      if (firstNewline !== -1) {
+        content = content.substring(firstNewline).trimStart();
+      } else {
+        content = "";
+      }
+    }
+    return content;
+  }, [post]);
+
+  const toc = useMemo(() => extractTOC(contentWithoutMainTitle), [contentWithoutMainTitle]);
+  const renderedContent = useMemo(() => renderMarkdown(contentWithoutMainTitle), [contentWithoutMainTitle]);
 
   // Track active heading on scroll
   useEffect(() => {

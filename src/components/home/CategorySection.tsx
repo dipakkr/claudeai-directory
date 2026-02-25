@@ -17,17 +17,17 @@ const CategorySection = () => {
   return (
     <section className="pb-12">
       <div className="container">
-        <div className="flex flex-wrap justify-center gap-2">
+        <div className="grid grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:justify-center">
           {categories.map((cat) => {
             const Icon = cat.icon;
             return (
               <Link
                 key={cat.href}
                 href={cat.href}
-                className="inline-flex items-center gap-2 rounded-full border border-border bg-card/50 px-4 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-card hover:border-primary/30 transition-all"
+                className="flex items-center justify-center gap-2 rounded-full border border-border bg-card/50 px-4 py-2.5 sm:py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-card hover:border-primary/30 transition-all sm:inline-flex"
               >
-                <Icon className="h-3.5 w-3.5 text-primary" />
-                <span>{cat.label}</span>
+                <Icon className="h-3.5 w-3.5 text-primary shrink-0" />
+                <span className="truncate">{cat.label}</span>
               </Link>
             );
           })}

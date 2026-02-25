@@ -72,27 +72,27 @@ export default function AboutPage() {
             </h2>
             <ul className="space-y-2">
               <li>
-                <strong className="text-foreground">Skills Directory</strong> —
+                <strong className="text-foreground">Skills Directory</strong>
                 Browse and discover Claude skills and capabilities
               </li>
               <li>
-                <strong className="text-foreground">MCP Servers</strong> —
+                <strong className="text-foreground">MCP Servers</strong>
                 Explore Model Context Protocol servers and integrations
               </li>
               <li>
-                <strong className="text-foreground">Prompts Library</strong> —
+                <strong className="text-foreground">Prompts Library</strong>
                 Find and share effective prompts for Claude
               </li>
               <li>
                 <strong className="text-foreground">Learning Resources</strong>{" "}
-                — Guides, tutorials, and blog posts to level up your AI skills
+                Guides, tutorials, and blog posts to level up your AI skills
               </li>
               <li>
-                <strong className="text-foreground">Job Board</strong> — AI and
+                <strong className="text-foreground">Job Board</strong> AI and
                 Claude-related job opportunities
               </li>
               <li>
-                <strong className="text-foreground">Community</strong> — Connect
+                <strong className="text-foreground">Community</strong> Connect
                 with other builders in the ecosystem
               </li>
             </ul>

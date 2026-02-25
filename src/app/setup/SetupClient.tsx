@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Separator } from "@/components/ui/separator";
 import { Copy, Download, Share2 } from "lucide-react";
+import PageBreadcrumb from "@/components/layout/PageBreadcrumb";
 import { generateClaudeMd } from "./generator";
 import {
   DEFAULT_CONFIG,
@@ -87,8 +88,8 @@ function Chip({
     <button
       onClick={onClick}
       className={`px-3 py-1 rounded-full text-xs font-medium border transition-all ${active
-          ? "bg-zinc-800 border-zinc-700 text-zinc-100 shadow-sm"
-          : "border-zinc-800 text-zinc-400 hover:border-zinc-700 hover:text-zinc-200 bg-transparent"
+        ? "bg-zinc-800 border-zinc-700 text-zinc-100 shadow-sm"
+        : "border-zinc-800 text-zinc-400 hover:border-zinc-700 hover:text-zinc-200 bg-transparent"
         }`}
     >
       {children}
@@ -110,8 +111,8 @@ function StackCard({
     <button
       onClick={onClick}
       className={`relative px-2 py-2.5 rounded-lg border text-center transition-all text-xs font-medium leading-tight ${active
-          ? "border-zinc-700 bg-zinc-800/80 text-zinc-100 shadow-sm"
-          : "border-zinc-800/80 text-zinc-400 hover:border-zinc-700 hover:text-zinc-200 hover:bg-zinc-900/50 bg-transparent"
+        ? "border-zinc-700 bg-zinc-800/80 text-zinc-100 shadow-sm"
+        : "border-zinc-800/80 text-zinc-400 hover:border-zinc-700 hover:text-zinc-200 hover:bg-zinc-900/50 bg-transparent"
         }`}
     >
       {active && (
@@ -142,8 +143,8 @@ function RadioCard({
     <button
       onClick={onClick}
       className={`flex-1 px-3 py-3 rounded-lg border text-left transition-all ${active
-          ? "border-zinc-700 bg-zinc-800/60 shadow-sm"
-          : "border-zinc-800/80 hover:border-zinc-700/80 hover:bg-zinc-900/50 bg-transparent"
+        ? "border-zinc-700 bg-zinc-800/60 shadow-sm"
+        : "border-zinc-800/80 hover:border-zinc-700/80 hover:bg-zinc-900/50 bg-transparent"
         }`}
     >
       <div className="flex items-center justify-between mb-1.5">
@@ -155,8 +156,8 @@ function RadioCard({
             <div
               key={i}
               className={`h-1.5 w-1.5 rounded-full transition-colors ${i < dots
-                  ? active ? "bg-zinc-300" : "bg-zinc-600"
-                  : "bg-zinc-800"
+                ? active ? "bg-zinc-300" : "bg-zinc-600"
+                : "bg-zinc-800"
                 }`}
             />
           ))}
@@ -294,7 +295,11 @@ export default function SetupClient() {
 
         {/* Page header */}
         <div className="mb-6">
-          <h1 className="text-2xl font-semibold text-foreground mb-1">
+          <PageBreadcrumb items={[
+            { label: "Tools", href: "/setup" },
+            { label: "CLAUDE.md Generator" },
+          ]} />
+          <h1 className="text-2xl font-semibold text-foreground mb-1 mt-4">
             CLAUDE.md Generator
           </h1>
           <p className="text-sm text-muted-foreground">
@@ -305,8 +310,8 @@ export default function SetupClient() {
         <div className="flex flex-col lg:flex-row gap-5 items-start">
 
           {/* ── Left Panel ── */}
-          <div className="w-full lg:w-[40%] rounded-xl border border-zinc-800/80 bg-black/40 shadow-inner overflow-hidden">
-            <div className="p-5 space-y-6 overflow-y-auto lg:max-h-[calc(100vh-10rem)] custom-scrollbar">
+          <div className="w-full lg:w-[35%] rounded-xl border border-zinc-800/80 bg-black/40 shadow-inner overflow-hidden">
+            <div className="p-5 space-y-6 overflow-y-auto lg:max-h-[calc(100vh-12rem)] custom-scrollbar">
 
               {/* Framework */}
               <div>
@@ -441,8 +446,8 @@ export default function SetupClient() {
                       <label
                         key={opt.key}
                         className={`flex items-center gap-3 px-3 py-2.5 rounded-lg cursor-pointer transition-all group ${checked
-                            ? "bg-zinc-800/80 border border-zinc-700 shadow-sm"
-                            : "border border-transparent hover:bg-zinc-900/50"
+                          ? "bg-zinc-800/80 border border-zinc-700 shadow-sm"
+                          : "border border-transparent hover:bg-zinc-900/50"
                           }`}
                       >
                         <Checkbox
@@ -468,7 +473,7 @@ export default function SetupClient() {
           </div>
 
           {/* ── Right Panel ── */}
-          <div className="w-full lg:w-[60%] lg:sticky lg:top-20">
+          <div className="w-full lg:w-[65%] lg:sticky lg:top-20">
 
             {/* Toolbar */}
             <div className="flex items-center justify-between mb-2 gap-2 flex-wrap">

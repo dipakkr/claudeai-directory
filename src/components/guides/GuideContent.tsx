@@ -63,7 +63,7 @@ export function GuideContent({
       </article>
 
       {/* Mark complete */}
-      <div className="mt-10 pt-6 border-t border-border">
+      <div className="mt-10 pt-6 border-t border-border flex justify-end">
         {isAuthenticated ? (
           <Button
             variant={isCompleted ? "outline" : "default"}

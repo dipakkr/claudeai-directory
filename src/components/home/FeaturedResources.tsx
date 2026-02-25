@@ -23,16 +23,16 @@ const FeaturedResources = ({ initialSkills = [] }: { initialSkills?: Skill[] }) 
             <Link
               key={skill.id}
               href={`/skills/${skill.id}`}
-              className="group rounded-lg border border-border bg-card p-4 hover:bg-accent/50 hover:border-primary/20 transition-all"
+              className="group rounded-lg border border-border bg-card p-4 hover:bg-accent/50 hover:border-primary/20 transition-all flex flex-col min-h-[160px]"
             >
               <div className="flex items-start justify-between gap-2 mb-2">
                 <div className="flex items-center gap-2 min-w-0">
                   <div className="h-8 w-8 rounded-md bg-primary/10 flex items-center justify-center text-primary text-sm font-medium shrink-0">
-                    {skill.name[0]?.toUpperCase()}
+                    {(skill.title || skill.name)[0]?.toUpperCase()}
                   </div>
                   <div className="min-w-0">
                     <h3 className="text-sm font-medium text-foreground flex items-center gap-1">
-                      <span className="truncate">{skill.name}</span>
+                      <span className="truncate">{skill.title || skill.name}</span>
                       {skill.verified && <CheckCircle className="h-3 w-3 text-primary shrink-0" />}
                     </h3>
                     <p className="text-xs text-muted-foreground truncate">{skill.category}</p>
@@ -40,14 +40,10 @@ const FeaturedResources = ({ initialSkills = [] }: { initialSkills?: Skill[] }) 
                 </div>
                 <ArrowUpRight className="h-3.5 w-3.5 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity shrink-0" />
               </div>
-              <p className="text-xs text-muted-foreground line-clamp-2 mb-2">
+              <p className="text-xs text-muted-foreground line-clamp-3 mb-2 flex-1">
                 {skill.description}
               </p>
-              <div className="flex items-center gap-3 text-xs text-muted-foreground">
-                <span className="flex items-center gap-1">
-                  <Star className="h-3 w-3 text-yellow-500" />
-                  {skill.rating.toFixed(1)}
-                </span>
+              <div className="flex items-center gap-3 text-xs text-muted-foreground mt-auto">
                 <span>{skill.downloads.toLocaleString()} downloads</span>
               </div>
             </Link>

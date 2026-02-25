@@ -46,7 +46,7 @@ const Header = () => {
           <div className="h-6 w-6 rounded-md bg-primary flex items-center justify-center">
             <span className="text-xs font-bold text-primary-foreground">C</span>
           </div>
-          <span className="hidden sm:inline">ClaudeAI Directory</span>
+          <span className="inline">ClaudeAI Directory</span>
         </Link>
 
         {/* Desktop nav */}

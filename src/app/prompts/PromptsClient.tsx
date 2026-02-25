@@ -107,7 +107,7 @@ export default function PromptsClient({
                 <Link
                   key={prompt.id}
                   href={`/prompts/${prompt.id}`}
-                  className="group rounded-lg border border-border bg-card p-4 hover:bg-accent/50 hover:border-primary/20 transition-all"
+                  className="group rounded-lg border border-border bg-card p-4 hover:bg-accent/50 hover:border-primary/20 transition-all flex flex-col min-h-[220px]"
                 >
                   <div className="flex items-start justify-between mb-2">
                     <h3 className="text-sm font-medium text-foreground group-hover:text-primary transition-colors">
@@ -116,10 +116,10 @@ export default function PromptsClient({
                     <ArrowUpRight className="h-3.5 w-3.5 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity shrink-0" />
                   </div>
                   <p className="text-xs text-muted-foreground line-clamp-2 mb-3">{prompt.description}</p>
-                  <div className="bg-muted/50 rounded-md p-2 mb-3">
-                    <p className="text-xs font-mono text-muted-foreground line-clamp-3">{prompt.prompt}</p>
+                  <div className="bg-muted/50 rounded-md p-2.5 mb-3 flex-1">
+                    <p className="text-xs font-mono text-muted-foreground line-clamp-5">{prompt.prompt}</p>
                   </div>
-                  <div className="flex items-center justify-between">
+                  <div className="flex items-center justify-between mt-auto">
                     <div className="flex items-center gap-2">
                       <Badge variant="secondary" className="text-[10px] px-1.5 py-0">{prompt.category}</Badge>
                       <span className="flex items-center gap-1 text-xs text-muted-foreground">
