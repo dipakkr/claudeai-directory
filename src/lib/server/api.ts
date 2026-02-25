@@ -10,7 +10,7 @@ function normalizeIds(obj: unknown): unknown {
 }
 
 export async function serverFetch(endpoint: string, options?: RequestInit) {
-  const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://api.claudeai.directory/api';
+  const baseUrl = process.env.NEXT_PUBLIC_API_URL;
 
   try {
     const response = await fetch(`${baseUrl}${endpoint}`, {

@@ -25,13 +25,11 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 ### Architecture
 - **Frontend**: Next.js in Docker on port `3000`
 - **Domain**: `claudeai.directory` → nginx (host) → Next.js (port 3000)
-- **API**: `https://api.claudeai.directory/api` (see `server/` repo)
 
 ### First-time setup
 ```bash
 # 1. Copy env and fill in real values
 cp .env.production .env
-# Edit .env — set NEXT_PUBLIC_API_URL=https://api.claudeai.directory/api
 
 # 2. Start the frontend container
 docker compose up -d --build
