@@ -21,6 +21,7 @@ export async function generateMetadata({
   const title = `${server.name} MCP Server`;
   const description =
     server.one_liner || server.description?.slice(0, 160) || `${server.name} MCP server for Claude AI`;
+  const ogImageUrl = `${SITE_URL}/mcp/${slug}/opengraph-image`;
 
   return {
     title,
@@ -29,13 +30,15 @@ export async function generateMetadata({
     openGraph: {
       title,
       description,
-      url: `/mcp/${slug}`,
+      url: `${SITE_URL}/mcp/${slug}`,
       type: "website",
+      images: [{ url: ogImageUrl, width: 1200, height: 630, alt: server.name }],
     },
     twitter: {
-      card: "summary",
+      card: "summary_large_image",
       title,
       description,
+      images: [ogImageUrl],
     },
   };
 }

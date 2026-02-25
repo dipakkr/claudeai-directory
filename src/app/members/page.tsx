@@ -5,20 +5,20 @@ import MembersClient from "./MembersClient";
 import type { MembersResponse } from "@/hooks/use-members";
 
 export const metadata: Metadata = {
-  title: "Members — Claude Directory Community",
+  title: "Members — ClaudeAI Directory Community",
   description:
     "Meet the Claude AI community — builders, researchers, and enthusiasts. Browse member profiles, find collaborators, and discover what people are building.",
   openGraph: {
-    title: "Members — Claude Directory Community",
+    title: "Members — ClaudeAI Directory Community",
     description:
       "Meet the people building with Claude AI. Browse member profiles and connect with the community.",
     url: "https://claudeai.directory/members",
-    siteName: "Claude Directory",
+    siteName: "ClaudeAI Directory",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Members — Claude Directory Community",
+    title: "Members — ClaudeAI Directory Community",
     description: "Meet the Claude AI community — builders, researchers, and enthusiasts.",
   },
   alternates: { canonical: "/members" },

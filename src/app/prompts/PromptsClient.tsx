@@ -1,13 +1,13 @@
 "use client";
 
-import { useCallback } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { Badge } from "@/components/ui/badge";
-import { ThumbsUp, Copy, ArrowUpRight } from "lucide-react";
-import { usePrompts } from "@/hooks/use-prompts";
+import { ThumbsUp, Copy, ArrowUpRight, Loader2 } from "lucide-react";
+import { useInfinitePrompts } from "@/hooks/use-prompts";
 import { toast } from "sonner";
 import { CollectionPageSchema } from "@/components/seo/JsonLd";
 import type { Prompt } from "@/types";
@@ -26,7 +26,7 @@ export default function PromptsClient({
   const search = searchParams.get("search") ?? "";
   const category = searchParams.get("category") ?? "All";
 
-  const { data: prompts } = usePrompts(
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useInfinitePrompts(
     {
       search: search || undefined,
       category: category === "All" ? undefined : category,
@@ -34,11 +34,34 @@ export default function PromptsClient({
     { initialData }
   );
 
+  const seen = new Set<string>();
+  const prompts = (data?.pages.flat() ?? []).filter((p) => {
+    if (seen.has(p.id)) return false;
+    seen.add(p.id);
+    return true;
+  });
+
+  const sentinelRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el = sentinelRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && hasNextPage && !isFetchingNextPage) {
+          fetchNextPage();
+        }
+      },
+      { threshold: 0.1 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
+
   const copyPrompt = (text: string) => {
     navigator.clipboard.writeText(text);
     toast.success("Prompt copied to clipboard");
   };
-
 
   const setCategory = useCallback((value: string) => {
     const params = new URLSearchParams(searchParams.toString());
@@ -62,7 +85,6 @@ export default function PromptsClient({
             <p className="text-sm text-muted-foreground">Copy-ready prompts for every use case</p>
           </div>
 
-
           <div className="flex items-center gap-1.5 mb-6 overflow-x-auto">
             {categories.map((c) => (
               <button
@@ -79,9 +101,9 @@ export default function PromptsClient({
           </div>
 
           <>
-            <p className="mb-4 text-xs text-muted-foreground">{prompts?.length ?? 0} prompts found</p>
+            <p className="mb-4 text-xs text-muted-foreground">{prompts.length} prompts found</p>
             <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-              {(prompts ?? []).map((prompt) => (
+              {prompts.map((prompt) => (
                 <Link
                   key={prompt.id}
                   href={`/prompts/${prompt.id}`}
@@ -116,11 +138,18 @@ export default function PromptsClient({
                 </Link>
               ))}
             </div>
-            {(prompts ?? []).length === 0 && (
+            {prompts.length === 0 && (
               <div className="py-16 text-center">
                 <p className="text-sm text-muted-foreground">No prompts found.</p>
               </div>
             )}
+
+            {/* Infinite scroll sentinel */}
+            <div ref={sentinelRef} className="py-6 flex justify-center">
+              {isFetchingNextPage && (
+                <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+              )}
+            </div>
           </>
 
           <section className="mt-20 border-t border-border pt-12 max-w-3xl">
@@ -142,7 +171,7 @@ export default function PromptsClient({
           </section>
 
           <section className="mt-12 border-t border-border pt-10 max-w-3xl">
-            <h3 className="text-lg font-medium text-foreground mb-3">Explore more from Claude Directory</h3>
+            <h3 className="text-lg font-medium text-foreground mb-3">Explore more from ClaudeAI Directory</h3>
             <div className="flex flex-wrap gap-x-4 gap-y-1.5 text-sm">
               <Link href="/skills" className="text-primary hover:underline">Claude Skills</Link>
               <Link href="/mcp" className="text-primary hover:underline">MCP Connectors</Link>

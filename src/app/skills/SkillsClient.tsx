@@ -96,7 +96,7 @@ export default function SkillsClient({
                   href={`/skills/${skill.id}`}
                   className="group rounded-lg border border-border bg-card p-4 hover:bg-accent/50 hover:border-primary/20 transition-all flex flex-col"
                 >
-                  <div className="flex items-center gap-2.5 mb-2.5">
+                  <div className="flex items-center gap-2.5 mb-2.5 min-w-0">
                     <div className="h-9 w-9 rounded-lg bg-primary/10 flex items-center justify-center text-primary text-sm font-semibold shrink-0">
                       {skill.name[0]?.toUpperCase()}
                     </div>
@@ -175,7 +175,7 @@ export default function SkillsClient({
           </section>
 
           <section className="mt-12 border-t border-border pt-10 max-w-3xl">
-            <h3 className="text-lg font-medium text-foreground mb-3">Explore more from Claude Directory</h3>
+            <h3 className="text-lg font-medium text-foreground mb-3">Explore more from ClaudeAI Directory</h3>
             <div className="flex flex-wrap gap-x-4 gap-y-1.5 text-sm">
               <Link href="/mcp" className="text-primary hover:underline">MCP Connectors</Link>
               <Link href="/prompts" className="text-primary hover:underline">Prompt Library</Link>

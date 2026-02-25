@@ -4,8 +4,8 @@ import Link from "next/link";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy - Claude Directory",
-  description: "Privacy policy for Claude Directory (claudeai.directory).",
+  title: "Privacy Policy - ClaudeAI Directory",
+  description: "Privacy policy for ClaudeAI Directory (claudeai.directory).",
 };
 
 export default function PrivacyPage() {
@@ -27,13 +27,13 @@ export default function PrivacyPage() {
                 Introduction
               </h2>
               <p>
-                Claude Directory (&quot;claudeai.directory&quot;, &quot;we&quot;,
+                ClaudeAI Directory (&quot;claudeai.directory&quot;, &quot;we&quot;,
                 &quot;our&quot;, or &quot;us&quot;) is committed to protecting
                 your privacy. This Privacy Policy explains how we collect, use,
                 and safeguard your information when you visit our website.
               </p>
               <p>
-                Claude Directory is an independent community project and is{" "}
+                ClaudeAI Directory is an independent community project and is{" "}
                 <strong className="text-foreground">not</strong> affiliated with
                 Anthropic or Claude.ai.
               </p>

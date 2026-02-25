@@ -5,7 +5,7 @@ export const metadata: Metadata = {
   description:
     "Articles, tutorials, and guides about Claude AI, MCP servers, prompt engineering, and building with AI.",
   openGraph: {
-    title: "Blog | Claude Directory",
+    title: "Blog | ClaudeAI Directory",
     description:
       "Articles, tutorials, and guides about Claude AI, MCP servers, prompt engineering, and building with AI.",
   },

@@ -19,7 +19,7 @@ export async function generateMetadata({
   }
 
   const title = thread.title;
-  const description = thread.body?.slice(0, 160) || "Community discussion on Claude Directory";
+  const description = thread.body?.slice(0, 160) || "Community discussion on ClaudeAI Directory";
 
   return {
     title,

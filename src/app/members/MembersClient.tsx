@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
@@ -93,7 +93,15 @@ export default function MembersClient({
   initialData: MembersResponse | null;
 }) {
   const [search, setSearch] = useState("");
+  const [mounted, setMounted] = useState(false);
   const { isAuthenticated } = useAuth();
+
+  useEffect(() => { setMounted(true); }, []);
+
+  // Always treat as locked until client has mounted and auth is resolved.
+  // This ensures SSR and initial client render are identical (locked view),
+  // preventing Radix UI ID mismatches.
+  const isUnlocked = mounted && isAuthenticated;
 
   const { data, isLoading } = useMembers(
     { per_page: 200 },
@@ -117,8 +125,8 @@ export default function MembersClient({
   }, [members, search]);
 
   // Split into visible + locked sections
-  const visibleMembers = isAuthenticated ? filtered : filtered.slice(0, VISIBLE_COUNT);
-  const lockedMembers = isAuthenticated ? [] : filtered.slice(VISIBLE_COUNT);
+  const visibleMembers = isUnlocked ? filtered : filtered.slice(0, VISIBLE_COUNT);
+  const lockedMembers = isUnlocked ? [] : filtered.slice(VISIBLE_COUNT);
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
@@ -138,7 +146,7 @@ export default function MembersClient({
                   : "The Claude AI community — builders, researchers, and enthusiasts."}
               </p>
             </div>
-            {!isAuthenticated && (
+            {!isUnlocked && (
               <Button asChild size="sm" className="shrink-0">
                 <Link href="/login">Join the community</Link>
               </Button>
@@ -172,27 +180,48 @@ export default function MembersClient({
                 ))}
               </div>
 
-              {/* Blurred locked members */}
+              {/* Locked section — ghost cards + overlay */}
               {lockedMembers.length > 0 && (
                 <div className="relative mt-2">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 blur-sm pointer-events-none select-none opacity-60">
-                    {lockedMembers.slice(0, 16).map((member) => (
-                      <MemberCard key={member.id} member={member} blurred />
+                  {/* Ghost placeholder cards — no real data */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 pointer-events-none select-none">
+                    {Array.from({ length: Math.min(lockedMembers.length, 16) }).map((_, i) => (
+                      <div
+                        key={i}
+                        className="flex items-center gap-3 px-4 py-3 border border-border rounded-lg"
+                      >
+                        <div className="h-10 w-10 rounded-md bg-muted/60 shrink-0" />
+                        <div className="space-y-2 flex-1">
+                          <div
+                            className="h-2.5 rounded-full bg-muted/60"
+                            style={{ width: `${45 + (i * 17) % 40}%` }}
+                          />
+                          <div
+                            className="h-2 rounded-full bg-muted/40"
+                            style={{ width: `${30 + (i * 11) % 30}%` }}
+                          />
+                        </div>
+                      </div>
                     ))}
                   </div>
 
-                  {/* Gradient fade + CTA overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background/60 to-background" />
-                  <div className="absolute inset-0 flex flex-col items-center justify-center gap-4">
-                    <div className="bg-background/90 border border-border rounded-2xl px-8 py-6 text-center shadow-xl backdrop-blur-sm max-w-sm">
+                  {/* Gradient fade from visible → locked */}
+                  <div className="absolute top-0 left-0 right-0 h-16 bg-gradient-to-b from-transparent to-background/80 pointer-events-none" />
+
+                  {/* Full overlay */}
+                  <div className="absolute inset-0 bg-background/70 backdrop-blur-[2px]" />
+
+                  {/* CTA card */}
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="bg-card border border-border rounded-2xl px-8 py-6 text-center shadow-xl max-w-sm w-full mx-4">
                       <div className="flex items-center justify-center w-10 h-10 rounded-full bg-primary/10 mx-auto mb-3">
                         <Lock className="h-5 w-5 text-primary" />
                       </div>
                       <p className="text-sm font-semibold text-foreground mb-1">
-                        {lockedMembers.length + VISIBLE_COUNT} members and counting
+                        {total} members and counting
                       </p>
                       <p className="text-xs text-muted-foreground mb-4 leading-relaxed">
-                        Sign in to see all members, visit profiles, and connect with the community.
+                        Sign in to browse all profiles and connect with the community.
                       </p>
                       <Button asChild size="sm" className="w-full">
                         <Link href="/login">Sign in to unlock</Link>

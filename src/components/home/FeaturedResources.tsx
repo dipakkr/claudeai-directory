@@ -25,20 +25,20 @@ const FeaturedResources = ({ initialSkills = [] }: { initialSkills?: Skill[] }) 
               href={`/skills/${skill.id}`}
               className="group rounded-lg border border-border bg-card p-4 hover:bg-accent/50 hover:border-primary/20 transition-all"
             >
-              <div className="flex items-start justify-between mb-2">
-                <div className="flex items-center gap-2">
-                  <div className="h-8 w-8 rounded-md bg-primary/10 flex items-center justify-center text-primary text-sm font-medium">
+              <div className="flex items-start justify-between gap-2 mb-2">
+                <div className="flex items-center gap-2 min-w-0">
+                  <div className="h-8 w-8 rounded-md bg-primary/10 flex items-center justify-center text-primary text-sm font-medium shrink-0">
                     {skill.name[0]?.toUpperCase()}
                   </div>
-                  <div>
+                  <div className="min-w-0">
                     <h3 className="text-sm font-medium text-foreground flex items-center gap-1">
-                      {skill.name}
-                      {skill.verified && <CheckCircle className="h-3 w-3 text-primary" />}
+                      <span className="truncate">{skill.name}</span>
+                      {skill.verified && <CheckCircle className="h-3 w-3 text-primary shrink-0" />}
                     </h3>
-                    <p className="text-xs text-muted-foreground">{skill.category}</p>
+                    <p className="text-xs text-muted-foreground truncate">{skill.category}</p>
                   </div>
                 </div>
-                <ArrowUpRight className="h-3.5 w-3.5 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
+                <ArrowUpRight className="h-3.5 w-3.5 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity shrink-0" />
               </div>
               <p className="text-xs text-muted-foreground line-clamp-2 mb-2">
                 {skill.description}

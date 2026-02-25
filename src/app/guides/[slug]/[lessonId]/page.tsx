@@ -32,7 +32,7 @@ export async function generateMetadata({
     : "";
   const description = excerpt
     ? `${excerpt}…`
-    : `${lesson.title} — part of the ${lesson.guide_title} guide on Claude Directory.`;
+    : `${lesson.title} — part of the ${lesson.guide_title} guide on ClaudeAI Directory.`;
 
   const ogImageUrl = `${SITE_URL}/guides/${slug}/${lessonId}/opengraph-image`;
 

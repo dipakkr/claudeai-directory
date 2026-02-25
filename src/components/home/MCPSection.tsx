@@ -61,8 +61,8 @@ const MCPSection = ({ initialServers = [] }: { initialServers?: MCPServer[] }) =
               href={`/mcp/${server.slug || server.id}`}
               className="group rounded-lg border border-border bg-card p-4 hover:bg-accent/50 hover:border-primary/20 transition-all"
             >
-              <div className="flex items-start justify-between mb-2">
-                <div className="flex items-center gap-2">
+              <div className="flex items-start justify-between gap-2 mb-2">
+                <div className="flex items-center gap-2 min-w-0">
                   <ServerIcon iconUrl={server.branding?.icon_url} name={server.name} />
                   <div className="min-w-0">
                     <h3 className="text-sm font-medium text-foreground flex items-center gap-1">

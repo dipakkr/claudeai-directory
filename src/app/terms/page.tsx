@@ -4,8 +4,8 @@ import Link from "next/link";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Terms of Service - Claude Directory",
-  description: "Terms of service for Claude Directory (claudeai.directory).",
+  title: "Terms of Service - ClaudeAI Directory",
+  description: "Terms of service for ClaudeAI Directory (claudeai.directory).",
 };
 
 export default function TermsPage() {
@@ -27,13 +27,13 @@ export default function TermsPage() {
                 Agreement to Terms
               </h2>
               <p>
-                By accessing Claude Directory (&quot;claudeai.directory&quot;,
+                By accessing ClaudeAI Directory (&quot;claudeai.directory&quot;,
                 &quot;we&quot;, &quot;our&quot;, or &quot;us&quot;), you agree to
                 be bound by these Terms of Service. If you do not agree, please
                 do not use the site.
               </p>
               <p>
-                Claude Directory is an independent community project and is{" "}
+                ClaudeAI Directory is an independent community project and is{" "}
                 <strong className="text-foreground">not</strong> affiliated with
                 Anthropic, Claude.ai, or Claude.com in any way.
               </p>
@@ -43,7 +43,7 @@ export default function TermsPage() {
               <h2 className="text-xl font-semibold text-foreground">
                 Use of Service
               </h2>
-              <p>You agree to use Claude Directory only for lawful purposes. You must not:</p>
+              <p>You agree to use ClaudeAI Directory only for lawful purposes. You must not:</p>
               <ul className="space-y-1">
                 <li>Use the service in any way that violates applicable laws</li>
                 <li>
@@ -75,7 +75,7 @@ export default function TermsPage() {
                 User Content
               </h2>
               <p>
-                You retain ownership of content you submit to Claude Directory.
+                You retain ownership of content you submit to ClaudeAI Directory.
                 By submitting content, you grant us a non-exclusive, worldwide,
                 royalty-free license to use, display, and distribute that content
                 on our platform.
@@ -91,7 +91,7 @@ export default function TermsPage() {
                 Third-Party Resources
               </h2>
               <p>
-                Claude Directory links to and references third-party tools,
+                ClaudeAI Directory links to and references third-party tools,
                 resources, and websites. We do not control and are not
                 responsible for third-party content. Use third-party resources at
                 your own risk.
@@ -103,8 +103,8 @@ export default function TermsPage() {
                 Intellectual Property
               </h2>
               <p>
-                The Claude Directory website, its design, and original content
-                are the property of Claude Directory. &quot;Claude&quot; and
+                The ClaudeAI Directory website, its design, and original content
+                are the property of ClaudeAI Directory. &quot;Claude&quot; and
                 &quot;Anthropic&quot; are trademarks of Anthropic, PBC. All
                 other trademarks belong to their respective owners. Our use of
                 these names is for descriptive purposes only and does not imply
@@ -117,7 +117,7 @@ export default function TermsPage() {
                 Disclaimer of Warranties
               </h2>
               <p>
-                Claude Directory is provided &quot;as is&quot; and &quot;as
+                ClaudeAI Directory is provided &quot;as is&quot; and &quot;as
                 available&quot; without warranties of any kind, express or
                 implied. We do not guarantee that the service will be
                 uninterrupted, error-free, or secure.
@@ -129,7 +129,7 @@ export default function TermsPage() {
                 Limitation of Liability
               </h2>
               <p>
-                To the maximum extent permitted by law, Claude Directory shall
+                To the maximum extent permitted by law, ClaudeAI Directory shall
                 not be liable for any indirect, incidental, special, or
                 consequential damages arising from your use of the service.
               </p>

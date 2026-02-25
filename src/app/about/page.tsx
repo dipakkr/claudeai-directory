@@ -4,9 +4,9 @@ import Link from "next/link";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "About - Claude Directory",
+  title: "About - ClaudeAI Directory",
   description:
-    "Learn about Claude Directory, a community-driven project helping builders understand the Claude AI ecosystem.",
+    "Learn about ClaudeAI Directory, a community-driven project helping builders understand the Claude AI ecosystem.",
 };
 
 export default function AboutPage() {
@@ -16,12 +16,12 @@ export default function AboutPage() {
       <main className="flex-1">
         <div className="container max-w-3xl py-16">
           <h1 className="text-3xl font-bold tracking-tight mb-8">
-            About Claude Directory
+            About ClaudeAI Directory
           </h1>
 
           <div className="prose prose-neutral dark:prose-invert max-w-none space-y-6 text-muted-foreground">
             <p className="text-lg leading-relaxed">
-              <strong className="text-foreground">Claude Directory</strong>{" "}
+              <strong className="text-foreground">ClaudeAI Directory</strong>{" "}
               (claudeai.directory) is an independent, community-driven project
               built to help developers, builders, and AI enthusiasts discover and
               understand more about the Claude AI ecosystem.
@@ -40,7 +40,7 @@ export default function AboutPage() {
                 Important Disclaimer
               </h2>
               <p className="mb-0">
-                Claude Directory is <strong className="text-foreground">NOT</strong>{" "}
+                ClaudeAI Directory is <strong className="text-foreground">NOT</strong>{" "}
                 associated with Anthropic, Claude.com, or Claude.ai in any way.
                 This is a community project and we are in{" "}
                 <strong className="text-foreground">no way</strong> officially

@@ -19,7 +19,6 @@ const navLinks = [
   { href: "/mcp", label: "MCPs" },
   { href: "/prompts", label: "Prompts" },
   { href: "/jobs", label: "Jobs" },
-  { href: "/members", label: "Members" },
   { href: "/blog", label: "Blog" },
 ];
 
@@ -47,7 +46,7 @@ const Header = () => {
           <div className="h-6 w-6 rounded-md bg-primary flex items-center justify-center">
             <span className="text-xs font-bold text-primary-foreground">C</span>
           </div>
-          <span className="hidden sm:inline">Claude Directory</span>
+          <span className="hidden sm:inline">ClaudeAI Directory</span>
         </Link>
 
         {/* Desktop nav */}

@@ -6,7 +6,13 @@ import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Copy, ThumbsUp, CheckCircle, ArrowLeft, ArrowRight } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Copy, ThumbsUp, CheckCircle, ArrowLeft, ArrowRight, Pencil, RotateCcw } from "lucide-react";
 import { usePrompt, usePrompts } from "@/hooks/use-prompts";
 import { toast } from "sonner";
 import PageBreadcrumb from "@/components/layout/PageBreadcrumb";
@@ -16,6 +22,9 @@ export default function PromptDetailClient({ prompt: initialPrompt, id }: { prom
   const { data: fetchedPrompt } = usePrompt(initialPrompt ? "" : id);
   const prompt = initialPrompt ?? fetchedPrompt ?? null;
   const [copied, setCopied] = useState(false);
+  const [customizeOpen, setCustomizeOpen] = useState(false);
+  const [customizedText, setCustomizedText] = useState("");
+  const [customizeCopied, setCustomizeCopied] = useState(false);
 
   // Fetch related prompts from same category
   const { data: relatedPrompts } = usePrompts(
@@ -30,6 +39,25 @@ export default function PromptDetailClient({ prompt: initialPrompt, id }: { prom
     setCopied(true);
     toast.success("Prompt copied to clipboard");
     setTimeout(() => setCopied(false), 2000);
+  };
+
+  const openCustomize = () => {
+    if (!prompt) return;
+    setCustomizedText(prompt.prompt);
+    setCustomizeOpen(true);
+  };
+
+  const copyCustomized = () => {
+    navigator.clipboard.writeText(customizedText);
+    setCustomizeCopied(true);
+    toast.success("Customized prompt copied!");
+    setTimeout(() => setCustomizeCopied(false), 2000);
+  };
+
+  const resetCustomized = () => {
+    if (!prompt) return;
+    setCustomizedText(prompt.prompt);
+    toast("Reset to original");
   };
 
   if (!prompt) {
@@ -84,19 +112,45 @@ export default function PromptDetailClient({ prompt: initialPrompt, id }: { prom
                 </div>
               </div>
 
+              {/* Use cases — compact chips */}
+              {prompt.use_cases.length > 0 && (
+                <div className="flex flex-wrap items-center gap-1.5 mb-5">
+                  <span className="text-xs text-muted-foreground mr-1">Best for:</span>
+                  {prompt.use_cases.map((uc, i) => (
+                    <span
+                      key={i}
+                      className="inline-flex items-center gap-1 rounded-full border border-border bg-muted/40 px-2.5 py-0.5 text-xs text-muted-foreground"
+                    >
+                      {uc}
+                    </span>
+                  ))}
+                </div>
+              )}
+
               {/* Prompt box */}
               <div className="rounded-xl border border-border bg-card mb-6">
                 <div className="flex items-center justify-between px-4 py-3 border-b border-border">
                   <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Prompt</span>
-                  <Button
-                    size="sm"
-                    variant="ghost"
-                    onClick={copyPrompt}
-                    className="h-7 text-xs gap-1.5"
-                  >
-                    {copied ? <CheckCircle className="h-3.5 w-3.5 text-emerald-400" /> : <Copy className="h-3.5 w-3.5" />}
-                    {copied ? "Copied" : "Copy"}
-                  </Button>
+                  <div className="flex items-center gap-1.5">
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={openCustomize}
+                      className="h-7 text-xs gap-1.5"
+                    >
+                      <Pencil className="h-3 w-3" />
+                      Customize
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={copyPrompt}
+                      className="h-7 text-xs gap-1.5"
+                    >
+                      {copied ? <CheckCircle className="h-3.5 w-3.5 text-emerald-400" /> : <Copy className="h-3.5 w-3.5" />}
+                      {copied ? "Copied" : "Copy"}
+                    </Button>
+                  </div>
                 </div>
                 <pre className="p-4 text-sm font-mono text-foreground/90 whitespace-pre-wrap break-words leading-relaxed">
                   {prompt.prompt}
@@ -118,20 +172,6 @@ export default function PromptDetailClient({ prompt: initialPrompt, id }: { prom
                   <div className="rounded-lg border border-border bg-muted/30 p-4">
                     <p className="text-sm text-muted-foreground whitespace-pre-wrap">{prompt.example_output}</p>
                   </div>
-                </div>
-              )}
-
-              {prompt.use_cases.length > 0 && (
-                <div className="mb-6">
-                  <h2 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">Use Cases</h2>
-                  <ul className="space-y-1.5">
-                    {prompt.use_cases.map((uc, i) => (
-                      <li key={i} className="flex items-start gap-2 text-sm text-muted-foreground">
-                        <div className="h-1.5 w-1.5 rounded-full bg-primary mt-1.5 shrink-0" />
-                        {uc}
-                      </li>
-                    ))}
-                  </ul>
                 </div>
               )}
 
@@ -174,17 +214,13 @@ export default function PromptDetailClient({ prompt: initialPrompt, id }: { prom
                             <p className="text-xs font-medium text-foreground group-hover:text-primary transition-colors leading-snug line-clamp-2">
                               {p.title}
                             </p>
-                            <p className="text-[11px] text-muted-foreground mt-0.5 flex items-center gap-1">
-                              <ThumbsUp className="h-2.5 w-2.5" />
-                              {p.upvotes}
-                            </p>
                           </div>
                           <ArrowRight className="h-3 w-3 text-muted-foreground/40 group-hover:text-primary shrink-0 mt-0.5 transition-colors" />
                         </Link>
                       ))}
                     </div>
                     <Link
-                      href={`/prompts?category=${prompt.category}`}
+                      href={`/prompts?category=${encodeURIComponent(prompt.category)}`}
                       className="inline-flex items-center gap-1 text-[11px] text-muted-foreground hover:text-primary transition-colors mt-2 px-3"
                     >
                       View all {prompt.category} prompts
@@ -210,9 +246,9 @@ export default function PromptDetailClient({ prompt: initialPrompt, id }: { prom
                 )}
 
                 {/* Quick copy CTA */}
-                <div className="rounded-xl border border-border bg-card p-4">
+                <div className="rounded-xl border border-border bg-card p-4 space-y-2">
                   <p className="text-xs font-medium text-foreground mb-1">Use this prompt</p>
-                  <p className="text-[11px] text-muted-foreground mb-3 leading-relaxed">
+                  <p className="text-[11px] text-muted-foreground leading-relaxed">
                     Copy and paste directly into Claude to get started.
                   </p>
                   <Button
@@ -223,6 +259,15 @@ export default function PromptDetailClient({ prompt: initialPrompt, id }: { prom
                     {copied ? <CheckCircle className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
                     {copied ? "Copied!" : "Copy Prompt"}
                   </Button>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="w-full h-8 text-xs gap-1.5"
+                    onClick={openCustomize}
+                  >
+                    <Pencil className="h-3 w-3" />
+                    Customize &amp; Copy
+                  </Button>
                 </div>
               </div>
             </aside>
@@ -230,6 +275,46 @@ export default function PromptDetailClient({ prompt: initialPrompt, id }: { prom
         </div>
       </main>
       <Footer />
+
+      {/* Customize editor dialog */}
+      <Dialog open={customizeOpen} onOpenChange={setCustomizeOpen}>
+        <DialogContent className="max-w-3xl w-full h-[80vh] flex flex-col p-0 gap-0">
+          <DialogHeader className="px-6 py-4 border-b border-border shrink-0">
+            <DialogTitle className="text-base font-semibold">Customize Prompt</DialogTitle>
+            <p className="text-xs text-muted-foreground mt-0.5">
+              Edit the prompt to fit your needs, then copy it.
+            </p>
+          </DialogHeader>
+
+          <div className="flex-1 min-h-0 px-6 py-4">
+            <textarea
+              className="w-full h-full resize-none rounded-lg border border-border bg-muted/30 p-4 text-sm font-mono text-foreground/90 leading-relaxed focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-colors"
+              value={customizedText}
+              onChange={(e) => setCustomizedText(e.target.value)}
+              spellCheck={false}
+            />
+          </div>
+
+          <div className="px-6 py-4 border-t border-border flex items-center justify-between shrink-0">
+            <button
+              onClick={resetCustomized}
+              className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors"
+            >
+              <RotateCcw className="h-3.5 w-3.5" />
+              Reset to original
+            </button>
+            <div className="flex items-center gap-2">
+              <Button variant="outline" size="sm" className="h-8 text-xs" onClick={() => setCustomizeOpen(false)}>
+                Cancel
+              </Button>
+              <Button size="sm" className="h-8 text-xs gap-1.5" onClick={copyCustomized}>
+                {customizeCopied ? <CheckCircle className="h-3.5 w-3.5 text-emerald-400" /> : <Copy className="h-3.5 w-3.5" />}
+                {customizeCopied ? "Copied!" : "Copy Prompt"}
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

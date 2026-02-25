@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 
 export const runtime = "edge";
-export const alt = "Claude Directory — Skills, MCP Servers, Prompts & AI Jobs";
+export const alt = "ClaudeAI Directory — Skills, MCP Servers, Prompts & AI Jobs";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -28,7 +28,7 @@ export default async function Image() {
             marginBottom: 16,
           }}
         >
-          Claude Directory
+          ClaudeAI Directory
         </div>
         <div
           style={{

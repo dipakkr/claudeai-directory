@@ -59,7 +59,7 @@ export default async function Image({ params }: { params: Promise<{ slug: string
           <div style={{ fontSize: 18, color: "#64748b", marginTop: 24 }}>by {author}</div>
         )}
         <div style={{ position: "absolute", bottom: 40, right: 60, fontSize: 18, color: "#475569" }}>
-          Claude Directory
+          ClaudeAI Directory
         </div>
       </div>
     ),

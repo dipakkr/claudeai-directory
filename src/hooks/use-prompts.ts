@@ -1,7 +1,9 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
 
 import { api } from "@/lib/api";
 import type { Prompt } from "@/types";
+
+const PAGE_SIZE = 20;
 
 interface PromptsParams {
   category?: string;
@@ -17,6 +19,30 @@ export function usePrompts(params?: PromptsParams, options?: { initialData?: Pro
     queryKey: ["prompts", params],
     queryFn: () => api.get<Prompt[]>("/prompts", params as Record<string, string | number | boolean | undefined>),
     initialData: options?.initialData,
+    initialDataUpdatedAt: options?.initialData ? Date.now() : undefined,
+  });
+}
+
+export function useInfinitePrompts(
+  params?: Omit<PromptsParams, "skip" | "limit">,
+  options?: { initialData?: Prompt[] }
+) {
+  return useInfiniteQuery({
+    queryKey: ["prompts-infinite", params],
+    queryFn: ({ pageParam }) =>
+      api.get<Prompt[]>("/prompts", {
+        ...params,
+        skip: pageParam,
+        limit: PAGE_SIZE,
+      } as Record<string, string | number | boolean | undefined>),
+    initialPageParam: 0,
+    getNextPageParam: (lastPage, allPages) => {
+      if (lastPage.length < PAGE_SIZE) return undefined;
+      return allPages.flat().length;
+    },
+    initialData: options?.initialData
+      ? { pages: [options.initialData], pageParams: [0] }
+      : undefined,
     initialDataUpdatedAt: options?.initialData ? Date.now() : undefined,
   });
 }

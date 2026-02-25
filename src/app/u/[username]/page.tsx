@@ -16,7 +16,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
     return {
       title: `${name}'s Profile`,
-      description: profile.bio || `View ${name}'s profile on Claude Directory.`,
+      description: profile.bio || `View ${name}'s profile on ClaudeAI Directory.`,
     };
   } catch (error) {
     return {

@@ -7,27 +7,33 @@ export function GuideCard({ guide }: { guide: Guide }) {
   return (
     <Link
       href={`/guides/${guide.id}`}
-      className="group rounded-xl border border-border bg-card overflow-hidden hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5 transition-all flex flex-col"
+      className="group flex flex-col h-full rounded-2xl border border-border bg-card/50 overflow-hidden hover:bg-card hover:border-orange-500/30 transition-all duration-300 hover:shadow-[0_8px_30px_rgb(249,115,22,0.06)] backdrop-blur-sm relative"
     >
       {/* Thumbnail */}
-      <div className="aspect-[3/1] relative overflow-hidden bg-gradient-to-br from-primary/20 via-primary/5 to-background flex items-center justify-center p-4">
+      <div className="aspect-[16/9] w-full relative overflow-hidden bg-gradient-to-br from-zinc-900 via-[#111] to-black flex items-center justify-center p-6 border-b border-border/50">
         <div
-          className="absolute inset-0 opacity-[0.06]"
+          className="absolute inset-0 opacity-[0.08]"
           style={{
-            backgroundImage:
-              "radial-gradient(circle, currentColor 1px, transparent 1px)",
-            backgroundSize: "20px 20px",
+            backgroundImage: "radial-gradient(circle at center, #f97316 1px, transparent 1px)",
+            backgroundSize: "24px 24px",
           }}
         />
-        <p className="relative text-sm font-semibold text-foreground/90 leading-snug line-clamp-2 text-center">
-          {guide.title}
-        </p>
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-80" />
+
+        {/* Course icon/graphic */}
+        <div className="relative z-10 w-12 h-12 rounded-2xl bg-orange-500/10 border border-orange-500/20 text-orange-500 flex items-center justify-center mb-6 shadow-lg transform group-hover:scale-110 group-hover:-translate-y-1 transition-all duration-500">
+          <BookOpen className="h-6 w-6" />
+        </div>
+
+        {/* Decorative fade */}
+        <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 w-[80%] h-20 bg-orange-500/20 blur-3xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+
         {guide.is_free ? (
-          <Badge className="absolute top-3 right-3 bg-green-500/10 text-green-500 border-0 text-[10px]">
+          <Badge className="absolute top-3 right-3 bg-green-500/10 text-green-500 hover:bg-green-500/20 border-0 text-[10px] font-semibold tracking-wide uppercase shadow-sm">
             Free
           </Badge>
         ) : (
-          <Badge className="absolute top-3 right-3 bg-primary/10 text-primary border-0 text-[10px] font-semibold">
+          <Badge className="absolute top-3 right-3 bg-orange-500 text-white hover:bg-orange-600 border-0 text-[10px] font-bold tracking-wide uppercase shadow-md">
             ${guide.price}
           </Badge>
         )}
@@ -36,38 +42,41 @@ export function GuideCard({ guide }: { guide: Guide }) {
       {/* Body */}
       <div className="p-3 flex flex-col flex-1">
         {/* Tags */}
-        <div className="flex items-center gap-1.5 mb-2">
-          <Badge variant="secondary" className="text-[10px] px-1.5 py-0 capitalize">
+        <div className="flex items-center gap-2 mb-3">
+          <Badge variant="secondary" className="text-[10px] px-2 py-0.5 capitalize bg-muted/60 text-muted-foreground hover:bg-muted font-medium border border-border/50">
             {guide.difficulty}
           </Badge>
-          <Badge variant="outline" className="text-[10px] px-1.5 py-0 capitalize">
+          <Badge variant="outline" className="text-[10px] px-2 py-0.5 capitalize bg-transparent text-muted-foreground border-border/50">
             {guide.category}
           </Badge>
         </div>
 
-        {/* Description */}
-        <p className="text-[11px] text-muted-foreground line-clamp-2 leading-relaxed flex-1 mb-3">
+        {/* Title & Description */}
+        <h3 className="text-base font-semibold text-foreground tracking-tight mb-2 group-hover:text-orange-500 transition-colors line-clamp-2">
+          {guide.title}
+        </h3>
+
+        <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed flex-1 mb-5 opacity-90">
           {guide.description}
         </p>
 
         {/* Stats */}
-        <div className="flex items-center gap-3 text-[11px] text-muted-foreground mb-3">
-          <span className="flex items-center gap-1">
-            <BookOpen className="h-3 w-3" />
-            {guide.total_lessons} lessons
-          </span>
-          <span className="flex items-center gap-1">
-            <Clock className="h-3 w-3" />
-            {guide.estimated_time} min
-          </span>
-        </div>
+        <div className="flex items-center justify-between mt-auto">
+          <div className="flex items-center gap-3.5 text-[11px] font-medium text-muted-foreground">
+            <span className="flex items-center gap-1.5">
+              <BookOpen className="h-3.5 w-3.5 opacity-70" />
+              {guide.total_lessons} lessons
+            </span>
+            <span className="flex items-center gap-1.5">
+              <Clock className="h-3.5 w-3.5 opacity-70" />
+              {guide.estimated_time}m
+            </span>
+          </div>
 
-        {/* CTA */}
-        <div className="flex items-center justify-between rounded-md bg-primary/8 group-hover:bg-primary/15 transition-colors px-2.5 py-2">
-          <span className="text-[11px] font-medium text-primary">
-            {guide.is_free ? "Start Learning" : `Enroll for $${guide.price}`}
-          </span>
-          <ArrowRight className="h-3 w-3 text-primary group-hover:translate-x-0.5 transition-transform" />
+          {/* Inline CTA */}
+          <div className="flex items-center justify-center w-8 h-8 rounded-full bg-orange-500/10 group-hover:bg-orange-500 transition-colors duration-300">
+            <ArrowRight className="h-3.5 w-3.5 text-orange-500 group-hover:text-white transition-colors" />
+          </div>
         </div>
       </div>
     </Link>

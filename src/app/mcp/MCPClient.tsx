@@ -153,8 +153,8 @@ export default function MCPClient({
                   href={`/mcp/${server.slug || server.id}`}
                   className="group rounded-lg border border-border bg-card p-4 hover:bg-accent/50 hover:border-primary/20 transition-all"
                 >
-                  <div className="flex items-start justify-between mb-2">
-                    <div className="flex items-center gap-2.5">
+                  <div className="flex items-start justify-between gap-2 mb-2">
+                    <div className="flex items-center gap-2.5 min-w-0">
                       <ServerIcon iconUrl={server.branding?.icon_url} name={server.name} size={36} />
                       <div className="min-w-0">
                         <h3 className="text-sm font-medium text-foreground flex items-center gap-1.5">
@@ -246,7 +246,7 @@ export default function MCPClient({
           </section>
 
           <section className="mt-12 border-t border-border pt-10 max-w-3xl">
-            <h3 className="text-lg font-medium text-foreground mb-3">Explore more from Claude Directory</h3>
+            <h3 className="text-lg font-medium text-foreground mb-3">Explore more from ClaudeAI Directory</h3>
             <div className="flex flex-wrap gap-x-4 gap-y-1.5 text-sm">
               <Link href="/skills" className="text-primary hover:underline">Claude Skills</Link>
               <Link href="/prompts" className="text-primary hover:underline">Prompt Library</Link>

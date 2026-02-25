@@ -15,7 +15,7 @@ export function OrganizationSchema() {
       data={{
         "@context": "https://schema.org",
         "@type": "Organization",
-        name: "Claude Directory",
+        name: "ClaudeAI Directory",
         url: SITE_URL,
         description:
           "The community directory for Claude AI — skills, MCP servers, prompts, and more.",
@@ -30,7 +30,7 @@ export function WebSiteSchema() {
       data={{
         "@context": "https://schema.org",
         "@type": "WebSite",
-        name: "Claude Directory",
+        name: "ClaudeAI Directory",
         url: SITE_URL,
         potentialAction: {
           "@type": "SearchAction",
@@ -62,7 +62,7 @@ export function CollectionPageSchema({
         name,
         description,
         url,
-        isPartOf: { "@type": "WebSite", name: "Claude Directory", url: SITE_URL },
+        isPartOf: { "@type": "WebSite", name: "ClaudeAI Directory", url: SITE_URL },
       }}
     />
   );
@@ -198,8 +198,8 @@ export function ArticleSchema({
         description,
         url,
         datePublished,
-        author: { "@type": "Person", name: author || "Claude Directory" },
-        publisher: { "@type": "Organization", name: "Claude Directory" },
+        author: { "@type": "Person", name: author || "ClaudeAI Directory" },
+        publisher: { "@type": "Organization", name: "ClaudeAI Directory" },
       }}
     />
   );

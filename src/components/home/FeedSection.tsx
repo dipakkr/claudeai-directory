@@ -9,14 +9,14 @@ import { toast } from "sonner";
 import type { FeedItem } from "@/types";
 
 const typeConfig: Record<string, { label: string; icon: typeof Wrench; href: (id: string) => string; color: string }> = {
-  skill: { label: "Skill", icon: Wrench, href: (id) => `/skills/${id}`, color: "text-blue-500" },
-  mcp: { label: "MCP", icon: Server, href: (slug) => `/mcp/${slug}`, color: "text-green-500" },
-  prompt: { label: "Prompt", icon: FileText, href: (id) => `/prompts/${id}`, color: "text-purple-500" },
-  job: { label: "Job", icon: Briefcase, href: (id) => `/jobs/${id}`, color: "text-orange-500" },
-  showcase: { label: "Show", icon: Rocket, href: (id) => `/showcase/${id}`, color: "text-pink-500" },
-  blog: { label: "Blog", icon: BookOpen, href: (id) => `/resources/${id}`, color: "text-yellow-600" },
-  post: { label: "Post", icon: LinkIcon, href: (id) => `/feed#${id}`, color: "text-emerald-500" },
-  news: { label: "News", icon: Newspaper, href: () => "#", color: "text-red-500/70 text-[9px]" },
+  skill: { label: "Skill", icon: Wrench, href: (id) => `/skills/${id}`, color: "text-primary" },
+  mcp: { label: "MCP", icon: Server, href: (slug) => `/mcp/${slug}`, color: "text-primary" },
+  prompt: { label: "Prompt", icon: FileText, href: (id) => `/prompts/${id}`, color: "text-primary" },
+  job: { label: "Job", icon: Briefcase, href: (id) => `/jobs/${id}`, color: "text-primary" },
+  showcase: { label: "Show", icon: Rocket, href: (id) => `/showcase/${id}`, color: "text-primary" },
+  blog: { label: "Blog", icon: BookOpen, href: (id) => `/resources/${id}`, color: "text-primary" },
+  post: { label: "Post", icon: LinkIcon, href: (id) => `/feed#${id}`, color: "text-primary" },
+  news: { label: "News", icon: Newspaper, href: () => "#", color: "text-primary text-[9px]" },
 };
 
 function timeAgo(dateStr: string): string {
@@ -61,20 +61,20 @@ function FeedRow({ item, rank }: { item: FeedItem; rank: number }) {
         {rank}.
       </span>
       <div className="min-w-0 flex-1">
-        <div className="flex items-center gap-1.5">
+        <div className="flex items-center gap-1.5 min-w-0">
           {isExternal ? (
             <a
               href={titleHref}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-sm font-medium text-foreground hover:underline truncate"
+              className="text-sm font-medium text-foreground hover:underline truncate min-w-0 flex-1"
             >
               {item.title}
             </a>
           ) : (
             <Link
               href={titleHref}
-              className="text-sm font-medium text-foreground hover:underline truncate"
+              className="text-sm font-medium text-foreground hover:underline truncate min-w-0 flex-1"
             >
               {item.title}
             </Link>

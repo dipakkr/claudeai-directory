@@ -86,11 +86,10 @@ function Chip({
   return (
     <button
       onClick={onClick}
-      className={`px-3 py-1 rounded-full text-xs font-medium border transition-all ${
-        active
-          ? "bg-primary border-primary text-primary-foreground shadow-sm"
-          : "border-border/70 text-muted-foreground hover:border-primary/50 hover:text-foreground bg-transparent"
-      }`}
+      className={`px-3 py-1 rounded-full text-xs font-medium border transition-all ${active
+          ? "bg-zinc-800 border-zinc-700 text-zinc-100 shadow-sm"
+          : "border-zinc-800 text-zinc-400 hover:border-zinc-700 hover:text-zinc-200 bg-transparent"
+        }`}
     >
       {children}
     </button>
@@ -110,14 +109,13 @@ function StackCard({
   return (
     <button
       onClick={onClick}
-      className={`relative px-2 py-2.5 rounded-lg border text-center transition-all text-xs font-medium leading-tight ${
-        active
-          ? "border-primary bg-primary/10 text-primary shadow-sm"
-          : "border-border/60 text-muted-foreground hover:border-border hover:text-foreground hover:bg-accent/40 bg-transparent"
-      }`}
+      className={`relative px-2 py-2.5 rounded-lg border text-center transition-all text-xs font-medium leading-tight ${active
+          ? "border-zinc-700 bg-zinc-800/80 text-zinc-100 shadow-sm"
+          : "border-zinc-800/80 text-zinc-400 hover:border-zinc-700 hover:text-zinc-200 hover:bg-zinc-900/50 bg-transparent"
+        }`}
     >
       {active && (
-        <span className="absolute top-1 right-1 h-1.5 w-1.5 rounded-full bg-primary" />
+        <span className="absolute top-1.5 right-1.5 h-1.5 w-1.5 rounded-full bg-zinc-300" />
       )}
       {label}
     </button>
@@ -143,45 +141,64 @@ function RadioCard({
   return (
     <button
       onClick={onClick}
-      className={`flex-1 px-3 py-3 rounded-lg border text-left transition-all ${
-        active
-          ? "border-primary bg-primary/8 shadow-sm"
-          : "border-border/60 hover:border-border hover:bg-accent/30 bg-transparent"
-      }`}
+      className={`flex-1 px-3 py-3 rounded-lg border text-left transition-all ${active
+          ? "border-zinc-700 bg-zinc-800/60 shadow-sm"
+          : "border-zinc-800/80 hover:border-zinc-700/80 hover:bg-zinc-900/50 bg-transparent"
+        }`}
     >
       <div className="flex items-center justify-between mb-1.5">
-        <p className={`text-sm font-semibold ${active ? "text-primary" : "text-foreground"}`}>
+        <p className={`text-sm font-semibold ${active ? "text-zinc-100" : "text-zinc-400"}`}>
           {label}
         </p>
         <div className="flex gap-1">
           {Array.from({ length: totalDots }).map((_, i) => (
             <div
               key={i}
-              className={`h-1.5 w-1.5 rounded-full transition-colors ${
-                i < dots
-                  ? active ? "bg-primary" : "bg-muted-foreground/50"
-                  : "bg-border"
-              }`}
+              className={`h-1.5 w-1.5 rounded-full transition-colors ${i < dots
+                  ? active ? "bg-zinc-300" : "bg-zinc-600"
+                  : "bg-zinc-800"
+                }`}
             />
           ))}
         </div>
       </div>
-      <p className="text-[11px] text-muted-foreground leading-snug">{description}</p>
+      <p className="text-[11px] text-zinc-500 leading-snug">{description}</p>
     </button>
   );
 }
 
 // ─── Markdown preview coloring ───────────────────────────────────────────────
 
+// ─── Markdown preview coloring ───────────────────────────────────────────────
+
 function colorizedMd(content: string): React.ReactNode[] {
   return content.split("\n").map((line, i) => {
-    let cls = "text-foreground/75";
-    if (line.startsWith("# ")) cls = "text-foreground font-bold text-sm";
-    else if (line.startsWith("## ")) cls = "text-primary font-semibold";
-    else if (line.startsWith("### ")) cls = "text-foreground/90 font-medium";
-    else if (line.startsWith("- ") || line.startsWith("* ")) cls = "text-foreground/65";
-    else if (line.startsWith("<!--")) cls = "text-muted-foreground/50 italic";
+    let cls = "text-zinc-300";
+    if (line.startsWith("# ")) cls = "text-zinc-100 font-bold text-sm tracking-wide";
+    else if (line.startsWith("## ")) cls = "text-zinc-200 font-semibold";
+    else if (line.startsWith("### ")) cls = "text-zinc-200 font-medium";
+    else if (line.startsWith("- ") || line.startsWith("* ")) cls = "text-zinc-400";
+    else if (line.startsWith("<!--")) cls = "text-zinc-500 italic";
     else if (line.trim() === "") cls = "";
+
+    // Highlight code blocks
+    if (line.startsWith("```")) cls = "text-zinc-600";
+
+    // Highlight inline paths or code
+    else if (line.includes("`")) {
+      const parts = line.split("`");
+      return (
+        <span key={i} className={cls}>
+          {parts.map((part, index) =>
+            index % 2 === 1 ? (
+              <span key={index} className="text-zinc-300 bg-black/40 px-1 rounded">{part}</span>
+            ) : part
+          )}
+          {"\n"}
+        </span>
+      );
+    }
+
     return (
       <span key={i} className={cls}>
         {line}
@@ -288,8 +305,8 @@ export default function SetupClient() {
         <div className="flex flex-col lg:flex-row gap-5 items-start">
 
           {/* ── Left Panel ── */}
-          <div className="w-full lg:w-[40%] rounded-xl border border-border bg-card/40 overflow-hidden">
-            <div className="p-5 space-y-6 overflow-y-auto lg:max-h-[calc(100vh-10rem)]">
+          <div className="w-full lg:w-[40%] rounded-xl border border-zinc-800/80 bg-black/40 shadow-inner overflow-hidden">
+            <div className="p-5 space-y-6 overflow-y-auto lg:max-h-[calc(100vh-10rem)] custom-scrollbar">
 
               {/* Framework */}
               <div>
@@ -344,7 +361,7 @@ export default function SetupClient() {
 
               {/* Package Manager */}
               <div>
-                <SectionLabel>Package Manager</SectionLabel>
+                <SectionLabel>PackageManager</SectionLabel>
                 <div className="flex flex-wrap gap-1.5">
                   {PM_OPTIONS.map((opt) => (
                     <Chip
@@ -423,22 +440,21 @@ export default function SetupClient() {
                     return (
                       <label
                         key={opt.key}
-                        className={`flex items-center gap-3 px-3 py-2.5 rounded-lg cursor-pointer transition-all group ${
-                          checked
-                            ? "bg-primary/8 border border-primary/20"
-                            : "border border-transparent hover:bg-accent/40"
-                        }`}
+                        className={`flex items-center gap-3 px-3 py-2.5 rounded-lg cursor-pointer transition-all group ${checked
+                            ? "bg-zinc-800/80 border border-zinc-700 shadow-sm"
+                            : "border border-transparent hover:bg-zinc-900/50"
+                          }`}
                       >
                         <Checkbox
                           checked={checked}
                           onCheckedChange={() => toggleBehavior(opt.key)}
-                          className="shrink-0"
+                          className="shrink-0 border-zinc-600 data-[state=checked]:bg-zinc-300 data-[state=checked]:text-black"
                         />
                         <div className="min-w-0">
-                          <p className={`text-sm font-medium leading-snug ${checked ? "text-foreground" : "text-foreground/80"}`}>
+                          <p className={`text-sm font-medium leading-snug ${checked ? "text-zinc-100" : "text-zinc-400"}`}>
                             {opt.label}
                           </p>
-                          <p className="text-[11px] text-muted-foreground leading-snug mt-0.5">
+                          <p className="text-[11px] text-zinc-500 leading-snug mt-0.5">
                             {opt.description}
                           </p>
                         </div>
@@ -456,20 +472,20 @@ export default function SetupClient() {
 
             {/* Toolbar */}
             <div className="flex items-center justify-between mb-2 gap-2 flex-wrap">
-              <div className="flex items-center gap-1.5 px-3 py-1 rounded-md bg-muted border border-border text-xs font-mono font-medium text-foreground">
-                <span className="h-2 w-2 rounded-full bg-primary/70" />
+              <div className="flex items-center gap-1.5 px-3 py-1 rounded-md bg-[#0d0d0d] border border-zinc-800 text-xs font-mono font-medium text-zinc-300 shadow-sm">
+                <span className="h-2 w-2 rounded-full bg-zinc-500" />
                 CLAUDE.md
               </div>
               <div className="flex items-center gap-1.5">
-                <Button variant="outline" size="sm" className="h-8 gap-1.5 text-xs" onClick={handleCopy}>
+                <Button variant="outline" size="sm" className="h-8 gap-1.5 text-xs bg-black/40 border-zinc-800 text-zinc-300 hover:text-zinc-100 hover:bg-zinc-800" onClick={handleCopy}>
                   <Copy className="h-3.5 w-3.5" />
                   Copy
                 </Button>
-                <Button variant="outline" size="sm" className="h-8 gap-1.5 text-xs" onClick={handleDownload}>
+                <Button variant="outline" size="sm" className="h-8 gap-1.5 text-xs bg-black/40 border-zinc-800 text-zinc-300 hover:text-zinc-100 hover:bg-zinc-800" onClick={handleDownload}>
                   <Download className="h-3.5 w-3.5" />
                   Download
                 </Button>
-                <Button variant="outline" size="sm" className="h-8 gap-1.5 text-xs" onClick={handleShare}>
+                <Button variant="outline" size="sm" className="h-8 gap-1.5 text-xs bg-black/40 border-zinc-800 text-zinc-300 hover:text-zinc-100 hover:bg-zinc-800" onClick={handleShare}>
                   <Share2 className="h-3.5 w-3.5" />
                   Share
                 </Button>
@@ -477,8 +493,9 @@ export default function SetupClient() {
             </div>
 
             {/* Preview */}
-            <div className="rounded-xl border border-border bg-card overflow-hidden">
-              <pre className="p-5 text-xs font-mono leading-relaxed overflow-auto max-h-[calc(100vh-10rem)] whitespace-pre-wrap break-words">
+            <div className="rounded-xl border border-zinc-800 bg-[#0a0a0a] shadow-2xl overflow-hidden relative">
+              <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-zinc-700 to-transparent opacity-20" />
+              <pre className="p-6 text-[13px] font-mono leading-relaxed overflow-auto max-h-[calc(100vh-10rem)] whitespace-pre-wrap break-words custom-scrollbar">
                 {colorizedMd(generatedContent)}
               </pre>
             </div>

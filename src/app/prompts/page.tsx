@@ -12,8 +12,9 @@ export default async function PromptsPage({
   if (params.search) qs.set("search", params.search);
   if (params.category && params.category !== "All") qs.set("category", params.category);
 
+  qs.set("limit", "20");
   const qsStr = qs.toString();
-  const initialData = await fetchApi<Prompt[]>(`/prompts${qsStr ? `?${qsStr}` : ""}`) ?? [];
+  const initialData = await fetchApi<Prompt[]>(`/prompts?${qsStr}`) ?? [];
 
   return (
     <PromptsClient

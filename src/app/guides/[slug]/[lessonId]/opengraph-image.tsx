@@ -140,7 +140,7 @@ export default async function Image({
             color: "#334155",
           }}
         >
-          Claude Directory
+          ClaudeAI Directory
         </div>
       </div>
     ),

@@ -52,7 +52,7 @@ const Footer = () => {
               <div className="h-5 w-5 rounded bg-primary flex items-center justify-center">
                 <span className="text-[10px] font-bold text-primary-foreground">C</span>
               </div>
-              Claude Directory
+              ClaudeAI Directory
             </Link>
             <p className="text-xs text-muted-foreground leading-relaxed">
               The directory for Claude AI. Discover skills, MCP servers, prompts, and more.
@@ -85,7 +85,7 @@ const Footer = () => {
         <div className="mt-10 pt-6 border-t border-border space-y-3">
           <div className="flex items-center justify-between">
             <p className="text-xs text-muted-foreground">
-              &copy; {new Date().getFullYear()} Claude Directory
+              &copy; {new Date().getFullYear()} ClaudeAI Directory
             </p>
             <div className="flex items-center gap-4 text-xs text-muted-foreground">
               <Link href="/about" className="hover:text-foreground transition-colors">
@@ -100,7 +100,7 @@ const Footer = () => {
             </div>
           </div>
           <p className="text-[11px] text-muted-foreground/60">
-            Claude Directory is not affiliated with or endorsed by Anthropic, Claude.ai, or Claude.com. This is an independent community project.
+            ClaudeAI Directory is not affiliated with or endorsed by Anthropic, Claude.ai, or Claude.com. This is an independent community project.
           </p>
         </div>
       </div>

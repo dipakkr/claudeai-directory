@@ -146,7 +146,7 @@ const BlogDetailClient = ({ post }: { post: BlogPost | null }) => {
     <div className="min-h-screen bg-background flex flex-col">
       <Header />
       <main className="flex-1">
-        <div className="container py-16 max-w-4xl mx-auto">
+        <div className="container py-16">
           <PageBreadcrumb items={[
             { label: "Blog", href: "/blog" },
             { label: post.title },
@@ -154,7 +154,7 @@ const BlogDetailClient = ({ post }: { post: BlogPost | null }) => {
 
           <div className="flex gap-10">
             {/* Main content */}
-            <article className="min-w-0 flex-1 max-w-3xl">
+            <article className="min-w-0 flex-1">
               {/* Header */}
               <div className="mb-8">
                 <div className="flex items-center gap-2 mb-3">

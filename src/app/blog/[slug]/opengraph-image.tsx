@@ -87,7 +87,7 @@ export default async function Image({ params }: { params: { slug: string } }) {
                         C
                     </div>
                     <div style={{ fontSize: 32, fontWeight: 700, color: "#cbd5e1" }}>
-                        Claude Directory
+                        ClaudeAI Directory
                     </div>
                 </div>
             </div>

@@ -26,7 +26,7 @@ const CategorySection = () => {
                 href={cat.href}
                 className="inline-flex items-center gap-2 rounded-full border border-border bg-card/50 px-4 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-card hover:border-primary/30 transition-all"
               >
-                <Icon className="h-3.5 w-3.5" />
+                <Icon className="h-3.5 w-3.5 text-primary" />
                 <span>{cat.label}</span>
               </Link>
             );

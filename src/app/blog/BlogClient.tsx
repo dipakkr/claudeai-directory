@@ -135,7 +135,7 @@ export default function BlogClient({
           </section>
 
           <section className="mt-12 border-t border-border pt-10 max-w-3xl">
-            <h3 className="text-lg font-medium text-foreground mb-3">Explore more from Claude Directory</h3>
+            <h3 className="text-lg font-medium text-foreground mb-3">Explore more from ClaudeAI Directory</h3>
             <div className="flex flex-wrap gap-x-4 gap-y-1.5 text-sm">
               <Link href="/skills" className="text-primary hover:underline">Claude Skills</Link>
               <Link href="/mcp" className="text-primary hover:underline">MCP Connectors</Link>
