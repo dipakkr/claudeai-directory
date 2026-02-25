@@ -36,7 +36,7 @@ export default function GuidesClient({
           </div>
 
           {guides && guides.length > 0 ? (
-            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {guides.map((guide) => (
                 <GuideCard key={guide.id} guide={guide} />
               ))}

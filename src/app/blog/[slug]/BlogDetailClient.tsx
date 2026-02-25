@@ -35,55 +35,63 @@ function extractTOC(content: string): TOCItem[] {
 
 function renderMarkdown(content: string): string {
   let html = content;
+  const codeBlocks: string[] = [];
 
   // Code blocks (``` ... ```)
   html = html.replace(/```(\w*)\n([\s\S]*?)```/g, (_match, lang, code) => {
-    return `<pre class="rounded-lg bg-muted/50 border border-border p-4 overflow-x-auto my-4"><code class="text-sm text-foreground">${escapeHtml(code.trim())}</code></pre>`;
+    const formattedCode = escapeHtml(code.trim());
+    codeBlocks.push(`<pre class="rounded-xl bg-[#0a0a0a] border border-border/50 p-5 overflow-x-auto my-8 shadow-sm"><code class="text-[13px] leading-[1.7] text-zinc-300 font-mono">${formattedCode}</code></pre>`);
+    return `__CODE_BLOCK_${codeBlocks.length - 1}__`;
   });
 
   // Inline code
-  html = html.replace(/`([^`]+)`/g, '<code class="bg-muted px-1.5 py-0.5 rounded text-sm text-foreground">$1</code>');
+  html = html.replace(/`([^`]+)`/g, '<code class="bg-muted/80 px-1.5 py-0.5 rounded border border-border/30 text-[13px] text-foreground font-mono">$1</code>');
 
   // Headings with IDs for TOC
   html = html.replace(/^### (.+)$/gm, (_match, text) => {
     const id = text.toLowerCase().replace(/[^\w\s-]/g, "").replace(/\s+/g, "-");
-    return `<h3 id="${id}" class="text-base font-semibold text-foreground mt-8 mb-3 scroll-mt-20">${text}</h3>`;
+    return `<h3 id="${id}" class="text-lg font-semibold text-foreground mt-8 mb-4 scroll-mt-20 tracking-tight">${text}</h3>`;
   });
   html = html.replace(/^## (.+)$/gm, (_match, text) => {
     const id = text.toLowerCase().replace(/[^\w\s-]/g, "").replace(/\s+/g, "-");
-    return `<h2 id="${id}" class="text-lg font-semibold text-foreground mt-10 mb-4 scroll-mt-20">${text}</h2>`;
+    return `<h2 id="${id}" class="text-xl font-bold text-foreground mt-12 mb-5 scroll-mt-20 tracking-tight pb-2 border-b border-border/40">${text}</h2>`;
   });
   html = html.replace(/^# (.+)$/gm, (_match, text) => {
     const id = text.toLowerCase().replace(/[^\w\s-]/g, "").replace(/\s+/g, "-");
-    return `<h1 id="${id}" class="text-xl font-bold text-foreground mt-10 mb-4 scroll-mt-20">${text}</h1>`;
+    return `<h1 id="${id}" class="text-2xl font-extrabold text-foreground mt-12 mb-6 scroll-mt-20 tracking-tight">${text}</h1>`;
   });
 
   // Bold and italic
   html = html.replace(/\*\*\*(.+?)\*\*\*/g, '<strong class="text-foreground"><em>$1</em></strong>');
-  html = html.replace(/\*\*(.+?)\*\*/g, '<strong class="text-foreground">$1</strong>');
+  html = html.replace(/\*\*(.+?)\*\*/g, '<strong class="text-foreground font-semibold">$1</strong>');
   html = html.replace(/\*(.+?)\*/g, "<em>$1</em>");
 
   // Links
-  html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" class="text-primary hover:underline" target="_blank" rel="noopener noreferrer">$1</a>');
+  html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" class="text-primary hover:text-primary/80 transition-colors font-medium underline underline-offset-4 decoration-primary/30 hover:decoration-primary/80" target="_blank" rel="noopener noreferrer">$1</a>');
 
   // Unordered lists
-  html = html.replace(/^- (.+)$/gm, '<li class="ml-4 list-disc text-sm text-muted-foreground leading-relaxed">$1</li>');
-  html = html.replace(/(<li[^>]*>.*<\/li>\n?)+/g, '<ul class="my-3 space-y-1">$&</ul>');
+  html = html.replace(/^- (.+)$/gm, '<li class="ml-5 list-disc text-[15px] text-muted-foreground/90 leading-relaxed">$1</li>');
+  html = html.replace(/(<li[^>]*>.*<\/li>\n?)+/g, '<ul class="my-5 space-y-2">$&</ul>');
 
   // Ordered lists
-  html = html.replace(/^\d+\. (.+)$/gm, '<li class="ml-4 list-decimal text-sm text-muted-foreground leading-relaxed">$1</li>');
+  html = html.replace(/^\d+\. (.+)$/gm, '<li class="ml-5 list-decimal text-[15px] text-muted-foreground/90 leading-relaxed">$1</li>');
 
   // Blockquotes
-  html = html.replace(/^> (.+)$/gm, '<blockquote class="border-l-2 border-primary/30 pl-4 my-4 text-sm text-muted-foreground italic">$1</blockquote>');
+  html = html.replace(/^> (.+)$/gm, '<blockquote class="border-l-[3px] border-primary/40 bg-muted/30 pl-5 py-3 pr-4 rounded-r-lg my-6 text-[15px] text-muted-foreground italic">$1</blockquote>');
 
   // Horizontal rules
-  html = html.replace(/^---$/gm, '<hr class="my-6 border-border" />');
+  html = html.replace(/^---$/gm, '<hr class="my-10 border-border/60" />');
 
   // Paragraphs - wrap remaining lines
-  html = html.replace(/^(?!<[a-z])((?!^$).+)$/gm, '<p class="text-sm text-muted-foreground leading-relaxed mb-4">$1</p>');
+  html = html.replace(/^(?!<[a-z]|__CODE_BLOCK_)((?!^$).+)$/gm, '<p class="text-[15px] text-muted-foreground/90 leading-relaxed mb-6">$1</p>');
 
   // Clean up empty paragraphs
   html = html.replace(/<p[^>]*>\s*<\/p>/g, "");
+
+  // Restore code blocks
+  html = html.replace(/__CODE_BLOCK_(\d+)__/g, (_match, index) => {
+    return codeBlocks[Number(index)];
+  });
 
   return html;
 }
@@ -241,10 +249,10 @@ const BlogDetailClient = ({ post }: { post: BlogPost | null }) => {
                         key={item.id}
                         href={`#${item.id}`}
                         className={`block text-xs leading-relaxed transition-colors ${item.level === 1
-                            ? "pl-0"
-                            : item.level === 2
-                              ? "pl-3"
-                              : "pl-6"
+                          ? "pl-0"
+                          : item.level === 2
+                            ? "pl-3"
+                            : "pl-6"
                           } ${activeId === item.id
                             ? "text-primary font-medium"
                             : "text-muted-foreground hover:text-foreground"

@@ -34,6 +34,7 @@ const typeRoutes: Record<string, string> = {
   blog: "/blog",
 };
 
+
 type CategoryItem = {
   name: string;
   description: string;
@@ -87,7 +88,6 @@ const categories: CategoryItem[] = [
     fullWidth: true,
   },
 ];
-
 const HeroSection = ({ initialQuery = "", initialStats = [] }: { initialQuery?: string; initialStats?: Stat[] }) => {
   const [query, setQuery] = useState(initialQuery);
   const debouncedQuery = useDebounce(query, 300);
@@ -97,51 +97,46 @@ const HeroSection = ({ initialQuery = "", initialStats = [] }: { initialQuery?: 
 
   return (
     <section className="pt-16 pb-14 md:pt-24 md:pb-20 relative overflow-x-clip">
-      {/* Subtle background effects */}
-      <div className="absolute top-1/4 -left-20 w-[500px] h-[500px] bg-primary/10 blur-[120px] rounded-full pointer-events-none" />
-      <div className="absolute bottom-0 right-0 translate-y-1/2 w-[600px] h-[600px] bg-primary/5 blur-[150px] rounded-full pointer-events-none z-[-1]" />
-
       <div className="container relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center max-w-7xl mx-auto">
 
           {/* Left column */}
           <div className="lg:col-span-6 lg:pr-8">
             {/* Label */}
-            <div className="inline-flex items-center rounded-full border border-primary/20 bg-primary/10 px-3 py-1.5 text-xs font-medium text-primary mb-8 shadow-sm">
-              <span className="relative flex h-2 w-2 mr-2">
+            <div className="inline-flex items-center rounded-full border border-primary/20 bg-primary/10 px-2.5 py-1 text-[11px] font-medium text-primary mb-6 shadow-sm">
+              <span className="relative flex h-1.5 w-1.5 mr-2">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+                <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-primary"></span>
               </span>
-              Open community for Claude builders
+              The home for Claude enthusiasts
             </div>
 
             {/* Headline */}
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-foreground leading-[1.1] mb-6">
+            <h1 className="text-3xl md:text-5xl font-normal tracking-tight text-foreground leading-[1.15] mb-5">
               Everything you need<br />
-              to build with <span className="text-primary bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/80">Claude</span>
+              to build with <span className="text-primary font-medium">Claude</span>
             </h1>
 
-            <p className="text-base md:text-lg text-muted-foreground leading-relaxed mb-10 max-w-lg">
-              Unlock the full potential of Claude with community-curated skills, MCP servers, prompts, jobs, and guides.
+            <p className="text-sm md:text-base text-muted-foreground leading-relaxed mb-10 max-w-lg">
+              An open directory of tools and resources for the Claude ecosystem. Browse community-submitted MCP servers, skills, prompts, and job openings.
             </p>
 
             {/* Search */}
-            <div className="relative max-w-xl mb-12">
+            <div className="relative w-full max-w-xl text-left mb-6">
               <div className="relative group">
-                <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-primary/20 to-border blur opacity-40 group-hover:opacity-100 transition-opacity duration-500" />
-                <div className="relative bg-card/80 backdrop-blur-xl rounded-2xl border border-border flex items-center shadow-lg transition-all duration-300">
-                  <Search className="absolute left-4 h-5 w-5 text-muted-foreground" />
+                <div className="relative bg-transparent rounded-md border border-border flex items-center transition-all duration-300 focus-within:border-foreground/30 shadow-sm">
+                  <Search className="absolute left-4 h-4 w-4 text-muted-foreground" />
                   <input
                     type="text"
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
                     placeholder="Search skills, MCPs, prompts, jobs..."
-                    className="w-full min-w-0 bg-transparent pl-12 pr-12 py-4 md:py-5 text-sm md:text-base text-foreground placeholder:text-muted-foreground focus:outline-none rounded-2xl"
+                    className="w-full min-w-0 bg-transparent pl-11 pr-11 py-3.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none rounded-md"
                   />
                   {isSearching && (
                     <button
                       onClick={() => setQuery("")}
-                      className="absolute right-4 p-1.5 rounded-full bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
+                      className="absolute right-3 p-1.5 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
                     >
                       <X className="h-4 w-4" />
                     </button>
@@ -151,14 +146,14 @@ const HeroSection = ({ initialQuery = "", initialStats = [] }: { initialQuery?: 
 
               {/* Search results */}
               {isSearching && (
-                <div className="absolute top-full left-0 right-0 mt-3 z-50">
+                <div className="absolute top-full left-0 right-0 mt-2 z-50">
                   {isLoading ? (
-                    <div className="rounded-2xl border border-border bg-card/95 backdrop-blur-xl p-8 text-center shadow-xl">
-                      <div className="h-6 w-6 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-3" />
+                    <div className="rounded-md border border-border bg-card p-8 text-center shadow-lg">
+                      <div className="h-5 w-5 border-2 border-border border-t-foreground rounded-full animate-spin mx-auto mb-3" />
                       <p className="text-sm text-muted-foreground">Searching collective...</p>
                     </div>
                   ) : (results ?? []).length > 0 ? (
-                    <div className="rounded-2xl border border-border bg-card/95 backdrop-blur-xl shadow-xl divide-y divide-border overflow-hidden max-h-[400px] overflow-y-auto">
+                    <div className="rounded-md border border-border bg-card shadow-lg divide-y divide-border overflow-hidden max-h-[400px] overflow-y-auto">
                       {(results ?? []).map((result) => {
                         const route = typeRoutes[result._type] ?? "/";
                         const icon = typeIcons[result._type];
@@ -168,15 +163,15 @@ const HeroSection = ({ initialQuery = "", initialStats = [] }: { initialQuery?: 
                           <Link
                             key={`${result._type}-${itemSlug}`}
                             href={`${route}/${itemSlug}`}
-                            className="flex items-start gap-4 px-5 py-4 hover:bg-muted/50 transition-colors"
+                            className="flex items-start gap-3 px-4 py-3 hover:bg-muted/50 transition-colors"
                           >
-                            <div className="mt-0.5 shrink-0 bg-background p-2 rounded-lg border border-border shadow-sm">{icon}</div>
+                            <div className="mt-0.5 shrink-0 bg-transparent p-1.5 rounded border border-border">{icon}</div>
                             <div className="min-w-0 flex-1">
-                              <div className="flex items-center gap-2 mb-1">
-                                <span className="text-sm font-semibold text-foreground truncate">
+                              <div className="flex items-center gap-2 mb-0.5">
+                                <span className="text-sm font-medium text-foreground truncate">
                                   {result.title ?? result.name}
                                 </span>
-                                <span className="text-[10px] font-medium text-muted-foreground bg-muted px-2 py-0.5 rounded-full shrink-0 border border-border/50">
+                                <span className="text-[10px] text-muted-foreground bg-muted px-1.5 py-0.5 rounded shrink-0 border border-border">
                                   {label}
                                 </span>
                               </div>
@@ -189,10 +184,10 @@ const HeroSection = ({ initialQuery = "", initialStats = [] }: { initialQuery?: 
                       })}
                     </div>
                   ) : debouncedQuery.length >= 2 ? (
-                    <div className="rounded-2xl border border-border bg-card/95 backdrop-blur-xl p-8 text-center shadow-xl">
+                    <div className="rounded-md border border-border bg-card p-8 text-center shadow-lg">
                       <p className="text-sm font-medium text-foreground mb-1">No results found</p>
-                      <p className="text-sm text-muted-foreground mb-4">We couldn't find anything matching "{debouncedQuery}".</p>
-                      <button onClick={() => setQuery("")} className="text-sm text-primary hover:underline font-medium">
+                      <p className="text-sm text-muted-foreground mb-3">We couldn't find anything matching "{debouncedQuery}".</p>
+                      <button onClick={() => setQuery("")} className="text-sm text-foreground hover:underline font-medium">
                         Clear search
                       </button>
                     </div>
@@ -200,7 +195,6 @@ const HeroSection = ({ initialQuery = "", initialStats = [] }: { initialQuery?: 
                 </div>
               )}
             </div>
-
           </div>
 
           {/* Right column — category grid, hidden when searching or on mobile */}
@@ -213,14 +207,14 @@ const HeroSection = ({ initialQuery = "", initialStats = [] }: { initialQuery?: 
                     key={cat.href}
                     href={cat.href}
                     style={{ animationDelay: `${i * 50}ms` }}
-                    className={`group relative overflow-hidden rounded-2xl border border-border/40 bg-card/30 p-4 hover:bg-card/80 hover:border-border transition-all duration-300 hover:shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:hover:shadow-[0_8px_30px_rgba(255,255,255,0.02)] backdrop-blur-sm animate-in fade-in slide-in-from-bottom-4 ${cat.fullWidth ? 'col-span-2' : ''}`}
+                    className={`group relative overflow-hidden rounded-xl border border-border bg-transparent p-4 transition-colors duration-200 hover:border-foreground/20 hover:bg-muted/30 ${cat.fullWidth ? 'col-span-2' : ''}`}
                   >
-                    <div className={`${cat.iconBg} rounded-xl h-10 w-10 flex items-center justify-center mb-3 transition-transform duration-300 group-hover:scale-110 group-hover:-translate-y-1 ring-1 ring-inset ring-black/5 dark:ring-white/5`}>
-                      <Icon className={`h-5 w-5 ${cat.iconColor}`} />
+                    <div className={`${cat.iconBg} rounded-md h-8 w-8 flex items-center justify-center mb-3 transition-transform duration-300 group-hover:scale-105 group-hover:-translate-y-0.5`}>
+                      <Icon className={`h-4 w-4 ${cat.iconColor}`} />
                     </div>
 
-                    <h3 className="text-sm font-semibold text-foreground mb-1 transition-colors group-hover:text-primary">{cat.name}</h3>
-                    <p className="text-xs text-muted-foreground leading-relaxed opacity-80">{cat.description}</p>
+                    <h3 className="text-sm font-medium text-foreground mb-1">{cat.name}</h3>
+                    <p className="text-[11px] text-muted-foreground line-clamp-1">{cat.description}</p>
                   </Link>
                 );
               })}

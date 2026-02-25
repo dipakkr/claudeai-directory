@@ -129,76 +129,76 @@
 
 @layer base {
   :root {
-    /* Forest Night Theme - Deep greens with emerald accents */
-    --background: 160 15% 6%;
-    --foreground: 140 10% 82%;
+    /* Neutral Dark Theme */
+    --background: 0 0% 6%;
+    --foreground: 0 0% 86%;
 
-    --card: 160 12% 9%;
-    --card-foreground: 140 10% 82%;
+    --card: 0 0% 8%;
+    --card-foreground: 0 0% 86%;
 
-    --popover: 160 12% 9%;
-    --popover-foreground: 140 10% 82%;
+    --popover: 0 0% 8%;
+    --popover-foreground: 0 0% 86%;
 
     /* Updated primary to Claude Orange/Terracotta */
     --primary: 18 85% 60%;
-    --primary-foreground: 160 15% 6%;
+    --primary-foreground: 0 0% 6%;
 
-    --secondary: 160 10% 14%;
-    --secondary-foreground: 140 10% 78%;
+    --secondary: 0 0% 12%;
+    --secondary-foreground: 0 0% 84%;
 
-    --muted: 160 10% 14%;
-    --muted-foreground: 150 8% 50%;
+    --muted: 0 0% 14%;
+    --muted-foreground: 0 0% 60%;
 
-    --accent: 160 12% 18%;
-    --accent-foreground: 140 10% 82%;
+    --accent: 0 0% 16%;
+    --accent-foreground: 0 0% 86%;
 
     --destructive: 0 72% 51%;
-    --destructive-foreground: 140 10% 82%;
+    --destructive-foreground: 0 0% 86%;
 
-    --border: 160 10% 16%;
-    --input: 160 10% 12%;
+    --border: 0 0% 14%;
+    --input: 0 0% 12%;
     --ring: 18 85% 60%;
 
     --radius: 0.5rem;
 
-    --sidebar-background: 160 15% 6%;
-    --sidebar-foreground: 140 10% 82%;
+    --sidebar-background: 0 0% 6%;
+    --sidebar-foreground: 0 0% 86%;
     --sidebar-primary: 18 85% 60%;
-    --sidebar-primary-foreground: 160 15% 6%;
-    --sidebar-accent: 160 10% 14%;
-    --sidebar-accent-foreground: 140 10% 82%;
-    --sidebar-border: 160 10% 16%;
+    --sidebar-primary-foreground: 0 0% 6%;
+    --sidebar-accent: 0 0% 12%;
+    --sidebar-accent-foreground: 0 0% 86%;
+    --sidebar-border: 0 0% 14%;
     --sidebar-ring: 18 85% 60%;
   }
 
   .dark {
-    --background: 160 15% 6%;
-    --foreground: 140 10% 82%;
+    --background: 0 0% 6%;
+    --foreground: 0 0% 86%;
 
-    --card: 160 12% 9%;
-    --card-foreground: 140 10% 82%;
+    --card: 0 0% 8%;
+    --card-foreground: 0 0% 86%;
 
-    --popover: 160 12% 9%;
-    --popover-foreground: 140 10% 82%;
+    --popover: 0 0% 8%;
+    --popover-foreground: 0 0% 86%;
 
     /* Updated primary to Claude Orange/Terracotta */
     --primary: 18 85% 60%;
-    --primary-foreground: 160 15% 6%;
+    --primary-foreground: 0 0% 6%;
 
-    --secondary: 160 10% 14%;
-    --secondary-foreground: 140 10% 78%;
+    --secondary: 0 0% 12%;
+    --secondary-foreground: 0 0% 84%;
 
-    --muted: 160 10% 14%;
-    --muted-foreground: 150 8% 50%;
+    --muted: 0 0% 14%;
+    --muted-foreground: 0 0% 60%;
 
-    --accent: 160 12% 18%;
-    --accent-foreground: 140 10% 82%;
+    --accent: 0 0% 16%;
+    --accent-foreground: 0 0% 86%;
 
     --destructive: 0 72% 51%;
-    --destructive-foreground: 140 10% 82%;
+    --destructive-foreground: 0 0% 86%;
 
-    --border: 160 10% 16%;
-    --input: 160 10% 12%;
+    --border: 0 0% 14%;
+    --input: 0 0% 12%;
     --ring: 18 85% 60%;
   }
 
