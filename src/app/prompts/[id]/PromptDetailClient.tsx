@@ -160,16 +160,7 @@ export default function PromptDetailClient({ prompt: initialPrompt, id }: { prom
                 </div>
               )}
 
-              {/* Prompt parsed markdown */}
-              {markdown && (
-                <div className="mb-8 rounded-2xl border border-border bg-card p-6 sm:p-8">
-                  <article className="guide-prose">
-                    <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeSlug]}>
-                      {markdown}
-                    </ReactMarkdown>
-                  </article>
-                </div>
-              )}
+              {/* Prompt parsed markdown removed */}
 
               {/* Prompt box */}
               <div className="rounded-xl border border-border bg-card mb-6">
