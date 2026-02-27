@@ -1,7 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import Link from "next/link";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import rehypeSlug from "rehype-slug";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { Badge } from "@/components/ui/badge";
@@ -23,6 +26,36 @@ export default function PromptDetailClient({ prompt: initialPrompt, id }: { prom
   const prompt = initialPrompt ?? fetchedPrompt ?? null;
   const [copied, setCopied] = useState(false);
   const [customizeOpen, setCustomizeOpen] = useState(false);
+
+  const { markdown, text: actualPromptText } = useMemo(() => {
+    if (!prompt?.prompt) return { markdown: "", text: "" };
+
+    let markdown = "";
+    let text = prompt.prompt;
+
+    if (text.includes("## Prompt")) {
+      const parts = text.split("## Prompt");
+      markdown = parts[0].trim();
+
+      let remainder = parts[1].trim();
+      if (remainder.startsWith("```")) {
+        const firstNewLine = remainder.indexOf('\n');
+        // Handle code block language specifier like ```markdown
+        if (firstNewLine !== -1 && firstNewLine < 20) {
+          remainder = remainder.slice(firstNewLine + 1);
+        } else {
+          remainder = remainder.slice(3);
+        }
+        if (remainder.endsWith("```")) {
+          remainder = remainder.slice(0, -3).trim();
+        }
+      }
+      text = remainder.trim();
+    }
+
+    return { markdown, text };
+  }, [prompt?.prompt]);
+
   const [customizedText, setCustomizedText] = useState("");
   const [customizeCopied, setCustomizeCopied] = useState(false);
 
@@ -35,7 +68,7 @@ export default function PromptDetailClient({ prompt: initialPrompt, id }: { prom
 
   const copyPrompt = () => {
     if (!prompt) return;
-    navigator.clipboard.writeText(prompt.prompt);
+    navigator.clipboard.writeText(actualPromptText);
     setCopied(true);
     toast.success("Prompt copied to clipboard");
     setTimeout(() => setCopied(false), 2000);
@@ -43,7 +76,7 @@ export default function PromptDetailClient({ prompt: initialPrompt, id }: { prom
 
   const openCustomize = () => {
     if (!prompt) return;
-    setCustomizedText(prompt.prompt);
+    setCustomizedText(actualPromptText);
     setCustomizeOpen(true);
   };
 
@@ -56,7 +89,7 @@ export default function PromptDetailClient({ prompt: initialPrompt, id }: { prom
 
   const resetCustomized = () => {
     if (!prompt) return;
-    setCustomizedText(prompt.prompt);
+    setCustomizedText(actualPromptText);
     toast("Reset to original");
   };
 
@@ -127,6 +160,17 @@ export default function PromptDetailClient({ prompt: initialPrompt, id }: { prom
                 </div>
               )}
 
+              {/* Prompt parsed markdown */}
+              {markdown && (
+                <div className="mb-8 rounded-2xl border border-border bg-card p-6 sm:p-8">
+                  <article className="guide-prose">
+                    <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeSlug]}>
+                      {markdown}
+                    </ReactMarkdown>
+                  </article>
+                </div>
+              )}
+
               {/* Prompt box */}
               <div className="rounded-xl border border-border bg-card mb-6">
                 <div className="flex items-center justify-between px-4 py-3 border-b border-border">
@@ -153,7 +197,7 @@ export default function PromptDetailClient({ prompt: initialPrompt, id }: { prom
                   </div>
                 </div>
                 <pre className="p-4 text-sm font-mono text-foreground/90 whitespace-pre-wrap break-words leading-relaxed">
-                  {prompt.prompt}
+                  {actualPromptText}
                 </pre>
               </div>
 

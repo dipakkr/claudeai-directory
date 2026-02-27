@@ -141,19 +141,13 @@ log "SSL certificate obtained: /etc/letsencrypt/live/${DOMAIN}/"
 # ---- 9. Deploy full HTTPS nginx config ----
 log "Writing HTTPS nginx config..."
 
-# Build server_name line (include www if we got a cert for it)
 if [[ -n "$EXTRA_DOMAINS" ]]; then
-    SERVER_NAME="${DOMAIN} www.${DOMAIN}"
-else
-    SERVER_NAME="${DOMAIN}"
-fi
-
 cat > "${NGINX_CONF}" << EOF
-# HTTP → HTTPS redirect
+# HTTP → HTTPS (www) redirect
 server {
     listen 80;
     listen [::]:80;
-    server_name ${SERVER_NAME};
+    server_name ${DOMAIN} www.${DOMAIN};
 
     # Keep ACME challenge working for renewals
     location /.well-known/acme-challenge/ {
@@ -161,16 +155,57 @@ server {
     }
 
     location / {
-        return 301 https://\$host\$request_uri;
+        return 301 https://www.${DOMAIN}\$request_uri;
     }
 }
 
-# HTTPS
+# HTTPS (non-www) → HTTPS (www) redirect
 server {
     listen 443 ssl http2;
     listen [::]:443 ssl http2;
-    server_name ${SERVER_NAME};
+    server_name ${DOMAIN};
 
+    ssl_certificate     /etc/letsencrypt/live/${DOMAIN}/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/${DOMAIN}/privkey.pem;
+
+    location / {
+        return 301 https://www.${DOMAIN}\$request_uri;
+    }
+}
+
+# HTTPS Main Site (www)
+server {
+    listen 443 ssl http2;
+    listen [::]:443 ssl http2;
+    server_name www.${DOMAIN};
+EOF
+else
+cat > "${NGINX_CONF}" << EOF
+# HTTP → HTTPS redirect
+server {
+    listen 80;
+    listen [::]:80;
+    server_name ${DOMAIN};
+
+    # Keep ACME challenge working for renewals
+    location /.well-known/acme-challenge/ {
+        root ${CERTBOT_WEBROOT};
+    }
+
+    location / {
+        return 301 https://${DOMAIN}\$request_uri;
+    }
+}
+
+# HTTPS Main Site
+server {
+    listen 443 ssl http2;
+    listen [::]:443 ssl http2;
+    server_name ${DOMAIN};
+EOF
+fi
+
+cat >> "${NGINX_CONF}" << EOF
     # Let's Encrypt certificates
     ssl_certificate     /etc/letsencrypt/live/${DOMAIN}/fullchain.pem;
     ssl_certificate_key /etc/letsencrypt/live/${DOMAIN}/privkey.pem;

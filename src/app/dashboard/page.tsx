@@ -28,6 +28,10 @@ import {
   Check,
   X,
   Loader2,
+  CalendarDays,
+  Globe,
+  Github,
+  Twitter,
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -42,6 +46,35 @@ const links = [
   { href: "/showcase", label: "Showcase", icon: Rocket },
   { href: "/learn", label: "Learn", icon: BookOpen },
 ];
+
+const BANNER_COLORS = [
+  "from-violet-500/20 to-purple-500/5",
+  "from-sky-500/20 to-blue-500/5",
+  "from-emerald-500/20 to-teal-500/5",
+  "from-rose-500/20 to-pink-500/5",
+  "from-amber-500/20 to-orange-500/5",
+  "from-indigo-500/20 to-violet-500/5",
+];
+
+function bannerGradient(username: string) {
+  if (!username) return BANNER_COLORS[0];
+  let n = 0;
+  for (let i = 0; i < username.length; i++) n += username.charCodeAt(i);
+  return BANNER_COLORS[n % BANNER_COLORS.length];
+}
+
+const AVATAR_COLORS = [
+  "bg-violet-500", "bg-pink-500", "bg-sky-500",
+  "bg-emerald-500", "bg-amber-500", "bg-rose-500",
+  "bg-indigo-500", "bg-teal-500",
+];
+
+function avatarColor(username: string) {
+  if (!username) return AVATAR_COLORS[0];
+  let n = 0;
+  for (let i = 0; i < username.length; i++) n += username.charCodeAt(i);
+  return AVATAR_COLORS[n % AVATAR_COLORS.length];
+}
 
 export default function Dashboard() {
   const { user, isAuthenticated, isLoading, updateProfile } = useAuth();
@@ -164,51 +197,119 @@ export default function Dashboard() {
     );
   }
 
+  const displayName = user.name ?? user.username;
+  const initials = displayName.slice(0, 2).toUpperCase();
+  const memberSince = user.created_at
+    ? new Date(user.created_at).toLocaleDateString("en-US", {
+      month: "long",
+      year: "numeric",
+    })
+    : "Unknown";
+
+  const gradient = bannerGradient(user.username);
+  const color = avatarColor(user.username);
+
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <Header />
-      <main className="flex-1">
-        <div className="container py-10 max-w-2xl">
-          {/* Profile */}
-          <div className="flex items-start justify-between mb-10">
-            <div className="flex items-center gap-4">
-              <Avatar className="h-14 w-14">
-                {user.avatar && (
-                  <AvatarImage
-                    src={user.avatar}
-                    alt={user.name ?? user.username}
-                  />
-                )}
-                <AvatarFallback className="bg-primary/10 text-primary text-lg">
-                  {user.name?.[0]?.toUpperCase() ??
-                    user.username[0]?.toUpperCase()}
-                </AvatarFallback>
-              </Avatar>
-              <div>
-                <h1 className="text-xl font-semibold text-foreground">
-                  {user.name ?? user.username}
-                </h1>
-                <p className="text-sm text-muted-foreground">{user.email}</p>
-                <Badge variant="secondary" className="mt-1 text-[10px]">
+      <main className="flex-1 pb-16">
+        {/* Banner */}
+        <div className={`h-36 w-full bg-gradient-to-br ${gradient} border-b border-border`} />
+
+        <div className="container max-w-3xl">
+          {/* Avatar row — overlaps banner */}
+          <div className="flex items-end justify-between -mt-12 mb-4 px-1">
+            <Avatar className="h-24 w-24 ring-4 ring-background rounded-full shrink-0">
+              {user.avatar && (
+                <AvatarImage src={user.avatar} alt={displayName} className="object-cover" />
+              )}
+              <AvatarFallback className={`text-2xl font-bold text-white ${color}`}>
+                {initials}
+              </AvatarFallback>
+            </Avatar>
+
+            <div className="flex items-center gap-2 mb-1">
+              {!editing && (
+                <Button variant="outline" size="sm" onClick={() => setEditing(true)}>
+                  <Pencil className="h-3.5 w-3.5 mr-1" />
+                  Edit profile
+                </Button>
+              )}
+            </div>
+          </div>
+
+          {/* Name + handle + badge */}
+          <div className="px-1 mb-4 flex items-center justify-between">
+            <div>
+              <h1 className="text-2xl font-bold text-foreground leading-tight">
+                {displayName}
+              </h1>
+              <div className="flex items-center gap-3 mt-0.5">
+                <p className="text-sm text-muted-foreground">@{user.username}</p>
+                <Badge variant="secondary" className="text-[10px] uppercase font-semibold">
                   {user.plan ?? "free"} plan
                 </Badge>
               </div>
             </div>
-            {!editing && (
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setEditing(true)}
-              >
-                <Pencil className="h-3.5 w-3.5" />
-                Edit
-              </Button>
-            )}
           </div>
+
+          {/* Bio display when not editing */}
+          {!editing && user.bio && (
+            <p className="px-1 text-sm text-foreground/80 leading-relaxed mb-4 max-w-xl">
+              {user.bio}
+            </p>
+          )}
+
+          {/* Social links display when not editing */}
+          {!editing && (user.website || user.github || user.twitter) && (
+            <div className="px-1 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-muted-foreground mb-4">
+              {user.website && (
+                <a
+                  href={user.website}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-1.5 hover:text-foreground transition-colors"
+                >
+                  <Globe className="h-4 w-4 shrink-0" />
+                  {user.website.replace(/^https?:\/\//, "").replace(/\/$/, "")}
+                </a>
+              )}
+              {user.github && (
+                <a
+                  href={`https://github.com/${user.github}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-1.5 hover:text-foreground transition-colors"
+                >
+                  <Github className="h-4 w-4 shrink-0" />
+                  {user.github}
+                </a>
+              )}
+              {user.twitter && (
+                <a
+                  href={`https://x.com/${user.twitter}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-1.5 hover:text-foreground transition-colors"
+                >
+                  <Twitter className="h-4 w-4 shrink-0" />
+                  {user.twitter}
+                </a>
+              )}
+            </div>
+          )}
+
+          {/* Joined date */}
+          {!editing && (
+            <div className="px-1 flex items-center gap-1 text-xs text-muted-foreground/50 mb-8">
+              <CalendarDays className="h-3 w-3 shrink-0" />
+              <span>Joined {memberSince}</span>
+            </div>
+          )}
 
           {/* Edit form */}
           {editing && (
-            <div className="rounded-lg border border-border p-5 mb-8 space-y-4">
+            <div className="rounded-lg border border-border p-5 mb-8 space-y-4 max-w-xl mx-1 mt-6">
               <div className="space-y-2">
                 <Label htmlFor="edit-username">Username</Label>
                 <div className="relative">
@@ -297,7 +398,7 @@ export default function Dashboard() {
                 </div>
               </div>
 
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 pt-2">
                 <Button
                   size="sm"
                   onClick={handleSave}
@@ -311,7 +412,7 @@ export default function Dashboard() {
                 >
                   {saving ? (
                     <>
-                      <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                      <Loader2 className="h-3.5 w-3.5 animate-spin mr-2" />
                       Saving...
                     </>
                   ) : (
@@ -330,37 +431,34 @@ export default function Dashboard() {
             </div>
           )}
 
-          {/* Bio display when not editing */}
-          {!editing && user.bio && (
-            <p className="text-sm text-muted-foreground mb-8 -mt-4">
-              {user.bio}
-            </p>
+          {/* Links Grid */}
+          {!editing && (
+            <div className="mt-8 border-t border-border pt-8 px-1">
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-lg font-semibold">Dashboard Menu</h2>
+                <Link
+                  href={`/u/${user.username}`}
+                  className="text-sm text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1"
+                >
+                  View public profile <ArrowRight className="h-3.5 w-3.5" />
+                </Link>
+              </div>
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                {links.map((link) => (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    className="flex flex-col items-center justify-center gap-3 rounded-xl border border-border bg-card p-6 hover:bg-accent/50 hover:border-primary/20 transition-all group"
+                  >
+                    <div className="h-10 w-10 flex items-center justify-center rounded-full bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
+                      <link.icon className="h-5 w-5" />
+                    </div>
+                    <span className="text-sm font-medium text-foreground">{link.label}</span>
+                  </Link>
+                ))}
+              </div>
+            </div>
           )}
-
-          {/* Public profile link */}
-          <Link
-            href={`/u/${user.username}`}
-            className="inline-block text-xs text-muted-foreground hover:text-foreground transition-colors mb-8"
-          >
-            View public profile &rarr;
-          </Link>
-
-          {/* Links */}
-          <div className="space-y-1">
-            {links.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className="flex items-center justify-between rounded-lg px-3 py-2.5 hover:bg-accent/50 transition-colors group"
-              >
-                <div className="flex items-center gap-3">
-                  <link.icon className="h-4 w-4 text-muted-foreground" />
-                  <span className="text-sm text-foreground">{link.label}</span>
-                </div>
-                <ArrowRight className="h-3.5 w-3.5 text-muted-foreground/40 group-hover:text-muted-foreground transition-colors" />
-              </Link>
-            ))}
-          </div>
         </div>
       </main>
       <Footer />

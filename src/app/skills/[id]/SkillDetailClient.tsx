@@ -37,7 +37,6 @@ export default function SkillDetail({ skill: initialSkill, id }: { skill: Skill 
                     </div>
                     <h1 className="text-2xl font-semibold text-foreground flex items-center gap-2">
                       {skill.title || skill.name}
-                      {skill.verified && <CheckCircle className="h-5 w-5 text-primary" />}
                     </h1>
                   </div>
                   <p className="text-base text-muted-foreground leading-relaxed">
