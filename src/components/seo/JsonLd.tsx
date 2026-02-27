@@ -7,7 +7,7 @@ export function JsonLd({ data }: { data: Record<string, unknown> }) {
   );
 }
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://claudeai.directory";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.claudeai.directory";
 
 export function OrganizationSchema() {
   return (

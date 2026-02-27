@@ -38,7 +38,7 @@ export default async function BlogDetailPage({ params }: Props) {
   const { slug } = await params;
   const post = await fetchApi<BlogPost>(`/blog/${slug}`);
 
-  const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://claudeai.directory";
+  const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.claudeai.directory";
 
   return (
     <>

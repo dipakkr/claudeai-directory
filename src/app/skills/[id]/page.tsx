@@ -4,7 +4,7 @@ import type { Skill } from "@/types";
 import SkillDetailClient from "./SkillDetailClient";
 import { SoftwareApplicationSchema, BreadcrumbSchema } from "@/components/seo/JsonLd";
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://claudeai.directory";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.claudeai.directory";
 
 export async function generateMetadata({
   params,

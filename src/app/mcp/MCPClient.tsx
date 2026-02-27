@@ -102,7 +102,7 @@ export default function MCPClient({
       <CollectionPageSchema
         name="MCP Servers"
         description="Browse and discover Model Context Protocol (MCP) servers to connect Claude AI to your favorite tools."
-        url="https://claudeai.directory/mcp"
+        url="https://www.claudeai.directory/mcp"
       />
       <Header />
       <main className="flex-1">

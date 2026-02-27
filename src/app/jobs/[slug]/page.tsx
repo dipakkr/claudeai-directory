@@ -4,7 +4,7 @@ import type { Job } from "@/types";
 import JobDetailClient from "./JobDetailClient";
 import { JobPostingSchema, BreadcrumbSchema } from "@/components/seo/JsonLd";
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://claudeai.directory";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.claudeai.directory";
 
 export async function generateMetadata({
   params,

@@ -4,7 +4,7 @@ import type { MCPServer } from "@/types";
 import MCPServerDetail from "./McpDetailClient";
 import { SoftwareApplicationSchema, BreadcrumbSchema } from "@/components/seo/JsonLd";
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://claudeai.directory";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.claudeai.directory";
 
 export async function generateMetadata({
   params,

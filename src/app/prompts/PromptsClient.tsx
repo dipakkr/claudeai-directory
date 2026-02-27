@@ -75,7 +75,7 @@ export default function PromptsClient({
       <CollectionPageSchema
         name="AI Prompts"
         description="Curated, copy-ready prompts for Claude AI across coding, writing, analysis, and more."
-        url="https://claudeai.directory/prompts"
+        url="https://www.claudeai.directory/prompts"
       />
       <Header />
       <main className="flex-1">

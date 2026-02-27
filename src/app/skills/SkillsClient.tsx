@@ -57,7 +57,7 @@ export default function SkillsClient({
       <CollectionPageSchema
         name="Claude Skills"
         description="Browse and install Claude skills shared by the community."
-        url="https://claudeai.directory/skills"
+        url="https://www.claudeai.directory/skills"
       />
       <Header />
       <main className="flex-1">

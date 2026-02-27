@@ -4,7 +4,7 @@ import type { GuideDetail, GuideLesson } from "@/types";
 import LessonPage from "./LessonClient";
 import { ArticleSchema, BreadcrumbSchema } from "@/components/seo/JsonLd";
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://claudeai.directory";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.claudeai.directory";
 
 export async function generateMetadata({
   params,
@@ -23,12 +23,12 @@ export async function generateMetadata({
   // Extract a plain-text excerpt from markdown content for description
   const excerpt = lesson.content
     ? lesson.content
-        .replace(/#{1,6}\s+.+/g, "")
-        .replace(/[*_`~]/g, "")
-        .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1")
-        .replace(/\n+/g, " ")
-        .trim()
-        .slice(0, 155)
+      .replace(/#{1,6}\s+.+/g, "")
+      .replace(/[*_`~]/g, "")
+      .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1")
+      .replace(/\n+/g, " ")
+      .trim()
+      .slice(0, 155)
     : "";
   const description = excerpt
     ? `${excerpt}…`

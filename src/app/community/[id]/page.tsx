@@ -4,7 +4,7 @@ import type { Thread } from "@/types";
 import ThreadDetail from "./ThreadDetailClient";
 import { BreadcrumbSchema } from "@/components/seo/JsonLd";
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://claudeai.directory";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.claudeai.directory";
 
 export async function generateMetadata({
   params,

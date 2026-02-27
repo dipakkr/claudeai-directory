@@ -56,7 +56,7 @@ export default function BlogClient({
       <CollectionPageSchema
         name="Blog"
         description="Articles, tutorials, and guides about Claude AI, MCP servers, prompt engineering, and building with AI."
-        url="https://claudeai.directory/blog"
+        url="https://www.claudeai.directory/blog"
       />
       <Header />
       <main className="flex-1">

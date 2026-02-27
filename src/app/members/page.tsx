@@ -12,7 +12,7 @@ export const metadata: Metadata = {
     title: "Members — ClaudeAI Directory Community",
     description:
       "Meet the people building with Claude AI. Browse member profiles and connect with the community.",
-    url: "https://claudeai.directory/members",
+    url: "https://www.claudeai.directory/members",
     siteName: "ClaudeAI Directory",
     type: "website",
   },

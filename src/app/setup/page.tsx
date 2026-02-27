@@ -10,7 +10,7 @@ export const metadata: Metadata = {
     title: "CLAUDE.md Generator — ClaudeAI Directory",
     description:
       "Generate a perfect CLAUDE.md for your project. Supports Next.js, FastAPI, Django, Rails, Go, Rust, and more.",
-    url: "https://claudeai.directory/setup",
+    url: "https://www.claudeai.directory/setup",
     siteName: "ClaudeAI Directory",
     type: "website",
   },
