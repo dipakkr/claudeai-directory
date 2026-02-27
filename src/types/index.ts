@@ -265,6 +265,16 @@ export interface Reply {
   created_at: string;
 }
 
+export interface SkillReply {
+  id: string;
+  skill_id: string;
+  body: string;
+  link?: string;
+  author: string;
+  author_avatar?: string;
+  created_at: string;
+}
+
 export interface FeedItem {
   id: string;
   type: "skill" | "mcp" | "job" | "prompt" | "showcase" | "blog" | "post" | "news";

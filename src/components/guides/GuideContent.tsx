@@ -25,6 +25,10 @@ export function GuideContent({
   onToggleComplete,
   isToggling,
 }: GuideContentProps) {
+  // Frequently CMS markdown includes the title as an H1 at the very start.
+  // We strip it here since we are rendering the lesson.title manually above.
+  const cleanContent = lesson.content.replace(/^\s*#\s+[^\n]+[\r\n]*/, '').trimStart();
+
   return (
     <div className="flex-1 min-w-0 max-w-3xl">
       {/* Breadcrumb */}
@@ -58,7 +62,7 @@ export function GuideContent({
       {/* Markdown content */}
       <article className="guide-prose">
         <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeSlug]}>
-          {lesson.content}
+          {cleanContent}
         </ReactMarkdown>
       </article>
 
