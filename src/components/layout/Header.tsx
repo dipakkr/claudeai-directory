@@ -24,6 +24,7 @@ const navLinks = [
 
 const moreLinks = [
   { href: "/guides", label: "Guides" },
+  { href: "/cheatsheet", label: "Claude Code Cheatsheet" },
   { href: "/llm-api-pricing", label: "LLM API Pricing" },
   { href: "/llm-api-pricing/cost-calculator", label: "Cost Calculator" },
   { href: "/anthropic-claude-release-timelines", label: "Anthropic Timeline" },

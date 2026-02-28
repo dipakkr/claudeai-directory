@@ -48,7 +48,7 @@ type CategoryItem = {
 const categories: CategoryItem[] = [
   {
     name: "Skills",
-    description: "Reusable Claude capabilities",
+    description: "Slash commands & reusable workflows",
     href: "/skills",
     icon: Wrench,
     iconColor: "text-primary",
@@ -56,7 +56,7 @@ const categories: CategoryItem[] = [
   },
   {
     name: "Prompts",
-    description: "Copy-ready templates",
+    description: "Battle-tested prompts, ready to paste",
     href: "/prompts",
     icon: FileText,
     iconColor: "text-primary",
@@ -64,7 +64,7 @@ const categories: CategoryItem[] = [
   },
   {
     name: "MCP Servers",
-    description: "Connect Claude to any tool",
+    description: "Connect Claude to your entire stack",
     href: "/mcp",
     icon: Server,
     iconColor: "text-primary",
@@ -72,7 +72,7 @@ const categories: CategoryItem[] = [
   },
   {
     name: "Guides",
-    description: "Learn to build with Claude",
+    description: "Deep dives for Claude Code power users",
     href: "/guides",
     icon: BookOpen,
     iconColor: "text-primary",
@@ -80,7 +80,7 @@ const categories: CategoryItem[] = [
   },
   {
     name: "Context Generator",
-    description: "Generate AI-friendly CLAUDE.md context",
+    description: "Auto-generate your project's CLAUDE.md file",
     href: "/setup",
     icon: Wand2,
     iconColor: "text-primary",
@@ -108,7 +108,7 @@ const HeroSection = ({ initialQuery = "", initialStats = [] }: { initialQuery?: 
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-primary"></span>
               </span>
-              The home for Claude enthusiasts
+              The Claude Code community hub
             </div>
 
             {/* Headline */}
@@ -118,7 +118,7 @@ const HeroSection = ({ initialQuery = "", initialStats = [] }: { initialQuery?: 
             </h1>
 
             <p className="text-sm md:text-base text-muted-foreground leading-relaxed mb-10 max-w-lg">
-              An open directory of tools and resources for the Claude ecosystem. Browse community-submitted MCP servers, skills, prompts, and job openings.
+              Discover MCP servers, skills, and prompts crafted by the Claude community. Connect your tools, sharpen your workflows, and ship faster with Claude Code.
             </p>
 
             {/* Search */}
@@ -130,7 +130,7 @@ const HeroSection = ({ initialQuery = "", initialStats = [] }: { initialQuery?: 
                     type="text"
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
-                    placeholder="Search skills, MCPs, prompts, jobs..."
+                    placeholder="Search MCPs, skills, prompts, guides..."
                     className="w-full min-w-0 bg-transparent pl-11 pr-11 py-3.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none rounded-md"
                   />
                   {isSearching && (
