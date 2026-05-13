@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Menu, X, LogOut, User as UserIcon, Bookmark, ChevronDown } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "@/lib/auth";
 import {
   DropdownMenu,
@@ -33,7 +33,10 @@ const moreLinks = [
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const { user, isAuthenticated, logout } = useAuth();
+
+  useEffect(() => { setMounted(true); }, []);
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border bg-background/80 backdrop-blur-md">
@@ -82,7 +85,7 @@ const Header = () => {
 
         {/* Desktop actions */}
         <div className="hidden items-center gap-2 md:flex">
-          {isAuthenticated && user ? (
+          {mounted && isAuthenticated && user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full">
@@ -167,7 +170,7 @@ const Header = () => {
               </Link>
             ))}
             <hr className="my-1 border-border" />
-            {isAuthenticated ? (
+            {mounted && isAuthenticated ? (
               <>
                 <Link href="/dashboard" onClick={() => setIsMenuOpen(false)} className="rounded-md px-3 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-accent">
                   Dashboard

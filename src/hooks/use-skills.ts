@@ -1,7 +1,7 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 
 import { api } from "@/lib/api";
-import type { Skill, SkillReply } from "@/types";
+import type { Skill } from "@/types";
 
 interface SkillsParams {
   category?: string;
@@ -36,21 +36,3 @@ export function useSkill(slug: string) {
   });
 }
 
-export function useSkillReplies(skillSlug: string) {
-  return useQuery({
-    queryKey: ["skill-replies", skillSlug],
-    queryFn: () => api.get<SkillReply[]>(`/skills/${skillSlug}/replies`),
-    enabled: !!skillSlug,
-  });
-}
-
-export function useCreateSkillReply(skillSlug: string) {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: (data: { body: string; link?: string }) =>
-      api.post<SkillReply>(`/skills/${skillSlug}/replies`, data),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["skill-replies", skillSlug] });
-    },
-  });
-}

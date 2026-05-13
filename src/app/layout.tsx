@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Providers from "@/components/providers";
 import Script from "next/script";
+import { OpenPanelComponent } from '@openpanel/nextjs';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -93,6 +94,10 @@ export default function RootLayout({
             gtag('config', 'G-ZPWBYERBTY');
           `}
         </Script>
+        <OpenPanelComponent
+          clientId="3c0fbc66-1ebf-4993-ae25-7598616931c5"
+          trackScreenViews={true}
+        />
       </body>
     </html>
   );

@@ -100,7 +100,7 @@ const Footer = () => {
             </div>
           </div>
           <p className="text-[11px] text-muted-foreground/60">
-            ClaudeAI Directory is not affiliated with or endorsed by Anthropic, Claude.ai, or Claude.com. This is an independent community project.
+            ClaudeAI Directory is NOT affiliated with or endorsed by Anthropic, Claude.ai, or Claude.com. This is an independent community project.
           </p>
         </div>
       </div>

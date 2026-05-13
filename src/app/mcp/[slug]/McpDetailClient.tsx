@@ -7,6 +7,7 @@ import Footer from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import ResourceReplies from "@/components/shared/ResourceReplies";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   ExternalLink,
@@ -432,6 +433,8 @@ export default function MCPServerDetail({ server: initialServer, slug }: { serve
                   </div>
                 </div>
               )}
+
+              <ResourceReplies resourceType="mcp" resourceId={slug} />
             </div>
 
             {/* Sidebar */}

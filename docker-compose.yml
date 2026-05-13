@@ -8,5 +8,5 @@ services:
         NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL}
         NEXT_PUBLIC_GOOGLE_CLIENT_ID: ${NEXT_PUBLIC_GOOGLE_CLIENT_ID}
     ports:
-      - "3000:3000" # Expose for manual host Nginx
+      - "3001:3001" # Expose for manual host Nginx
     restart: unless-stopped

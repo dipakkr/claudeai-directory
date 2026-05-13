@@ -265,15 +265,22 @@ export interface Reply {
   created_at: string;
 }
 
-export interface SkillReply {
+export type ResourceType = "skill" | "prompt" | "mcp";
+
+export interface ResourceReply {
   id: string;
-  skill_id: string;
+  resource_type: ResourceType;
+  resource_id: string;
   body: string;
   link?: string;
   author: string;
   author_avatar?: string;
   created_at: string;
 }
+
+// Legacy aliases kept for any existing backend compatibility
+export type SkillReply = ResourceReply;
+export type PromptReply = ResourceReply;
 
 export interface FeedItem {
   id: string;

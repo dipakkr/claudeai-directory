@@ -10,7 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { CheckCircle, ExternalLink, Github, Wrench, Server, FileText } from "lucide-react";
 import PageBreadcrumb from "@/components/layout/PageBreadcrumb";
-import SkillReplies from "@/components/skills/SkillReplies";
+import ResourceReplies from "@/components/shared/ResourceReplies";
 import { useSkill } from "@/hooks/use-skills";
 import type { Skill } from "@/types";
 
@@ -84,7 +84,7 @@ export default function SkillDetail({ skill: initialSkill, id }: { skill: Skill 
                   </div>
                 )}
 
-                <SkillReplies skillSlug={skill.id} />
+                <ResourceReplies resourceType="skill" resourceId={skill.id} />
               </div>
 
               {/* Right sidebar */}

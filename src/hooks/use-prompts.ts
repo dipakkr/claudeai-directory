@@ -62,3 +62,4 @@ export function useUpvotePrompt() {
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["prompts"] }),
   });
 }
+

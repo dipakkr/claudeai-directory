@@ -19,6 +19,7 @@ import { Copy, ThumbsUp, CheckCircle, ArrowLeft, ArrowRight, Pencil, RotateCcw }
 import { usePrompt, usePrompts } from "@/hooks/use-prompts";
 import { toast } from "sonner";
 import PageBreadcrumb from "@/components/layout/PageBreadcrumb";
+import ResourceReplies from "@/components/shared/ResourceReplies";
 import type { Prompt } from "@/types";
 
 export default function PromptDetailClient({ prompt: initialPrompt, id }: { prompt: Prompt | null; id: string }) {
@@ -221,7 +222,9 @@ export default function PromptDetailClient({ prompt: initialPrompt, id }: { prom
                 </div>
               )}
 
-              <div className="pt-4 border-t border-border">
+              <ResourceReplies resourceType="prompt" resourceId={id} />
+
+              <div className="pt-8 border-t border-border mt-10">
                 <Link href="/prompts" className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors">
                   <ArrowLeft className="h-3.5 w-3.5" />
                   Back to Prompts
@@ -280,30 +283,6 @@ export default function PromptDetailClient({ prompt: initialPrompt, id }: { prom
                   </div>
                 )}
 
-                {/* Quick copy CTA */}
-                <div className="rounded-xl border border-border bg-card p-4 space-y-2">
-                  <p className="text-xs font-medium text-foreground mb-1">Use this prompt</p>
-                  <p className="text-[11px] text-muted-foreground leading-relaxed">
-                    Copy and paste directly into Claude to get started.
-                  </p>
-                  <Button
-                    size="sm"
-                    className="w-full h-8 text-xs gap-1.5"
-                    onClick={copyPrompt}
-                  >
-                    {copied ? <CheckCircle className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
-                    {copied ? "Copied!" : "Copy Prompt"}
-                  </Button>
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    className="w-full h-8 text-xs gap-1.5"
-                    onClick={openCustomize}
-                  >
-                    <Pencil className="h-3 w-3" />
-                    Customize &amp; Copy
-                  </Button>
-                </div>
               </div>
             </aside>
           </div>

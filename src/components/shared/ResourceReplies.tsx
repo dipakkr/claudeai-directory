@@ -11,15 +11,33 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useSkillReplies, useCreateSkillReply } from "@/hooks/use-skills";
+import { useResourceReplies, useCreateResourceReply } from "@/hooks/use-replies";
 import { useAuth } from "@/lib/auth";
-import type { SkillReply } from "@/types";
+import type { ResourceReply, ResourceType } from "@/types";
 
 const schema = z.object({
   body: z.string().min(10, "Please write at least 10 characters"),
   link: z.string().url("Must be a valid URL").optional().or(z.literal("")),
 });
 type FormValues = z.infer<typeof schema>;
+
+const COPY: Record<ResourceType, { heading: string; placeholder: string; signInPrompt: string }> = {
+  skill: {
+    heading: "What are you building with this skill?",
+    placeholder: "Describe how you're using this skill, any tweaks you made, or results you got...",
+    signInPrompt: "to share what you're building.",
+  },
+  prompt: {
+    heading: "How are you using this prompt?",
+    placeholder: "Share how you're using this prompt, any tweaks you made, or results you got...",
+    signInPrompt: "to share how you're using this prompt.",
+  },
+  mcp: {
+    heading: "How are you using this MCP?",
+    placeholder: "Share your experience, use cases, or tips for this MCP server...",
+    signInPrompt: "to share your experience.",
+  },
+};
 
 function timeAgo(dateStr: string): string {
   const diff = Math.floor((Date.now() - new Date(dateStr).getTime()) / 1000);
@@ -30,7 +48,7 @@ function timeAgo(dateStr: string): string {
   return `${Math.floor(diff / 2592000)}mo ago`;
 }
 
-function ReplyCard({ reply }: { reply: SkillReply }) {
+function ReplyCard({ reply }: { reply: ResourceReply }) {
   return (
     <div className="py-4">
       <div className="flex items-start gap-3">
@@ -67,9 +85,16 @@ function ReplyCard({ reply }: { reply: SkillReply }) {
   );
 }
 
-function ReplyForm({ skillSlug }: { skillSlug: string }) {
+function ReplyForm({
+  resourceType,
+  resourceId,
+}: {
+  resourceType: ResourceType;
+  resourceId: string;
+}) {
   const { isAuthenticated } = useAuth();
-  const createReply = useCreateSkillReply(skillSlug);
+  const copy = COPY[resourceType];
+  const createReply = useCreateResourceReply(resourceType, resourceId);
   const {
     register,
     handleSubmit,
@@ -96,7 +121,7 @@ function ReplyForm({ skillSlug }: { skillSlug: string }) {
         <Link href="/login" className="text-primary hover:underline font-medium">
           Sign in
         </Link>{" "}
-        to share what you&apos;re building.
+        {copy.signInPrompt}
       </div>
     );
   }
@@ -106,7 +131,7 @@ function ReplyForm({ skillSlug }: { skillSlug: string }) {
       <div>
         <Textarea
           {...register("body")}
-          placeholder="Describe how you're using this skill..."
+          placeholder={copy.placeholder}
           className="text-sm min-h-[80px]"
         />
         {errors.body && (
@@ -116,7 +141,7 @@ function ReplyForm({ skillSlug }: { skillSlug: string }) {
       <div>
         <Input
           {...register("link")}
-          placeholder="Link to your project (optional)"
+          placeholder="Link to your project or example (optional)"
           className="text-sm"
         />
         {errors.link && (
@@ -132,13 +157,20 @@ function ReplyForm({ skillSlug }: { skillSlug: string }) {
   );
 }
 
-export default function SkillReplies({ skillSlug }: { skillSlug: string }) {
-  const { data: replies, isLoading } = useSkillReplies(skillSlug);
+export default function ResourceReplies({
+  resourceType,
+  resourceId,
+}: {
+  resourceType: ResourceType;
+  resourceId: string;
+}) {
+  const copy = COPY[resourceType];
+  const { data: replies, isLoading } = useResourceReplies(resourceType, resourceId);
 
   return (
     <div className="mt-10">
       <h3 className="text-xs font-bold text-foreground/80 mb-4 uppercase tracking-wider">
-        What are you building with this skill?
+        {copy.heading}
       </h3>
 
       <div className="rounded-2xl border border-border bg-card p-6">
@@ -164,7 +196,7 @@ export default function SkillReplies({ skillSlug }: { skillSlug: string }) {
         ) : null}
 
         <div className={(replies ?? []).length > 0 ? "pt-4 border-t border-border" : ""}>
-          <ReplyForm skillSlug={skillSlug} />
+          <ReplyForm resourceType={resourceType} resourceId={resourceId} />
         </div>
       </div>
     </div>
