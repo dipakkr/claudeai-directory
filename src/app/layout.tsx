@@ -96,6 +96,7 @@ export default function RootLayout({
         </Script>
         <OpenPanelComponent
           clientId="3c0fbc66-1ebf-4993-ae25-7598616931c5"
+          apiUrl="https://analytics.tooljunction.io/api"
           trackScreenViews={true}
         />
       </body>
