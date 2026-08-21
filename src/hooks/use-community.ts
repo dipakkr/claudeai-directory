@@ -10,18 +10,20 @@ interface ThreadsParams {
   limit?: number;
 }
 
-export function useThreads(params?: ThreadsParams) {
+export function useThreads(params?: ThreadsParams, initialData?: Thread[]) {
   return useQuery({
     queryKey: ["community-threads", params],
     queryFn: () => api.get<Thread[]>("/community/threads", params as Record<string, string | number | boolean | undefined>),
+    initialData,
   });
 }
 
-export function useThread(id: string) {
+export function useThread(id: string, initialData?: Thread) {
   return useQuery({
     queryKey: ["community-thread", id],
     queryFn: () => api.get<Thread>(`/community/threads/${id}`),
     enabled: !!id,
+    initialData,
   });
 }
 
@@ -36,11 +38,12 @@ export function useCreateThread() {
   });
 }
 
-export function useReplies(threadId: string) {
+export function useReplies(threadId: string, initialData?: Reply[]) {
   return useQuery({
     queryKey: ["community-replies", threadId],
     queryFn: () => api.get<Reply[]>(`/community/threads/${threadId}/replies`),
     enabled: !!threadId,
+    initialData,
   });
 }
 

@@ -23,17 +23,17 @@ const CTASection = () => {
   };
 
   return (
-    <section className="py-16">
+    <section className="cad-section">
       <div className="container">
-        <div className="rounded-2xl border border-border bg-card p-8 md:p-12">
+        <div className="cad-card p-8 md:p-10">
           <div className="grid gap-10 md:grid-cols-2 md:gap-16 items-center">
             {/* Left — Join CTA */}
             <div>
-              <div className="inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-3 py-1 text-xs text-primary mb-4">
+              <div className="cad-chip mb-4 inline-flex items-center gap-1.5 text-primary">
                 <Sparkles className="h-3 w-3" />
                 Open community
               </div>
-              <h2 className="text-xl font-medium text-foreground mb-2">
+              <h2 className="mb-2 text-2xl font-medium text-foreground">
                 Join the directory
               </h2>
               <p className="text-sm text-muted-foreground mb-6 leading-relaxed">
@@ -73,7 +73,7 @@ const CTASection = () => {
                   placeholder="you@example.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="h-9 bg-background border-border text-sm"
+                  className="h-9 border-border bg-background text-sm"
                   required
                 />
                 <Button type="submit" size="sm" variant="secondary" disabled={isSubmitting}>

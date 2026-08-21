@@ -1,6 +1,6 @@
 "use client";
 
-import { use, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Header from "@/components/layout/Header";
@@ -9,12 +9,12 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { MessageSquare, Eye, ChevronUp, Clock } from "lucide-react";
+import { ChevronUp } from "lucide-react";
 import PageBreadcrumb from "@/components/layout/PageBreadcrumb";
 import { useThread, useReplies, useCreateReply } from "@/hooks/use-community";
 import { useAuth } from "@/lib/auth";
 import { toast } from "sonner";
-import type { Reply } from "@/types";
+import type { Reply, Thread } from "@/types";
 
 function timeAgo(dateStr: string): string {
   const now = Date.now();
@@ -25,6 +25,25 @@ function timeAgo(dateStr: string): string {
   if (diff < 86400) return `${Math.floor(diff / 3600)}h ago`;
   if (diff < 2592000) return `${Math.floor(diff / 86400)}d ago`;
   return `${Math.floor(diff / 2592000)}mo ago`;
+}
+
+function AuthorName({
+  author,
+  username,
+  className,
+}: {
+  author: string;
+  username?: string;
+  className?: string;
+}) {
+  if (username) {
+    return (
+      <Link href={`/u/${username}`} className={`${className ?? ""} hover:underline`}>
+        {author}
+      </Link>
+    );
+  }
+  return <span className={className}>{author}</span>;
 }
 
 function ReplyCard({ reply }: { reply: Reply }) {
@@ -40,7 +59,11 @@ function ReplyCard({ reply }: { reply: Reply }) {
         </div>
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 text-[11px] text-muted-foreground mb-1.5">
-            <span className="font-medium text-foreground">{reply.author}</span>
+            <AuthorName
+              author={reply.author}
+              username={reply.author_username}
+              className="font-medium text-foreground"
+            />
             <span className="text-border">·</span>
             <span>{timeAgo(reply.created_at)}</span>
           </div>
@@ -107,10 +130,17 @@ function ReplyForm({ threadId }: { threadId: string }) {
   );
 }
 
-export default function ThreadDetail({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = use(params);
-  const { data: thread, isLoading: threadLoading } = useThread(id);
-  const { data: replies, isLoading: repliesLoading } = useReplies(id);
+export default function ThreadDetail({
+  id,
+  initialThread,
+  initialReplies,
+}: {
+  id: string;
+  initialThread?: Thread;
+  initialReplies?: Reply[];
+}) {
+  const { data: thread, isLoading: threadLoading } = useThread(id, initialThread);
+  const { data: replies, isLoading: repliesLoading } = useReplies(id, initialReplies);
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
@@ -150,7 +180,11 @@ export default function ThreadDetail({ params }: { params: Promise<{ id: string 
                       thread.author[0]?.toUpperCase()
                     )}
                   </div>
-                  <span className="text-sm font-medium text-foreground">{thread.author}</span>
+                  <AuthorName
+                    author={thread.author}
+                    username={thread.author_username}
+                    className="text-sm font-medium text-foreground"
+                  />
                   <span className="text-xs text-muted-foreground">{timeAgo(thread.created_at)}</span>
                 </div>
 

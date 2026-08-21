@@ -18,7 +18,7 @@ interface AuthContextType {
   isNewUser: boolean;
   loginWithGoogle: (credential: string) => Promise<void>;
   logout: () => void;
-  updateProfile: (data: { username?: string; name?: string; avatar?: string; bio?: string; website?: string; twitter?: string; github?: string }) => Promise<void>;
+  updateProfile: (data: { username?: string; name?: string; avatar?: string; bio?: string; website?: string; twitter?: string; github?: string; email_notifications?: boolean }) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);

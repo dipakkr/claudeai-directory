@@ -22,6 +22,7 @@ function ServerIcon({ iconUrl, name }: { iconUrl?: string; name: string }) {
 
   if (favicon && !failed) {
     return (
+      // eslint-disable-next-line @next/next/no-img-element
       <img
         src={favicon}
         alt={name}
@@ -34,7 +35,7 @@ function ServerIcon({ iconUrl, name }: { iconUrl?: string; name: string }) {
   }
 
   return (
-    <div className="h-8 w-8 rounded-md bg-primary/10 flex items-center justify-center text-primary text-sm font-medium shrink-0">
+    <div className="cad-icon-tile">
       {name[0]?.toUpperCase()}
     </div>
   );
@@ -42,13 +43,13 @@ function ServerIcon({ iconUrl, name }: { iconUrl?: string; name: string }) {
 
 const MCPSection = ({ initialServers = [] }: { initialServers?: MCPServer[] }) => {
   return (
-    <section className="py-10">
+    <section className="cad-section cad-section-rule">
       <div className="container">
-        <div className="flex items-center justify-between mb-6">
+        <div className="mb-6 flex items-center justify-between">
           <h2 className="text-base font-medium text-foreground">Popular MCP Servers</h2>
           <Link
             href="/mcp"
-            className="text-sm text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1"
+            className="flex items-center gap-1 text-sm text-muted-foreground hover:text-primary"
           >
             View all <ArrowUpRight className="h-3.5 w-3.5" />
           </Link>
@@ -59,9 +60,9 @@ const MCPSection = ({ initialServers = [] }: { initialServers?: MCPServer[] }) =
             <Link
               key={server.id}
               href={`/mcp/${server.slug || server.id}`}
-              className="group rounded-lg border border-border bg-card p-4 hover:bg-accent/50 hover:border-primary/20 transition-all"
+              className="cad-card group p-4"
             >
-              <div className="flex items-start justify-between gap-2 mb-2">
+              <div className="mb-3 flex items-start justify-between gap-2">
                 <div className="flex items-center gap-2 min-w-0">
                   <ServerIcon iconUrl={server.branding?.icon_url} name={server.name} />
                   <div className="min-w-0">
@@ -74,14 +75,14 @@ const MCPSection = ({ initialServers = [] }: { initialServers?: MCPServer[] }) =
                     </p>
                   </div>
                 </div>
-                <ArrowUpRight className="h-3.5 w-3.5 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity shrink-0" />
+                <ArrowUpRight className="h-3.5 w-3.5 shrink-0 text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100" />
               </div>
-              <p className="text-xs text-muted-foreground line-clamp-2 mb-2">
+              <p className="mb-3 line-clamp-2 text-xs leading-relaxed text-muted-foreground">
                 {server.one_liner || server.description}
               </p>
-              <div className="flex items-center gap-1.5 flex-wrap">
+              <div className="flex flex-wrap items-center gap-1.5 border-t border-border pt-3">
                 {(server.capabilities?.tools?.length ?? 0) > 0 && (
-                  <span className="flex items-center gap-1 text-[10px] text-muted-foreground bg-muted/50 px-1.5 py-0.5 rounded">
+                  <span className="flex items-center gap-1 rounded bg-muted/50 px-1.5 py-0.5 text-[10px] text-muted-foreground">
                     <Wrench className="h-2.5 w-2.5" />
                     {server.capabilities.tools.length} tools
                   </span>

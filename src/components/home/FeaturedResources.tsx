@@ -1,18 +1,18 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowUpRight, Star, CheckCircle } from "lucide-react";
+import { ArrowUpRight, CheckCircle } from "lucide-react";
 import type { Skill } from "@/types";
 
 const FeaturedResources = ({ initialSkills = [] }: { initialSkills?: Skill[] }) => {
   return (
-    <section className="py-10">
+    <section className="cad-section cad-section-rule">
       <div className="container">
-        <div className="flex items-center justify-between mb-6">
+        <div className="mb-6 flex items-center justify-between">
           <h2 className="text-base font-medium text-foreground">Featured Skills</h2>
           <Link
             href="/skills"
-            className="text-sm text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1"
+            className="flex items-center gap-1 text-sm text-muted-foreground hover:text-primary"
           >
             View all <ArrowUpRight className="h-3.5 w-3.5" />
           </Link>
@@ -23,11 +23,11 @@ const FeaturedResources = ({ initialSkills = [] }: { initialSkills?: Skill[] }) 
             <Link
               key={skill.id}
               href={`/skills/${skill.id}`}
-              className="group rounded-lg border border-border bg-card p-4 hover:bg-accent/50 hover:border-primary/20 transition-all flex flex-col min-h-[160px]"
+              className="cad-card group flex min-h-[172px] flex-col p-4"
             >
-              <div className="flex items-start justify-between gap-2 mb-2">
+              <div className="mb-3 flex items-start justify-between gap-2">
                 <div className="flex items-center gap-2 min-w-0">
-                  <div className="h-8 w-8 rounded-md bg-primary/10 flex items-center justify-center text-primary text-sm font-medium shrink-0">
+                  <div className="cad-icon-tile">
                     {(skill.title || skill.name)[0]?.toUpperCase()}
                   </div>
                   <div className="min-w-0">
@@ -35,15 +35,15 @@ const FeaturedResources = ({ initialSkills = [] }: { initialSkills?: Skill[] }) 
                       <span className="truncate">{skill.title || skill.name}</span>
                       {skill.verified && <CheckCircle className="h-3 w-3 text-primary shrink-0" />}
                     </h3>
-                    <p className="text-xs text-muted-foreground truncate">{skill.category}</p>
+                    <p className="truncate text-xs text-muted-foreground">{skill.category}</p>
                   </div>
                 </div>
-                <ArrowUpRight className="h-3.5 w-3.5 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity shrink-0" />
+                <ArrowUpRight className="h-3.5 w-3.5 shrink-0 text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100" />
               </div>
-              <p className="text-xs text-muted-foreground line-clamp-3 mb-2 flex-1">
+              <p className="mb-3 line-clamp-3 flex-1 text-xs leading-relaxed text-muted-foreground">
                 {skill.description}
               </p>
-              <div className="flex items-center gap-3 text-xs text-muted-foreground mt-auto">
+              <div className="mt-auto flex items-center gap-3 border-t border-border pt-3 text-xs text-muted-foreground">
                 <span>{skill.downloads.toLocaleString()} downloads</span>
               </div>
             </Link>

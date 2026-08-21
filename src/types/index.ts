@@ -10,6 +10,7 @@ export interface User {
   github?: string;
   role: string;
   plan: string;
+  email_notifications?: boolean;
   created_at: string;
 }
 
@@ -23,6 +24,7 @@ export interface PublicProfile {
   twitter?: string;
   github?: string;
   created_at: string;
+  apps?: ShowcaseProject[];
 }
 
 export interface TokenResponse {
@@ -167,16 +169,30 @@ export interface Job {
 export interface ShowcaseProject {
   id: string;
   title: string;
+  tagline?: string;
   description: string;
   images: string[];
+  app_url?: string;
   demo_url?: string;
   github_url?: string;
+  category?: string;
   tech_stack: string[];
   skills_used: string[];
+  use_cases?: string[];
+  feedback_prompt?: string;
+  badge_page_url?: string;
+  badge_html?: string;
   author_id?: string;
+  author_username?: string;
+  author_name?: string;
   upvotes: number;
   featured: boolean;
+  status?: "pending_badge" | "listed" | "rejected" | string;
+  badge_verified?: boolean;
+  badge_verified_at?: string;
+  listed_at?: string;
   created_at: string;
+  updated_at?: string;
 }
 
 export interface BlogPost {
@@ -247,6 +263,7 @@ export interface Thread {
   title: string;
   body: string;
   author: string;
+  author_username?: string;
   author_avatar?: string;
   tags: string[];
   replies: number;
@@ -259,6 +276,7 @@ export interface Reply {
   thread_id: string;
   body: string;
   author: string;
+  author_username?: string;
   author_avatar?: string;
   parent_id?: string;
   upvotes: number;
@@ -284,7 +302,7 @@ export type PromptReply = ResourceReply;
 
 export interface FeedItem {
   id: string;
-  type: "skill" | "mcp" | "job" | "prompt" | "showcase" | "blog" | "post" | "news";
+  type: "skill" | "mcp" | "job" | "prompt" | "showcase" | "blog" | "post" | "news" | "resource";
   title: string;
   description: string;
   url?: string;
@@ -365,4 +383,25 @@ export interface GuideProgress {
   last_accessed_at?: string;
   started_at?: string;
   completed_at?: string;
+}
+
+export interface Resource {
+  id: string;
+  title: string;
+  url: string;
+  description: string;
+  category: string;
+  tags: string[];
+  author?: string | null;
+  author_url?: string | null;
+  author_avatar?: string | null;
+  source?: string | null;
+  body?: string | null;
+  cover_image?: string | null;
+  curated: boolean;
+  status: "pending" | "approved" | "rejected";
+  upvotes: number;
+  published_at?: string | null;
+  curated_at?: string | null;
+  created_at: string;
 }

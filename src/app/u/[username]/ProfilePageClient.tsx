@@ -4,9 +4,10 @@ import Link from "next/link";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/lib/auth";
-import { CalendarDays, ArrowLeft, Globe, Github, Twitter, Pencil, ArrowRight } from "lucide-react";
+import { BadgeCheck, CalendarDays, ArrowLeft, Globe, Github, Twitter, Pencil, ArrowRight, ExternalLink } from "lucide-react";
 import type { PublicProfile } from "@/types";
 
 const BANNER_COLORS = [
@@ -37,10 +38,8 @@ function avatarColor(username: string) {
 }
 
 export default function PublicProfilePage({
-  username,
   initialProfile,
 }: {
-  username: string;
   initialProfile: PublicProfile | null;
 }) {
   const { user } = useAuth();
@@ -79,6 +78,7 @@ export default function PublicProfilePage({
 
   const gradient = bannerGradient(profile.username);
   const color = avatarColor(profile.username);
+  const listedApps = profile.apps ?? [];
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
@@ -182,17 +182,71 @@ export default function PublicProfilePage({
 
           {/* Divider */}
           <div className="border-t border-border px-1 pt-8 pb-16">
+            {listedApps.length > 0 && (
+              <section className="mb-10">
+                <div className="mb-4 flex items-center justify-between gap-4">
+                  <div>
+                    <h2 className="text-xl font-semibold text-foreground">Listed apps</h2>
+                    <p className="mt-1 text-sm text-muted-foreground">
+                      Verified Claude AI Directory submissions from this member.
+                    </p>
+                  </div>
+                  <Badge variant="secondary" className="hidden gap-1 rounded-md sm:inline-flex">
+                    <BadgeCheck className="h-3 w-3" />
+                    Badge verified
+                  </Badge>
+                </div>
+
+                <div className="grid gap-3 sm:grid-cols-2">
+                  {listedApps.map((app) => (
+                    <Link
+                      key={app.id}
+                      href={`/showcase/${app.id}`}
+                      className="rounded-[12px] border border-border bg-card p-4 transition-colors hover:border-primary/35"
+                    >
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="min-w-0">
+                          <h3 className="truncate text-sm font-semibold text-foreground">{app.title}</h3>
+                          <p className="mt-1 line-clamp-2 text-xs leading-5 text-muted-foreground">
+                            {app.tagline || app.description}
+                          </p>
+                        </div>
+                        <ExternalLink className="h-4 w-4 shrink-0 text-muted-foreground" />
+                      </div>
+                      <div className="mt-3 flex flex-wrap gap-1.5">
+                        {app.category && (
+                          <Badge variant="outline" className="rounded-md text-[10px]">
+                            {app.category}
+                          </Badge>
+                        )}
+                        {app.tech_stack?.slice(0, 2).map((tag) => (
+                          <Badge key={tag} variant="secondary" className="rounded-md text-[10px]">
+                            {tag}
+                          </Badge>
+                        ))}
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              </section>
+            )}
+
             {isOwnProfile ? (
               <div className="rounded-xl border border-dashed border-border p-8 text-center">
                 <p className="text-sm text-muted-foreground mb-3">
-                  Add your bio, website, and social links to complete your profile.
+                  Add your bio, website, social links, or submit an app to complete your profile.
                 </p>
-                <Button variant="outline" size="sm" asChild>
-                  <Link href="/dashboard">
-                    Complete profile
-                    <ArrowRight className="h-3.5 w-3.5" />
-                  </Link>
-                </Button>
+                <div className="flex flex-wrap justify-center gap-2">
+                  <Button variant="outline" size="sm" asChild>
+                    <Link href="/dashboard">
+                      Complete profile
+                      <ArrowRight className="h-3.5 w-3.5" />
+                    </Link>
+                  </Button>
+                  <Button size="sm" asChild>
+                    <Link href="/submit">Submit app</Link>
+                  </Button>
+                </div>
               </div>
             ) : (
               <p className="text-xs text-muted-foreground text-center">

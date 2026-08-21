@@ -31,11 +31,13 @@ const typeConfig: Record<string, { label: string; icon: typeof Wrench; href: (id
   blog: { label: "Blog", icon: BookOpen, href: (id) => `/resources/${id}`, color: "text-yellow-600" },
   post: { label: "Post", icon: LinkIcon, href: (id) => `/feed#${id}`, color: "text-emerald-500" },
   news: { label: "News", icon: Newspaper, href: () => "#", color: "text-red-500/70 text-[9px]" },
+  resource: { label: "Resource", icon: BookOpen, href: (id) => `/resources/${id}`, color: "text-sky-500" },
 };
 
 const typeFilters = [
   { label: "All", key: undefined },
   { label: "News", key: "news" },
+  { label: "Resources", key: "resource" },
   { label: "Posts", key: "post" },
 ];
 

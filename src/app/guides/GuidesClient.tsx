@@ -29,7 +29,7 @@ export default function GuidesClient({
                   <h1 className="text-3xl font-bold tracking-tight text-foreground">Guides</h1>
                 </div>
                 <p className="text-base text-muted-foreground max-w-2xl leading-relaxed">
-                  Structured courses to master Claude AI, from basics to building production agents.
+                  Structured guides to master Claude AI, from basics to building production agents.
                 </p>
               </div>
             </div>

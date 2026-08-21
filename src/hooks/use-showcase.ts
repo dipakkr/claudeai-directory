@@ -15,7 +15,6 @@ export function useShowcaseProjects(params?: ShowcaseParams, options?: { initial
     queryKey: ["showcase", params],
     queryFn: () => api.get<ShowcaseProject[]>("/showcase", params as Record<string, string | number | boolean | undefined>),
     initialData: options?.initialData,
-    initialDataUpdatedAt: options?.initialData ? Date.now() : undefined,
   });
 }
 
@@ -32,5 +31,50 @@ export function useUpvoteShowcase() {
   return useMutation({
     mutationFn: (slug: string) => api.post<ShowcaseProject>(`/showcase/${slug}/upvote`),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["showcase"] }),
+  });
+}
+
+export function useMyShowcaseProjects(options?: { enabled?: boolean }) {
+  return useQuery({
+    queryKey: ["showcase", "me"],
+    queryFn: () => api.get<ShowcaseProject[]>("/showcase/account/me"),
+    enabled: options?.enabled ?? true,
+  });
+}
+
+export function useSubmitShowcaseProject() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (data: {
+      title: string;
+      tagline?: string;
+      description: string;
+      app_url: string;
+      demo_url?: string;
+      github_url?: string;
+      category?: string;
+      tech_stack: string[];
+      skills_used: string[];
+      use_cases: string[];
+      feedback_prompt?: string;
+      badge_page_url: string;
+    }) => api.post<ShowcaseProject>("/showcase", data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["showcase"] });
+      queryClient.invalidateQueries({ queryKey: ["showcase", "me"] });
+    },
+  });
+}
+
+export function useVerifyShowcaseBadge() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ slug, badge_page_url }: { slug: string; badge_page_url?: string }) =>
+      api.post<ShowcaseProject>(`/showcase/${slug}/verify-badge`, { badge_page_url }),
+    onSuccess: (project) => {
+      queryClient.invalidateQueries({ queryKey: ["showcase"] });
+      queryClient.invalidateQueries({ queryKey: ["showcase", "me"] });
+      queryClient.invalidateQueries({ queryKey: ["showcase", project.id] });
+    },
   });
 }

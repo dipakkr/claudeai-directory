@@ -4,13 +4,13 @@ import type { Prompt } from "@/types";
 
 const PromptsSection = ({ initialPrompts = [] }: { initialPrompts?: Prompt[] }) => {
   return (
-    <section className="py-10">
+    <section className="cad-section cad-section-rule">
       <div className="container">
-        <div className="flex items-center justify-between mb-6">
+        <div className="mb-6 flex items-center justify-between">
           <h2 className="text-base font-medium text-foreground">Popular Prompts</h2>
           <Link
             href="/prompts"
-            className="text-sm text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1"
+            className="flex items-center gap-1 text-sm text-muted-foreground hover:text-primary"
           >
             View all <ArrowUpRight className="h-3.5 w-3.5" />
           </Link>
@@ -21,9 +21,9 @@ const PromptsSection = ({ initialPrompts = [] }: { initialPrompts?: Prompt[] }) 
             <Link
               key={prompt.id}
               href={`/prompts/${prompt.id}`}
-              className="group rounded-lg border border-border bg-card p-4 hover:bg-accent/50 hover:border-primary/20 transition-all"
+              className="cad-card group p-4"
             >
-              <div className="flex items-start justify-between mb-2">
+              <div className="mb-3 flex items-start justify-between">
                 <div className="min-w-0 flex-1">
                   <h3 className="text-sm font-medium text-foreground flex items-center gap-1 truncate">
                     <span className="truncate">{prompt.title}</span>
@@ -31,12 +31,12 @@ const PromptsSection = ({ initialPrompts = [] }: { initialPrompts?: Prompt[] }) 
                   </h3>
                   <p className="text-xs text-muted-foreground truncate">{prompt.category}</p>
                 </div>
-                <ArrowUpRight className="h-3.5 w-3.5 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity shrink-0 ml-2" />
+                <ArrowUpRight className="ml-2 h-3.5 w-3.5 shrink-0 text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100" />
               </div>
-              <p className="text-xs text-muted-foreground line-clamp-2 mb-3">
+              <p className="mb-3 line-clamp-2 text-xs leading-relaxed text-muted-foreground">
                 {prompt.description}
               </p>
-              <div className="flex items-center gap-3 text-xs text-muted-foreground">
+              <div className="flex items-center gap-3 border-t border-border pt-3 text-xs text-muted-foreground">
                 <span className="flex items-center gap-1">
                   <ChevronUp className="h-3 w-3 text-primary" />
                   {prompt.upvotes}

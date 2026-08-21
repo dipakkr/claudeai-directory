@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Search, Wrench, Server, FileText, Briefcase, Rocket, BookOpen, DollarSign, Users, X, Wand2 } from "lucide-react";
+import { Search, Wrench, Server, FileText, Briefcase, Rocket, BookOpen, X, Wand2, MessageSquare, Users, type LucideIcon } from "lucide-react";
 import { useSearch } from "@/hooks/use-search";
 import { useDebounce } from "@/hooks/use-debounce";
 import type { Stat } from "@/types";
@@ -39,7 +39,7 @@ type CategoryItem = {
   name: string;
   description: string;
   href: string;
-  icon: any;
+  icon: LucideIcon;
   iconColor: string;
   iconBg: string;
   fullWidth?: boolean;
@@ -47,8 +47,24 @@ type CategoryItem = {
 
 const categories: CategoryItem[] = [
   {
+    name: "Community",
+    description: "Ask questions and compare real workflows",
+    href: "/community",
+    icon: MessageSquare,
+    iconColor: "text-primary",
+    iconBg: "bg-primary/10",
+  },
+  {
+    name: "MCP Servers",
+    description: "Connect Claude to your working stack",
+    href: "/mcp",
+    icon: Server,
+    iconColor: "text-primary",
+    iconBg: "bg-primary/10",
+  },
+  {
     name: "Skills",
-    description: "Slash commands & reusable workflows",
+    description: "Reusable Claude capabilities",
     href: "/skills",
     icon: Wrench,
     iconColor: "text-primary",
@@ -56,39 +72,38 @@ const categories: CategoryItem[] = [
   },
   {
     name: "Prompts",
-    description: "Battle-tested prompts, ready to paste",
+    description: "Copy-ready prompts for work",
     href: "/prompts",
     icon: FileText,
     iconColor: "text-primary",
     iconBg: "bg-primary/10",
   },
   {
-    name: "MCP Servers",
-    description: "Connect Claude to your entire stack",
-    href: "/mcp",
-    icon: Server,
-    iconColor: "text-primary",
-    iconBg: "bg-primary/10",
-  },
-  {
     name: "Guides",
-    description: "Deep dives for Claude Code power users",
+    description: "Practical notes from builders",
     href: "/guides",
     icon: BookOpen,
     iconColor: "text-primary",
     iconBg: "bg-primary/10",
   },
   {
-    name: "Context Generator",
-    description: "Auto-generate your project's CLAUDE.md file",
+    name: "Members",
+    description: "Find the people building with Claude",
+    href: "/members",
+    icon: Users,
+    iconColor: "text-primary",
+    iconBg: "bg-primary/10",
+  },
+  {
+    name: "CLAUDE.md Generator",
+    description: "Create project context for Claude Code",
     href: "/setup",
     icon: Wand2,
     iconColor: "text-primary",
     iconBg: "bg-primary/10",
-    fullWidth: true,
   },
 ];
-const HeroSection = ({ initialQuery = "", initialStats = [] }: { initialQuery?: string; initialStats?: Stat[] }) => {
+const HeroSection = ({ initialQuery = "" }: { initialQuery?: string; initialStats?: Stat[] }) => {
   const [query, setQuery] = useState(initialQuery);
   const debouncedQuery = useDebounce(query, 300);
   const { data: results, isLoading } = useSearch(debouncedQuery);
@@ -96,47 +111,63 @@ const HeroSection = ({ initialQuery = "", initialStats = [] }: { initialQuery?: 
 
 
   return (
-    <section className="pt-10 pb-8 md:pt-24 md:pb-20 relative overflow-x-clip">
+    <section className="relative overflow-x-clip pb-10 pt-10 md:pb-16 md:pt-16">
       <div className="container relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-8 items-center max-w-7xl mx-auto">
 
           {/* Left column */}
           <div className="lg:col-span-6 lg:pr-8">
             {/* Label */}
-            <div className="inline-flex items-center rounded-full border border-primary/20 bg-primary/10 px-2.5 py-1 text-[11px] font-medium text-primary mb-6 shadow-sm">
+            <div className="cad-chip mb-6 inline-flex items-center">
               <span className="relative flex h-1.5 w-1.5 mr-2">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-primary"></span>
               </span>
-              The Claude Code community hub
+              Unofficial Claude community directory
             </div>
 
             {/* Headline */}
-            <h1 className="text-3xl md:text-5xl font-normal tracking-tight text-foreground leading-[1.15] mb-5">
-              Everything you need<br />
-              to build with <span className="text-primary font-medium">Claude</span>
+            <h1 className="mb-5 max-w-2xl text-4xl font-medium leading-[1.08] text-foreground md:text-6xl">
+              Find what people are building with Claude.
             </h1>
 
             <p className="text-sm md:text-base text-muted-foreground leading-relaxed mb-10 max-w-lg">
-              Discover MCP servers, skills, and prompts crafted by the Claude community. Connect your tools, sharpen your workflows, and ship faster with Claude Code.
+              Browse community-tested MCP servers, skills, prompts, jobs,
+              guides, and forum threads for Claude and Claude Code.
             </p>
+
+            <div className="mb-5 flex flex-col gap-2 sm:flex-row">
+              <Link
+                href="/community"
+                className="inline-flex h-10 items-center justify-center gap-2 rounded-lg bg-primary px-4 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+              >
+                Open forum
+                <MessageSquare className="h-4 w-4" />
+              </Link>
+              <Link
+                href="/mcp"
+                className="inline-flex h-10 items-center justify-center gap-2 rounded-lg border border-border bg-card px-4 text-sm font-medium text-foreground transition-colors hover:border-[var(--cad-line-hover)]"
+              >
+                Browse MCP servers
+              </Link>
+            </div>
 
             {/* Search */}
             <div className="relative w-full max-w-xl text-left mb-6">
               <div className="relative group">
-                <div className="relative bg-transparent rounded-md border border-border flex items-center transition-all duration-300 focus-within:border-foreground/30 shadow-sm">
+                <div className="relative flex items-center rounded-[10px] border border-border bg-card shadow-sm transition-colors focus-within:border-[var(--cad-line-hover)]">
                   <Search className="absolute left-4 h-4 w-4 text-muted-foreground" />
                   <input
                     type="text"
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
                     placeholder="Search MCPs, skills, prompts, guides..."
-                    className="w-full min-w-0 bg-transparent pl-11 pr-11 py-3.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none rounded-md"
+                    className="w-full min-w-0 rounded-[10px] bg-transparent py-3.5 pl-11 pr-11 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none"
                   />
                   {isSearching && (
                     <button
                       onClick={() => setQuery("")}
-                      className="absolute right-3 p-1.5 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+                      className="absolute right-3 rounded-full p-1.5 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
                     >
                       <X className="h-4 w-4" />
                     </button>
@@ -148,12 +179,12 @@ const HeroSection = ({ initialQuery = "", initialStats = [] }: { initialQuery?: 
               {isSearching && (
                 <div className="absolute top-full left-0 right-0 mt-2 z-50">
                   {isLoading ? (
-                    <div className="rounded-md border border-border bg-card p-8 text-center shadow-lg">
+                    <div className="cad-card p-8 text-center shadow-lg">
                       <div className="h-5 w-5 border-2 border-border border-t-foreground rounded-full animate-spin mx-auto mb-3" />
                       <p className="text-sm text-muted-foreground">Searching collective...</p>
                     </div>
                   ) : (results ?? []).length > 0 ? (
-                    <div className="rounded-md border border-border bg-card shadow-lg divide-y divide-border overflow-hidden max-h-[400px] overflow-y-auto">
+                    <div className="cad-card max-h-[400px] divide-y divide-border overflow-hidden overflow-y-auto shadow-lg">
                       {(results ?? []).map((result) => {
                         const route = typeRoutes[result._type] ?? "/";
                         const icon = typeIcons[result._type];
@@ -163,15 +194,15 @@ const HeroSection = ({ initialQuery = "", initialStats = [] }: { initialQuery?: 
                           <Link
                             key={`${result._type}-${itemSlug}`}
                             href={`${route}/${itemSlug}`}
-                            className="flex items-start gap-3 px-4 py-3 hover:bg-muted/50 transition-colors"
+                            className="flex items-start gap-3 px-4 py-3 transition-colors hover:bg-muted/50"
                           >
-                            <div className="mt-0.5 shrink-0 bg-transparent p-1.5 rounded border border-border">{icon}</div>
+                            <div className="mt-0.5 shrink-0 rounded-md border border-border bg-[var(--cad-raised)] p-1.5">{icon}</div>
                             <div className="min-w-0 flex-1">
                               <div className="flex items-center gap-2 mb-0.5">
-                                <span className="text-sm font-medium text-foreground truncate">
+                                <span className="truncate text-sm font-medium text-foreground">
                                   {result.title ?? result.name}
                                 </span>
-                                <span className="text-[10px] text-muted-foreground bg-muted px-1.5 py-0.5 rounded shrink-0 border border-border">
+                                <span className="shrink-0 rounded border border-border bg-muted px-1.5 py-0.5 text-[10px] text-muted-foreground">
                                   {label}
                                 </span>
                               </div>
@@ -184,9 +215,11 @@ const HeroSection = ({ initialQuery = "", initialStats = [] }: { initialQuery?: 
                       })}
                     </div>
                   ) : debouncedQuery.length >= 2 ? (
-                    <div className="rounded-md border border-border bg-card p-8 text-center shadow-lg">
+                    <div className="cad-card p-8 text-center shadow-lg">
                       <p className="text-sm font-medium text-foreground mb-1">No results found</p>
-                      <p className="text-sm text-muted-foreground mb-3">We couldn't find anything matching "{debouncedQuery}".</p>
+                      <p className="text-sm text-muted-foreground mb-3">
+                        No results found for {debouncedQuery}.
+                      </p>
                       <button onClick={() => setQuery("")} className="text-sm text-foreground hover:underline font-medium">
                         Clear search
                       </button>
@@ -207,9 +240,9 @@ const HeroSection = ({ initialQuery = "", initialStats = [] }: { initialQuery?: 
                     key={cat.href}
                     href={cat.href}
                     style={{ animationDelay: `${i * 50}ms` }}
-                    className={`group relative overflow-hidden rounded-xl border border-border bg-transparent p-4 transition-colors duration-200 hover:border-foreground/20 hover:bg-muted/30 ${cat.fullWidth ? 'col-span-2' : ''}`}
+                    className="cad-card group relative min-h-[118px] overflow-hidden p-4"
                   >
-                    <div className={`${cat.iconBg} rounded-md h-8 w-8 flex items-center justify-center mb-3 transition-transform duration-300 group-hover:scale-105 group-hover:-translate-y-0.5`}>
+                    <div className={`${cat.iconBg} mb-3 flex h-9 w-9 items-center justify-center rounded-[9px] border border-border transition-transform duration-300 group-hover:-translate-y-0.5`}>
                       <Icon className={`h-4 w-4 ${cat.iconColor}`} />
                     </div>
 

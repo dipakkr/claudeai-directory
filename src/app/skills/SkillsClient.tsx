@@ -5,8 +5,7 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
-import { Badge } from "@/components/ui/badge";
-import { CheckCircle, Download } from "lucide-react";
+import { CheckCircle } from "lucide-react";
 import { useSkills } from "@/hooks/use-skills";
 import { CollectionPageSchema } from "@/components/seo/JsonLd";
 import type { Skill } from "@/types";
@@ -21,7 +20,6 @@ const categories = [
 
 export default function SkillsClient({
   initialData,
-  initialParams,
 }: {
   initialData: Skill[];
   initialParams: { category?: string; search?: string };
@@ -53,7 +51,7 @@ export default function SkillsClient({
   }, [router, searchParams]);
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div className="cad-shell flex flex-col">
       <CollectionPageSchema
         name="Claude Skills"
         description="Browse and install Claude skills shared by the community."
@@ -61,71 +59,60 @@ export default function SkillsClient({
       />
       <Header />
       <main className="flex-1">
-        <div className="container py-10">
-          <div className="mb-8">
-            <h1 className="text-2xl font-semibold text-foreground mb-2">Skills</h1>
-            <p className="text-sm text-muted-foreground">
+        <div className="mx-auto flex max-w-[1180px] flex-col gap-3 px-8 pb-[34px] pt-[60px]">
+          <h1 className="text-[clamp(32px,4vw,42px)] font-medium leading-[1.08]">Claude Skills</h1>
+          <p className="max-w-[62ch] text-base leading-[1.6] text-muted-foreground">
               Browse Claude skills and capabilities shared by the community
             </p>
-          </div>
-
-
-          <div className="flex items-center gap-1.5 mb-6 overflow-x-auto">
+          <div className="mt-2 flex flex-wrap gap-2">
             {categories.map((c) => (
               <button
                 key={c.value}
                 onClick={() => setCategory(c.value)}
-                className={`px-2.5 py-1 text-[11px] rounded-md border transition-colors whitespace-nowrap ${category === c.value
-                  ? "bg-primary text-primary-foreground border-primary"
-                  : "bg-card border-border text-muted-foreground hover:text-foreground"
+                className={`cad-chip whitespace-nowrap px-3.5 text-[13px] ${category === c.value
+                  ? "cad-chip-active"
+                  : "bg-card hover:border-primary hover:text-primary"
                   }`}
               >
                 {c.label}
               </button>
             ))}
           </div>
+        </div>
 
+        <div className="mx-auto max-w-[1180px] px-8 pb-[88px]">
           <>
             <p className="mb-4 text-xs text-muted-foreground">
               {skills?.length ?? 0} skills found
             </p>
-            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="grid gap-3.5 [grid-template-columns:repeat(auto-fit,minmax(340px,1fr))]">
               {(skills ?? []).map((skill) => (
                 <Link
                   key={skill.id}
                   href={`/skills/${skill.id}`}
-                  className="group rounded-lg border border-border bg-card p-4 hover:bg-accent/50 hover:border-primary/20 transition-all flex flex-col"
+                  className="group flex items-center gap-3.5 rounded-[9px] border border-border bg-card p-4 hover:border-[var(--cad-line-hover)]"
                 >
-                  <div className="flex items-center gap-2.5 mb-2.5 min-w-0">
-                    <div className="h-9 w-9 rounded-lg bg-primary/10 flex items-center justify-center text-primary text-sm font-semibold shrink-0">
-                      {(skill.title || skill.name)[0]?.toUpperCase()}
-                    </div>
-                    <div className="min-w-0">
-                      <h3 className="text-sm font-medium text-foreground flex items-center gap-1">
-                        <span className="truncate">{skill.title || skill.name}</span>
-                        {skill.verified && <CheckCircle className="h-3 w-3 text-primary shrink-0" />}
-                      </h3>
-                      <p className="text-[11px] text-muted-foreground">{skill.category}</p>
-                    </div>
+                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-[var(--cad-chip)] text-sm font-medium text-[var(--cad-accent-hover)]">
+                    {(skill.title || skill.name)[0]?.toUpperCase()}
                   </div>
-                  <p className="text-xs text-muted-foreground line-clamp-2 mb-3 flex-1">
-                    {skill.description}
-                  </p>
-                  <div className="flex items-center justify-between gap-2">
-                    {skill.tags.length > 0 ? (
-                      <div className="flex flex-wrap gap-1 min-w-0">
-                        {skill.tags.slice(0, 3).map((tag) => (
-                          <Badge key={tag} variant="secondary" className="text-[10px] px-1.5 py-0">
-                            {tag}
-                          </Badge>
-                        ))}
+                  <div className="flex min-w-0 flex-1 flex-col gap-1">
+                    <div className="flex min-w-0 items-center gap-[7px]">
+                      <div className="truncate text-[15px] font-semibold">{skill.title || skill.name}</div>
+                      {skill.verified && (
+                        <div className="flex h-3.5 w-3.5 shrink-0 items-center justify-center rounded-full bg-[var(--cad-chip)] text-[9px] text-[var(--cad-faint)]">
+                          <CheckCircle className="h-3 w-3" />
+                        </div>
+                      )}
+                      <div className="shrink-0 whitespace-nowrap rounded-md bg-[var(--cad-accent-soft)] px-[7px] py-0.5 text-[10.5px] uppercase tracking-[0.06em] text-[var(--cad-accent-hover)]">
+                        {skill.category}
                       </div>
-                    ) : (
-                      <div />
-                    )}
-                    <span className="flex items-center gap-1 text-[11px] text-muted-foreground/60 shrink-0">
-                      <Download className="h-3 w-3" />
-                      {skill.downloads.toLocaleString()}
+                    </div>
+                    <div className="line-clamp-2 text-pretty text-[13px] leading-[1.45] text-muted-foreground">
+                      {skill.description}
+                    </div>
+                    <span className="text-xs text-[var(--cad-faint)]">
+                      {skill.downloads.toLocaleString()} downloads
+                      {skill.tags.length > 0 ? ` · ${skill.tags.slice(0, 2).join(", ")}` : ""}
                     </span>
                   </div>
                 </Link>

@@ -1,18 +1,16 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, type FormEvent } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 
-import { Badge } from "@/components/ui/badge";
 import {
-  Wrench,
+  Check,
   Shield,
-  ArrowUpRight,
-  Unlock,
-  Plug,
+  Plus,
+  Search,
 } from "lucide-react";
 import { useMCPServers } from "@/hooks/use-mcp-servers";
 import { CollectionPageSchema } from "@/components/seo/JsonLd";
@@ -34,12 +32,13 @@ function ServerIcon({ iconUrl, name, size = 36 }: { iconUrl?: string; name: stri
 
   if (favicon && !failed) {
     return (
+      // eslint-disable-next-line @next/next/no-img-element
       <img
         src={favicon}
         alt={name}
         width={size}
         height={size}
-        className="rounded-md object-contain shrink-0"
+        className="shrink-0 rounded-lg bg-[var(--cad-chip)] object-contain p-1"
         style={{ width: size, height: size }}
         onError={() => setFailed(true)}
       />
@@ -48,7 +47,7 @@ function ServerIcon({ iconUrl, name, size = 36 }: { iconUrl?: string; name: stri
 
   return (
     <div
-      className="rounded-md bg-primary/10 flex items-center justify-center text-primary font-semibold shrink-0"
+      className="cad-icon-tile"
       style={{ width: size, height: size, fontSize: size * 0.38 }}
     >
       {name[0]?.toUpperCase()}
@@ -64,7 +63,6 @@ const categories = [
 
 export default function MCPClient({
   initialData,
-  initialParams,
 }: {
   initialData: MCPServer[];
   initialParams: { category?: string; search?: string };
@@ -73,6 +71,7 @@ export default function MCPClient({
   const searchParams = useSearchParams();
   const search = searchParams.get("search") ?? "";
   const category = searchParams.get("category") ?? "All";
+  const [searchInput, setSearchInput] = useState(search);
   const [noAuthOnly, setNoAuthOnly] = useState(false);
 
   const { data: servers } = useMCPServers(
@@ -93,12 +92,23 @@ export default function MCPClient({
     router.push(`/mcp?${params.toString()}`);
   }, [router, searchParams]);
 
+  const handleSearch = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const params = new URLSearchParams(searchParams.toString());
+    const trimmed = searchInput.trim();
+    if (trimmed) params.set("search", trimmed);
+    else params.delete("search");
+    router.push(`/mcp?${params.toString()}`);
+  };
+
   const filtered = noAuthOnly
     ? (servers ?? []).filter((s) => s.connection?.is_authless)
     : (servers ?? []);
 
+  const featuredServers = filtered.slice(0, 7);
+
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div className="cad-shell flex flex-col">
       <CollectionPageSchema
         name="MCP Servers"
         description="Browse and discover Model Context Protocol (MCP) servers to connect Claude AI to your favorite tools."
@@ -106,109 +116,142 @@ export default function MCPClient({
       />
       <Header />
       <main className="flex-1">
-        <div className="container py-10">
-          <div className="mb-8">
-            <h1 className="text-2xl font-semibold text-foreground mb-2">MCP Connectors</h1>
-            <p className="text-sm text-muted-foreground">
-              Connect Claude to your favorite tools with Model Context Protocol servers
-            </p>
-          </div>
-
-
-
-          <div className="flex items-center gap-1.5 mb-6 overflow-x-auto pb-1">
-            {categories.map((c) => (
-              <button
-                key={c}
-                onClick={() => setCategory(c)}
-                className={`px-2.5 py-1 text-[11px] rounded-md border transition-colors whitespace-nowrap ${category === c
-                  ? "bg-primary text-primary-foreground border-primary"
-                  : "bg-card border-border text-muted-foreground hover:text-foreground"
-                  }`}
-              >
-                {c}
-              </button>
-            ))}
-            <div className="w-px h-5 bg-border shrink-0 mx-1" />
-            <button
-              onClick={() => setNoAuthOnly((v) => !v)}
-              className={`flex items-center gap-1 px-2.5 py-1 text-[11px] rounded-md border transition-colors whitespace-nowrap ${noAuthOnly
-                ? "bg-emerald-500/15 text-emerald-400 border-emerald-500/30"
-                : "bg-card border-border text-muted-foreground hover:text-foreground"
-                }`}
+        <section className="mx-auto flex max-w-[1180px] flex-col gap-7 px-6 pb-12 pt-16 sm:px-8 md:pt-[88px]">
+          <div className="flex items-start justify-between gap-5">
+            <div className="flex items-center gap-5">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/logo-mark.svg" alt="" className="h-14 w-14 md:h-[64px] md:w-[64px]" />
+              <div className="min-w-0">
+                <h1 className="text-[clamp(32px,4vw,42px)] font-medium leading-[1.08]">MCPs</h1>
+                <p className="mt-2 max-w-[62ch] text-pretty text-base font-medium leading-[1.5] text-muted-foreground md:text-lg">
+                  Model Context Protocol servers people use to connect Claude to tools, data and workflows.
+                </p>
+              </div>
+            </div>
+            <Link
+              href="/submit"
+              className="inline-flex h-10 shrink-0 items-center justify-center rounded-[9px] bg-primary px-4 text-sm font-semibold text-primary-foreground hover:bg-[var(--cad-accent-hover)]"
             >
-              <Unlock className="h-3 w-3" />
-              No Auth
-            </button>
+              Add MCP Server
+            </Link>
           </div>
 
-          <>
-            <p className="mb-4 text-xs text-muted-foreground">
-              {filtered.length} connectors found
-            </p>
-            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-              {filtered.map((server) => (
-                <Link
-                  key={server.id}
-                  href={`/mcp/${server.slug || server.id}`}
-                  className="group rounded-lg border border-border bg-card p-4 hover:bg-accent/50 hover:border-primary/20 transition-all"
-                >
-                  <div className="flex items-start justify-between gap-2 mb-2">
-                    <div className="flex items-center gap-2.5 min-w-0">
-                      <ServerIcon iconUrl={server.branding?.icon_url} name={server.name} size={36} />
-                      <div className="min-w-0">
-                        <h3 className="text-sm font-medium text-foreground flex items-center gap-1.5">
-                          <span className="truncate">{server.name}</span>
-                          {server.official && (
-                            <Shield className="h-3 w-3 text-primary shrink-0" />
-                          )}
-                        </h3>
-                        <p className="text-[11px] text-muted-foreground truncate">
-                          {(typeof server.author === "object" ? server.author?.name : server.author) || "Community"}
-                        </p>
-                      </div>
-                    </div>
-                    <ArrowUpRight className="h-3.5 w-3.5 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity shrink-0" />
-                  </div>
+          <form onSubmit={handleSearch} className="grid grid-cols-1 gap-3 md:grid-cols-[1fr_auto_auto]">
+            <label className="flex h-11 items-center gap-2.5 rounded-[9px] border border-border bg-card px-4">
+              <Search className="h-4 w-4 shrink-0 text-[var(--cad-faint)]" />
+              <input
+                value={searchInput}
+                onChange={(event) => setSearchInput(event.target.value)}
+                placeholder="Search MCP servers"
+                className="min-w-0 flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground"
+              />
+            </label>
+            <label className="flex h-11 items-center gap-2 rounded-[9px] border border-border bg-card px-4 text-sm font-medium text-muted-foreground">
+              <span>Filter:</span>
+              <select
+                value={category}
+                onChange={(event) => setCategory(event.target.value)}
+                className="bg-transparent font-semibold text-foreground outline-none"
+                aria-label="Filter MCP servers"
+              >
+                {categories.map((item) => (
+                  <option key={item} value={item}>{item}</option>
+                ))}
+              </select>
+            </label>
+            <button
+              type="button"
+              onClick={() => setNoAuthOnly((value) => !value)}
+              className={`h-11 rounded-[9px] border px-4 text-sm font-semibold transition-colors ${
+                noAuthOnly
+                  ? "border-primary bg-[var(--cad-accent-soft)] text-primary"
+                  : "border-border bg-card text-muted-foreground hover:border-primary hover:text-primary"
+              }`}
+            >
+              No auth
+            </button>
+          </form>
+        </section>
 
-                  <p className="text-xs text-muted-foreground line-clamp-2 mb-3">
-                    {server.one_liner || server.description}
-                  </p>
+        <section className="mx-auto max-w-[1180px] px-6 pb-14 sm:px-8">
+          <div className="overflow-hidden rounded-[10px] border border-border bg-card">
+            <div className="flex min-h-[290px] flex-col items-center justify-center gap-6 bg-[linear-gradient(180deg,var(--cad-raised)_0%,var(--cad-raised)_34%,var(--cad-accent-soft)_140%)] px-6 py-12 text-center">
+              <div>
+                <div className="text-xs font-semibold uppercase tracking-[0.22em] text-[var(--cad-faint)]">
+                  Curated from the index
+                </div>
+                <h2 className="mt-5 text-[clamp(26px,3vw,36px)] font-medium leading-tight">
+                  Claude with MCP servers
+                </h2>
+                <p className="mx-auto mt-4 max-w-[47ch] text-pretty text-base font-medium leading-[1.45] text-muted-foreground">
+                  Browse live MCP listings for development, data, browser automation, cloud services and research workflows.
+                </p>
+              </div>
+              <div className="flex flex-wrap justify-center gap-3">
+                {featuredServers.map((server) => (
+                  <span
+                    key={server.id}
+                    className="flex h-14 w-14 items-center justify-center overflow-hidden rounded-[9px] border border-border bg-card text-sm font-semibold text-muted-foreground shadow-sm"
+                    title={server.name}
+                  >
+                    <ServerIcon iconUrl={server.branding?.icon_url} name={server.name} size={56} />
+                  </span>
+                ))}
+              </div>
+              <Link
+                href="#mcp-servers"
+                className="inline-flex min-h-12 items-center justify-center rounded-[9px] bg-primary px-7 text-sm font-semibold text-primary-foreground hover:bg-[var(--cad-accent-hover)]"
+              >
+                Explore MCP servers
+              </Link>
+            </div>
+          </div>
+        </section>
 
-                  <div className="flex items-center gap-1.5 flex-wrap">
-                    {(server.capabilities?.tools?.length ?? 0) > 0 && (
-                      <span className="flex items-center gap-1 text-[10px] text-muted-foreground bg-muted/50 px-1.5 py-0.5 rounded">
-                        <Wrench className="h-2.5 w-2.5" />
-                        {server.capabilities.tools.length} tools
-                      </span>
-                    )}
-                    {server.connection?.is_authless && (
-                      <span className="flex items-center gap-1 text-[10px] text-emerald-400 bg-emerald-400/10 px-1.5 py-0.5 rounded">
-                        <Unlock className="h-2.5 w-2.5" />
-                        No auth
+        <div id="mcp-servers" className="mx-auto max-w-[1180px] px-6 pb-[88px] sm:px-8">
+          <div className="mb-5 flex items-baseline justify-between gap-4">
+            <h2 className="text-[clamp(24px,2.4vw,32px)] font-medium leading-tight">Top MCP servers</h2>
+            <span className="whitespace-nowrap text-sm font-medium text-primary">
+              {filtered.length} shown
+            </span>
+          </div>
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3">
+            {filtered.map((server) => (
+              <Link
+                key={server.id}
+                href={`/mcp/${server.slug || server.id}`}
+                className="group flex min-h-[92px] items-center gap-4 rounded-[9px] border border-border bg-card p-4 transition-colors hover:border-[var(--cad-line-hover)]"
+              >
+                <ServerIcon iconUrl={server.branding?.icon_url} name={server.name} size={44} />
+                <div className="min-w-0 flex-1">
+                  <div className="flex min-w-0 items-center gap-2">
+                    <h3 className="truncate text-[15px] font-semibold">{server.name}</h3>
+                    {server.official && (
+                      <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-[var(--cad-chip)] text-[10px] text-[var(--cad-faint)]">
+                        <Shield className="h-2.5 w-2.5" />
                       </span>
                     )}
                     {server.capabilities?.has_mcp_app && (
-                      <span className="flex items-center gap-1 text-[10px] text-primary bg-primary/10 px-1.5 py-0.5 rounded">
-                        <Plug className="h-2.5 w-2.5" />
-                        App
+                      <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-[var(--cad-chip)] text-[10px] text-[var(--cad-faint)]">
+                        <Check className="h-2.5 w-2.5" />
                       </span>
                     )}
-                    {server.category && (
-                      <Badge variant="secondary" className="text-[10px] px-1.5 py-0">
-                        {server.category}
-                      </Badge>
-                    )}
                   </div>
-                </Link>
-              ))}
+                  <p className="mt-1 line-clamp-2 text-pretty text-[13.5px] leading-[1.45] text-muted-foreground">
+                    {server.one_liner || server.description}
+                  </p>
+                </div>
+                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[9px] border border-border bg-[var(--cad-raised)] text-muted-foreground group-hover:border-primary group-hover:text-primary">
+                  <Plus className="h-4 w-4" />
+                </span>
+              </Link>
+            ))}
+          </div>
+          {filtered.length === 0 && (
+            <div className="py-16 text-center">
+              <p className="text-sm text-muted-foreground">No MCP servers found.</p>
             </div>
-            {filtered.length === 0 && (
-              <div className="py-16 text-center">
-                <p className="text-sm text-muted-foreground">No connectors found.</p>
-              </div>
-            )}
-          </>
+          )}
 
           {/* SEO: What is MCP */}
           <section className="mt-20 border-t border-border pt-12 max-w-3xl">

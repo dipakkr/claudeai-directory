@@ -204,3 +204,62 @@ export function ArticleSchema({
     />
   );
 }
+
+export function DiscussionForumPostingSchema({
+  title,
+  body,
+  url,
+  datePublished,
+  author,
+  views,
+  comments,
+}: {
+  title: string;
+  body: string;
+  url: string;
+  datePublished: string;
+  author?: string;
+  views?: number;
+  comments?: { body: string; author?: string; datePublished: string }[];
+}) {
+  const interactionStatistic: Record<string, unknown>[] = [
+    {
+      "@type": "InteractionCounter",
+      interactionType: "https://schema.org/CommentAction",
+      userInteractionCount: comments?.length ?? 0,
+    },
+  ];
+  if (typeof views === "number" && views > 0) {
+    interactionStatistic.push({
+      "@type": "InteractionCounter",
+      interactionType: "https://schema.org/ViewAction",
+      userInteractionCount: views,
+    });
+  }
+
+  return (
+    <JsonLd
+      data={{
+        "@context": "https://schema.org",
+        "@type": "DiscussionForumPosting",
+        headline: title,
+        text: body,
+        url,
+        datePublished,
+        author: { "@type": "Person", name: author || "ClaudeAI Directory" },
+        publisher: { "@type": "Organization", name: "ClaudeAI Directory" },
+        interactionStatistic,
+        ...(comments && comments.length > 0
+          ? {
+              comment: comments.map((c) => ({
+                "@type": "Comment",
+                text: c.body,
+                datePublished: c.datePublished,
+                author: { "@type": "Person", name: c.author || "Member" },
+              })),
+            }
+          : {}),
+      }}
+    />
+  );
+}

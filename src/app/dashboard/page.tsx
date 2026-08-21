@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 import {
   Bookmark,
   MessageSquare,
@@ -86,6 +87,7 @@ export default function Dashboard() {
   const [website, setWebsite] = useState("");
   const [twitter, setTwitter] = useState("");
   const [github, setGithub] = useState("");
+  const [emailNotifications, setEmailNotifications] = useState(true);
   const [saving, setSaving] = useState(false);
   const [availability, setAvailability] = useState<
     "idle" | "checking" | "available" | "taken" | "invalid"
@@ -105,6 +107,7 @@ export default function Dashboard() {
       setWebsite(user.website ?? "");
       setTwitter(user.twitter ?? "");
       setGithub(user.github ?? "");
+      setEmailNotifications(user.email_notifications !== false);
     }
   }, [user]);
 
@@ -163,6 +166,7 @@ export default function Dashboard() {
         website: website.trim() || undefined,
         twitter: twitter.trim().replace(/^@/, "") || undefined,
         github: github.trim().replace(/^@/, "") || undefined,
+        email_notifications: emailNotifications,
       });
       setEditing(false);
       setAvailability("idle");
@@ -181,6 +185,7 @@ export default function Dashboard() {
       setWebsite(user.website ?? "");
       setTwitter(user.twitter ?? "");
       setGithub(user.github ?? "");
+      setEmailNotifications(user.email_notifications !== false);
     }
     setAvailability("idle");
     setEditing(false);
@@ -396,6 +401,22 @@ export default function Dashboard() {
                     />
                   </div>
                 </div>
+              </div>
+
+              <div className="flex items-center justify-between rounded-lg border border-border p-3 mt-2">
+                <div className="pr-4">
+                  <Label htmlFor="edit-email-notifications" className="text-sm">
+                    Email me when someone replies
+                  </Label>
+                  <p className="text-xs text-muted-foreground mt-0.5">
+                    Get an email when someone replies to your discussions.
+                  </p>
+                </div>
+                <Switch
+                  id="edit-email-notifications"
+                  checked={emailNotifications}
+                  onCheckedChange={setEmailNotifications}
+                />
               </div>
 
               <div className="flex items-center gap-2 pt-2">

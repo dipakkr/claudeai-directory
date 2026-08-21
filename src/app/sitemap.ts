@@ -40,13 +40,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   ];
 
   // Dynamic pages
-  const [mcpSlugs, skillIds, promptSlugs, jobSlugs, guideSlugs, blogSlugs] = await Promise.all([
+  const [mcpSlugs, skillIds, promptSlugs, jobSlugs, guideSlugs, blogSlugs, threadIds] = await Promise.all([
     fetchSlugs("/mcp-servers", "slug"),
     fetchSlugs("/skills", "_id"),
     fetchSlugs("/prompts", "_id"),
     fetchSlugs("/jobs", "_id"),
     fetchSlugs("/guides", "_id"),
     fetchSlugs("/blog", "_id"),
+    fetchSlugs("/community/threads", "id"),
   ]);
 
   const mcpPages: MetadataRoute.Sitemap = mcpSlugs.map((slug) => ({
@@ -85,5 +86,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.7,
   }));
 
-  return [...staticPages, ...mcpPages, ...skillPages, ...promptPages, ...jobPages, ...guidePages, ...blogPages];
+  const threadPages: MetadataRoute.Sitemap = threadIds.map((id) => ({
+    url: `${SITE_URL}/community/${id}`,
+    changeFrequency: "weekly",
+    priority: 0.6,
+  }));
+
+  return [...staticPages, ...mcpPages, ...skillPages, ...promptPages, ...jobPages, ...guidePages, ...blogPages, ...threadPages];
 }

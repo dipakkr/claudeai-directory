@@ -18,7 +18,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title: `${name}'s Profile`,
       description: profile.bio || `View ${name}'s profile on ClaudeAI Directory.`,
     };
-  } catch (error) {
+  } catch {
     return {
       title: 'User Not Found',
     };
@@ -29,5 +29,5 @@ export default async function ProfilePage({ params }: Props) {
   const { username } = await params;
   const profile = await serverFetch(`/users/${username}`).catch(() => null) as PublicProfile | null;
 
-  return <ProfilePageClient username={username} initialProfile={profile} />;
+  return <ProfilePageClient initialProfile={profile} />;
 }

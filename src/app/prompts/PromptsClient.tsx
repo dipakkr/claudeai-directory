@@ -5,8 +5,7 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
-import { Badge } from "@/components/ui/badge";
-import { ThumbsUp, Copy, ArrowUpRight, Loader2 } from "lucide-react";
+import { CheckCircle, Copy, Loader2 } from "lucide-react";
 import { useInfinitePrompts } from "@/hooks/use-prompts";
 import { toast } from "sonner";
 import { CollectionPageSchema } from "@/components/seo/JsonLd";
@@ -16,7 +15,6 @@ const categories = ["All", "Coding", "Writing", "Analysis", "Business", "Creativ
 
 export default function PromptsClient({
   initialData,
-  initialParams,
 }: {
   initialData: Prompt[];
   initialParams: { category?: string; search?: string };
@@ -71,7 +69,7 @@ export default function PromptsClient({
   }, [router, searchParams]);
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div className="cad-shell flex flex-col">
       <CollectionPageSchema
         name="AI Prompts"
         description="Curated, copy-ready prompts for Claude AI across coding, writing, analysis, and more."
@@ -79,62 +77,65 @@ export default function PromptsClient({
       />
       <Header />
       <main className="flex-1">
-        <div className="container py-10">
-          <div className="mb-8">
-            <h1 className="text-2xl font-semibold text-foreground mb-2">Prompts</h1>
-            <p className="text-sm text-muted-foreground">Copy-ready prompts for every use case</p>
-          </div>
-
-          <div className="flex items-center gap-1.5 mb-6 overflow-x-auto">
+        <div className="mx-auto flex max-w-[1180px] flex-col gap-3 px-8 pb-[34px] pt-[60px]">
+          <h1 className="text-[clamp(32px,4vw,42px)] font-medium leading-[1.08]">Prompts</h1>
+          <p className="max-w-[62ch] text-base leading-[1.6] text-muted-foreground">Copy-ready prompts for every use case</p>
+          <div className="mt-2 flex flex-wrap gap-2">
             {categories.map((c) => (
               <button
                 key={c}
                 onClick={() => setCategory(c)}
-                className={`px-2.5 py-1 text-[11px] rounded-md border transition-colors whitespace-nowrap ${category === c
-                  ? "bg-primary text-primary-foreground border-primary"
-                  : "bg-card border-border text-muted-foreground hover:text-foreground"
+                className={`cad-chip whitespace-nowrap px-3.5 text-[13px] ${category === c
+                  ? "cad-chip-active"
+                  : "bg-card hover:border-primary hover:text-primary"
                   }`}
               >
                 {c}
               </button>
             ))}
           </div>
+        </div>
 
+        <div className="mx-auto max-w-[1180px] px-8 pb-[88px]">
           <>
             <p className="mb-4 text-xs text-muted-foreground">{prompts.length} prompts found</p>
-            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="grid gap-3.5 [grid-template-columns:repeat(auto-fit,minmax(340px,1fr))]">
               {prompts.map((prompt) => (
                 <Link
                   key={prompt.id}
                   href={`/prompts/${prompt.id}`}
-                  className="group rounded-lg border border-border bg-card p-4 hover:bg-accent/50 hover:border-primary/20 transition-all flex flex-col min-h-[220px]"
+                  className="group flex items-center gap-3.5 rounded-[9px] border border-border bg-card p-4 hover:border-[var(--cad-line-hover)]"
                 >
-                  <div className="flex items-start justify-between mb-2">
-                    <h3 className="text-sm font-medium text-foreground group-hover:text-primary transition-colors">
-                      {prompt.title}
-                    </h3>
-                    <ArrowUpRight className="h-3.5 w-3.5 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity shrink-0" />
+                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-[var(--cad-chip)] text-sm font-medium text-[var(--cad-accent-hover)]">
+                    {prompt.title[0]?.toUpperCase()}
                   </div>
-                  <p className="text-xs text-muted-foreground line-clamp-2 mb-3">{prompt.description}</p>
-                  <div className="bg-muted/50 rounded-md p-2.5 mb-3 flex-1">
-                    <p className="text-xs font-mono text-muted-foreground line-clamp-5">{prompt.prompt}</p>
-                  </div>
-                  <div className="flex items-center justify-between mt-auto">
-                    <div className="flex items-center gap-2">
-                      <Badge variant="secondary" className="text-[10px] px-1.5 py-0">{prompt.category}</Badge>
-                      <span className="flex items-center gap-1 text-xs text-muted-foreground">
-                        <ThumbsUp className="h-3 w-3" />
-                        {prompt.upvotes}
-                      </span>
+                  <div className="flex min-w-0 flex-1 flex-col gap-1">
+                    <div className="flex min-w-0 items-center gap-[7px]">
+                      <div className="truncate text-[15px] font-semibold">{prompt.title}</div>
+                      {prompt.verified && (
+                        <div className="flex h-3.5 w-3.5 shrink-0 items-center justify-center rounded-full bg-[var(--cad-chip)] text-[9px] text-[var(--cad-faint)]">
+                          <CheckCircle className="h-3 w-3" />
+                        </div>
+                      )}
+                      <div className="shrink-0 whitespace-nowrap rounded-md bg-[var(--cad-accent-soft)] px-[7px] py-0.5 text-[10.5px] uppercase tracking-[0.06em] text-[var(--cad-accent-hover)]">
+                        {prompt.category}
+                      </div>
                     </div>
-                    <button
-                      onClick={(e) => { e.preventDefault(); copyPrompt(prompt.prompt); }}
-                      className="text-xs text-muted-foreground hover:text-foreground flex items-center gap-1 transition-colors"
-                    >
-                      <Copy className="h-3 w-3" />
-                      Copy
-                    </button>
+                    <div className="line-clamp-2 text-pretty text-[13px] leading-[1.45] text-muted-foreground">
+                      {prompt.description}
+                    </div>
+                    <span className="text-xs text-[var(--cad-faint)]">
+                      {prompt.upvotes.toLocaleString()} upvotes · {prompt.complexity}
+                    </span>
                   </div>
+                  <button
+                    onClick={(e) => { e.preventDefault(); copyPrompt(prompt.prompt); }}
+                    className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[9px] border border-border bg-[var(--cad-raised)] text-muted-foreground group-hover:border-primary group-hover:text-primary"
+                    title="Copy prompt"
+                    aria-label={`Copy ${prompt.title}`}
+                  >
+                    <Copy className="h-3.5 w-3.5" />
+                  </button>
                 </Link>
               ))}
             </div>

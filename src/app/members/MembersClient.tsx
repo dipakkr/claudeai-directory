@@ -1,10 +1,9 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo } from "react";
 import Link from "next/link";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useMembers, type MembersResponse } from "@/hooks/use-members";
@@ -12,53 +11,35 @@ import { useAuth } from "@/lib/auth";
 import { Users, Lock } from "lucide-react";
 import type { PublicProfile } from "@/types";
 
-const FALLBACK_COLORS = [
-  "bg-violet-500",
-  "bg-pink-500",
-  "bg-sky-500",
-  "bg-emerald-500",
-  "bg-amber-500",
-  "bg-rose-500",
-  "bg-indigo-500",
-  "bg-teal-500",
-];
-
-function avatarColor(username: string) {
-  let n = 0;
-  for (let i = 0; i < username.length; i++) n += username.charCodeAt(i);
-  return FALLBACK_COLORS[n % FALLBACK_COLORS.length];
-}
-
 function MemberCard({ member, blurred }: { member: PublicProfile; blurred?: boolean }) {
   const displayName = member.name || member.username;
   const initials = displayName.slice(0, 2).toUpperCase();
-  const color = avatarColor(member.username);
 
   const inner = (
     <div
-      className={`flex items-center gap-3 px-4 py-3 border border-border rounded-lg transition-all group ${
+      className={`flex items-center gap-3 rounded-[10px] border border-border bg-card p-3 transition-colors group ${
         blurred
           ? "select-none pointer-events-none"
-          : "hover:border-primary/40 hover:bg-accent/30 cursor-pointer"
+          : "hover:border-[var(--cad-line-hover)] cursor-pointer"
       }`}
     >
-      <Avatar className="h-10 w-10 shrink-0 rounded-md">
-        {member.avatar && !blurred && (
-          <AvatarImage src={member.avatar} alt={displayName} className="rounded-md object-cover" />
+      <span className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-full bg-[var(--cad-chip)] text-[12px] font-semibold text-[var(--cad-accent-hover)]">
+        {member.avatar && !blurred ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={member.avatar} alt="" className="h-full w-full object-cover" />
+        ) : (
+          initials
         )}
-        <AvatarFallback className={`rounded-md text-xs font-bold text-white ${color}`}>
-          {initials}
-        </AvatarFallback>
-      </Avatar>
+      </span>
       <div className="min-w-0">
-        <p className="text-sm font-medium text-foreground group-hover:text-primary transition-colors truncate">
+        <p className="truncate text-[13px] font-semibold text-foreground">
           {displayName}
         </p>
         {member.bio && !blurred && (
-          <p className="text-[11px] text-muted-foreground truncate">{member.bio}</p>
+          <p className="truncate text-[12px] leading-[1.4] text-muted-foreground">{member.bio}</p>
         )}
         {blurred && (
-          <p className="text-[11px] text-muted-foreground">@{member.username}</p>
+          <p className="text-[12px] text-muted-foreground">@{member.username}</p>
         )}
       </div>
     </div>
@@ -74,8 +55,8 @@ function MemberCard({ member, blurred }: { member: PublicProfile; blurred?: bool
 
 function MemberCardSkeleton() {
   return (
-    <div className="flex items-center gap-3 px-4 py-3 border border-border rounded-lg">
-      <Skeleton className="h-10 w-10 rounded-md shrink-0" />
+    <div className="flex items-center gap-3 p-3 border border-border rounded-[10px]">
+      <Skeleton className="h-9 w-9 rounded-full shrink-0" />
       <div className="space-y-1.5">
         <Skeleton className="h-3.5 w-28" />
         <Skeleton className="h-2.5 w-20" />
@@ -93,22 +74,15 @@ export default function MembersClient({
   initialData: MembersResponse | null;
 }) {
   const [search, setSearch] = useState("");
-  const [mounted, setMounted] = useState(false);
   const { isAuthenticated } = useAuth();
-
-  useEffect(() => { setMounted(true); }, []);
-
-  // Always treat as locked until client has mounted and auth is resolved.
-  // This ensures SSR and initial client render are identical (locked view),
-  // preventing Radix UI ID mismatches.
-  const isUnlocked = mounted && isAuthenticated;
+  const isUnlocked = isAuthenticated;
 
   const { data, isLoading } = useMembers(
     { per_page: 200 },
     { initialData: initialData ?? undefined }
   );
 
-  const members = data?.members ?? [];
+  const members = useMemo(() => data?.members ?? [], [data?.members]);
   const total = data?.total ?? 0;
 
   const filtered = useMemo(() => {
@@ -129,21 +103,21 @@ export default function MembersClient({
   const lockedMembers = isUnlocked ? [] : filtered.slice(VISIBLE_COUNT);
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div className="cad-shell flex flex-col">
       <Header />
       <main className="flex-1">
-        <div className="container py-12 max-w-7xl">
+        <div className="mx-auto max-w-[1180px] px-8 pb-[88px] pt-[60px]">
 
           {/* Page header */}
-          <div className="flex items-start justify-between mb-10">
+          <div className="mb-[34px] flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
             <div>
-              <h1 className="text-2xl font-semibold text-foreground mb-1">
-                Browse Members
+              <h1 className="text-[clamp(32px,4vw,42px)] font-medium leading-[1.08]">
+                Members
               </h1>
-              <p className="text-sm text-muted-foreground">
+              <p className="mt-3 max-w-[62ch] text-base leading-[1.6] text-muted-foreground">
                 {total > 0
-                  ? `${total.toLocaleString()} members in the Claude community.`
-                  : "The Claude AI community — builders, researchers, and enthusiasts."}
+                  ? `${total.toLocaleString()} people submit, review and maintain what's listed here.`
+                  : "People submit, review and maintain what's listed here."}
               </p>
             </div>
             {!isUnlocked && (
@@ -166,7 +140,7 @@ export default function MembersClient({
 
           {/* Grid */}
           {isLoading && !initialData ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2">
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
               {Array.from({ length: 18 }).map((_, i) => (
                 <MemberCardSkeleton key={i} />
               ))}
@@ -174,7 +148,7 @@ export default function MembersClient({
           ) : filtered.length > 0 ? (
             <div className="relative">
               {/* Visible members */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2">
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                 {visibleMembers.map((member) => (
                   <MemberCard key={member.id} member={member} />
                 ))}
@@ -182,15 +156,15 @@ export default function MembersClient({
 
               {/* Locked section — ghost cards + overlay */}
               {lockedMembers.length > 0 && (
-                <div className="relative mt-2">
+                <div className="relative mt-4">
                   {/* Ghost placeholder cards — no real data */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 pointer-events-none select-none">
+                  <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 pointer-events-none select-none">
                     {Array.from({ length: Math.min(lockedMembers.length, 16) }).map((_, i) => (
                       <div
                         key={i}
-                        className="flex items-center gap-3 px-4 py-3 border border-border rounded-lg"
+                        className="flex items-center gap-3 p-3 border border-border rounded-[10px]"
                       >
-                        <div className="h-10 w-10 rounded-md bg-muted/60 shrink-0" />
+                        <div className="h-9 w-9 rounded-full bg-muted/60 shrink-0" />
                         <div className="space-y-2 flex-1">
                           <div
                             className="h-2.5 rounded-full bg-muted/60"
@@ -213,7 +187,7 @@ export default function MembersClient({
 
                   {/* CTA card */}
                   <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="bg-card border border-border rounded-2xl px-8 py-6 text-center shadow-xl max-w-sm w-full mx-4">
+                    <div className="bg-card border border-border rounded-[10px] px-8 py-6 text-center shadow-xl max-w-sm w-full mx-4">
                       <div className="flex items-center justify-center w-10 h-10 rounded-full bg-primary/10 mx-auto mb-3">
                         <Lock className="h-5 w-5 text-primary" />
                       </div>

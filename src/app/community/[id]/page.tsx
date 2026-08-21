@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { fetchApi } from "@/lib/api-server";
-import type { Thread } from "@/types";
+import type { Thread, Reply } from "@/types";
 import ThreadDetail from "./ThreadDetailClient";
-import { BreadcrumbSchema } from "@/components/seo/JsonLd";
+import { BreadcrumbSchema, DiscussionForumPostingSchema } from "@/components/seo/JsonLd";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.claudeai.directory";
 
@@ -25,7 +25,7 @@ export async function generateMetadata({
     title,
     description,
     alternates: { canonical: `/community/${id}` },
-    openGraph: { title, description, url: `/community/${id}` },
+    openGraph: { title, description, url: `/community/${id}`, type: "article" },
   };
 }
 
@@ -35,20 +35,42 @@ export default async function CommunityThreadPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const thread = await fetchApi<Thread>(`/community/threads/${id}`);
+  const [thread, replies] = await Promise.all([
+    fetchApi<Thread>(`/community/threads/${id}`),
+    fetchApi<Reply[]>(`/community/threads/${id}/replies`),
+  ]);
 
   return (
     <>
       {thread && (
-        <BreadcrumbSchema
-          items={[
-            { name: "Home", url: SITE_URL },
-            { name: "Community", url: `${SITE_URL}/community` },
-            { name: thread.title, url: `${SITE_URL}/community/${id}` },
-          ]}
-        />
+        <>
+          <BreadcrumbSchema
+            items={[
+              { name: "Home", url: SITE_URL },
+              { name: "Community", url: `${SITE_URL}/community` },
+              { name: thread.title, url: `${SITE_URL}/community/${id}` },
+            ]}
+          />
+          <DiscussionForumPostingSchema
+            title={thread.title}
+            body={thread.body}
+            url={`${SITE_URL}/community/${id}`}
+            datePublished={thread.created_at}
+            author={thread.author}
+            views={thread.views}
+            comments={(replies ?? []).map((r) => ({
+              body: r.body,
+              author: r.author,
+              datePublished: r.created_at,
+            }))}
+          />
+        </>
       )}
-      <ThreadDetail params={params} />
+      <ThreadDetail
+        id={id}
+        initialThread={thread ?? undefined}
+        initialReplies={replies ?? undefined}
+      />
     </>
   );
 }
