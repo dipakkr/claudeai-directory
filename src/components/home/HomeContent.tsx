@@ -6,7 +6,7 @@ import { ArrowUpRight } from "lucide-react";
 import FeaturedResources from "@/components/home/FeaturedResources";
 import MCPSection from "@/components/home/MCPSection";
 import PromptsSection from "@/components/home/PromptsSection";
-import McpCta from "@/components/home/McpCta";
+import UseCaseCarousel, { type UseCaseBundle } from "@/components/home/UseCaseCarousel";
 import type { Stat, Skill, MCPServer, FeedItem, Prompt, Thread, PublicProfile } from "@/types";
 
 interface HomeContentProps {
@@ -18,6 +18,7 @@ interface HomeContentProps {
   initialThreads: Thread[];
   communityMembers: PublicProfile[];
   memberCount: number;
+  useCaseBundles?: UseCaseBundle[];
 }
 
 function initials(value?: string) {
@@ -244,10 +245,27 @@ function HomeInner(props: HomeContentProps) {
         </div>
       </section>
 
+      {/* Stats trust strip — uses the site's curated /stats figures. */}
+      {props.initialStats.length > 0 && (
+        <section className="border-y border-border bg-[var(--cad-raised)]">
+          <div className="container grid grid-cols-2 gap-x-6 gap-y-8 py-10 sm:grid-cols-4 md:py-12">
+            {props.initialStats.slice(0, 4).map((stat, i) => (
+              <div key={stat.label || i} className="text-center sm:text-left">
+                <div className="text-[clamp(28px,3.4vw,38px)] font-semibold leading-none text-foreground">
+                  {stat.value}
+                </div>
+                <div className="mt-2 text-sm font-medium text-foreground">{stat.label}</div>
+                <div className="mt-0.5 text-[12px] leading-snug text-muted-foreground">{stat.description}</div>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
       <FeaturedResources initialSkills={props.initialFeaturedSkills} />
       <MCPSection initialServers={props.initialMcpServers} />
       <PromptsSection initialPrompts={props.initialPrompts} />
-      <McpCta initialServers={props.initialMcpServers} />
+      <UseCaseCarousel bundles={props.useCaseBundles ?? []} />
     </>
   );
 }
