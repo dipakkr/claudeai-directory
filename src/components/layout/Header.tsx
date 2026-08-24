@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import NotificationBell from "@/components/layout/NotificationBell";
+import { SOCIAL_LINKS } from "@/lib/social";
 
 const navLinks = [
   { href: "/community", label: "Community" },
@@ -37,7 +38,7 @@ const moreLinks = [
   { href: "/setup", label: "CLAUDE.md Generator" },
 ];
 
-const discordUrl = process.env.NEXT_PUBLIC_DISCORD_URL;
+const discordUrl = SOCIAL_LINKS.discord;
 
 function JoinCommunityMenu() {
   return (

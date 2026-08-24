@@ -8,6 +8,7 @@ import Footer from "@/components/layout/Footer";
 import { Briefcase } from "lucide-react";
 import { useJobs } from "@/hooks/use-jobs";
 import type { Job } from "@/types";
+import { CompanyLogo } from "@/components/jobs/CompanyLogo";
 
 const types = ["All", "Full-time", "Part-time", "Contract", "Remote"];
 
@@ -73,9 +74,11 @@ export default function JobsClient({
                     >
                       <div className="flex min-w-0 flex-1 flex-col gap-2.5">
                         <div className="flex min-w-0 flex-wrap items-center gap-2.5 text-[13.5px] text-muted-foreground">
-                          <span className="flex h-[22px] w-[22px] shrink-0 items-center justify-center rounded-md bg-primary text-[11px] font-medium text-white">
-                            {job.company[0]?.toUpperCase()}
-                          </span>
+                          <CompanyLogo
+                            company={job.company}
+                            logo={job.logo}
+                            className="h-[22px] w-[22px] text-[11px]"
+                          />
                           <span className="font-medium text-foreground">{job.company}</span>
                           <span className="text-[var(--cad-faint)]">·</span>
                           <span>{job.location}</span>

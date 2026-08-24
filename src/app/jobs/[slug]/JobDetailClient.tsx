@@ -19,6 +19,7 @@ import {
 import PageBreadcrumb from "@/components/layout/PageBreadcrumb";
 import { useJob } from "@/hooks/use-jobs";
 import type { Job } from "@/types";
+import { CompanyLogo } from "@/components/jobs/CompanyLogo";
 
 export default function JobDetail({ job: initialJob, slug }: { job: Job | null; slug: string }) {
   const { data: fetchedJob } = useJob(initialJob ? "" : slug);
@@ -57,11 +58,11 @@ export default function JobDetail({ job: initialJob, slug }: { job: Job | null; 
               <div>
                 <div className="flex items-start gap-4 mb-4">
                   <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center text-primary text-lg font-medium shrink-0">
-                    {job.logo ? (
-                      <img src={job.logo} alt={job.company} className="h-12 w-12 rounded-lg object-cover" />
-                    ) : (
-                      job.company[0]?.toUpperCase()
-                    )}
+                    <CompanyLogo
+                      company={job.company}
+                      logo={job.logo}
+                      className="h-12 w-12 rounded-lg text-lg"
+                    />
                   </div>
                   <div className="flex-1 min-w-0">
                     <h1 className="text-base font-semibold text-foreground">{job.title}</h1>

@@ -1,4 +1,8 @@
 import Link from "next/link";
+import { Facebook, Linkedin } from "lucide-react";
+
+import { DiscordIcon } from "@/components/icons/DiscordIcon";
+import { SOCIAL_LINKS } from "@/lib/social";
 
 const footerLinks = [
   {
@@ -113,8 +117,41 @@ const Footer = () => {
           </div>
         </div>
         <div className="mx-auto max-w-[1180px] px-8 pb-8">
-          <div className="border-t border-border pt-5 text-xs text-muted-foreground">
-            &copy; {new Date().getFullYear()} ClaudeAI Directory
+          <div className="flex flex-wrap items-center justify-between gap-4 border-t border-border pt-5">
+            <div className="text-xs text-muted-foreground">
+              &copy; {new Date().getFullYear()} ClaudeAI Directory
+            </div>
+            <div className="flex items-center gap-3">
+              <a
+                href={SOCIAL_LINKS.discord}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Join the Claude AI Community on Discord"
+                className="text-muted-foreground transition-colors hover:text-foreground"
+              >
+                <DiscordIcon className="h-[18px] w-[18px]" />
+              </a>
+              <a
+                href={SOCIAL_LINKS.linkedin}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Claude AI Community on LinkedIn"
+                className="text-muted-foreground transition-colors hover:text-foreground"
+              >
+                <Linkedin className="h-[18px] w-[18px]" />
+              </a>
+              {SOCIAL_LINKS.facebook && (
+                <a
+                  href={SOCIAL_LINKS.facebook}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Claude AI Community on Facebook"
+                  className="text-muted-foreground transition-colors hover:text-foreground"
+                >
+                  <Facebook className="h-[18px] w-[18px]" />
+                </a>
+              )}
+            </div>
           </div>
         </div>
       </div>

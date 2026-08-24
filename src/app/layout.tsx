@@ -4,6 +4,7 @@ import "./globals.css";
 import Providers from "@/components/providers";
 import Script from "next/script";
 import { OpenPanelComponent } from '@openpanel/nextjs';
+import { AnnouncementBanner } from "@/components/layout/AnnouncementBanner";
 
 const roboto = Roboto({
   variable: "--font-roboto",
@@ -86,7 +87,10 @@ export default function RootLayout({
       <body
         className={`${roboto.variable} ${robotoSerif.variable} ${robotoMono.variable} antialiased overflow-x-hidden`}
       >
-        <Providers>{children}</Providers>
+        <Providers>
+          <AnnouncementBanner />
+          {children}
+        </Providers>
 
         {/* Google Analytics */}
         <Script

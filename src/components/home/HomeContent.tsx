@@ -153,6 +153,7 @@ function HomeInner(props: HomeContentProps) {
               </Link>
             </div>
 
+
             <Link href="/members" className="group mt-7 inline-flex items-center gap-3">
               <div className="flex -space-x-2.5">
                 {peopleGrid.slice(0, 6).map((person, index) => (
