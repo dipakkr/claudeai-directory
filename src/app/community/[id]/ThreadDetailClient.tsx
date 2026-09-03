@@ -46,13 +46,59 @@ function AuthorName({
   return <span className={className}>{author}</span>;
 }
 
-function ReplyCard({ reply }: { reply: Reply }) {
+// ─── Reddit-style threading (2 visible levels) ────────────────────
+// Replies deeper than one level are flattened under their top-level
+// ancestor, with an "@author" chip pointing at the direct parent.
+
+interface ReplyNode {
+  reply: Reply;
+  children: Reply[];
+}
+
+function buildReplyTree(replies: Reply[]): { nodes: ReplyNode[]; byId: Map<string, Reply> } {
+  const byId = new Map(replies.map((r) => [r.id, r]));
+  const childrenOf = new Map<string, Reply[]>();
+  const topLevel: Reply[] = [];
+
+  for (const r of replies) {
+    if (!r.parent_id || !byId.has(r.parent_id)) {
+      topLevel.push(r);
+      continue;
+    }
+    // Walk up to the top-level ancestor (flattens depth > 2).
+    let ancestor = byId.get(r.parent_id)!;
+    while (ancestor.parent_id && byId.has(ancestor.parent_id)) {
+      ancestor = byId.get(ancestor.parent_id)!;
+    }
+    const bucket = childrenOf.get(ancestor.id) ?? [];
+    bucket.push(r);
+    childrenOf.set(ancestor.id, bucket);
+  }
+
+  return {
+    nodes: topLevel.map((reply) => ({ reply, children: childrenOf.get(reply.id) ?? [] })),
+    byId,
+  };
+}
+
+function ReplyCard({
+  reply,
+  threadId,
+  nested,
+  replyingToAuthor,
+}: {
+  reply: Reply;
+  threadId: string;
+  nested?: boolean;
+  replyingToAuthor?: string;
+}) {
+  const [composerOpen, setComposerOpen] = useState(false);
   return (
-    <div className="py-4">
+    <div className={nested ? "py-3" : "py-4"}>
       <div className="flex items-start gap-3">
-        <div className="h-7 w-7 rounded-full bg-muted flex items-center justify-center text-[11px] font-medium text-muted-foreground shrink-0 mt-0.5">
+        <div className={`${nested ? "h-6 w-6 text-[10px]" : "h-7 w-7 text-[11px]"} rounded-full bg-muted flex items-center justify-center font-medium text-muted-foreground shrink-0 mt-0.5`}>
           {reply.author_avatar ? (
-            <img src={reply.author_avatar} alt="" className="h-7 w-7 rounded-full object-cover" />
+            <img src={reply.author_avatar} alt="" className="h-full w-full rounded-full object-cover" />
           ) : (
             reply.author[0]?.toUpperCase()
           )}
@@ -64,16 +110,41 @@ function ReplyCard({ reply }: { reply: Reply }) {
               username={reply.author_username}
               className="font-medium text-foreground"
             />
+            {replyingToAuthor && (
+              <span className="rounded bg-muted px-1.5 py-0.5 text-[10px]">
+                ↳ @{replyingToAuthor}
+              </span>
+            )}
             <span className="text-border">·</span>
             <span>{timeAgo(reply.created_at)}</span>
           </div>
           <div className="text-sm text-foreground whitespace-pre-wrap leading-relaxed">
             {reply.body}
           </div>
-          {reply.upvotes > 0 && (
-            <div className="flex items-center gap-1 mt-2 text-[11px] text-muted-foreground">
-              <ChevronUp className="h-3 w-3" />
-              <span>{reply.upvotes}</span>
+          <div className="flex items-center gap-3 mt-2 text-[11px] text-muted-foreground">
+            {reply.upvotes > 0 && (
+              <span className="flex items-center gap-1">
+                <ChevronUp className="h-3 w-3" />
+                {reply.upvotes}
+              </span>
+            )}
+            <button
+              type="button"
+              onClick={() => setComposerOpen((v) => !v)}
+              className="font-medium hover:text-foreground transition-colors"
+            >
+              {composerOpen ? "Cancel" : "Reply"}
+            </button>
+          </div>
+          {composerOpen && (
+            <div className="mt-3">
+              <ReplyForm
+                threadId={threadId}
+                parentId={reply.id}
+                compact
+                autoFocus
+                onPosted={() => setComposerOpen(false)}
+              />
             </div>
           )}
         </div>
@@ -82,7 +153,19 @@ function ReplyCard({ reply }: { reply: Reply }) {
   );
 }
 
-function ReplyForm({ threadId }: { threadId: string }) {
+function ReplyForm({
+  threadId,
+  parentId,
+  compact,
+  autoFocus,
+  onPosted,
+}: {
+  threadId: string;
+  parentId?: string;
+  compact?: boolean;
+  autoFocus?: boolean;
+  onPosted?: () => void;
+}) {
   const [body, setBody] = useState("");
   const { isAuthenticated } = useAuth();
   const router = useRouter();
@@ -101,11 +184,12 @@ function ReplyForm({ threadId }: { threadId: string }) {
       return;
     }
     createReply.mutate(
-      { body: body.trim() },
+      { body: body.trim(), ...(parentId ? { parent_id: parentId } : {}) },
       {
         onSuccess: () => {
           setBody("");
           toast.success("Reply posted!");
+          onPosted?.();
         },
         onError: () => toast.error("Failed to post reply"),
       }
@@ -113,13 +197,14 @@ function ReplyForm({ threadId }: { threadId: string }) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-3">
+    <form onSubmit={handleSubmit} className="space-y-2">
       <Textarea
         placeholder={isAuthenticated ? "Write a reply..." : "Sign in to reply..."}
         value={body}
         onChange={(e) => setBody(e.target.value)}
-        className="text-sm min-h-[80px]"
+        className={compact ? "text-sm min-h-[60px]" : "text-sm min-h-[80px]"}
         disabled={!isAuthenticated}
+        autoFocus={autoFocus}
       />
       <div className="flex justify-end">
         <Button type="submit" size="sm" className="text-sm" disabled={createReply.isPending || !isAuthenticated}>
@@ -233,9 +318,33 @@ export default function ThreadDetail({
                   </div>
                 ) : (replies ?? []).length > 0 ? (
                   <div className="divide-y divide-border">
-                    {(replies ?? []).map((reply) => (
-                      <ReplyCard key={reply.id} reply={reply} />
-                    ))}
+                    {(() => {
+                      const { nodes, byId } = buildReplyTree(replies ?? []);
+                      return nodes.map(({ reply, children }) => (
+                        <div key={reply.id}>
+                          <ReplyCard reply={reply} threadId={id} />
+                          {children.length > 0 && (
+                            <div className="ml-5 sm:ml-9 border-l-2 border-border pl-4 mb-2">
+                              {children.map((child) => {
+                                const directParent =
+                                  child.parent_id && child.parent_id !== reply.id
+                                    ? byId.get(child.parent_id)
+                                    : undefined;
+                                return (
+                                  <ReplyCard
+                                    key={child.id}
+                                    reply={child}
+                                    threadId={id}
+                                    nested
+                                    replyingToAuthor={directParent?.author}
+                                  />
+                                );
+                              })}
+                            </div>
+                          )}
+                        </div>
+                      ));
+                    })()}
                   </div>
                 ) : (
                   <div className="py-8 text-center">
