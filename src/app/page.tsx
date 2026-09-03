@@ -3,7 +3,7 @@ import Footer from "@/components/layout/Footer";
 import HomeContent from "@/components/home/HomeContent";
 import { OrganizationSchema, WebSiteSchema } from "@/components/seo/JsonLd";
 import { fetchApi } from "@/lib/api-server";
-import type { Stat, Skill, MCPServer, FeedItem, Prompt, Thread, PublicProfile } from "@/types";
+import type { Stat, Skill, MCPServer, FeedItem, Prompt, Thread, PublicProfile, ShowcaseProject } from "@/types";
 import type { UseCaseBundle } from "@/components/home/UseCaseCarousel";
 
 // "Claude for X" carousel bundles, mapped to real index categories. Only
@@ -56,7 +56,7 @@ interface MembersListResponse {
 }
 
 export default async function Home() {
-  const [statsData, featuredSkillsData, mcpServersData, mcpAllData, feedData, promptsData, threadsData, membersData] = await Promise.all([
+  const [statsData, featuredSkillsData, mcpServersData, mcpAllData, feedData, promptsData, threadsData, membersData, showcaseData] = await Promise.all([
     fetchApi<Stat[]>("/stats"),
     fetchApi<SkillsListResponse>("/skills?featured=true&limit=8"),
     fetchApi<MCPServersListResponse>("/mcp-servers?limit=8"),
@@ -65,6 +65,7 @@ export default async function Home() {
     fetchApi<Prompt[]>("/prompts?limit=8"),
     fetchApi<Thread[]>("/community/threads?limit=6"),
     fetchApi<MembersListResponse>("/users?per_page=12"),
+    fetchApi<ShowcaseProject[]>("/showcase?limit=6"),
   ]);
 
   const initialStats = statsData ?? [];
@@ -76,6 +77,7 @@ export default async function Home() {
   const initialThreads = threadsData ?? [];
   const communityMembers = membersData?.members ?? [];
   const memberCount = membersData?.total ?? 0;
+  const initialShowcase = Array.isArray(showcaseData) ? showcaseData : [];
 
   return (
     <div className="min-h-screen bg-background">
@@ -93,6 +95,7 @@ export default async function Home() {
           communityMembers={communityMembers}
           memberCount={memberCount}
           useCaseBundles={useCaseBundles}
+          initialShowcase={initialShowcase}
         />
       </main>
       <Footer />

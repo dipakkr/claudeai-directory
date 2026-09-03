@@ -11,14 +11,23 @@ import { useAuth } from "@/lib/auth";
 import { Users, Lock } from "lucide-react";
 import type { PublicProfile } from "@/types";
 
-function MemberCard({ member, blurred }: { member: PublicProfile; blurred?: boolean }) {
+function MemberCard({
+  member,
+  blurred,
+  teased,
+}: {
+  member: PublicProfile;
+  blurred?: boolean;
+  /** Real content, softened and non-interactive — the row behind the gate. */
+  teased?: boolean;
+}) {
   const displayName = member.name || member.username;
   const initials = displayName.slice(0, 2).toUpperCase();
 
   const inner = (
     <div
       className={`flex items-center gap-3 rounded-[10px] border border-border bg-card p-3 transition-colors group ${
-        blurred
+        blurred || teased
           ? "select-none pointer-events-none"
           : "hover:border-[var(--cad-line-hover)] cursor-pointer"
       }`}
@@ -45,7 +54,7 @@ function MemberCard({ member, blurred }: { member: PublicProfile; blurred?: bool
     </div>
   );
 
-  if (blurred) return inner;
+  if (blurred || teased) return inner;
   return (
     <Link href={`/u/${member.username}`} className="block">
       {inner}
@@ -65,8 +74,10 @@ function MemberCardSkeleton() {
   );
 }
 
-// How many members to show clearly before blurring
-const VISIBLE_COUNT = 12;
+// Two rows fully visible, then one row of real people softened behind the gate
+// so it reads as "there are more" rather than ending in grey placeholders.
+const VISIBLE_COUNT = 8;
+const TEASE_COUNT = 4;
 
 export default function MembersClient({
   initialData,
@@ -100,6 +111,9 @@ export default function MembersClient({
 
   // Split into visible + locked sections
   const visibleMembers = isUnlocked ? filtered : filtered.slice(0, VISIBLE_COUNT);
+  const teasedMembers = isUnlocked
+    ? []
+    : filtered.slice(VISIBLE_COUNT, VISIBLE_COUNT + TEASE_COUNT);
   const lockedMembers = isUnlocked ? [] : filtered.slice(VISIBLE_COUNT);
 
   return (
@@ -154,47 +168,36 @@ export default function MembersClient({
                 ))}
               </div>
 
-              {/* Locked section — ghost cards + overlay */}
+              {/* Locked section — one softened row of real members, fading into the CTA */}
               {lockedMembers.length > 0 && (
-                <div className="relative mt-4">
-                  {/* Ghost placeholder cards — no real data */}
-                  <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 pointer-events-none select-none">
-                    {Array.from({ length: Math.min(lockedMembers.length, 16) }).map((_, i) => (
-                      <div
-                        key={i}
-                        className="flex items-center gap-3 p-3 border border-border rounded-[10px]"
-                      >
-                        <div className="h-9 w-9 rounded-full bg-muted/60 shrink-0" />
-                        <div className="space-y-2 flex-1">
-                          <div
-                            className="h-2.5 rounded-full bg-muted/60"
-                            style={{ width: `${45 + (i * 17) % 40}%` }}
-                          />
-                          <div
-                            className="h-2 rounded-full bg-muted/40"
-                            style={{ width: `${30 + (i * 11) % 30}%` }}
-                          />
-                        </div>
-                      </div>
-                    ))}
+                <div className="relative mt-3">
+                  <div
+                    aria-hidden="true"
+                    className="pointer-events-none select-none blur-[3px] opacity-70"
+                    style={{
+                      maskImage:
+                        "linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,0.85) 45%, rgba(0,0,0,0) 100%)",
+                      WebkitMaskImage:
+                        "linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,0.85) 45%, rgba(0,0,0,0) 100%)",
+                    }}
+                  >
+                    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                      {teasedMembers.map((member) => (
+                        <MemberCard key={member.id} member={member} teased />
+                      ))}
+                    </div>
                   </div>
 
-                  {/* Gradient fade from visible → locked */}
-                  <div className="absolute top-0 left-0 right-0 h-16 bg-gradient-to-b from-transparent to-background/80 pointer-events-none" />
-
-                  {/* Full overlay */}
-                  <div className="absolute inset-0 bg-background/70 backdrop-blur-[2px]" />
-
-                  {/* CTA card */}
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="bg-card border border-border rounded-[10px] px-8 py-6 text-center shadow-xl max-w-sm w-full mx-4">
-                      <div className="flex items-center justify-center w-10 h-10 rounded-full bg-primary/10 mx-auto mb-3">
+                  {/* CTA sits under the fade rather than covering the faces */}
+                  <div className="-mt-6 flex justify-center">
+                    <div className="w-full max-w-sm rounded-[10px] border border-border bg-card px-8 py-6 text-center shadow-xl">
+                      <div className="mx-auto mb-3 flex h-10 w-10 items-center justify-center rounded-full bg-primary/10">
                         <Lock className="h-5 w-5 text-primary" />
                       </div>
-                      <p className="text-sm font-semibold text-foreground mb-1">
-                        {total} members and counting
+                      <p className="mb-1 text-sm font-semibold text-foreground">
+                        {lockedMembers.length.toLocaleString()} more {lockedMembers.length === 1 ? "member" : "members"}
                       </p>
-                      <p className="text-xs text-muted-foreground mb-4 leading-relaxed">
+                      <p className="mb-4 text-xs leading-relaxed text-muted-foreground">
                         Sign in to browse all profiles and connect with the community.
                       </p>
                       <Button asChild size="sm" className="w-full">

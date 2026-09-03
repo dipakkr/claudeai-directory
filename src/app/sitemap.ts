@@ -20,6 +20,31 @@ async function fetchSlugs(endpoint: string, slugField = "id"): Promise<string[]>
   }
 }
 
+/** Guide lessons live under guide.chapters[].lessons[], not a flat list. */
+async function fetchGuideLessonPaths(guideSlugs: string[]): Promise<string[]> {
+  const perGuide = await Promise.all(
+    guideSlugs.map(async (slug) => {
+      try {
+        const res = await fetch(`${API_BASE}/guides/${slug}`, {
+          next: { revalidate: 3600 },
+        });
+        if (!res.ok) return [];
+        const guide = await res.json();
+        const chapters = (guide?.chapters ?? []) as { lessons?: { id?: string }[] }[];
+        return chapters.flatMap((chapter) =>
+          (chapter.lessons ?? [])
+            .map((lesson) => lesson?.id)
+            .filter(Boolean)
+            .map((lessonId) => `${slug}/${lessonId}`)
+        );
+      } catch {
+        return [];
+      }
+    })
+  );
+  return perGuide.flat();
+}
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Static pages
   const staticPages: MetadataRoute.Sitemap = [
@@ -49,6 +74,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     fetchSlugs("/blog", "_id"),
     fetchSlugs("/community/threads", "id"),
   ]);
+
+  const resourceSlugs = await fetchSlugs("/resources", "_id");
+  const lessonPaths = await fetchGuideLessonPaths(guideSlugs);
 
   const mcpPages: MetadataRoute.Sitemap = mcpSlugs.map((slug) => ({
     url: `${SITE_URL}/mcp/${slug}`,
@@ -86,11 +114,36 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.7,
   }));
 
+  // Lesson pages carry the searchable content ("what is claude", "build an
+  // mcp server"); without these only the guide index was discoverable.
+  const lessonPages: MetadataRoute.Sitemap = lessonPaths.map((path) => ({
+    url: `${SITE_URL}/guides/${path}`,
+    changeFrequency: "monthly",
+    priority: 0.7,
+  }));
+
+  const resourcePages: MetadataRoute.Sitemap = resourceSlugs.map((slug) => ({
+    url: `${SITE_URL}/resources/${slug}`,
+    changeFrequency: "monthly",
+    priority: 0.7,
+  }));
+
   const threadPages: MetadataRoute.Sitemap = threadIds.map((id) => ({
     url: `${SITE_URL}/community/${id}`,
     changeFrequency: "weekly",
     priority: 0.6,
   }));
 
-  return [...staticPages, ...mcpPages, ...skillPages, ...promptPages, ...jobPages, ...guidePages, ...blogPages, ...threadPages];
+  return [
+    ...staticPages,
+    ...mcpPages,
+    ...skillPages,
+    ...promptPages,
+    ...jobPages,
+    ...guidePages,
+    ...lessonPages,
+    ...resourcePages,
+    ...blogPages,
+    ...threadPages,
+  ];
 }

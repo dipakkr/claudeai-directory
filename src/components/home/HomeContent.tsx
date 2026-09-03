@@ -1,13 +1,15 @@
 "use client";
 
-import { Suspense, useMemo, useState } from "react";
+import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import FeaturedResources from "@/components/home/FeaturedResources";
 import MCPSection from "@/components/home/MCPSection";
 import PromptsSection from "@/components/home/PromptsSection";
 import UseCaseCarousel, { type UseCaseBundle } from "@/components/home/UseCaseCarousel";
-import type { Stat, Skill, MCPServer, FeedItem, Prompt, Thread, PublicProfile } from "@/types";
+import type { Stat, Skill, MCPServer, FeedItem, Prompt, Thread, PublicProfile, ShowcaseProject } from "@/types";
+import ShowcaseSection from "@/components/home/ShowcaseSection";
+import StatsStrip from "@/components/home/StatsStrip";
 
 interface HomeContentProps {
   initialStats: Stat[];
@@ -19,7 +21,10 @@ interface HomeContentProps {
   communityMembers: PublicProfile[];
   memberCount: number;
   useCaseBundles?: UseCaseBundle[];
+  initialShowcase?: ShowcaseProject[];
 }
+
+const BOARD_ROTATE_MS = 6000;
 
 function initials(value?: string) {
   return (value || "?")
@@ -116,7 +121,31 @@ function HomeInner(props: HomeContentProps) {
   ].filter((board) => board.items.length > 0), [props.initialThreads, props.initialMcpServers, props.initialFeaturedSkills, props.initialPrompts]);
 
   const [activeBoard, setActiveBoard] = useState(0);
+  // The board advertises itself as live, so it should actually move. Rotating
+  // also surfaces all four categories to someone who never clicks a tab.
+  const [paused, setPaused] = useState(false);
+  const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
   const board = boards[activeBoard] ?? boards[0];
+
+  useEffect(() => {
+    if (paused || boards.length <= 1) return;
+    const id = window.setInterval(() => {
+      setActiveBoard((current) => (current + 1) % boards.length);
+    }, BOARD_ROTATE_MS);
+    return () => window.clearInterval(id);
+  }, [paused, boards.length]);
+
+  const focusTab = (index: number) => {
+    setActiveBoard(index);
+    tabRefs.current[index]?.focus();
+  };
+
+  const onTabKeyDown = (event: React.KeyboardEvent) => {
+    if (event.key !== "ArrowRight" && event.key !== "ArrowLeft") return;
+    event.preventDefault();
+    const delta = event.key === "ArrowRight" ? 1 : -1;
+    focusTab((activeBoard + delta + boards.length) % boards.length);
+  };
 
   const peopleGrid = props.communityMembers.slice(0, 18).map((member, index) => ({
     id: member.id,
@@ -176,7 +205,13 @@ function HomeInner(props: HomeContentProps) {
             </Link>
           </div>
 
-          <aside className="relative overflow-hidden rounded-[18px] border border-border bg-card shadow-[0_18px_60px_var(--cad-shadow)]">
+          <aside
+            onMouseEnter={() => setPaused(true)}
+            onMouseLeave={() => setPaused(false)}
+            onFocusCapture={() => setPaused(true)}
+            onBlurCapture={() => setPaused(false)}
+            className="relative overflow-hidden rounded-[18px] border border-border bg-card shadow-[0_18px_60px_var(--cad-shadow)]"
+          >
             <div className="flex items-center justify-between gap-3 border-b border-border bg-[var(--cad-raised)] px-5 py-4">
               <div>
                 <div className="text-[11px] font-medium uppercase tracking-[0.16em] text-[var(--cad-faint)]">Live board</div>
@@ -191,39 +226,74 @@ function HomeInner(props: HomeContentProps) {
               </span>
             </div>
 
-            {/* Tabs */}
-            <div className="flex gap-1 border-b border-border px-3 pt-3">
+            {/* Tabs — equal width so the indicator can slide by index alone */}
+            <div
+              role="tablist"
+              aria-label="Claude builder activity"
+              onKeyDown={onTabKeyDown}
+              className="relative flex border-b border-border px-3 pt-3"
+            >
               {boards.map((b, i) => (
                 <button
                   key={b.key}
+                  ref={(el) => {
+                    tabRefs.current[i] = el;
+                  }}
                   type="button"
-                  onClick={() => setActiveBoard(i)}
-                  className={`relative rounded-t-[8px] px-3 py-2 text-[13px] font-medium transition-colors ${
+                  role="tab"
+                  id={`board-tab-${b.key}`}
+                  aria-selected={i === activeBoard}
+                  aria-controls={`board-panel-${b.key}`}
+                  tabIndex={i === activeBoard ? 0 : -1}
+                  onClick={() => focusTab(i)}
+                  className={`flex-1 rounded-t-[8px] px-2 py-2 text-[13px] font-medium transition-colors ${
                     i === activeBoard ? "text-foreground" : "text-muted-foreground hover:text-foreground"
                   }`}
                 >
                   {b.label}
-                  {i === activeBoard && (
-                    <span className="absolute inset-x-2 -bottom-px h-0.5 rounded-full bg-primary" />
-                  )}
                 </button>
               ))}
+
+              <span className="pointer-events-none absolute inset-x-3 bottom-0 h-[2px]" aria-hidden="true">
+                <span
+                  className="block h-full rounded-full bg-primary/20 transition-transform duration-300 ease-out"
+                  style={{
+                    width: `${100 / boards.length}%`,
+                    transform: `translateX(${activeBoard * 100}%)`,
+                  }}
+                >
+                  <span
+                    key={`${activeBoard}-${paused}`}
+                    className={`block h-full origin-left rounded-full bg-primary ${
+                      paused
+                        ? ""
+                        : "animate-[board-progress_6000ms_linear_forwards] motion-reduce:animate-none"
+                    }`}
+                  />
+                </span>
+              </span>
             </div>
 
             {/* Active board */}
-            <div className="flex min-h-[268px] flex-col p-4">
+            <div
+              id={`board-panel-${board.key}`}
+              role="tabpanel"
+              aria-labelledby={`board-tab-${board.key}`}
+              className="flex min-h-[268px] flex-col p-4"
+            >
               <div className="mb-1 flex items-center gap-1.5 px-1 text-xs text-[var(--cad-faint)]">
                 <span className="h-1 w-1 rounded-full bg-success" />
                 {board.live}
               </div>
-              <div className="space-y-0.5">
-                {board.items.map((item) => (
+              <div key={board.key} className="space-y-0.5">
+                {board.items.map((item, index) => (
                   <Link
                     key={item.href}
                     href={item.href}
-                    className="group flex items-center gap-3 rounded-[10px] p-2.5 hover:bg-[var(--cad-raised)]"
+                    style={{ animationDelay: `${index * 70}ms` }}
+                    className="group flex animate-[board-row-in_320ms_ease-out_both] items-center gap-3 rounded-[10px] p-2.5 transition-colors hover:bg-[var(--cad-raised)] motion-reduce:animate-none"
                   >
-                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px] bg-[var(--cad-chip)] text-[11px] font-semibold text-[var(--cad-accent-hover)]">
+                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px] bg-[var(--cad-chip)] text-[11px] font-semibold text-[var(--cad-accent-hover)] transition-transform duration-200 group-hover:scale-105 motion-reduce:transition-none">
                       {item.mono}
                     </span>
                     <span className="min-w-0 flex-1">
@@ -246,27 +316,13 @@ function HomeInner(props: HomeContentProps) {
         </div>
       </section>
 
-      {/* Stats trust strip — uses the site's curated /stats figures. */}
-      {props.initialStats.length > 0 && (
-        <section className="border-y border-border bg-[var(--cad-raised)]">
-          <div className="container grid grid-cols-2 gap-x-6 gap-y-8 py-10 sm:grid-cols-4 md:py-12">
-            {props.initialStats.slice(0, 4).map((stat, i) => (
-              <div key={stat.label || i} className="text-center sm:text-left">
-                <div className="text-[clamp(28px,3.4vw,38px)] font-semibold leading-none text-foreground">
-                  {stat.value}
-                </div>
-                <div className="mt-2 text-sm font-medium text-foreground">{stat.label}</div>
-                <div className="mt-0.5 text-[12px] leading-snug text-muted-foreground">{stat.description}</div>
-              </div>
-            ))}
-          </div>
-        </section>
-      )}
+      <StatsStrip stats={props.initialStats} />
 
       <FeaturedResources initialSkills={props.initialFeaturedSkills} />
       <MCPSection initialServers={props.initialMcpServers} />
       <PromptsSection initialPrompts={props.initialPrompts} />
       <UseCaseCarousel bundles={props.useCaseBundles ?? []} />
+      <ShowcaseSection initialProjects={props.initialShowcase ?? []} />
     </>
   );
 }

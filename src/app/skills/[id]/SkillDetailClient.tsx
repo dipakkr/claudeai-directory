@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeSlug from "rehype-slug";
@@ -8,7 +9,7 @@ import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { CheckCircle, ExternalLink, Github, Wrench, Server, FileText } from "lucide-react";
+import { CheckCircle, Check, Copy, Github, Wrench, Server, FileText } from "lucide-react";
 import PageBreadcrumb from "@/components/layout/PageBreadcrumb";
 import ResourceReplies from "@/components/shared/ResourceReplies";
 import { useSkill } from "@/hooks/use-skills";
@@ -92,16 +93,12 @@ export default function SkillDetail({ skill: initialSkill, id }: { skill: Skill 
                 <div className="sticky top-20 space-y-4">
                   {/* Install card */}
                   <div className="rounded-xl border border-border bg-card p-5">
-                    <h3 className="text-sm font-semibold text-foreground mb-3">Install this skill</h3>
-                    <div className="space-y-2">
-                      {skill.source && (
-                        <a href={skill.source} target="_blank" rel="noopener noreferrer" className="block">
-                          <Button className="w-full text-sm">
-                            <ExternalLink className="mr-1.5 h-3.5 w-3.5" />
-                            Install
-                          </Button>
-                        </a>
-                      )}
+                    <h3 className="text-sm font-semibold text-foreground mb-1.5">Install this skill</h3>
+                    <p className="text-xs text-muted-foreground mb-3">
+                      Copies the skill into Claude Code&apos;s skills folder:
+                    </p>
+                    <InstallCommand name={skill.name} location={skill.location} />
+                    <div className="space-y-2 mt-3">
                       {skill.github_url && (
                         <a href={skill.github_url} target="_blank" rel="noopener noreferrer" className="block">
                           <Button variant="outline" className="w-full text-sm">
@@ -148,5 +145,46 @@ export default function SkillDetail({ skill: initialSkill, id }: { skill: Skill 
       </main>
       <Footer />
     </div>
+  );
+}
+
+function InstallCommand({ name, location }: { name: string; location?: string }) {
+  const [copied, setCopied] = useState(false);
+
+  // Derive the repo subpath from location ("skills/<name>/SKILL.md");
+  // older rows carry container paths like /mnt/skills/... - ignore those
+  // and default to the official anthropics/skills layout.
+  const subpath =
+    location && !location.startsWith("/")
+      ? location.replace(/\/SKILL\.md$/, "")
+      : `skills/${name}`;
+  const command = `npx degit anthropics/skills/${subpath} ~/.claude/skills/${name}`;
+
+  const copy = async () => {
+    try {
+      await navigator.clipboard.writeText(command);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      /* clipboard unavailable */
+    }
+  };
+
+  return (
+    <button
+      type="button"
+      onClick={copy}
+      className="group flex w-full items-start gap-2 rounded-lg border border-border bg-muted/50 px-3 py-2.5 text-left transition-colors hover:border-foreground/25"
+      title="Copy install command"
+    >
+      <code className="flex-1 break-all font-mono text-[11px] leading-relaxed text-foreground/90">
+        {command}
+      </code>
+      {copied ? (
+        <Check className="h-3.5 w-3.5 shrink-0 mt-0.5 text-emerald-600" />
+      ) : (
+        <Copy className="h-3.5 w-3.5 shrink-0 mt-0.5 text-muted-foreground group-hover:text-foreground" />
+      )}
+    </button>
   );
 }
