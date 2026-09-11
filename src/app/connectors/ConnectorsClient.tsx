@@ -254,7 +254,7 @@ export default function ConnectorsClient({ initialServers = [] }: { initialServe
             <div className="min-w-0">
               <h1 className="text-[clamp(32px,4vw,42px)] font-medium leading-[1.08]">Connectors</h1>
               <p className="mt-2 max-w-[62ch] text-pretty text-base font-medium leading-[1.5] text-muted-foreground md:text-lg">
-                Not a list of apps — a guide to what people actually build with them.
+                Not a list of apps: a guide to what people actually build with them.
               </p>
             </div>
           </div>
@@ -284,7 +284,7 @@ export default function ConnectorsClient({ initialServers = [] }: { initialServe
             </label>
             <Link
               href="/submit"
-              className="inline-flex min-h-[62px] items-center justify-center rounded-[9px] bg-primary px-7 text-base font-semibold text-primary-foreground hover:bg-[var(--cad-accent-hover)]"
+              className="inline-flex min-h-[62px] items-center justify-center rounded-[9px] bg-foreground px-7 text-base font-semibold text-background hover:bg-foreground/85"
             >
               Add a workflow
             </Link>
@@ -302,7 +302,7 @@ export default function ConnectorsClient({ initialServers = [] }: { initialServe
                   Claude for support teams
                 </h2>
                 <p className="mx-auto mt-4 max-w-[47ch] text-pretty text-base font-medium leading-[1.45] text-muted-foreground">
-                  The connectors support leads keep together — inbox, CRM, docs and the ticket queue.
+                  The connectors support leads keep together: inbox, CRM, docs and the ticket queue.
                 </p>
               </div>
               <div className="flex flex-wrap justify-center gap-3">
@@ -329,7 +329,7 @@ export default function ConnectorsClient({ initialServers = [] }: { initialServe
               </div>
               <Link
                 href="#top-connectors"
-                className="inline-flex min-h-12 items-center justify-center rounded-[9px] bg-primary px-7 text-sm font-semibold text-primary-foreground hover:bg-[var(--cad-accent-hover)]"
+                className="inline-flex min-h-12 items-center justify-center rounded-[9px] bg-foreground px-7 text-sm font-semibold text-background hover:bg-foreground/85"
               >
                 Explore this collection
               </Link>

@@ -18,7 +18,7 @@ export function OrganizationSchema() {
         name: "ClaudeAI Directory",
         url: SITE_URL,
         description:
-          "The community directory for Claude AI — skills, MCP servers, prompts, and more.",
+          "The community directory for Claude AI: skills, MCP servers, prompts, and more.",
       }}
     />
   );

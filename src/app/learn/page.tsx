@@ -130,7 +130,7 @@ const Learn = () => {
                   onClick={() => setCategory(c)}
                   className={`px-3 py-1.5 text-xs rounded-md border transition-colors ${
                     category === c
-                      ? "bg-primary text-primary-foreground border-primary"
+                      ? "bg-foreground text-background border-primary"
                       : "bg-card border-border text-muted-foreground hover:text-foreground"
                   }`}
                 >

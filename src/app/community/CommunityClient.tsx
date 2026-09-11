@@ -321,7 +321,7 @@ export default function CommunityClient({
                     <li>Be respectful and constructive</li>
                     <li>Share knowledge and help others</li>
                     <li>No spam or self-promotion</li>
-                    <li>Stay on topic — Claude &amp; AI</li>
+                    <li>Stay on topic: Claude &amp; AI</li>
                   </ul>
                 </div>
 
@@ -337,7 +337,7 @@ export default function CommunityClient({
                         onClick={() => setActiveTag(activeTag === tag ? undefined : tag)}
                         className={`px-2 py-0.5 rounded-full text-[11px] transition-colors ${
                           activeTag === tag
-                            ? "bg-primary text-primary-foreground"
+                            ? "bg-foreground text-background"
                             : "bg-muted text-muted-foreground hover:text-foreground"
                         }`}
                       >

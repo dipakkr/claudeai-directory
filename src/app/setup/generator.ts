@@ -20,7 +20,7 @@ function corePrinciples(strictness: Strictness): string {
   if (strictness === "relaxed") {
     return `## Core Principles
 
-- Work autonomously — minimize interruptions and questions
+- Work autonomously: minimize interruptions and questions
 - Use best judgement for implementation details
 - Creating new files is fine when it makes sense
 - Completing tasks end-to-end without checking in is preferred
@@ -33,7 +33,7 @@ function corePrinciples(strictness: Strictness): string {
 - Never create new files without explicit approval
 - Never run destructive commands (rm, drop, truncate) without confirmation
 - Present a plan before implementing features
-- Keep changes minimal and focused — do exactly what was asked, no more
+- Keep changes minimal and focused: do exactly what was asked, no more
 - Do not refactor surrounding code unless explicitly requested`;
   }
   // balanced
@@ -41,7 +41,7 @@ function corePrinciples(strictness: Strictness): string {
 
 - Ask before making major architectural decisions
 - Prefer editing existing files over creating new ones
-- Don't auto-commit — always check before running git commit
+- Don't auto-commit: always check before running git commit
 - Keep changes focused on the task at hand
 - If a task requires touching many files, summarize the plan first
 - Do not add unrequested features or refactors`;
@@ -51,53 +51,53 @@ function codeStyle(config: GeneratorConfig): string {
   const { stack, language, styling } = config;
 
   if (stack === "nextjs") {
-    return `## Code Style — Next.js
+    return `## Code Style: Next.js
 
-- Use the App Router (\`app/\` directory) — no Pages Router patterns
+- Use the App Router (\`app/\` directory): no Pages Router patterns
 - Prefer React Server Components; only add \`"use client"\` when truly needed (event handlers, hooks, browser APIs)
 - Co-locate page-specific components in the route folder
 - Use \`next/image\` for all images with explicit \`width\`/\`height\`
 - Use \`next/link\` for all internal navigation
 - Data fetching: fetch in Server Components, pass data as props; avoid client-side fetching unless interactive
 ${styling === "tailwind" ? "- Use Tailwind CSS utility classes; avoid inline styles and custom CSS where a utility exists" : ""}
-- Keep \`page.tsx\` thin — extract logic into dedicated client/server components
+- Keep \`page.tsx\` thin: extract logic into dedicated client/server components
 - Name files in kebab-case, components in PascalCase`;
   }
 
   if (stack === "react") {
-    return `## Code Style — React
+    return `## Code Style: React
 
-- Functional components only — no class components
+- Functional components only: no class components
 - Custom hooks for shared stateful logic (prefix with \`use\`)
 ${styling === "tailwind" ? "- Use Tailwind CSS utility classes" : ""}
-- Keep components small and focused — one responsibility per component
+- Keep components small and focused: one responsibility per component
 - Lift state up only as far as necessary
-- Avoid prop drilling beyond 2 levels — use context or state management`;
+- Avoid prop drilling beyond 2 levels: use context or state management`;
   }
 
   if (stack === "fastapi") {
-    return `## Code Style — FastAPI
+    return `## Code Style: FastAPI
 
 - Always add type hints to function signatures and return types
-- Use Pydantic models for request/response schemas — no raw dicts in endpoints
+- Use Pydantic models for request/response schemas: no raw dicts in endpoints
 - Prefer async/await for I/O operations
 - Use dependency injection for shared resources (DB sessions, auth)
 - Group related endpoints in routers (\`APIRouter\`)
-- Keep route handlers thin — business logic in service modules`;
+- Keep route handlers thin: business logic in service modules`;
   }
 
   if (stack === "django") {
-    return `## Code Style — Django
+    return `## Code Style: Django
 
-- Follow Django's MVT pattern — keep views thin, logic in models/services
+- Follow Django's MVT pattern: keep views thin, logic in models/services
 - Use class-based views for CRUD; function-based views for one-off logic
-- Always use Django ORM — no raw SQL unless absolutely necessary
+- Always use Django ORM: no raw SQL unless absolutely necessary
 - Use Django forms or DRF serializers for input validation
 - Keep settings split by environment (base / local / production)`;
   }
 
   if (stack === "flask") {
-    return `## Code Style — Flask
+    return `## Code Style: Flask
 
 - Use application factory pattern (\`create_app()\`)
 - Blueprint per feature/domain
@@ -107,19 +107,19 @@ ${styling === "tailwind" ? "- Use Tailwind CSS utility classes" : ""}
   }
 
   if (stack === "express") {
-    return `## Code Style — Express
+    return `## Code Style: Express
 
 - Structure: routes → controllers → services → models
 - Always use async/await with proper error handling middleware
 - Validate request bodies with Zod or Joi
-- Never trust \`req.body\` — sanitize all user input
-${language === "typescript" ? "- Use TypeScript strict mode — no implicit any" : ""}`;
+- Never trust \`req.body\`: sanitize all user input
+${language === "typescript" ? "- Use TypeScript strict mode: no implicit any" : ""}`;
   }
 
   if (stack === "rails") {
-    return `## Code Style — Rails
+    return `## Code Style: Rails
 
-- Follow Rails conventions — convention over configuration
+- Follow Rails conventions: convention over configuration
 - Fat models, thin controllers
 - Use ActiveRecord scopes for reusable queries
 - Service objects for complex business logic
@@ -127,20 +127,20 @@ ${language === "typescript" ? "- Use TypeScript strict mode — no implicit any"
   }
 
   if (stack === "go") {
-    return `## Code Style — Go
+    return `## Code Style: Go
 
 - Follow the official Go style guide and \`gofmt\` formatting
-- Explicit error handling — never ignore errors (\`_ = err\`)
+- Explicit error handling: never ignore errors (\`_ = err\`)
 - Interfaces should be small and defined by the consumer
 - Use \`context.Context\` for cancellation and timeouts
 - Prefer table-driven tests`;
   }
 
   if (stack === "rust") {
-    return `## Code Style — Rust
+    return `## Code Style: Rust
 
 - Prefer owned types over references when ownership is clear
-- Use \`Result\` and \`Option\` — never \`unwrap()\` in production code
+- Use \`Result\` and \`Option\`: never \`unwrap()\` in production code
 - Follow Clippy recommendations
 - Use \`thiserror\` for library errors, \`anyhow\` for application errors
 - Document public APIs with \`///\` doc comments`;
@@ -150,8 +150,8 @@ ${language === "typescript" ? "- Use TypeScript strict mode — no implicit any"
   return `## Code Style
 
 - Consistent naming: camelCase for variables/functions, PascalCase for types/classes
-- Keep functions small and focused — single responsibility
-- Avoid deeply nested conditionals — prefer early returns
+- Keep functions small and focused: single responsibility
+- Avoid deeply nested conditionals: prefer early returns
 - Self-documenting code over comments; add comments only where logic is non-obvious`;
 }
 
@@ -196,7 +196,7 @@ function gitPractices(config: GeneratorConfig): string {
   const nocommit = behaviors.includes("nocommit");
   const conventional = behaviors.includes("conventional");
 
-  let lines = ["## Git Practices", ""];
+  const lines = ["## Git Practices", ""];
 
   if (nocommit || strictness !== "relaxed") {
     lines.push("- Never run `git commit` without explicit instruction");
@@ -211,11 +211,11 @@ function gitPractices(config: GeneratorConfig): string {
 
   if (strictness === "strict") {
     lines.push("- Never force-push or rewrite published history");
-    lines.push("- Always stage specific files — never `git add .` blindly");
+    lines.push("- Always stage specific files: never `git add .` blindly");
     lines.push("- Show a diff summary before committing");
   }
 
-  lines.push("- Never push to main/master directly — use feature branches");
+  lines.push("- Never push to main/master directly: use feature branches");
 
   return lines.join("\n");
 }
@@ -224,7 +224,7 @@ function communicationStyle(teamSize: TeamSize): string {
   if (teamSize === "solo") {
     return `## Communication Style
 
-- Keep responses concise — skip preamble, get to the point
+- Keep responses concise: skip preamble, get to the point
 - Personal preferences and shortcuts are fine
 - You can assume context from previous messages
 - Skip boilerplate explanations unless something is genuinely unexpected`;
@@ -257,10 +257,10 @@ function behaviorRules(behaviors: BehaviorKey[]): string {
     conventional:
       "- Use Conventional Commits: `feat:`, `fix:`, `chore:`, `docs:`, `refactor:`",
     concise:
-      "- Keep explanations short — one paragraph max unless more is asked for",
+      "- Keep explanations short: one paragraph max unless more is asked for",
     nologs:
       "- Do not add `console.log`, `print`, or debug logging to the code",
-    noany: "- Never use TypeScript `any` — always use proper types or `unknown`",
+    noany: "- Never use TypeScript `any`: always use proper types or `unknown`",
     checkfirst: "- Always read a file before attempting to edit it",
     testnew: "- Write tests for every new function, hook, or component added",
   };
@@ -310,7 +310,7 @@ export function generateClaudeMd(config: GeneratorConfig): string {
     config.packageManager === "gomod" ? "go mod" : config.packageManager;
 
   const sections = [
-    `# Project — Claude Instructions
+    `# Project: Claude Instructions
 
 <!-- Replace "Project" above with your project name -->
 <!-- Add a 1–2 sentence project overview here -->`,

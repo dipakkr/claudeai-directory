@@ -88,8 +88,8 @@ function Chip({
     <button
       onClick={onClick}
       className={`px-3 py-1 rounded-full text-xs font-medium border transition-all ${active
-        ? "bg-zinc-800 border-zinc-700 text-zinc-100 shadow-sm"
-        : "border-zinc-800 text-zinc-400 hover:border-zinc-700 hover:text-zinc-200 bg-transparent"
+        ? "bg-foreground border-foreground text-background"
+        : "border-border text-muted-foreground hover:border-[var(--cad-line-hover)] hover:text-foreground bg-transparent"
         }`}
     >
       {children}
@@ -111,12 +111,12 @@ function StackCard({
     <button
       onClick={onClick}
       className={`relative px-2 py-2.5 rounded-lg border text-center transition-all text-xs font-medium leading-tight ${active
-        ? "border-zinc-700 bg-zinc-800/80 text-zinc-100 shadow-sm"
-        : "border-zinc-800/80 text-zinc-400 hover:border-zinc-700 hover:text-zinc-200 hover:bg-zinc-900/50 bg-transparent"
+        ? "border-foreground bg-foreground text-background"
+        : "border-border text-muted-foreground hover:border-[var(--cad-line-hover)] hover:text-foreground bg-transparent"
         }`}
     >
       {active && (
-        <span className="absolute top-1.5 right-1.5 h-1.5 w-1.5 rounded-full bg-zinc-300" />
+        <span className="absolute top-1.5 right-1.5 h-1.5 w-1.5 rounded-full bg-primary" />
       )}
       {label}
     </button>
@@ -143,12 +143,12 @@ function RadioCard({
     <button
       onClick={onClick}
       className={`flex-1 px-3 py-3 rounded-lg border text-left transition-all ${active
-        ? "border-zinc-700 bg-zinc-800/60 shadow-sm"
-        : "border-zinc-800/80 hover:border-zinc-700/80 hover:bg-zinc-900/50 bg-transparent"
+        ? "border-foreground/40 bg-secondary"
+        : "border-border hover:border-[var(--cad-line-hover)] bg-transparent"
         }`}
     >
       <div className="flex items-center justify-between mb-1.5">
-        <p className={`text-sm font-semibold ${active ? "text-zinc-100" : "text-zinc-400"}`}>
+        <p className={`text-sm font-semibold ${active ? "text-foreground" : "text-muted-foreground"}`}>
           {label}
         </p>
         <div className="flex gap-1">
@@ -156,14 +156,14 @@ function RadioCard({
             <div
               key={i}
               className={`h-1.5 w-1.5 rounded-full transition-colors ${i < dots
-                ? active ? "bg-zinc-300" : "bg-zinc-600"
-                : "bg-zinc-800"
+                ? active ? "bg-primary" : "bg-muted-foreground/50"
+                : "bg-border"
                 }`}
             />
           ))}
         </div>
       </div>
-      <p className="text-[11px] text-zinc-500 leading-snug">{description}</p>
+      <p className="text-[11px] text-muted-foreground leading-snug">{description}</p>
     </button>
   );
 }
@@ -303,14 +303,14 @@ export default function SetupClient() {
             CLAUDE.md Generator
           </h1>
           <p className="text-sm text-muted-foreground">
-            Pick your stack and preferences — get a shareable CLAUDE.md instantly.
+            Pick your stack and preferences. Get a shareable CLAUDE.md instantly.
           </p>
         </div>
 
         <div className="flex flex-col lg:flex-row gap-5 items-start">
 
           {/* ── Left Panel ── */}
-          <div className="w-full lg:w-[35%] rounded-xl border border-zinc-800/80 bg-black/40 shadow-inner overflow-hidden">
+          <div className="w-full lg:w-[35%] rounded-xl border border-border bg-card overflow-hidden">
             <div className="p-5 space-y-6 overflow-y-auto lg:max-h-[calc(100vh-12rem)] custom-scrollbar">
 
               {/* Framework */}
@@ -446,20 +446,20 @@ export default function SetupClient() {
                       <label
                         key={opt.key}
                         className={`flex items-center gap-3 px-3 py-2.5 rounded-lg cursor-pointer transition-all group ${checked
-                          ? "bg-zinc-800/80 border border-zinc-700 shadow-sm"
-                          : "border border-transparent hover:bg-zinc-900/50"
+                          ? "bg-secondary border border-border"
+                          : "border border-transparent hover:bg-secondary/60"
                           }`}
                       >
                         <Checkbox
                           checked={checked}
                           onCheckedChange={() => toggleBehavior(opt.key)}
-                          className="shrink-0 border-zinc-600 data-[state=checked]:bg-zinc-300 data-[state=checked]:text-black"
+                          className="shrink-0 border-muted-foreground/50 data-[state=checked]:bg-foreground data-[state=checked]:text-background"
                         />
                         <div className="min-w-0">
-                          <p className={`text-sm font-medium leading-snug ${checked ? "text-zinc-100" : "text-zinc-400"}`}>
+                          <p className={`text-sm font-medium leading-snug ${checked ? "text-foreground" : "text-muted-foreground"}`}>
                             {opt.label}
                           </p>
-                          <p className="text-[11px] text-zinc-500 leading-snug mt-0.5">
+                          <p className="text-[11px] text-muted-foreground leading-snug mt-0.5">
                             {opt.description}
                           </p>
                         </div>
@@ -477,20 +477,20 @@ export default function SetupClient() {
 
             {/* Toolbar */}
             <div className="flex items-center justify-between mb-2 gap-2 flex-wrap">
-              <div className="flex items-center gap-1.5 px-3 py-1 rounded-md bg-[#0d0d0d] border border-zinc-800 text-xs font-mono font-medium text-zinc-300 shadow-sm">
-                <span className="h-2 w-2 rounded-full bg-zinc-500" />
+              <div className="flex items-center gap-1.5 px-3 py-1 rounded-md bg-card border border-border text-xs font-mono font-medium text-muted-foreground">
+                <span className="h-2 w-2 rounded-full bg-primary" />
                 CLAUDE.md
               </div>
               <div className="flex items-center gap-1.5">
-                <Button variant="outline" size="sm" className="h-8 gap-1.5 text-xs bg-black/40 border-zinc-800 text-zinc-300 hover:text-zinc-100 hover:bg-zinc-800" onClick={handleCopy}>
+                <Button variant="outline" size="sm" className="h-8 gap-1.5 text-xs" onClick={handleCopy}>
                   <Copy className="h-3.5 w-3.5" />
                   Copy
                 </Button>
-                <Button variant="outline" size="sm" className="h-8 gap-1.5 text-xs bg-black/40 border-zinc-800 text-zinc-300 hover:text-zinc-100 hover:bg-zinc-800" onClick={handleDownload}>
+                <Button variant="outline" size="sm" className="h-8 gap-1.5 text-xs" onClick={handleDownload}>
                   <Download className="h-3.5 w-3.5" />
                   Download
                 </Button>
-                <Button variant="outline" size="sm" className="h-8 gap-1.5 text-xs bg-black/40 border-zinc-800 text-zinc-300 hover:text-zinc-100 hover:bg-zinc-800" onClick={handleShare}>
+                <Button variant="outline" size="sm" className="h-8 gap-1.5 text-xs" onClick={handleShare}>
                   <Share2 className="h-3.5 w-3.5" />
                   Share
                 </Button>

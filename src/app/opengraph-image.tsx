@@ -3,7 +3,7 @@ import { readFileSync } from "fs";
 import { join } from "path";
 
 export const runtime = "nodejs";
-export const alt = "claudeai.directory — Skills, MCP Servers, Prompts & AI Jobs for Claude";
+export const alt = "claudeai.directory: Skills, MCP Servers, Prompts & AI Jobs for Claude";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 

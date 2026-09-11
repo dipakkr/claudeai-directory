@@ -77,7 +77,7 @@ export function GuideContent({
           >
             {isCompleted ? (
               <>
-                <CheckCircle2 className="mr-1.5 h-3.5 w-3.5 text-green-500" />
+                <CheckCircle2 className="mr-1.5 h-3.5 w-3.5 text-success" />
                 Completed
               </>
             ) : (

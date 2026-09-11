@@ -33,7 +33,7 @@ export function GuideAccessBar({
         </div>
         <Link href="/pricing">
           <Button size="sm">
-            Get Full Access — ${price}
+            Get Full Access: ${price}
           </Button>
         </Link>
       </div>

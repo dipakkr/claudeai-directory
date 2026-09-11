@@ -57,7 +57,7 @@ const PM_CONTENT: CourseContent = {
           blocks: [
             {
               type: "text",
-              text: "Most PMs use AI like a search engine: one vague question, one generic answer, close the tab. This course teaches the opposite motion — treating Claude like a sharp junior PM who drafts, and you direct.",
+              text: "Most PMs use AI like a search engine: one vague question, one generic answer, close the tab. This course teaches the opposite motion: treating Claude like a sharp junior PM who drafts, and you direct.",
             },
             {
               type: "heading",
@@ -67,7 +67,7 @@ const PM_CONTENT: CourseContent = {
               type: "list",
               items: [
                 "Structuring mess: turning call notes, Slack threads and founder rants into briefs with named sections.",
-                "First drafts: PRDs, user stories, launch notes — 70% quality in 2 minutes, which you edit to 95%.",
+                "First drafts: PRDs, user stories, launch notes: 70% quality in 2 minutes, which you edit to 95%.",
                 "Critique: attacking your own spec for gaps, edge cases and untested assumptions before engineering does.",
               ],
             },
@@ -97,8 +97,8 @@ const PM_CONTENT: CourseContent = {
               type: "list",
               items: [
                 "Role: who Claude should act as (senior PM, skeptical engineer, first-time user).",
-                "Context: paste the raw material — notes, feedback, the old spec. More context beats cleverer wording.",
-                "Task: one verb — extract, draft, compare, critique, prioritize.",
+                "Context: paste the raw material: notes, feedback, the old spec. More context beats cleverer wording.",
+                "Task: one verb: extract, draft, compare, critique, prioritize.",
                 "Format: name the sections or table columns you want back.",
                 "Constraints: length limits, tone, what to leave out.",
               ],
@@ -110,7 +110,7 @@ const PM_CONTENT: CourseContent = {
             },
             {
               type: "tip",
-              text: "The last constraint — \"do not invent\" — is the single biggest quality lever when you paste real data.",
+              text: "The last constraint: \"do not invent\": is the single biggest quality lever when you paste real data.",
             },
           ],
         },
@@ -122,16 +122,16 @@ const PM_CONTENT: CourseContent = {
           blocks: [
             {
               type: "text",
-              text: "Time to produce your first artifact. Take a real feature idea from your backlog — the messier the better — and run it through the brief workflow.",
+              text: "Time to produce your first artifact. Take a real feature idea from your backlog: the messier the better: and run it through the brief workflow.",
             },
             { type: "heading", text: "The workflow" },
             {
               type: "list",
               items: [
-                "Step 1 — Dump: paste everything you have. Notes, Slack messages, half-sentences.",
-                "Step 2 — Extract: run the brief prompt below.",
-                "Step 3 — Interrogate: ask Claude \"what are the 3 weakest assumptions in this brief?\"",
-                "Step 4 — Tighten: fix the weak spots yourself. You own the judgment; Claude owns the typing.",
+                "Step 1: Dump: paste everything you have. Notes, Slack messages, half-sentences.",
+                "Step 2: Extract: run the brief prompt below.",
+                "Step 3: Interrogate: ask Claude \"what are the 3 weakest assumptions in this brief?\"",
+                "Step 4: Tighten: fix the weak spots yourself. You own the judgment; Claude owns the typing.",
               ],
             },
             {
@@ -141,7 +141,7 @@ const PM_CONTENT: CourseContent = {
             },
             {
               type: "tip",
-              text: "Save your best output as a template. By Day 7 you'll have a personal PM prompt library — that's the real product of this course.",
+              text: "Save your best output as a template. By Day 7 you'll have a personal PM prompt library: that's the real product of this course.",
             },
           ],
         },
@@ -160,13 +160,13 @@ const PM_CONTENT: CourseContent = {
                 "Asking for bullet points",
               ],
               correctIndex: 1,
-              explanation: "Grounding constraints (\"only use my notes, don't invent\") keep the output anchored to real evidence — the #1 fix for generic AI answers.",
+              explanation: "Grounding constraints (\"only use my notes, don't invent\") keep the output anchored to real evidence: the #1 fix for generic AI answers.",
             },
             {
               question: "In the 5-part prompt skeleton, which part is 'a table with columns Theme | Evidence | Severity'?",
               options: ["Role", "Context", "Format", "Constraints"],
               correctIndex: 2,
-              explanation: "Naming the exact sections or columns you want back is the Format part — it's what makes output copy-paste ready.",
+              explanation: "Naming the exact sections or columns you want back is the Format part: it's what makes output copy-paste ready.",
             },
             {
               question: "After Claude drafts your brief, what's the recommended next move?",
@@ -196,7 +196,7 @@ const PM_CONTENT: CourseContent = {
           blocks: [
             {
               type: "text",
-              text: "Vague stories create rework. This lesson turns your Day 1 brief into testable behavior — stories with acceptance criteria an engineer can actually build against.",
+              text: "Vague stories create rework. This lesson turns your Day 1 brief into testable behavior: stories with acceptance criteria an engineer can actually build against.",
             },
             {
               type: "prompt",
@@ -205,7 +205,7 @@ const PM_CONTENT: CourseContent = {
             },
             {
               type: "tip",
-              text: "Ask Claude to play a skeptical engineer and estimate which criteria are ambiguous — it catches the fights before sprint planning does.",
+              text: "Ask Claude to play a skeptical engineer and estimate which criteria are ambiguous: it catches the fights before sprint planning does.",
             },
           ],
         },
@@ -234,7 +234,7 @@ const PM_CONTENT: CourseContent = {
           blocks: [
             {
               type: "text",
-              text: "The Day 4 workflow: cluster raw feedback, score friction, and rank what to fix first — with evidence attached so stakeholders stop debating vibes.",
+              text: "The Day 4 workflow: cluster raw feedback, score friction, and rank what to fix first: with evidence attached so stakeholders stop debating vibes.",
             },
             {
               type: "prompt",
@@ -264,7 +264,7 @@ const PM_CONTENT: CourseContent = {
                 "It improves SEO",
               ],
               correctIndex: 1,
-              explanation: "Evidence-linked themes turn prioritization arguments into decisions — the quote is the receipt.",
+              explanation: "Evidence-linked themes turn prioritization arguments into decisions: the quote is the receipt.",
             },
           ],
         },
@@ -300,7 +300,7 @@ const PM_CONTENT: CourseContent = {
           blocks: [
             {
               type: "text",
-              text: "One input, five outputs: release notes, customer FAQ, support notes, internal announcement, and a launch checklist — each in the right voice for its audience.",
+              text: "One input, five outputs: release notes, customer FAQ, support notes, internal announcement, and a launch checklist: each in the right voice for its audience.",
             },
             {
               type: "prompt",
@@ -324,7 +324,7 @@ const PM_CONTENT: CourseContent = {
               items: [
                 "Generalize: replace project specifics with [placeholders].",
                 "Name each prompt by the artifact it produces, not by cleverness.",
-                "Store them in a doc/Notion — or a CLAUDE.md if you use Claude Projects.",
+                "Store them in a doc/Notion: or a CLAUDE.md if you use Claude Projects.",
               ],
             },
             {
@@ -348,7 +348,7 @@ const PM_CONTENT: CourseContent = {
                 "Refuse to generate the PRD",
               ],
               correctIndex: 2,
-              explanation: "You explicitly instruct Claude to flag thin inputs — surfacing gaps is more valuable than papering over them.",
+              explanation: "You explicitly instruct Claude to flag thin inputs: surfacing gaps is more valuable than papering over them.",
             },
             {
               question: "Why generalize prompts with [placeholders] at the end of the course?",
@@ -407,7 +407,7 @@ function generateFromCurriculum(course: Course): CourseContent {
           },
           {
             type: "tip",
-            text: "This course is in preview — full interactive lessons are being written. The prompts above are functional starting points.",
+            text: "This course is in preview: full interactive lessons are being written. The prompts above are functional starting points.",
           },
         ],
       })),

@@ -23,15 +23,15 @@ import { toast } from "sonner";
 import type { FeedItem } from "@/types";
 
 const typeConfig: Record<string, { label: string; icon: typeof Wrench; href: (id: string) => string; color: string }> = {
-  skill: { label: "Skill", icon: Wrench, href: (id) => `/skills/${id}`, color: "text-blue-500" },
-  mcp: { label: "MCP", icon: Server, href: (slug) => `/mcp/${slug}`, color: "text-green-500" },
-  prompt: { label: "Prompt", icon: FileText, href: (id) => `/prompts/${id}`, color: "text-purple-500" },
-  job: { label: "Job", icon: Briefcase, href: (id) => `/jobs/${id}`, color: "text-orange-500" },
-  showcase: { label: "Show", icon: Rocket, href: (id) => `/showcase/${id}`, color: "text-pink-500" },
-  blog: { label: "Blog", icon: BookOpen, href: (id) => `/resources/${id}`, color: "text-yellow-600" },
-  post: { label: "Post", icon: LinkIcon, href: (id) => `/feed#${id}`, color: "text-emerald-500" },
-  news: { label: "News", icon: Newspaper, href: () => "#", color: "text-red-500/70 text-[9px]" },
-  resource: { label: "Resource", icon: BookOpen, href: (id) => `/resources/${id}`, color: "text-sky-500" },
+  skill: { label: "Skill", icon: Wrench, href: (id) => `/skills/${id}`, color: "text-muted-foreground" },
+  mcp: { label: "MCP", icon: Server, href: (slug) => `/mcp/${slug}`, color: "text-muted-foreground" },
+  prompt: { label: "Prompt", icon: FileText, href: (id) => `/prompts/${id}`, color: "text-muted-foreground" },
+  job: { label: "Job", icon: Briefcase, href: (id) => `/jobs/${id}`, color: "text-muted-foreground" },
+  showcase: { label: "Show", icon: Rocket, href: (id) => `/showcase/${id}`, color: "text-muted-foreground" },
+  blog: { label: "Blog", icon: BookOpen, href: (id) => `/resources/${id}`, color: "text-muted-foreground" },
+  post: { label: "Post", icon: LinkIcon, href: (id) => `/feed#${id}`, color: "text-muted-foreground" },
+  news: { label: "News", icon: Newspaper, href: () => "#", color: "text-muted-foreground" },
+  resource: { label: "Resource", icon: BookOpen, href: (id) => `/resources/${id}`, color: "text-muted-foreground" },
 };
 
 const typeFilters = [
@@ -168,7 +168,7 @@ export default function FeedClient({
                 key={filter.label}
                 onClick={() => setTypeFilter(filter.key)}
                 className={`px-3 py-1 rounded-full text-xs font-medium transition-colors whitespace-nowrap ${typeFilter === filter.key
-                    ? "bg-primary text-primary-foreground"
+                    ? "bg-foreground text-background"
                     : "bg-muted/50 text-muted-foreground hover:text-foreground hover:bg-muted"
                   }`}
               >

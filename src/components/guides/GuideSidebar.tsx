@@ -96,7 +96,7 @@ export function GuideSidebar({
                       {/* Status icon */}
                       <span className="shrink-0 mt-[3px] w-3.5 flex items-center justify-center">
                         {isCompleted ? (
-                          <CheckCircle2 className="h-3.5 w-3.5 text-green-500" />
+                          <CheckCircle2 className="h-3.5 w-3.5 text-success" />
                         ) : isLocked ? (
                           <Lock className="h-3 w-3 text-muted-foreground/30" />
                         ) : isActive ? (

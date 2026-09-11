@@ -77,7 +77,7 @@ const McpCta = ({ initialServers = [] }: { initialServers?: MCPServer[] }) => {
             )}
             <Link
               href="/mcp"
-              className="inline-flex min-h-12 items-center justify-center rounded-[9px] bg-primary px-7 text-sm font-semibold text-primary-foreground hover:bg-[var(--cad-accent-hover)]"
+              className="inline-flex min-h-12 items-center justify-center rounded-[9px] bg-foreground px-7 text-sm font-semibold text-background hover:bg-foreground/85"
             >
               Explore MCP servers
             </Link>

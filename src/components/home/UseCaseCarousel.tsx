@@ -77,7 +77,7 @@ export default function UseCaseCarousel({ bundles }: { bundles: UseCaseBundle[] 
               Claude, bundled for your work
             </h2>
             <p className="mt-3 max-w-[52ch] text-pretty text-[15px] leading-[1.6] text-muted-foreground">
-              Curated groups of MCP servers for a job to be done — explore a whole
+              Curated groups of MCP servers for a job to be done: explore a whole
               stack together instead of hunting one server at a time.
             </p>
           </div>

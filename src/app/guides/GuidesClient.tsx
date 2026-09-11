@@ -23,7 +23,7 @@ export default function GuidesClient({
             <div className="flex justify-between items-end mb-4">
               <div>
                 <div className="flex items-center gap-2.5 mb-2.5">
-                  <div className="h-10 w-10 flex items-center justify-center rounded-xl bg-orange-500/10 text-orange-500 border border-orange-500/20 shadow-sm">
+                  <div className="h-10 w-10 flex items-center justify-center rounded-xl bg-[var(--cad-accent-soft)] text-primary border border-border">
                     <BookOpen className="h-5 w-5" />
                   </div>
                   <h1 className="text-3xl font-bold tracking-tight text-foreground">Guides</h1>

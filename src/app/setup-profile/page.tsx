@@ -141,7 +141,7 @@ export default function SetupProfile() {
                     <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
                   )}
                   {availability === "available" && (
-                    <Check className="h-4 w-4 text-green-500" />
+                    <Check className="h-4 w-4 text-success" />
                   )}
                   {availability === "taken" && (
                     <X className="h-4 w-4 text-destructive" />

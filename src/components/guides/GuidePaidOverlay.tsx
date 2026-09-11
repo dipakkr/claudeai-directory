@@ -29,7 +29,7 @@ export function GuidePaidOverlay({ guideTitle, price }: GuidePaidOverlayProps) {
         <div className="space-y-2 text-left mb-6">
           {["Access all premium lessons", "Track your progress", "Lifetime access to updates"].map((item) => (
             <div key={item} className="flex items-center gap-2 text-xs text-muted-foreground">
-              <CheckCircle2 className="h-3.5 w-3.5 text-green-500 shrink-0" />
+              <CheckCircle2 className="h-3.5 w-3.5 text-success shrink-0" />
               <span>{item}</span>
             </div>
           ))}
@@ -38,7 +38,7 @@ export function GuidePaidOverlay({ guideTitle, price }: GuidePaidOverlayProps) {
         <Link href="/pricing">
           <Button className="w-full" size="sm">
             <Sparkles className="mr-1.5 h-3.5 w-3.5" />
-            {price ? `Unlock Guide — $${price}` : "Upgrade to Pro"}
+            {price ? `Unlock Guide: $${price}` : "Upgrade to Pro"}
           </Button>
         </Link>
 

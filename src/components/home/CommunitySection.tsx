@@ -60,7 +60,7 @@ const CommunitySection = ({ initialThreads, members = [], memberCount = 0 }: Com
               Ask questions. Share what works. Meet the builders.
             </h2>
             <p className="text-sm text-muted-foreground mt-1.5 max-w-xl">
-              A community-run forum for people building with Claude — open to read, free to join.
+              A community-run forum for people building with Claude: open to read, free to join.
             </p>
           </div>
           <Link
@@ -188,7 +188,7 @@ const CommunitySection = ({ initialThreads, members = [], memberCount = 0 }: Com
               </p>
               <Link
                 href="/signup"
-                className="inline-flex w-full items-center justify-center gap-1.5 rounded-lg bg-primary py-2 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90"
+                className="inline-flex w-full items-center justify-center gap-1.5 rounded-lg bg-foreground py-2 text-sm font-medium text-background transition-opacity hover:opacity-90"
               >
                 <Lock className="h-3.5 w-3.5" />
                 Join to connect

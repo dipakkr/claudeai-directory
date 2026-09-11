@@ -3,7 +3,7 @@ import { fetchApi } from "@/lib/api-server";
 import type { BlogPost } from "@/types";
 
 export const runtime = "edge";
-export const alt = "Cloud Directory — Blog";
+export const alt = "Cloud Directory: Blog";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 

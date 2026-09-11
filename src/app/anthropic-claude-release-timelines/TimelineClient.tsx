@@ -278,7 +278,7 @@ export default function TimelineClient({ initialEvents }: { initialEvents: Timel
             </h1>
             <p className="text-sm text-muted-foreground">
               Every model release, feature launch, research paper, and milestone in Anthropic&apos;s
-              history —{" "}
+              history.{" "}
               <span className="text-foreground">{sortedEvents.length} events</span> from 2021 to today.
             </p>
           </div>
@@ -298,7 +298,7 @@ export default function TimelineClient({ initialEvents }: { initialEvents: Timel
                   key={opt.value}
                   onClick={() => setActiveFilter(opt.value)}
                   className={`flex items-center gap-1.5 px-2.5 py-1 text-[11px] rounded-md border transition-colors whitespace-nowrap ${isActive
-                      ? "bg-primary text-primary-foreground border-primary"
+                      ? "bg-foreground text-background border-primary"
                       : "bg-card text-muted-foreground border-border hover:text-foreground hover:border-primary/30"
                     }`}
                 >

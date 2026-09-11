@@ -47,11 +47,11 @@ export async function generateMetadata({
     const resource = await getResource(slug);
 
     if (!resource) {
-        return { title: "Resource not found — ClaudeAI Directory" };
+        return { title: "Resource not found: ClaudeAI Directory" };
     }
 
     return {
-        title: `${resource.title} — ClaudeAI Directory`,
+        title: `${resource.title}: ClaudeAI Directory`,
         description: resource.description,
         authors: resource.author ? [{ name: resource.author }] : undefined,
         // Point search engines at the author's original. This is a mirror with

@@ -237,7 +237,7 @@ export default function CheatsheetClient() {
               {/* 4 — Checkpointing */}
               <section id="checkpointing">
                 <h2 className="text-lg font-semibold mb-5 pb-2 border-b border-border">Checkpointing</h2>
-                <p className="text-sm text-muted-foreground mb-4">Rewind the conversation and all file changes to a previous state — like a session-level undo.</p>
+                <p className="text-sm text-muted-foreground mb-4">Rewind the conversation and all file changes to a previous state, like a session-level undo.</p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 mb-5">
                   {[
                     { key: "Esc Esc", desc: "Undo last assistant turn" },
@@ -278,14 +278,14 @@ export default function CheatsheetClient() {
                   <CmdRow cmd="/review"      desc="Invoke code-review skill (if installed)" />
                   <CmdRow cmd="/commit"      desc="Invoke commit skill (if installed)" />
                 </tbody></table>
-                <h3 className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-2">Custom — <code className="font-mono normal-case text-xs bg-muted px-1 py-0.5 rounded">.claude/commands/&lt;name&gt;.md</code></h3>
+                <h3 className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-2">Custom: <code className="font-mono normal-case text-xs bg-muted px-1 py-0.5 rounded">.claude/commands/&lt;name&gt;.md</code></h3>
                 <CodeBlock code={`---\ndescription: "Run all linters and fix auto-fixable issues"\nallowed-tools: Bash\n---\n\n1. \`npm run lint -- --fix\`\n2. \`npm run type-check\`\n3. Summarise what was fixed.`} language="markdown" />
               </section>
 
               {/* 6 — Headless Mode */}
               <section id="headless-mode">
                 <h2 className="text-lg font-semibold mb-5 pb-2 border-b border-border">Headless Mode</h2>
-                <p className="text-sm text-muted-foreground mb-4">Use <Kbd>-p</Kbd> / <Kbd>--print</Kbd> for non-interactive use — CI, scripts, automation.</p>
+                <p className="text-sm text-muted-foreground mb-4">Use <Kbd>-p</Kbd> / <Kbd>--print</Kbd> for non-interactive use: CI, scripts, automation.</p>
                 <CodeBlock code={`claude -p "summarise the last commit"\ncat README.md | claude -p "check for spelling errors"\nclaude -p "list all TODO comments" --output-format json\nclaude -p "explain main.go" --output-format stream-json`} />
                 <h3 className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-2 mt-5">Output formats</h3>
                 <table className="w-full mb-5"><tbody>
@@ -341,7 +341,7 @@ export default function CheatsheetClient() {
                     { name: "notion",      desc: "Query, create, and update pages and databases in Notion.",            cmd: "npx -y @notionhq/notion-mcp-server" },
                     { name: "linear",      desc: "Create and triage issues, projects, and cycles in Linear.",           cmd: "npx -y @linear/linear-mcp-server" },
                     { name: "figma",       desc: "Inspect Figma files, components, and design tokens.",                 cmd: "npx -y @figma/mcp-server" },
-                    { name: "playwright",  desc: "Automate browsers — navigate, click, screenshot, and scrape.",        cmd: "npx -y @executeautomation/playwright-mcp-server" },
+                    { name: "playwright",  desc: "Automate browsers: navigate, click, screenshot, and scrape.",        cmd: "npx -y @executeautomation/playwright-mcp-server" },
                   ].map((s) => <McpCard key={s.name} {...s} />)}
                 </div>
                 <Link
@@ -356,7 +356,7 @@ export default function CheatsheetClient() {
               {/* 10 — Git Worktrees */}
               <section id="git-worktrees">
                 <h2 className="text-lg font-semibold mb-5 pb-2 border-b border-border">Git Worktrees</h2>
-                <p className="text-sm text-muted-foreground mb-4">Check out multiple branches simultaneously — run parallel Claude Code sessions without conflicts.</p>
+                <p className="text-sm text-muted-foreground mb-4">Check out multiple branches simultaneously: run parallel Claude Code sessions without conflicts.</p>
                 <CodeBlock code={`git worktree list\ngit worktree add ../feature-branch feature-branch\ngit worktree add -b my-feature ../my-feature main\ngit worktree remove ../feature-branch\ngit worktree prune`} />
                 <h3 className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-2 mt-5">Parallel workflow</h3>
                 <CodeBlock code={`# Terminal 1\ngit worktree add -b feat/auth ../project-auth main\ncd ../project-auth && claude\n\n# Terminal 2\ngit worktree add -b fix/perf ../project-perf main\ncd ../project-perf && claude`} />
@@ -400,7 +400,7 @@ export default function CheatsheetClient() {
                 <h2 className="text-lg font-semibold mb-5 pb-2 border-b border-border">Hooks</h2>
                 <h3 className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-2">Events</h3>
                 <table className="w-full mb-5"><tbody>
-                  <CmdRow cmd="PreToolUse"   desc="Before any tool call — block by exiting non-zero" />
+                  <CmdRow cmd="PreToolUse"   desc="Before any tool call: block by exiting non-zero" />
                   <CmdRow cmd="PostToolUse"  desc="After any tool call completes" />
                   <CmdRow cmd="Stop"         desc="When Claude finishes its final response" />
                   <CmdRow cmd="Notification" desc="When Claude emits a system notification" />

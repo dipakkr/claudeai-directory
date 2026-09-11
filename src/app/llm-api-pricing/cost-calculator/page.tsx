@@ -104,7 +104,7 @@ const CompareCost = () => {
                                         <div className="flex items-center justify-between">
                                             <span className="text-xs text-muted-foreground">Cheapest</span>
                                             <div className="flex items-center gap-2">
-                                                <TrendingDown className="h-3 w-3 text-green-500" />
+                                                <TrendingDown className="h-3 w-3 text-success" />
                                                 <span className="text-sm font-medium">{cheapest.provider} {cheapest.model.substring(0, 15)}{cheapest.model.length > 15 ? '...' : ''}</span>
                                             </div>
                                         </div>
@@ -113,7 +113,7 @@ const CompareCost = () => {
                                         <div className="flex items-center justify-between">
                                             <span className="text-xs text-muted-foreground">Most Expensive</span>
                                             <div className="flex items-center gap-2">
-                                                <TrendingUp className="h-3 w-3 text-red-500" />
+                                                <TrendingUp className="h-3 w-3 text-destructive" />
                                                 <span className="text-sm font-medium">{mostExpensive.provider} {mostExpensive.model.substring(0, 15)}{mostExpensive.model.length > 15 ? '...' : ''}</span>
                                             </div>
                                         </div>
@@ -180,7 +180,7 @@ const CompareCost = () => {
                                                                         <div className="flex items-center gap-2">
                                                                             <span className="font-medium">{comparison.provider}</span>
                                                                             {isCheapest && (
-                                                                                <Badge variant="outline" className="text-xs bg-green-500/10 text-green-500 border-green-500/20">
+                                                                                <Badge>
                                                                                     Best Value
                                                                                 </Badge>
                                                                             )}
@@ -204,7 +204,7 @@ const CompareCost = () => {
                                                                     </div>
                                                                 </TableCell>
                                                                 <TableCell className="text-right">
-                                                                    <span className={`font-medium ${isCheapest ? 'text-green-500' : isExpensive ? 'text-red-500' : ''}`}>
+                                                                    <span className={`font-medium ${isCheapest ? 'text-success' : isExpensive ? 'text-destructive' : ''}`}>
                                                                         {formatCost(comparison.cost)}
                                                                     </span>
                                                                 </TableCell>
