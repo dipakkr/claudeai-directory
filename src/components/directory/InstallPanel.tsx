@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { ExternalLink, KeyRound, Terminal } from "lucide-react";
+import { ChevronDown, ExternalLink, KeyRound, Terminal } from "lucide-react";
 import { CodeBlock, CopyButton, SectionLabel } from "@/components/directory/detail";
 import { track } from "@/lib/analytics";
 import { recordRecent } from "@/lib/recent";
@@ -32,21 +32,29 @@ function Step({ n, title, children }: { n?: number; title: string; children: Rea
 function CommandRow({
   command,
   event,
+  surface,
   kind,
   resourceId,
 }: {
   command: string;
   event: "install_command_copied" | "marketplace_command_copied" | "mcp_command_copied";
+  /** Where the command runs, so we can see which install path people use. */
+  surface?: "terminal" | "session";
   kind: ResourceKind;
   resourceId: string;
 }) {
   return (
     <div className="flex items-start gap-2">
       <div className="min-w-0 flex-1">
-        <CodeBlock>{command}</CodeBlock>
+        {/* Wrapped so a long install line is readable before it is pasted. */}
+        <CodeBlock wrap>{command}</CodeBlock>
       </div>
       <div className="pt-3">
-        <CopyButton text={command} event={event} eventProps={{ resource_type: kind, resource_id: resourceId }} />
+        <CopyButton
+          text={command}
+          event={event}
+          eventProps={{ resource_type: kind, resource_id: resourceId, ...(surface ? { surface } : {}) }}
+        />
       </div>
     </div>
   );
@@ -125,14 +133,48 @@ export function InstallPanel({
 
       {resolution.method === "plugin_marketplace" && (
         <div className="space-y-3">
-          <Step title={`Already added the ${resolution.match.marketplaceName} marketplace?`}>
-            <CommandRow command={resolution.installCommand} event="install_command_copied" kind={kind} resourceId={resourceId} />
+          <Step title="Run in your terminal">
+            <CommandRow
+              command={resolution.terminalCommand}
+              event="install_command_copied"
+              surface="terminal"
+              kind={kind}
+              resourceId={resourceId}
+            />
+            <p className="mt-2.5 text-[13px] leading-relaxed text-muted-foreground">
+              Adds the {resolution.match.marketplaceName} marketplace if you don&apos;t have it yet, then installs. Start a
+              new Claude Code session to use it.
+            </p>
           </Step>
-          <Step title="First time? Add the marketplace once, then run the command above.">
-            <CommandRow command={resolution.addMarketplaceCommand} event="marketplace_command_copied" kind={kind} resourceId={resourceId} />
-          </Step>
+          <details className="group rounded-xl border border-border bg-card/40 p-4 [&_summary::-webkit-details-marker]:hidden">
+            <summary className="flex cursor-pointer list-none items-center justify-between text-sm text-foreground">
+              Already in a Claude Code session?
+              <ChevronDown className="h-4 w-4 text-muted-foreground transition-transform group-open:rotate-180" />
+            </summary>
+            <div className="mt-3 space-y-3">
+              <div>
+                <p className="mb-1.5 text-[13px] text-muted-foreground">1. Add the marketplace (first time only)</p>
+                <CommandRow
+                  command={resolution.addMarketplaceCommand}
+                  event="marketplace_command_copied"
+                  surface="session"
+                  kind={kind}
+                  resourceId={resourceId}
+                />
+              </div>
+              <div>
+                <p className="mb-1.5 text-[13px] text-muted-foreground">2. Install</p>
+                <CommandRow
+                  command={resolution.installCommand}
+                  event="install_command_copied"
+                  surface="session"
+                  kind={kind}
+                  resourceId={resourceId}
+                />
+              </div>
+            </div>
+          </details>
           <p className="text-[13px] leading-relaxed text-muted-foreground">
-            Run these inside Claude Code.
             {resolution.match.bundledWith.length > 0 && (
               <>
                 {" "}

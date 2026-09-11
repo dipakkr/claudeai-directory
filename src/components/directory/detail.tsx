@@ -168,9 +168,13 @@ export function ConfigCard({
   );
 }
 
-export function CodeBlock({ children }: { children: string }) {
+export function CodeBlock({ children, wrap = false }: { children: string; wrap?: boolean }) {
   return (
-    <pre className="overflow-x-auto rounded-lg border border-border bg-[var(--cad-code)] p-4 font-mono text-[13px] leading-6 text-foreground/90">
+    <pre
+      className={`rounded-lg border border-border bg-[var(--cad-code)] p-4 font-mono text-[13px] leading-6 text-foreground/90 ${
+        wrap ? "whitespace-pre-wrap break-words" : "overflow-x-auto"
+      }`}
+    >
       <code>{children}</code>
     </pre>
   );

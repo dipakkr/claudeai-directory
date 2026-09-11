@@ -45,6 +45,8 @@ export type InstallResolution =
       verified: true;
       installCommand: string;
       addMarketplaceCommand: string;
+      /** One shell line: add the marketplace (a no-op when already added) and install. */
+      terminalCommand: string;
       match: MarketplaceMatch;
       sourceUrl?: string;
     }
@@ -115,6 +117,12 @@ export function pluginInstallCommand(pluginName: string, marketplaceName: string
 export function marketplaceAddCommand(source: string): string {
   return `/plugin marketplace add ${source}`;
 }
+
+export function pluginTerminalCommand(pluginName: string, marketplaceName: string, source: string): string {
+  return `claude plugin marketplace add ${source} && claude plugin install ${pluginName}@${marketplaceName}`;
+}
+
+const GITHUB_SOURCE = /^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/;
 
 /** MCP: structured `install` from the API wins; otherwise derive from connection fields. */
 export function resolveMcpInstall(input: {
@@ -212,13 +220,15 @@ export function resolvePluginInstall(input: {
   sourceUrl?: string | null;
 }): InstallResolution {
   const sourceUrl = input.sourceUrl || undefined;
-  if (input.match && SLUG.test(input.match.pluginName)) {
+  const m = input.match;
+  if (m && SLUG.test(m.pluginName) && SLUG.test(m.marketplaceName) && GITHUB_SOURCE.test(m.marketplaceSource)) {
     return {
       method: "plugin_marketplace",
       verified: true,
-      installCommand: pluginInstallCommand(input.match.pluginName, input.match.marketplaceName),
-      addMarketplaceCommand: marketplaceAddCommand(input.match.marketplaceSource),
-      match: input.match,
+      installCommand: pluginInstallCommand(m.pluginName, m.marketplaceName),
+      addMarketplaceCommand: marketplaceAddCommand(m.marketplaceSource),
+      terminalCommand: pluginTerminalCommand(m.pluginName, m.marketplaceName, m.marketplaceSource),
+      match: m,
       sourceUrl,
     };
   }
