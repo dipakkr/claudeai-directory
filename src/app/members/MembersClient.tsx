@@ -1,71 +1,72 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useMemo, useState } from "react";
 import Link from "next/link";
+import { ChevronDown, Search, Users } from "lucide-react";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
-import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useMembers, type MembersResponse } from "@/hooks/use-members";
 import { useAuth } from "@/lib/auth";
-import { Users, Lock } from "lucide-react";
 import type { PublicProfile } from "@/types";
 
-function MemberCard({
-  member,
-  blurred,
-  teased,
-}: {
-  member: PublicProfile;
-  blurred?: boolean;
-  /** Real content, softened and non-interactive — the row behind the gate. */
-  teased?: boolean;
-}) {
-  const displayName = member.name || member.username;
-  const initials = displayName.slice(0, 2).toUpperCase();
+const PAGE_SIZE = 60;
 
-  const inner = (
-    <div
-      className={`flex items-center gap-3 rounded-[10px] border border-border bg-card p-3 transition-colors group ${
-        blurred || teased
-          ? "select-none pointer-events-none"
-          : "hover:border-[var(--cad-line-hover)] cursor-pointer"
-      }`}
-    >
-      <span className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-full bg-[var(--cad-chip)] text-[12px] font-semibold text-[var(--cad-accent-hover)]">
-        {member.avatar && !blurred ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img src={member.avatar} alt="" className="h-full w-full object-cover" />
-        ) : (
-          initials
-        )}
-      </span>
-      <div className="min-w-0">
-        <p className="truncate text-[13px] font-semibold text-foreground">
-          {displayName}
-        </p>
-        {member.bio && !blurred && (
-          <p className="truncate text-[12px] leading-[1.4] text-muted-foreground">{member.bio}</p>
-        )}
-        {blurred && (
-          <p className="text-[12px] text-muted-foreground">@{member.username}</p>
-        )}
-      </div>
-    </div>
-  );
+// Muted, warm-leaning hues for letter avatars; picked by a stable hash of the username.
+const AVATAR_HUES = [14, 32, 48, 95, 160, 195, 225, 265, 320];
 
-  if (blurred || teased) return inner;
+function hueFor(key: string) {
+  let h = 0;
+  for (let i = 0; i < key.length; i++) h = (h * 31 + key.charCodeAt(i)) >>> 0;
+  return AVATAR_HUES[h % AVATAR_HUES.length];
+}
+
+function Avatar({ member }: { member: PublicProfile }) {
+  const [failed, setFailed] = useState(false);
+  const label = (member.name || member.username).trim();
+  if (member.avatar && !failed) {
+    return (
+      // eslint-disable-next-line @next/next/no-img-element
+      <img
+        src={member.avatar}
+        alt=""
+        loading="lazy"
+        referrerPolicy="no-referrer"
+        onError={() => setFailed(true)}
+        className="h-10 w-10 shrink-0 rounded-lg border border-border object-cover"
+      />
+    );
+  }
   return (
-    <Link href={`/u/${member.username}`} className="block">
-      {inner}
+    <span
+      aria-hidden="true"
+      className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg text-[15px] font-medium text-white"
+      style={{ backgroundColor: `hsl(${hueFor(member.username)} 42% 42%)` }}
+    >
+      {label[0]?.toUpperCase()}
+    </span>
+  );
+}
+
+function MemberCard({ member }: { member: PublicProfile }) {
+  return (
+    <Link
+      href={`/u/${member.username}`}
+      className="flex items-center gap-3 rounded-xl border border-border bg-card/40 p-3 transition-colors hover:border-[var(--cad-line-hover)] hover:bg-card"
+    >
+      <Avatar member={member} />
+      <span className="min-w-0">
+        <span className="block truncate text-[14px] text-foreground">{member.name || member.username}</span>
+        <span className="block truncate font-mono text-[12px] text-muted-foreground">@{member.username}</span>
+      </span>
     </Link>
   );
 }
 
 function MemberCardSkeleton() {
   return (
-    <div className="flex items-center gap-3 p-3 border border-border rounded-[10px]">
-      <Skeleton className="h-9 w-9 rounded-full shrink-0" />
+    <div className="flex items-center gap-3 rounded-xl border border-border p-3">
+      <Skeleton className="h-10 w-10 shrink-0 rounded-lg" />
       <div className="space-y-1.5">
         <Skeleton className="h-3.5 w-28" />
         <Skeleton className="h-2.5 w-20" />
@@ -74,155 +75,119 @@ function MemberCardSkeleton() {
   );
 }
 
-// Two rows fully visible, then one row of real people softened behind the gate
-// so it reads as "there are more" rather than ending in grey placeholders.
-const VISIBLE_COUNT = 8;
-const TEASE_COUNT = 4;
+type Sort = "recent" | "name";
 
-export default function MembersClient({
-  initialData,
-}: {
-  initialData: MembersResponse | null;
-}) {
+export default function MembersClient({ initialData }: { initialData: MembersResponse | null }) {
   const [search, setSearch] = useState("");
+  const [sort, setSort] = useState<Sort>("recent");
+  const [visible, setVisible] = useState(PAGE_SIZE);
   const { isAuthenticated } = useAuth();
-  const isUnlocked = isAuthenticated;
 
-  const { data, isLoading } = useMembers(
-    { per_page: 200 },
-    { initialData: initialData ?? undefined }
-  );
-
+  const { data, isLoading } = useMembers({ per_page: 200 }, { initialData: initialData ?? undefined });
   const members = useMemo(() => data?.members ?? [], [data?.members]);
-  const total = data?.total ?? 0;
+  const total = data?.total ?? members.length;
 
   const filtered = useMemo(() => {
-    if (!search.trim()) return members;
-    const q = search.toLowerCase();
-    return members.filter(
-      (m) =>
-        m.username.toLowerCase().includes(q) ||
-        m.name?.toLowerCase().includes(q) ||
-        m.bio?.toLowerCase().includes(q) ||
-        m.github?.toLowerCase().includes(q) ||
-        m.twitter?.toLowerCase().includes(q)
-    );
-  }, [members, search]);
+    const q = search.trim().toLowerCase();
+    const list = q
+      ? members.filter(
+          (m) =>
+            m.username.toLowerCase().includes(q) ||
+            m.name?.toLowerCase().includes(q) ||
+            m.bio?.toLowerCase().includes(q),
+        )
+      : members;
+    // The API already returns newest first.
+    return sort === "name"
+      ? [...list].sort((a, b) => (a.name || a.username).localeCompare(b.name || b.username))
+      : list;
+  }, [members, search, sort]);
 
-  // Split into visible + locked sections
-  const visibleMembers = isUnlocked ? filtered : filtered.slice(0, VISIBLE_COUNT);
-  const teasedMembers = isUnlocked
-    ? []
-    : filtered.slice(VISIBLE_COUNT, VISIBLE_COUNT + TEASE_COUNT);
-  const lockedMembers = isUnlocked ? [] : filtered.slice(VISIBLE_COUNT);
+  const shown = filtered.slice(0, visible);
 
   return (
-    <div className="cad-shell flex flex-col">
+    <div className="min-h-screen bg-background">
       <Header />
-      <main className="flex-1">
-        <div className="mx-auto max-w-[1180px] px-8 pb-[88px] pt-[60px]">
-
-          {/* Page header */}
-          <div className="mb-[34px] flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-            <div>
-              <h1 className="text-[clamp(32px,4vw,42px)] font-medium leading-[1.08]">
-                Members
-              </h1>
-              <p className="mt-3 max-w-[62ch] text-base leading-[1.6] text-muted-foreground">
-                {total > 0
-                  ? `${total.toLocaleString()} people submit, review and maintain what's listed here.`
-                  : "People submit, review and maintain what's listed here."}
-              </p>
-            </div>
-            {!isUnlocked && (
-              <Button asChild size="sm" className="shrink-0">
-                <Link href="/login">Join the community</Link>
-              </Button>
-            )}
+      <main className="mx-auto max-w-[1180px] px-4 pb-24 pt-14 md:px-8 md:pt-16">
+        <div className="flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
+          <div>
+            <h1 className="text-[clamp(36px,5vw,52px)] font-normal leading-[1.05] text-foreground">Members</h1>
+            <p className="mt-3 text-[16px] text-muted-foreground">
+              {total > 0 ? `${total.toLocaleString()} people` : "People"} building with Claude and sharing what they make.
+            </p>
           </div>
+          {!isAuthenticated && (
+            <Link
+              href="/login"
+              className="inline-flex h-10 shrink-0 items-center self-start rounded-full border border-border px-4 text-sm text-foreground transition-colors hover:border-[var(--cad-line-hover)]"
+            >
+              Join the community
+            </Link>
+          )}
+        </div>
 
-          {/* Search */}
-          <div className="mb-8 border-b border-border">
+        <div className="mt-10 flex flex-col gap-3 sm:flex-row">
+          <label className="relative block flex-1 sm:max-w-[520px]">
+            <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <input
-              type="text"
-              placeholder="Search members"
+              type="search"
               value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="w-full bg-transparent py-2.5 text-sm text-foreground placeholder:text-muted-foreground/60 focus:outline-none"
+              onChange={(e) => {
+                setSearch(e.target.value);
+                setVisible(PAGE_SIZE);
+              }}
+              placeholder={members.length > 0 ? `Search ${members.length.toLocaleString()} members by name...` : "Search members by name..."}
+              aria-label="Search members"
+              className="h-11 w-full rounded-full border border-border bg-card pl-11 pr-4 text-[14px] text-foreground outline-none transition-colors placeholder:text-muted-foreground focus:border-[var(--cad-line-hover)]"
             />
-          </div>
+          </label>
+          <label className="relative block sm:w-44">
+            <select
+              value={sort}
+              onChange={(e) => setSort(e.target.value as Sort)}
+              aria-label="Sort members"
+              className="h-11 w-full appearance-none rounded-full border border-border bg-card pl-4 pr-10 text-[14px] text-foreground outline-none transition-colors focus:border-[var(--cad-line-hover)]"
+            >
+              <option value="recent">Recent</option>
+              <option value="name">Name A to Z</option>
+            </select>
+            <ChevronDown className="pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+          </label>
+        </div>
 
-          {/* Grid */}
+        <div className="mt-6">
           {isLoading && !initialData ? (
-            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
               {Array.from({ length: 18 }).map((_, i) => (
                 <MemberCardSkeleton key={i} />
               ))}
             </div>
-          ) : filtered.length > 0 ? (
-            <div className="relative">
-              {/* Visible members */}
-              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                {visibleMembers.map((member) => (
+          ) : shown.length > 0 ? (
+            <>
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                {shown.map((member) => (
                   <MemberCard key={member.id} member={member} />
                 ))}
               </div>
-
-              {/* Locked section — one softened row of real members, fading into the CTA */}
-              {lockedMembers.length > 0 && (
-                <div className="relative mt-3">
-                  <div
-                    aria-hidden="true"
-                    className="pointer-events-none select-none blur-[3px] opacity-70"
-                    style={{
-                      maskImage:
-                        "linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,0.85) 45%, rgba(0,0,0,0) 100%)",
-                      WebkitMaskImage:
-                        "linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,0.85) 45%, rgba(0,0,0,0) 100%)",
-                    }}
+              {filtered.length > visible && (
+                <div className="mt-8 flex justify-center">
+                  <button
+                    type="button"
+                    onClick={() => setVisible((v) => v + PAGE_SIZE)}
+                    className="h-9 rounded-full border border-border px-5 text-sm text-muted-foreground transition-colors hover:border-[var(--cad-line-hover)] hover:text-foreground"
                   >
-                    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                      {teasedMembers.map((member) => (
-                        <MemberCard key={member.id} member={member} teased />
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* CTA sits under the fade rather than covering the faces */}
-                  <div className="-mt-6 flex justify-center">
-                    <div className="w-full max-w-sm rounded-[10px] border border-border bg-card px-8 py-6 text-center shadow-xl">
-                      <div className="mx-auto mb-3 flex h-10 w-10 items-center justify-center rounded-full bg-primary/10">
-                        <Lock className="h-5 w-5 text-primary" />
-                      </div>
-                      <p className="mb-1 text-sm font-semibold text-foreground">
-                        {lockedMembers.length.toLocaleString()} more {lockedMembers.length === 1 ? "member" : "members"}
-                      </p>
-                      <p className="mb-4 text-xs leading-relaxed text-muted-foreground">
-                        Sign in to browse all profiles and connect with the community.
-                      </p>
-                      <Button asChild size="sm" className="w-full">
-                        <Link href="/login">Sign in to unlock</Link>
-                      </Button>
-                    </div>
-                  </div>
+                    Show more
+                    <span className="ml-2 font-mono text-[11px]">{filtered.length - visible}</span>
+                  </button>
                 </div>
               )}
-
-              {search && filtered.length !== members.length && (
-                <p className="text-xs text-muted-foreground mt-5">
-                  Showing {filtered.length} of {members.length} members
-                </p>
-              )}
-            </div>
+            </>
           ) : (
             <div className="py-24 text-center">
-              <Users className="h-10 w-10 text-muted-foreground/20 mx-auto mb-3" />
-              <p className="text-sm text-muted-foreground">
-                {search ? "No members match your search." : "No members yet."}
-              </p>
+              <Users className="mx-auto mb-3 h-10 w-10 text-muted-foreground/30" />
+              <p className="text-sm text-muted-foreground">{search ? "No members match your search." : "No members yet."}</p>
             </div>
           )}
-
         </div>
       </main>
       <Footer />
