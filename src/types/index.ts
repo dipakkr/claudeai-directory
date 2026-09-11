@@ -1,3 +1,5 @@
+import type { ResourceInstall } from "@/lib/install";
+
 export interface User {
   id: string;
   email: string;
@@ -50,6 +52,26 @@ export interface Skill {
   review_count: number;
   verified: boolean;
   featured: boolean;
+  install?: ResourceInstall | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface Agent {
+  id: string;
+  name: string;
+  title: string;
+  description: string;
+  content?: string;
+  category: string;
+  tags: string[];
+  author?: { name: string; url?: string };
+  github_url?: string;
+  stars?: number;
+  license?: string;
+  tools?: string[];
+  model?: string;
+  install?: ResourceInstall | null;
   created_at: string;
   updated_at: string;
 }
@@ -125,6 +147,7 @@ export interface MCPServer {
   tags: string[];
   published_on?: string;
   updated_on?: string;
+  install?: ResourceInstall | null;
   created_at: string;
   updated_at: string;
 }
