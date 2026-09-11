@@ -10,12 +10,14 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
-import { Search, Wrench, Server, FileText, Briefcase, Rocket, BookOpen } from "lucide-react";
+import { Search, Wrench, Server, FileText, Briefcase, Rocket, BookOpen, Bot } from "lucide-react";
 import { useSearch } from "@/hooks/use-search";
 import { useDebounce } from "@/hooks/use-debounce";
+import { track } from "@/lib/analytics";
 
 const typeIcons: Record<string, React.ReactNode> = {
   skill: <Wrench className="mr-2 h-4 w-4 text-muted-foreground" />,
+  agent: <Bot className="mr-2 h-4 w-4 text-muted-foreground" />,
   mcp_server: <Server className="mr-2 h-4 w-4 text-muted-foreground" />,
   prompt: <FileText className="mr-2 h-4 w-4 text-muted-foreground" />,
   job: <Briefcase className="mr-2 h-4 w-4 text-muted-foreground" />,
@@ -25,6 +27,7 @@ const typeIcons: Record<string, React.ReactNode> = {
 
 const typeLabels: Record<string, string> = {
   skill: "Skills",
+  agent: "Agents",
   mcp_server: "MCP Servers",
   prompt: "Prompts",
   job: "Jobs",
@@ -34,6 +37,7 @@ const typeLabels: Record<string, string> = {
 
 const typeRoutes: Record<string, string> = {
   skill: "/skills",
+  agent: "/agents",
   mcp_server: "/mcp",
   prompt: "/prompts",
   job: "/jobs",
@@ -53,6 +57,11 @@ export function CommandMenuProvider({ children }: { children: React.ReactNode })
   const debouncedQuery = useDebounce(query, 300);
   const { data: results } = useSearch(debouncedQuery);
   const router = useRouter();
+  const settledQuery = useDebounce(query, 900);
+
+  useEffect(() => {
+    if (settledQuery.trim().length >= 2) track("search_performed", { query: settledQuery.trim() });
+  }, [settledQuery]);
 
   useEffect(() => {
     const down = (e: KeyboardEvent) => {

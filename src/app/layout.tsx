@@ -1,25 +1,25 @@
 import type { Metadata } from "next";
-import { Roboto, Roboto_Mono, Roboto_Serif } from "next/font/google";
+import { Geist, Geist_Mono, Source_Serif_4 } from "next/font/google";
 import "./globals.css";
 import Providers from "@/components/providers";
 import Script from "next/script";
 import { OpenPanelComponent } from '@openpanel/nextjs';
 import { AnnouncementBanner } from "@/components/layout/AnnouncementBanner";
 
-const roboto = Roboto({
-  variable: "--font-roboto",
+const geistSans = Geist({
+  variable: "--font-geist-sans",
   subsets: ["latin"],
-  weight: ["300", "400", "500", "700"],
 });
 
-const robotoSerif = Roboto_Serif({
-  variable: "--font-roboto-serif",
+// Display serif for page titles — the "Claude" half of the look.
+const sourceSerif = Source_Serif_4({
+  variable: "--font-source-serif",
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+  weight: ["400", "500", "600"],
 });
 
-const robotoMono = Roboto_Mono({
-  variable: "--font-roboto-mono",
+const geistMono = Geist_Mono({
+  variable: "--font-geist-mono",
   subsets: ["latin"],
 });
 
@@ -28,38 +28,35 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.claudeai.direc
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "ClaudeAI Directory — Skills, MCP Servers, Prompts & AI Jobs",
-    template: "%s | ClaudeAI Directory",
+    default: "Claude Directory: Skills, MCP Servers & Agents",
+    template: "%s | Claude Directory",
   },
   description:
-    "The community directory for Claude AI. Discover MCP servers, skills, prompts, AI jobs, and resources to build with Claude.",
+    "Discover community-built Claude Skills, MCP servers and Agents. Explore what is trending, install useful resources and publish what you build.",
   keywords: [
-    "Claude AI",
-    "MCP servers",
-    "Model Context Protocol",
-    "Claude skills",
-    "AI prompts",
+    "Claude Skills",
+    "Claude MCP servers",
+    "MCP servers for Claude",
+    "Claude Agents",
+    "Claude Code Agents",
     "Claude Code",
-    "AI tools",
-    "AI jobs",
-    "Anthropic",
   ],
-  authors: [{ name: "ClaudeAI Directory" }],
-  creator: "ClaudeAI Directory",
+  authors: [{ name: "Claude Directory" }],
+  creator: "Claude Directory",
   openGraph: {
     type: "website",
     locale: "en_US",
     url: SITE_URL,
-    siteName: "ClaudeAI Directory",
-    title: "ClaudeAI Directory — Skills, MCP Servers, Prompts & AI Jobs",
+    siteName: "Claude Directory",
+    title: "Claude Directory: Skills, MCP Servers & Agents",
     description:
-      "The community directory for Claude AI. Discover MCP servers, skills, prompts, AI jobs, and resources to build with Claude.",
+      "Discover community-built Claude Skills, MCP servers and Agents. Explore what is trending, install useful resources and publish what you build.",
   },
   twitter: {
     card: "summary_large_image",
-    title: "ClaudeAI Directory — Skills, MCP Servers, Prompts & AI Jobs",
+    title: "Claude Directory: Skills, MCP Servers & Agents",
     description:
-      "The community directory for Claude AI. Discover MCP servers, skills, prompts, AI jobs, and resources.",
+      "Discover community-built Claude Skills, MCP servers and Agents. Explore what is trending, install useful resources and publish what you build.",
   },
   robots: {
     index: true,
@@ -85,7 +82,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${roboto.variable} ${robotoSerif.variable} ${robotoMono.variable} antialiased overflow-x-hidden`}
+        className={`${geistSans.variable} ${sourceSerif.variable} ${geistMono.variable} antialiased overflow-x-hidden`}
       >
         <Providers>
           <AnnouncementBanner />

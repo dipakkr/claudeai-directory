@@ -1,4 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap');
 @import "tailwindcss";
 
 @plugin "tailwindcss-animate";
@@ -7,9 +6,9 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-  --font-mono: var(--font-roboto-mono), 'JetBrains Mono', monospace;
-  --font-sans: var(--font-roboto), system-ui, sans-serif;
-  --font-display: var(--font-roboto-serif), var(--font-roboto), serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-sans: var(--font-geist-sans), system-ui, sans-serif;
+  --font-display: var(--font-source-serif), Georgia, serif;
 
   --color-border: hsl(var(--border));
   --color-input: hsl(var(--input));
@@ -147,7 +146,8 @@
 @utility container {
   margin-inline: auto;
   padding-inline: 1rem;
-  max-width: 1400px;
+  /* Same box as the header/footer so page content lines up with the logo. */
+  max-width: 1180px;
 
   @media (min-width: 768px) {
     padding-inline: 2rem;
@@ -155,120 +155,123 @@
 }
 
 @layer base {
+  /* Light: Claude-style warm cream. Dark (default): warm near-black.
+     Palette is inspired by Claude's product colors; the site stays an
+     independent, unofficial directory (see footer disclaimer). */
   :root {
-    --background: 26 47% 97%; /* #FBF7F4 */
-    --foreground: 20 33% 11%; /* #241812 */
+    --background: 48 33% 97%; /* #FAF9F5 */
+    --foreground: 45 7% 11%; /* #1F1E1B */
 
     --card: 0 0% 100%;
-    --card-foreground: 20 33% 11%;
+    --card-foreground: 45 7% 11%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 20 33% 11%;
+    --popover-foreground: 45 7% 11%;
 
-    --primary: 12 71% 55%; /* #DE5B3B */
+    --primary: 15 54% 47%; /* coral, darkened for AA on cream */
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 28 39% 94%;
-    --secondary-foreground: 20 33% 11%;
+    --secondary: 48 28% 93%;
+    --secondary-foreground: 45 7% 11%;
 
-    --muted: 27 45% 94%;
-    --muted-foreground: 19 16% 37%;
+    --muted: 48 28% 93%;
+    --muted-foreground: 45 4% 36%;
 
-    --accent: 23 82% 91%;
-    --accent-foreground: 12 63% 44%;
+    --accent: 22 63% 92%;
+    --accent-foreground: 15 56% 42%;
 
     --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 100%;
 
-    --success: 99 22% 36%;
+    --success: 109 28% 37%;
 
-    --border: 25 35% 89%;
-    --input: 25 35% 89%;
-    --ring: 12 71% 55%;
+    --border: 46 21% 88%;
+    --input: 46 21% 88%;
+    --ring: 15 54% 47%;
 
-    --radius: 0.5rem;
+    --radius: 0.625rem;
 
-    --sidebar-background: 0 0% 100%;
-    --sidebar-foreground: 20 33% 11%;
-    --sidebar-primary: 12 71% 55%;
+    --sidebar-background: 48 28% 95%;
+    --sidebar-foreground: 45 7% 11%;
+    --sidebar-primary: 15 54% 47%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 28 39% 94%;
-    --sidebar-accent-foreground: 20 33% 11%;
-    --sidebar-border: 25 35% 89%;
-    --sidebar-ring: 12 71% 55%;
+    --sidebar-accent: 48 28% 93%;
+    --sidebar-accent-foreground: 45 7% 11%;
+    --sidebar-border: 46 21% 88%;
+    --sidebar-ring: 15 54% 47%;
 
     --cad-surface: #ffffff;
-    --cad-raised: #fdf8f5;
-    --cad-ink: #241812;
-    --cad-muted: #6e5a50;
-    --cad-faint: #a08375;
-    --cad-line: #ede2da;
-    --cad-line-soft: #f4ebe5;
-    --cad-line-hover: #e2d3c8;
-    --cad-accent-hover: #b8402a;
-    --cad-accent-soft: #fbe4d6;
-    --cad-chip: #f6efe9;
-    --cad-code: #faf4ef;
-    --cad-code-rule: #e9d7c8;
-    --cad-nav-bg: rgba(251, 247, 244, 0.9);
-    --cad-shadow: rgba(150, 90, 60, 0.1);
+    --cad-raised: #f5f4ee;
+    --cad-ink: #1f1e1b;
+    --cad-muted: #5f5d57;
+    --cad-faint: #8a877d;
+    --cad-line: #e6e3d9;
+    --cad-line-soft: #efede5;
+    --cad-line-hover: #d4d0c3;
+    --cad-accent-hover: #a94e2f;
+    --cad-accent-soft: #f7e6dc;
+    --cad-chip: #f2f0e8;
+    --cad-code: #f5f4ee;
+    --cad-code-rule: #e6e3d9;
+    --cad-nav-bg: rgba(250, 249, 245, 0.85);
+    --cad-shadow: rgba(60, 50, 30, 0.08);
   }
 
   .dark {
-    --background: 0 0% 8.2%; /* #151515 */
-    --foreground: 36 16% 94%;
+    --background: 48 11% 9%; /* #1A1915 */
+    --foreground: 48 25% 92%; /* #F0EEE6 */
 
-    --card: 60 2% 8.5%;
-    --card-foreground: 36 16% 94%;
+    --card: 48 8% 11.6%;
+    --card-foreground: 48 25% 92%;
 
-    --popover: 60 2% 8.5%;
-    --popover-foreground: 36 16% 94%;
+    --popover: 48 8% 11.6%;
+    --popover-foreground: 48 25% 92%;
 
-    --primary: 22 91% 69%; /* #F79E6B */
-    --primary-foreground: 18 23% 7%;
+    --primary: 15 63% 60%; /* #D97757 */
+    --primary-foreground: 48 11% 9%;
 
-    --secondary: 60 2% 11%;
-    --secondary-foreground: 36 16% 94%;
+    --secondary: 48 8% 12.7%;
+    --secondary-foreground: 48 25% 92%;
 
-    --muted: 60 4% 12%;
-    --muted-foreground: 33 6% 63%;
+    --muted: 48 7% 13.9%;
+    --muted-foreground: 46 7% 63%;
 
-    --accent: 25 39% 13%;
-    --accent-foreground: 26 89% 77%;
+    --accent: 19 28% 15.7%;
+    --accent-foreground: 19 78% 73.5%;
 
-    --destructive: 0 72% 51%;
-    --destructive-foreground: 0 0% 86%;
+    --destructive: 0 62% 55%;
+    --destructive-foreground: 0 0% 98%;
 
-    --success: 99 30% 55%;
+    --success: 101 31% 55%;
 
-    --border: 51 10% 14%;
-    --input: 51 10% 14%;
-    --ring: 22 91% 69%;
+    --border: 43 8% 17.5%;
+    --input: 43 8% 17.5%;
+    --ring: 15 63% 60%;
 
-    --sidebar-background: 60 4% 5%;
-    --sidebar-foreground: 36 16% 94%;
-    --sidebar-primary: 22 91% 69%;
-    --sidebar-primary-foreground: 18 23% 7%;
-    --sidebar-accent: 60 2% 11%;
-    --sidebar-accent-foreground: 36 16% 94%;
-    --sidebar-border: 51 10% 14%;
-    --sidebar-ring: 22 91% 69%;
+    --sidebar-background: 48 11% 8%;
+    --sidebar-foreground: 48 25% 92%;
+    --sidebar-primary: 15 63% 60%;
+    --sidebar-primary-foreground: 48 11% 9%;
+    --sidebar-accent: 48 8% 12.7%;
+    --sidebar-accent-foreground: 48 25% 92%;
+    --sidebar-border: 43 8% 17.5%;
+    --sidebar-ring: 15 63% 60%;
 
-    --cad-surface: #161615;
-    --cad-raised: #1b1b1a;
-    --cad-ink: #f2f0ed;
-    --cad-muted: #a7a29b;
-    --cad-faint: #7e7873;
-    --cad-line: #26251f;
-    --cad-line-soft: #1f1e1a;
-    --cad-line-hover: #35342c;
-    --cad-accent-hover: #ffc59b;
-    --cad-accent-soft: #2e1e14;
-    --cad-chip: #201f1d;
-    --cad-code: #191918;
+    --cad-surface: #201f1b;
+    --cad-raised: #23221e;
+    --cad-ink: #f0eee6;
+    --cad-muted: #a8a59b;
+    --cad-faint: #787569;
+    --cad-line: #302e29;
+    --cad-line-soft: #26251f;
+    --cad-line-hover: #3f3d36;
+    --cad-accent-hover: #f0a887;
+    --cad-accent-soft: #33241d;
+    --cad-chip: #262521;
+    --cad-code: #1e1d19;
     --cad-code-rule: #34322c;
-    --cad-nav-bg: rgba(14, 14, 13, 0.9);
-    --cad-shadow: rgba(0, 0, 0, 0.5);
+    --cad-nav-bg: rgba(26, 25, 21, 0.85);
+    --cad-shadow: rgba(0, 0, 0, 0.45);
   }
 
   * {
@@ -277,15 +280,15 @@
 
   body {
     @apply bg-background text-foreground antialiased;
-    font-family: var(--font-roboto), system-ui, sans-serif;
+    font-family: var(--font-geist-sans), system-ui, sans-serif;
     letter-spacing: 0;
   }
 
   h1,
   h2,
   .font-display {
-    font-family: var(--font-roboto-serif), var(--font-roboto), serif;
-    letter-spacing: 0;
+    font-family: var(--font-source-serif), Georgia, serif;
+    letter-spacing: -0.01em;
   }
 
   a {
@@ -321,7 +324,7 @@
   }
 
   .cad-chip-active {
-    @apply border-primary bg-primary text-primary-foreground;
+    @apply border-foreground bg-foreground text-background;
   }
 
   .cad-icon-tile {
@@ -398,6 +401,7 @@
   /* Inline code */
   & :not(pre)>code {
     @apply text-primary bg-muted px-1.5 py-0.5 rounded text-xs font-mono;
+    overflow-wrap: anywhere;
   }
 
   & code::before,
@@ -407,7 +411,7 @@
 
   /* Code blocks */
   & pre {
-    @apply bg-muted border border-border rounded-lg p-4 my-4 overflow-x-auto;
+    @apply bg-muted border border-border rounded-lg p-4 my-4 overflow-x-auto max-w-full;
   }
 
   & pre code {

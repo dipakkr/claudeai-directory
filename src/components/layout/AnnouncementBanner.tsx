@@ -47,9 +47,9 @@ export function AnnouncementBanner() {
     if (dismissed) return null;
 
     return (
-        <div className="relative z-[60] w-full border-b border-[#4752C4] bg-[#5865F2] text-white">
-            <div className="mx-auto flex max-w-[1180px] items-center justify-center gap-2.5 px-10 py-2 text-[13.5px]">
-                <DiscordIcon className="h-4 w-4 shrink-0" />
+        <div className="relative z-[60] w-full border-b border-border bg-card text-muted-foreground">
+            <div className="mx-auto flex max-w-[1180px] items-center justify-center gap-2.5 px-10 py-2 text-[13px]">
+                <DiscordIcon className="h-4 w-4 shrink-0 text-[#7984F5]" />
                 <span className="text-center">
                     The Claude AI Community Discord is open.
                 </span>
@@ -57,7 +57,7 @@ export function AnnouncementBanner() {
                     href={SOCIAL_LINKS.discord}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="group inline-flex shrink-0 items-center gap-1 font-semibold underline underline-offset-4 hover:no-underline"
+                    className="group inline-flex shrink-0 items-center gap-1 font-medium text-foreground hover:text-primary"
                 >
                     Join us
                     <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
@@ -68,7 +68,7 @@ export function AnnouncementBanner() {
                 type="button"
                 onClick={dismiss}
                 aria-label="Dismiss announcement"
-                className="absolute right-3 top-1/2 -translate-y-1/2 rounded p-1 text-white/80 transition-colors hover:bg-white/15 hover:text-white"
+                className="absolute right-3 top-1/2 -translate-y-1/2 rounded p-1 text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
             >
                 <X className="h-3.5 w-3.5" />
             </button>

@@ -1,7 +1,10 @@
 import Link from "next/link";
-import { Facebook, Linkedin } from "lucide-react";
+import { Linkedin } from "lucide-react";
 
 import { DiscordIcon } from "@/components/icons/DiscordIcon";
+import { Logo } from "@/components/layout/Logo";
+import { ThemeSwitcher } from "@/components/layout/ThemeSwitcher";
+import { FooterSubscribe } from "@/components/layout/FooterSubscribe";
 import { SOCIAL_LINKS } from "@/lib/social";
 
 const footerLinks = [
@@ -10,31 +13,38 @@ const footerLinks = [
     links: [
       { label: "Skills", href: "/skills" },
       { label: "MCP servers", href: "/mcp" },
-      { label: "Community", href: "/community" },
-      { label: "Prompts", href: "/prompts" },
-    ],
-  },
-  {
-    title: "Work",
-    links: [
+      { label: "Agents", href: "/agents" },
       { label: "Jobs", href: "/jobs" },
-      { label: "Blog", href: "/blog" },
-      { label: "Learn", href: "/learn" },
-      { label: "API pricing", href: "/llm-api-pricing" },
+      { label: "Prompts", href: "/prompts" },
+      { label: "Connectors", href: "/connectors" },
     ],
   },
   {
     title: "Community",
     links: [
-      { label: "Members", href: "/members" },
       { label: "Discussions", href: "/community" },
-      { label: "Submit a resource", href: "/submit" },
-      { label: "Sign up", href: "/signup" },
+      { label: "Members", href: "/members" },
+      { label: "Showcase", href: "/showcase" },
+      { label: "Discord", href: SOCIAL_LINKS.discord },
     ],
   },
   {
-    title: "Company",
+    title: "Resources",
     links: [
+      { label: "Guides", href: "/guides" },
+      { label: "Blog", href: "/blog" },
+      { label: "Claude Code Cheatsheet", href: "/cheatsheet" },
+      { label: "CLAUDE.md Generator", href: "/setup" },
+      { label: "LLM API Pricing", href: "/llm-api-pricing" },
+      { label: "Anthropic Timeline", href: "/anthropic-claude-release-timelines" },
+    ],
+  },
+  {
+    title: "Contribute",
+    links: [
+      { label: "Submit a resource", href: "/submit" },
+      { label: "Submit your app", href: "/showcase/submit" },
+      { label: "Sign up", href: "/signup" },
       { label: "About", href: "/about" },
       { label: "Privacy", href: "/privacy" },
       { label: "Terms", href: "/terms" },
@@ -43,115 +53,76 @@ const footerLinks = [
   },
 ];
 
+const isExternal = (href: string) => /^(https?:|mailto:)/.test(href);
+
 const Footer = () => {
   return (
-    <footer>
-      <div className="bg-[#1C1310] text-[#FBF7F4]">
-        <div className="mx-auto grid max-w-[1180px] grid-cols-1 items-center gap-10 px-8 py-[68px] md:grid-cols-2">
-          <div className="flex min-w-0 flex-col gap-3.5">
-            <div className="text-pretty text-[clamp(26px,3vw,34px)] font-medium leading-[1.14]">
-              Built something with Claude?
-            </div>
-            <div className="max-w-[44ch] text-pretty text-[15px] leading-[1.6] text-[#C9B4A8]">
-              Submit a skill, server, connector workflow or prompt. Accepted submissions are
-              credited to you and stay free to browse.
-            </div>
+    <footer className="mt-24 border-t border-border">
+      <div className="mx-auto max-w-[1180px] px-4 md:px-8">
+        <div className="flex flex-col gap-5 border-b border-border py-10 md:flex-row md:items-center md:justify-between">
+          <div>
+            <p className="text-[15px] text-foreground">The weekly Claude digest</p>
+            <p className="mt-1 text-sm text-muted-foreground">
+              New Skills, MCP servers and Agents worth installing. One email a week.
+            </p>
           </div>
-          <div className="flex min-w-0 flex-col gap-3">
-            <div className="flex flex-wrap gap-2.5">
-              <input
-                type="email"
-                placeholder="you@example.com"
-                className="min-w-[200px] flex-1 rounded-lg border border-[#3A2A22] bg-[#241812] px-4 py-3.5 text-[15px] text-[#FBF7F4] outline-none placeholder:text-[#8E7568]"
-              />
-              <button
-                type="button"
-                className="whitespace-nowrap rounded-lg bg-[#F79E6B] px-6 py-3.5 text-[15px] font-semibold text-[#241812] hover:bg-white"
-              >
-                Get the weekly
-              </button>
-            </div>
-            <div className="text-[13px] text-[#8E7568]">
-              One email a week with new Claude resources and community additions.
-            </div>
-          </div>
+          <FooterSubscribe />
         </div>
-      </div>
 
-      <div className="border-t border-border bg-background">
-        <div className="mx-auto flex max-w-[1180px] flex-wrap gap-10 px-8 pb-9 pt-[52px]">
-          <div className="flex min-w-0 flex-[1_1_280px] flex-col gap-3">
-            <Link href="/" className="flex items-center gap-2.5" aria-label="claudeai.directory home">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/logo-mark.svg" alt="" width={28} height={28} className="h-7 w-7" />
-              <span className="text-[16px] font-semibold text-foreground">
-                claudeai<span className="text-primary">.directory</span>
-              </span>
-            </Link>
-            <p className="max-w-[34ch] text-[13.5px] leading-[1.6] text-muted-foreground">
-              An independent, community-run index for Claude resources, workflows,
-              jobs and people building with Claude.
-            </p>
-            <p className="text-[11px] leading-relaxed text-muted-foreground/70">
-              Not affiliated with or endorsed by Anthropic, Claude.ai, or Claude.com.
-            </p>
-          </div>
-
-          <div className="grid flex-[2_1_520px] grid-cols-2 gap-8 sm:grid-cols-4">
-            {footerLinks.map((column) => (
-              <div key={column.title} className="flex min-w-0 flex-col gap-3">
-                <h3 className="text-xs font-semibold uppercase text-foreground">{column.title}</h3>
-                <div className="flex flex-col gap-2">
-                  {column.links.map((link) => (
-                    <Link
-                      key={`${column.title}-${link.label}`}
+        <div className="grid grid-cols-2 gap-10 py-12 md:grid-cols-4">
+          {footerLinks.map((column) => (
+            <div key={column.title} className="flex min-w-0 flex-col gap-4">
+              <h3 className="font-sans text-sm font-medium text-foreground">{column.title}</h3>
+              <div className="flex flex-col gap-2.5">
+                {column.links.map((link) =>
+                  isExternal(link.href) ? (
+                    <a
+                      key={link.label}
                       href={link.href}
-                      className="text-sm text-muted-foreground hover:text-primary"
+                      target={link.href.startsWith("http") ? "_blank" : undefined}
+                      rel="noopener noreferrer"
+                      className="text-sm text-muted-foreground hover:text-foreground"
                     >
                       {link.label}
+                    </a>
+                  ) : (
+                    <Link key={link.label} href={link.href} className="text-sm text-muted-foreground hover:text-foreground">
+                      {link.label}
                     </Link>
-                  ))}
-                </div>
+                  ),
+                )}
               </div>
-            ))}
-          </div>
+            </div>
+          ))}
         </div>
-        <div className="mx-auto max-w-[1180px] px-8 pb-8">
-          <div className="flex flex-wrap items-center justify-between gap-4 border-t border-border pt-5">
-            <div className="text-xs text-muted-foreground">
-              &copy; {new Date().getFullYear()} ClaudeAI Directory
-            </div>
-            <div className="flex items-center gap-3">
-              <a
-                href={SOCIAL_LINKS.discord}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Join the Claude AI Community on Discord"
-                className="text-muted-foreground transition-colors hover:text-foreground"
-              >
-                <DiscordIcon className="h-[18px] w-[18px]" />
-              </a>
-              <a
-                href={SOCIAL_LINKS.linkedin}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Claude AI Community on LinkedIn"
-                className="text-muted-foreground transition-colors hover:text-foreground"
-              >
-                <Linkedin className="h-[18px] w-[18px]" />
-              </a>
-              {SOCIAL_LINKS.facebook && (
-                <a
-                  href={SOCIAL_LINKS.facebook}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="Claude AI Community on Facebook"
-                  className="text-muted-foreground transition-colors hover:text-foreground"
-                >
-                  <Facebook className="h-[18px] w-[18px]" />
-                </a>
-              )}
-            </div>
+
+        <div className="flex flex-col gap-5 border-t border-border py-8 md:flex-row md:items-center md:justify-between">
+          <div className="flex flex-col gap-1.5">
+            <Logo muted />
+            <p className="text-xs text-muted-foreground/80">
+              Independent and community-run. Not affiliated with or endorsed by Anthropic, Claude.ai, or Claude.com.
+            </p>
+          </div>
+          <div className="flex items-center gap-4">
+            <ThemeSwitcher />
+            <a
+              href={SOCIAL_LINKS.discord}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Join the community on Discord"
+              className="text-muted-foreground transition-colors hover:text-foreground"
+            >
+              <DiscordIcon className="h-[18px] w-[18px]" />
+            </a>
+            <a
+              href={SOCIAL_LINKS.linkedin}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="LinkedIn"
+              className="text-muted-foreground transition-colors hover:text-foreground"
+            >
+              <Linkedin className="h-[18px] w-[18px]" />
+            </a>
           </div>
         </div>
       </div>
