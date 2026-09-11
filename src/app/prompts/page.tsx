@@ -8,13 +8,8 @@ export default async function PromptsPage({
   searchParams: Promise<{ category?: string; search?: string }>;
 }) {
   const params = await searchParams;
-  const qs = new URLSearchParams();
-  if (params.search) qs.set("search", params.search);
-  if (params.category && params.category !== "All") qs.set("category", params.category);
-
-  qs.set("limit", "20");
-  const qsStr = qs.toString();
-  const initialData = await fetchApi<Prompt[]>(`/prompts?${qsStr}`) ?? [];
+  // Whole index; filtering happens client-side in the ranked list.
+  const initialData = (await fetchApi<Prompt[]>("/prompts?limit=100")) ?? [];
 
   return (
     <PromptsClient

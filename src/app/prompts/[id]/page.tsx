@@ -18,7 +18,7 @@ export async function generateMetadata({
   }
 
   const title = prompt.title;
-  const description = prompt.description?.slice(0, 160) || `${prompt.title} — a Claude AI prompt`;
+  const description = prompt.description?.slice(0, 160) || `${prompt.title}: a Claude AI prompt`;
 
   return {
     title,

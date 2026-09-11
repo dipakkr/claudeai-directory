@@ -2,9 +2,6 @@
 
 import { useState, useMemo } from "react";
 import Link from "next/link";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
-import rehypeSlug from "rehype-slug";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { Badge } from "@/components/ui/badge";
@@ -15,10 +12,10 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Copy, ThumbsUp, CheckCircle, ArrowLeft, ArrowRight, Pencil, RotateCcw } from "lucide-react";
+import { Copy, ThumbsUp, CheckCircle, ArrowRight, Pencil, RotateCcw } from "lucide-react";
 import { usePrompt, usePrompts } from "@/hooks/use-prompts";
 import { toast } from "sonner";
-import PageBreadcrumb from "@/components/layout/PageBreadcrumb";
+import { DetailHeader, DetailPage, IconTile, SectionLabel, StatPill, TagList } from "@/components/directory/detail";
 import ResourceReplies from "@/components/shared/ResourceReplies";
 import type { Prompt } from "@/types";
 
@@ -28,7 +25,7 @@ export default function PromptDetailClient({ prompt: initialPrompt, id }: { prom
   const [copied, setCopied] = useState(false);
   const [customizeOpen, setCustomizeOpen] = useState(false);
 
-  const { markdown, text: actualPromptText } = useMemo(() => {
+  const { text: actualPromptText } = useMemo(() => {
     if (!prompt?.prompt) return { markdown: "", text: "" };
 
     let markdown = "";
@@ -112,181 +109,116 @@ export default function PromptDetailClient({ prompt: initialPrompt, id }: { prom
   }
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div className="min-h-screen bg-background">
       <Header />
-      <main className="flex-1">
-        <div className="container py-8">
-          <PageBreadcrumb items={[
-            { label: "Prompts", href: "/prompts" },
-            { label: prompt.title },
-          ]} />
+      <main>
+        <DetailPage backHref="/prompts" backLabel="Prompts">
+          <DetailHeader
+            icon={<IconTile name={prompt.title} />}
+            title={prompt.title}
+            stats={
+              prompt.upvotes > 0 ? (
+                <StatPill icon={<ThumbsUp className="h-3.5 w-3.5" />} title={`${prompt.upvotes} upvotes`}>
+                  {prompt.upvotes}
+                </StatPill>
+              ) : undefined
+            }
+          />
+          <p className="mt-2 font-mono text-[12px] uppercase tracking-wide text-muted-foreground">
+            Prompt · {prompt.complexity}
+          </p>
 
-          <div className="flex gap-10 items-start">
-            {/* Main content */}
-            <div className="flex-1 min-w-0">
-              {/* Header */}
-              <div className="mb-6">
-                <div className="flex items-start justify-between gap-4 mb-3">
-                  <h1 className="text-2xl font-semibold text-foreground">{prompt.title}</h1>
-                  <div className="flex items-center gap-1.5 text-sm text-muted-foreground shrink-0">
-                    <ThumbsUp className="h-4 w-4" />
-                    {prompt.upvotes}
-                  </div>
-                </div>
-                <p className="text-sm text-muted-foreground leading-relaxed">{prompt.description}</p>
-                <div className="flex flex-wrap items-center gap-2 mt-3">
-                  <Badge variant="secondary">{prompt.category}</Badge>
-                  <Badge variant="outline">{prompt.complexity}</Badge>
-                  {prompt.verified && (
-                    <span className="flex items-center gap-1 text-xs text-primary">
-                      <CheckCircle className="h-3.5 w-3.5" />
-                      Verified
-                    </span>
-                  )}
-                </div>
-              </div>
+          <p className="mt-5 text-[17px] leading-relaxed text-foreground/90">{prompt.description}</p>
 
-              {/* Use cases — compact chips */}
-              {prompt.use_cases.length > 0 && (
-                <div className="flex flex-wrap items-center gap-1.5 mb-5">
-                  <span className="text-xs text-muted-foreground mr-1">Best for:</span>
-                  {prompt.use_cases.map((uc, i) => (
-                    <span
-                      key={i}
-                      className="inline-flex items-center gap-1 rounded-full border border-border bg-muted/40 px-2.5 py-0.5 text-xs text-muted-foreground"
-                    >
-                      {uc}
-                    </span>
-                  ))}
-                </div>
-              )}
-
-              {/* Prompt parsed markdown removed */}
-
-              {/* Prompt box */}
-              <div className="rounded-xl border border-border bg-card mb-6">
-                <div className="flex items-center justify-between px-4 py-3 border-b border-border">
-                  <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Prompt</span>
-                  <div className="flex items-center gap-1.5">
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      onClick={openCustomize}
-                      className="h-7 text-xs gap-1.5"
-                    >
-                      <Pencil className="h-3 w-3" />
-                      Customize
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      onClick={copyPrompt}
-                      className="h-7 text-xs gap-1.5"
-                    >
-                      {copied ? <CheckCircle className="h-3.5 w-3.5 text-emerald-400" /> : <Copy className="h-3.5 w-3.5" />}
-                      {copied ? "Copied" : "Copy"}
-                    </Button>
-                  </div>
-                </div>
-                <pre className="p-4 text-sm font-mono text-foreground/90 whitespace-pre-wrap break-words leading-relaxed">
-                  {actualPromptText}
-                </pre>
-              </div>
-
-              {prompt.example_input && (
-                <div className="mb-6">
-                  <h2 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">Example Input</h2>
-                  <div className="rounded-lg border border-border bg-muted/30 p-4">
-                    <p className="text-sm text-muted-foreground whitespace-pre-wrap">{prompt.example_input}</p>
-                  </div>
-                </div>
-              )}
-
-              {prompt.example_output && (
-                <div className="mb-6">
-                  <h2 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">Example Output</h2>
-                  <div className="rounded-lg border border-border bg-muted/30 p-4">
-                    <p className="text-sm text-muted-foreground whitespace-pre-wrap">{prompt.example_output}</p>
-                  </div>
-                </div>
-              )}
-
-              {prompt.tags.length > 0 && (
-                <div className="mb-6">
-                  <h2 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">Tags</h2>
-                  <div className="flex flex-wrap gap-1.5">
-                    {prompt.tags.map((tag) => (
-                      <Badge key={tag} variant="outline" className="text-xs">{tag}</Badge>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              <ResourceReplies resourceType="prompt" resourceId={id} />
-
-              <div className="pt-8 border-t border-border mt-10">
-                <Link href="/prompts" className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors">
-                  <ArrowLeft className="h-3.5 w-3.5" />
-                  Back to Prompts
-                </Link>
-              </div>
-            </div>
-
-            {/* Right sidebar */}
-            <aside className="hidden lg:block w-72 shrink-0">
-              <div className="sticky top-20 space-y-6">
-                {/* Related prompts */}
-                {related.length > 0 && (
-                  <div>
-                    <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground/50 mb-3">
-                      Related Prompts
-                    </p>
-                    <div className="space-y-1">
-                      {related.map((p) => (
-                        <Link
-                          key={p.id}
-                          href={`/prompts/${p.id}`}
-                          className="group flex items-start justify-between gap-2 rounded-lg px-3 py-2.5 hover:bg-accent transition-colors"
-                        >
-                          <div className="min-w-0">
-                            <p className="text-xs font-medium text-foreground group-hover:text-primary transition-colors leading-snug line-clamp-2">
-                              {p.title}
-                            </p>
-                          </div>
-                          <ArrowRight className="h-3 w-3 text-muted-foreground/40 group-hover:text-primary shrink-0 mt-0.5 transition-colors" />
-                        </Link>
-                      ))}
-                    </div>
-                    <Link
-                      href={`/prompts?category=${encodeURIComponent(prompt.category)}`}
-                      className="inline-flex items-center gap-1 text-[11px] text-muted-foreground hover:text-primary transition-colors mt-2 px-3"
-                    >
-                      View all {prompt.category} prompts
-                      <ArrowRight className="h-2.5 w-2.5" />
-                    </Link>
-                  </div>
-                )}
-
-                {/* Tags */}
-                {prompt.tags.length > 0 && (
-                  <div>
-                    <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground/50 mb-3">
-                      Tags
-                    </p>
-                    <div className="flex flex-wrap gap-1.5">
-                      {prompt.tags.map((tag) => (
-                        <Badge key={tag} variant="outline" className="text-[10px] cursor-pointer hover:border-primary hover:text-primary transition-colors">
-                          {tag}
-                        </Badge>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-              </div>
-            </aside>
+          <div className="mt-7 flex flex-wrap gap-2.5">
+            <button
+              type="button"
+              onClick={copyPrompt}
+              className="inline-flex h-10 items-center gap-2 rounded-full bg-foreground px-5 text-sm font-medium text-background transition-colors hover:bg-foreground/85"
+            >
+              {copied ? <CheckCircle className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+              {copied ? "Copied" : "Copy prompt"}
+            </button>
+            <button
+              type="button"
+              onClick={openCustomize}
+              className="inline-flex h-10 items-center gap-2 rounded-full border border-border px-4 text-sm text-foreground transition-colors hover:border-[var(--cad-line-hover)]"
+            >
+              <Pencil className="h-3.5 w-3.5 text-muted-foreground" />
+              Customize
+            </button>
           </div>
-        </div>
+
+          <div className="mt-8 flex flex-wrap gap-2">
+            <Badge variant="secondary">{prompt.category}</Badge>
+            {prompt.verified && (
+              <Badge>
+                <CheckCircle className="h-3 w-3" />
+                Verified
+              </Badge>
+            )}
+            {prompt.use_cases.map((uc) => (
+              <Badge key={uc} variant="outline">
+                {uc}
+              </Badge>
+            ))}
+          </div>
+
+          <SectionLabel>Prompt</SectionLabel>
+          <div className="rounded-xl border border-border bg-card/40">
+            <pre className="whitespace-pre-wrap break-words p-5 font-mono text-[13px] leading-relaxed text-foreground/90">
+              {actualPromptText}
+            </pre>
+          </div>
+
+          {prompt.example_input && (
+            <>
+              <SectionLabel>Example input</SectionLabel>
+              <div className="rounded-xl border border-border p-4">
+                <p className="whitespace-pre-wrap text-sm text-muted-foreground">{prompt.example_input}</p>
+              </div>
+            </>
+          )}
+
+          {prompt.example_output && (
+            <>
+              <SectionLabel>Example output</SectionLabel>
+              <div className="rounded-xl border border-border p-4">
+                <p className="whitespace-pre-wrap text-sm text-muted-foreground">{prompt.example_output}</p>
+              </div>
+            </>
+          )}
+
+          {prompt.tags.length > 0 && (
+            <>
+              <SectionLabel>Tags</SectionLabel>
+              <TagList tags={prompt.tags} />
+            </>
+          )}
+
+          {related.length > 0 && (
+            <>
+              <SectionLabel>{`More in ${prompt.category}`}</SectionLabel>
+              <ul className="border-t border-border">
+                {related.map((p) => (
+                  <li key={p.id}>
+                    <Link href={`/prompts/${p.id}`} className="group flex items-center justify-between gap-3 border-b border-border/70 py-3">
+                      <span className="min-w-0">
+                        <span className="block truncate text-[15px] text-foreground group-hover:text-primary">{p.title}</span>
+                        <span className="block truncate text-[13px] text-muted-foreground">{p.description}</span>
+                      </span>
+                      <ArrowRight className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </>
+          )}
+
+          <div className="mt-14">
+            <ResourceReplies resourceType="prompt" resourceId={id} />
+          </div>
+        </DetailPage>
       </main>
       <Footer />
 
@@ -322,7 +254,7 @@ export default function PromptDetailClient({ prompt: initialPrompt, id }: { prom
                 Cancel
               </Button>
               <Button size="sm" className="h-8 text-xs gap-1.5" onClick={copyCustomized}>
-                {customizeCopied ? <CheckCircle className="h-3.5 w-3.5 text-emerald-400" /> : <Copy className="h-3.5 w-3.5" />}
+                {customizeCopied ? <CheckCircle className="h-3.5 w-3.5 text-success" /> : <Copy className="h-3.5 w-3.5" />}
                 {customizeCopied ? "Copied!" : "Copy Prompt"}
               </Button>
             </div>
