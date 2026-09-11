@@ -410,12 +410,14 @@
   }
 
   /* Code blocks */
+  /* Colors set explicitly: prose's default pre text is light gray for a dark
+     background, which disappears on our light code background. */
   & pre {
-    @apply bg-muted border border-border rounded-lg p-4 my-4 overflow-x-auto max-w-full;
+    @apply bg-[var(--cad-code)] text-foreground border border-border rounded-lg p-4 my-4 overflow-x-auto max-w-full;
   }
 
   & pre code {
-    @apply text-xs leading-6 bg-transparent p-0;
+    @apply text-xs leading-6 bg-transparent p-0 text-foreground/90;
   }
 
   /* Blockquotes */
