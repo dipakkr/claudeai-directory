@@ -51,6 +51,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: SITE_URL, changeFrequency: "daily", priority: 1 },
     { url: `${SITE_URL}/mcp`, changeFrequency: "daily", priority: 0.9 },
     { url: `${SITE_URL}/skills`, changeFrequency: "daily", priority: 0.9 },
+    { url: `${SITE_URL}/agents`, changeFrequency: "daily", priority: 0.9 },
+    { url: `${SITE_URL}/submit`, changeFrequency: "monthly", priority: 0.5 },
     { url: `${SITE_URL}/prompts`, changeFrequency: "daily", priority: 0.9 },
     { url: `${SITE_URL}/jobs`, changeFrequency: "daily", priority: 0.8 },
     { url: `${SITE_URL}/showcase`, changeFrequency: "weekly", priority: 0.7 },
@@ -76,10 +78,17 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   ]);
 
   const resourceSlugs = await fetchSlugs("/resources", "_id");
+  const agentSlugs = await fetchSlugs("/agents", "_id");
   const lessonPaths = await fetchGuideLessonPaths(guideSlugs);
 
   const mcpPages: MetadataRoute.Sitemap = mcpSlugs.map((slug) => ({
     url: `${SITE_URL}/mcp/${slug}`,
+    changeFrequency: "weekly",
+    priority: 0.8,
+  }));
+
+  const agentPages: MetadataRoute.Sitemap = agentSlugs.map((slug) => ({
+    url: `${SITE_URL}/agents/${slug}`,
     changeFrequency: "weekly",
     priority: 0.8,
   }));
@@ -138,6 +147,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...staticPages,
     ...mcpPages,
     ...skillPages,
+    ...agentPages,
     ...promptPages,
     ...jobPages,
     ...guidePages,

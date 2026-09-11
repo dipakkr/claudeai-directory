@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { fetchApi } from "@/lib/api-server";
 import type { MCPServer } from "@/types";
 import MCPServerDetail from "./McpDetailClient";
+import { resolveMcpInstall } from "@/lib/install";
+import { resourceTitle } from "@/lib/seo";
 import { SoftwareApplicationSchema, BreadcrumbSchema } from "@/components/seo/JsonLd";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.claudeai.directory";
@@ -18,13 +20,13 @@ export async function generateMetadata({
     return { title: "MCP Server Not Found" };
   }
 
-  const title = `${server.name} MCP Server`;
+  const title = resourceTitle(server.name, server.one_liner || server.description);
   const description =
     server.one_liner || server.description?.slice(0, 160) || `${server.name} MCP server for Claude AI`;
   const ogImageUrl = `${SITE_URL}/mcp/${slug}/opengraph-image`;
 
   return {
-    title,
+    title: { absolute: title },
     description,
     alternates: { canonical: `/mcp/${slug}` },
     openGraph: {
@@ -50,6 +52,15 @@ export default async function MCPDetailPage({
 }) {
   const { slug } = await params;
   const server = await fetchApi<MCPServer>(`/mcp-servers/${slug}`);
+  const resolution = resolveMcpInstall({
+    install: server?.install,
+    slug: server?.slug || slug,
+    connectionUrl: server?.connection?.url,
+    transport: server?.connection?.transport,
+    isAuthless: server?.connection?.is_authless,
+    setupUrl: server?.links?.documentation || server?.documentation_url,
+    sourceUrl: server?.links?.repository || server?.github_url,
+  });
 
   return (
     <>
@@ -71,7 +82,7 @@ export default async function MCPDetailPage({
           />
         </>
       )}
-      <MCPServerDetail server={server} slug={slug} />
+      <MCPServerDetail server={server} slug={slug} resolution={resolution} />
     </>
   );
 }

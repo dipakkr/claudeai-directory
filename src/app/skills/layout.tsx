@@ -1,16 +1,14 @@
 import type { Metadata } from "next";
 
+const TITLE = "Claude Skills: Discover the Best Skills for Claude";
+const DESCRIPTION =
+  "Discover community-built Claude Skills for coding, research, testing, productivity and more. Explore trending Skills and install what you need.";
+
 export const metadata: Metadata = {
-  title: "Claude Skills — Community-Built AI Capabilities",
-  description:
-    "Browse and install Claude skills shared by the community. Extend Claude's capabilities with reusable prompts, workflows, and coding patterns.",
+  title: { absolute: TITLE },
+  description: DESCRIPTION,
   alternates: { canonical: "/skills" },
-  openGraph: {
-    title: "Claude Skills — Community-Built AI Capabilities",
-    description:
-      "Browse and install Claude skills shared by the community. Extend Claude's capabilities with reusable prompts and workflows.",
-    url: "/skills",
-  },
+  openGraph: { title: TITLE, description: DESCRIPTION, url: "/skills" },
 };
 
 export default function SkillsLayout({ children }: { children: React.ReactNode }) {

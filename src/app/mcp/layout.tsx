@@ -1,16 +1,14 @@
 import type { Metadata } from "next";
 
+const TITLE = "Claude MCP Servers: Discover and Install MCPs";
+const DESCRIPTION =
+  "Discover MCP servers for Claude Code. Explore popular community MCPs and copy verified install commands for development, data and productivity tools.";
+
 export const metadata: Metadata = {
-  title: "MCP Servers — Claude AI Connectors Directory",
-  description:
-    "Browse and discover Model Context Protocol (MCP) servers to connect Claude AI to your favorite tools, databases, and workflows.",
+  title: { absolute: TITLE },
+  description: DESCRIPTION,
   alternates: { canonical: "/mcp" },
-  openGraph: {
-    title: "MCP Servers — Claude AI Connectors Directory",
-    description:
-      "Browse and discover MCP servers to connect Claude AI to your favorite tools, databases, and workflows.",
-    url: "/mcp",
-  },
+  openGraph: { title: TITLE, description: DESCRIPTION, url: "/mcp" },
 };
 
 export default function MCPLayout({ children }: { children: React.ReactNode }) {

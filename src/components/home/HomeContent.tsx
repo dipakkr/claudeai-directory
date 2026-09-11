@@ -1,347 +1,111 @@
-"use client";
-
-import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
-import { ArrowUpRight } from "lucide-react";
-import FeaturedResources from "@/components/home/FeaturedResources";
-import MCPSection from "@/components/home/MCPSection";
-import PromptsSection from "@/components/home/PromptsSection";
-import UseCaseCarousel, { type UseCaseBundle } from "@/components/home/UseCaseCarousel";
-import type { Stat, Skill, MCPServer, FeedItem, Prompt, Thread, PublicProfile, ShowcaseProject } from "@/types";
-import ShowcaseSection from "@/components/home/ShowcaseSection";
-import StatsStrip from "@/components/home/StatsStrip";
+import { ArrowRight, Bot, Server, Sparkles } from "lucide-react";
+import DirectoryList from "@/components/directory/DirectoryList";
+import RecentlyViewed from "@/components/directory/RecentlyViewed";
+import type { DirectoryItem, SortKey } from "@/lib/directory";
 
 interface HomeContentProps {
-  initialStats: Stat[];
-  initialFeaturedSkills: Skill[];
-  initialMcpServers: MCPServer[];
-  initialFeedItems: FeedItem[];
-  initialPrompts: Prompt[];
-  initialThreads: Thread[];
-  communityMembers: PublicProfile[];
-  memberCount: number;
-  useCaseBundles?: UseCaseBundle[];
-  initialShowcase?: ShowcaseProject[];
+  items: DirectoryItem[];
+  orders: Record<SortKey, string[]>;
 }
 
-const BOARD_ROTATE_MS = 6000;
+const BROWSE = [
+  {
+    type: "skill" as const,
+    href: "/skills",
+    title: "Claude Skills",
+    body: "Folders of instructions and scripts that teach Claude a specific job.",
+    Icon: Sparkles,
+  },
+  {
+    type: "mcp" as const,
+    href: "/mcp",
+    title: "MCP Servers",
+    body: "Connect Claude Code to your tools, data and services.",
+    Icon: Server,
+  },
+  {
+    type: "agent" as const,
+    href: "/agents",
+    title: "Claude Agents",
+    body: "Specialized subagents for reviewing, testing, debugging and more.",
+    Icon: Bot,
+  },
+];
 
-function initials(value?: string) {
-  return (value || "?")
-    .split(/\s|-/)
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((part) => part[0]?.toUpperCase())
-    .join("");
-}
-
-function MemberAvatar({
-  avatar,
-  initials: fallback,
-  label,
-  opacity,
-}: {
-  avatar?: string;
-  initials: string;
-  label?: string;
-  opacity: number;
-}) {
-  const [showImage, setShowImage] = useState(Boolean(avatar));
-
-  return (
-    <span
-      className="flex h-[34px] w-[34px] items-center justify-center overflow-hidden rounded-full bg-[var(--cad-chip)] text-[11px] font-medium text-[var(--cad-accent-hover)]"
-      style={{ opacity }}
-      title={label}
-    >
-      {showImage && avatar ? (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img src={avatar} alt="" className="h-full w-full object-cover" onError={() => setShowImage(false)} />
-      ) : (
-        fallback
-      )}
-    </span>
-  );
-}
-
-function HomeInner(props: HomeContentProps) {
-  const boards = useMemo(() => [
-    {
-      key: "questions",
-      label: "Questions",
-      cta: "All discussions",
-      href: "/community",
-      live: `${props.initialThreads.length.toLocaleString()} live`,
-      items: props.initialThreads.slice(0, 3).map((thread) => ({
-        mono: initials(thread.author),
-        title: thread.title,
-        meta: `${thread.tags?.[0] || "Claude"} · ${thread.replies} replies`,
-        href: `/community/${thread.id}`,
-      })),
-    },
-    {
-      key: "mcp",
-      label: "MCP",
-      cta: "All MCP servers",
-      href: "/mcp",
-      live: `${props.initialMcpServers.length.toLocaleString()} listed`,
-      items: props.initialMcpServers.slice(0, 3).map((server) => ({
-        mono: initials(server.name),
-        title: server.name,
-        meta: `${server.category || "MCP"} · ${(server.capabilities?.tools?.length ?? 0).toLocaleString()} tools`,
-        href: `/mcp/${server.slug || server.id}`,
-      })),
-    },
-    {
-      key: "skills",
-      label: "Skills",
-      cta: "All skills",
-      href: "/skills",
-      live: `${props.initialFeaturedSkills.length.toLocaleString()} featured`,
-      items: props.initialFeaturedSkills.slice(0, 3).map((skill) => ({
-        mono: initials(skill.title || skill.name),
-        title: skill.title || skill.name,
-        meta: `${skill.downloads.toLocaleString()} downloads`,
-        href: `/skills/${skill.id}`,
-      })),
-    },
-    {
-      key: "prompts",
-      label: "Prompts",
-      cta: "All prompts",
-      href: "/prompts",
-      live: `${props.initialPrompts.length.toLocaleString()} shared`,
-      items: props.initialPrompts.slice(0, 3).map((prompt) => ({
-        mono: initials(prompt.title),
-        title: prompt.title,
-        meta: `${prompt.upvotes.toLocaleString()} upvotes`,
-        href: `/prompts/${prompt.id}`,
-      })),
-    },
-  ].filter((board) => board.items.length > 0), [props.initialThreads, props.initialMcpServers, props.initialFeaturedSkills, props.initialPrompts]);
-
-  const [activeBoard, setActiveBoard] = useState(0);
-  // The board advertises itself as live, so it should actually move. Rotating
-  // also surfaces all four categories to someone who never clicks a tab.
-  const [paused, setPaused] = useState(false);
-  const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
-  const board = boards[activeBoard] ?? boards[0];
-
-  useEffect(() => {
-    if (paused || boards.length <= 1) return;
-    const id = window.setInterval(() => {
-      setActiveBoard((current) => (current + 1) % boards.length);
-    }, BOARD_ROTATE_MS);
-    return () => window.clearInterval(id);
-  }, [paused, boards.length]);
-
-  const focusTab = (index: number) => {
-    setActiveBoard(index);
-    tabRefs.current[index]?.focus();
-  };
-
-  const onTabKeyDown = (event: React.KeyboardEvent) => {
-    if (event.key !== "ArrowRight" && event.key !== "ArrowLeft") return;
-    event.preventDefault();
-    const delta = event.key === "ArrowRight" ? 1 : -1;
-    focusTab((activeBoard + delta + boards.length) % boards.length);
-  };
-
-  const peopleGrid = props.communityMembers.slice(0, 18).map((member, index) => ({
-    id: member.id,
-    mono: initials(member.name || member.username),
-    avatar: member.avatar,
-    label: member.name || member.username,
-    dim: index > 11 ? 0.45 : 1,
-  }));
+export default function HomeContent({ items, orders }: HomeContentProps) {
+  const count = (type: DirectoryItem["type"]) => items.filter((i) => i.type === type).length;
 
   return (
     <>
-      <section className="container pb-20 pt-12 md:pb-28 md:pt-16">
-        <div className="grid items-center gap-10 lg:grid-cols-[minmax(0,0.94fr)_minmax(390px,0.72fr)]">
-          <div className="max-w-[720px]">
-            <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-border bg-card px-3 py-1.5 text-[13px] font-medium text-primary">
-              <span className="h-1.5 w-1.5 rounded-full bg-primary" />
-              The Claude AI Community Hub · 5k+ members
-            </div>
-            <h1 className="max-w-[12ch] text-balance text-[clamp(38px,8.5vw,48px)] font-medium leading-[1.04] text-foreground md:max-w-[14ch] md:text-[clamp(42px,4.6vw,56px)]">
-              The Claude AI Community
-            </h1>
-            <p className="mt-5 max-w-[58ch] text-pretty text-[16px] leading-[1.7] text-muted-foreground md:text-[17px]">
-              A focused Claude AI community for asking questions, comparing workflows,
-              and finding the MCP servers, connectors, skills, and prompts builders
-              are actually using.
-            </p>
-
-            <div className="mt-7 flex flex-wrap gap-3">
-              <Link href="/signup" className="inline-flex min-h-11 items-center justify-center rounded-lg bg-primary px-5 text-sm font-medium text-primary-foreground hover:bg-[var(--cad-accent-hover)]">
-                Join the community
-              </Link>
-              <Link href="/community" className="inline-flex min-h-11 items-center justify-center rounded-lg border border-border bg-card px-5 text-sm font-medium text-foreground hover:border-primary hover:text-primary">
-                Browse discussions
-              </Link>
-            </div>
-
-
-            <Link href="/members" className="group mt-7 inline-flex items-center gap-3">
-              <div className="flex -space-x-2.5">
-                {peopleGrid.slice(0, 6).map((person, index) => (
-                  <span
-                    key={`${person.id}-${index}`}
-                    className="rounded-full ring-2 ring-background"
-                  >
-                    <MemberAvatar
-                      avatar={person.avatar}
-                      initials={person.mono}
-                      label={person.label}
-                      opacity={1}
-                    />
-                  </span>
-                ))}
-              </div>
-              <span className="text-sm text-muted-foreground group-hover:text-foreground">
-                <span className="font-semibold text-foreground">5k+ builders</span> already inside
-              </span>
-            </Link>
-          </div>
-
-          <aside
-            onMouseEnter={() => setPaused(true)}
-            onMouseLeave={() => setPaused(false)}
-            onFocusCapture={() => setPaused(true)}
-            onBlurCapture={() => setPaused(false)}
-            className="relative overflow-hidden rounded-[18px] border border-border bg-card shadow-[0_18px_60px_var(--cad-shadow)]"
+      <section className="mx-auto max-w-[1180px] px-4 pb-12 pt-16 text-center md:px-8 md:pt-24">
+        <h1 className="mx-auto max-w-[19ch] text-balance text-[clamp(40px,6.2vw,68px)] font-normal leading-[1.04] text-foreground">
+          Discover the best resources for <em className="text-primary">Claude</em>
+        </h1>
+        <p className="mx-auto mt-6 max-w-[52ch] text-pretty text-[16px] leading-relaxed text-muted-foreground md:text-[17px]">
+          Discover community-built Claude Skills, MCP servers and Agents. Find what is trending or publish something you
+          built.
+        </p>
+        <div className="mt-8 flex flex-wrap justify-center gap-2.5">
+          <a
+            href="#trending"
+            className="inline-flex h-10 items-center rounded-full bg-foreground px-5 text-sm font-medium text-background transition-colors hover:bg-foreground/85"
           >
-            <div className="flex items-center justify-between gap-3 border-b border-border bg-[var(--cad-raised)] px-5 py-4">
-              <div>
-                <div className="text-[11px] font-medium uppercase tracking-[0.16em] text-[var(--cad-faint)]">Live board</div>
-                <div className="mt-1 text-lg font-semibold">Claude builder activity</div>
-              </div>
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-[var(--cad-accent-soft)] px-3 py-1 text-xs font-medium text-[var(--cad-accent-hover)]">
-                <span className="relative flex h-1.5 w-1.5">
-                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[var(--cad-accent-hover)] opacity-75" />
-                  <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-[var(--cad-accent-hover)]" />
-                </span>
-                Live
-              </span>
-            </div>
-
-            {/* Tabs — equal width so the indicator can slide by index alone */}
-            <div
-              role="tablist"
-              aria-label="Claude builder activity"
-              onKeyDown={onTabKeyDown}
-              className="relative flex border-b border-border px-3 pt-3"
-            >
-              {boards.map((b, i) => (
-                <button
-                  key={b.key}
-                  ref={(el) => {
-                    tabRefs.current[i] = el;
-                  }}
-                  type="button"
-                  role="tab"
-                  id={`board-tab-${b.key}`}
-                  aria-selected={i === activeBoard}
-                  aria-controls={`board-panel-${b.key}`}
-                  tabIndex={i === activeBoard ? 0 : -1}
-                  onClick={() => focusTab(i)}
-                  className={`flex-1 rounded-t-[8px] px-2 py-2 text-[13px] font-medium transition-colors ${
-                    i === activeBoard ? "text-foreground" : "text-muted-foreground hover:text-foreground"
-                  }`}
-                >
-                  {b.label}
-                </button>
-              ))}
-
-              <span className="pointer-events-none absolute inset-x-3 bottom-0 h-[2px]" aria-hidden="true">
-                <span
-                  className="block h-full rounded-full bg-primary/20 transition-transform duration-300 ease-out"
-                  style={{
-                    width: `${100 / boards.length}%`,
-                    transform: `translateX(${activeBoard * 100}%)`,
-                  }}
-                >
-                  <span
-                    key={`${activeBoard}-${paused}`}
-                    className={`block h-full origin-left rounded-full bg-primary ${
-                      paused
-                        ? ""
-                        : "animate-[board-progress_6000ms_linear_forwards] motion-reduce:animate-none"
-                    }`}
-                  />
-                </span>
-              </span>
-            </div>
-
-            {/* Active board */}
-            <div
-              id={`board-panel-${board.key}`}
-              role="tabpanel"
-              aria-labelledby={`board-tab-${board.key}`}
-              className="flex min-h-[268px] flex-col p-4"
-            >
-              <div className="mb-1 flex items-center gap-1.5 px-1 text-xs text-[var(--cad-faint)]">
-                <span className="h-1 w-1 rounded-full bg-success" />
-                {board.live}
-              </div>
-              <div key={board.key} className="space-y-0.5">
-                {board.items.map((item, index) => (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    style={{ animationDelay: `${index * 70}ms` }}
-                    className="group flex animate-[board-row-in_320ms_ease-out_both] items-center gap-3 rounded-[10px] p-2.5 transition-colors hover:bg-[var(--cad-raised)] motion-reduce:animate-none"
-                  >
-                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px] bg-[var(--cad-chip)] text-[11px] font-semibold text-[var(--cad-accent-hover)] transition-transform duration-200 group-hover:scale-105 motion-reduce:transition-none">
-                      {item.mono}
-                    </span>
-                    <span className="min-w-0 flex-1">
-                      <span className="block line-clamp-1 text-sm font-medium group-hover:text-primary">{item.title}</span>
-                      <span className="mt-0.5 block line-clamp-1 text-xs text-[var(--cad-faint)]">{item.meta}</span>
-                    </span>
-                    <ArrowUpRight className="h-4 w-4 shrink-0 -translate-x-1 text-transparent transition-all group-hover:translate-x-0 group-hover:text-primary" />
-                  </Link>
-                ))}
-              </div>
-              <Link
-                href={board.href}
-                className="mt-auto flex items-center justify-center gap-1.5 rounded-[10px] border border-border py-2.5 text-[13px] font-medium text-muted-foreground transition-colors hover:border-primary hover:text-primary"
-              >
-                {board.cta}
-                <ArrowUpRight className="h-3.5 w-3.5" />
-              </Link>
-            </div>
-          </aside>
+            Explore Trending
+          </a>
+          <Link
+            href="/submit"
+            className="inline-flex h-10 items-center rounded-full border border-border px-5 text-sm text-foreground transition-colors hover:border-[var(--cad-line-hover)]"
+          >
+            Submit a Resource
+          </Link>
         </div>
       </section>
 
-      <StatsStrip stats={props.initialStats} />
+      <section className="mx-auto max-w-[840px] px-4 md:px-8">
+        <DirectoryList items={items} orders={orders} showTypeFilter feedId="trending" />
+      </section>
 
-      <FeaturedResources initialSkills={props.initialFeaturedSkills} />
-      <MCPSection initialServers={props.initialMcpServers} />
-      <PromptsSection initialPrompts={props.initialPrompts} />
-      <UseCaseCarousel bundles={props.useCaseBundles ?? []} />
-      <ShowcaseSection initialProjects={props.initialShowcase ?? []} />
+      <section className="mx-auto mt-10 max-w-[840px] px-4 md:px-8">
+        <RecentlyViewed />
+      </section>
+
+      <section className="mx-auto mt-20 max-w-[840px] px-4 md:px-8">
+        <div className="grid gap-3 sm:grid-cols-3">
+          {BROWSE.map(({ type, href, title, body, Icon }) => (
+            <Link
+              key={href}
+              href={href}
+              className="group flex flex-col rounded-xl border border-border p-5 transition-colors hover:border-[var(--cad-line-hover)]"
+            >
+              <span className="flex items-center justify-between">
+                <Icon className="h-4 w-4 text-primary" />
+                <span className="font-mono text-[12px] text-muted-foreground">{count(type)}</span>
+              </span>
+              <span className="mt-4 text-[15px] text-foreground group-hover:text-primary">{title}</span>
+              <span className="mt-1.5 text-[13px] leading-relaxed text-muted-foreground">{body}</span>
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      <section className="mx-auto mt-16 max-w-[840px] px-4 md:px-8">
+        <div className="flex flex-col items-start gap-5 rounded-xl border border-border bg-card/40 p-6 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <p className="text-[15px] text-foreground">Built something for Claude?</p>
+            <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
+              Publish your Skill, MCP or Agent and make it easy to discover and install.
+            </p>
+          </div>
+          <Link
+            href="/submit"
+            className="inline-flex h-10 shrink-0 items-center gap-1.5 rounded-full bg-foreground px-5 text-sm font-medium text-background transition-colors hover:bg-foreground/85"
+          >
+            Submit a Resource
+            <ArrowRight className="h-3.5 w-3.5" />
+          </Link>
+        </div>
+      </section>
     </>
-  );
-}
-
-function HomeSkeleton() {
-  return (
-    <div className="mx-auto max-w-[1180px] animate-pulse px-8 py-16">
-      <div className="mx-auto mb-5 h-5 w-72 rounded bg-muted" />
-      <div className="mx-auto mb-4 h-16 max-w-xl rounded bg-muted" />
-      <div className="mx-auto mb-10 h-6 max-w-2xl rounded bg-muted" />
-      <div className="h-16 rounded-[10px] border border-border bg-card" />
-    </div>
-  );
-}
-
-export default function HomeContent(props: HomeContentProps) {
-  return (
-    <Suspense fallback={<HomeSkeleton />}>
-      <HomeInner {...props} />
-    </Suspense>
   );
 }

@@ -1,4 +1,7 @@
+import type { Metadata } from "next";
 import { fetchApi } from "@/lib/api-server";
+import { loadOrders } from "@/lib/server/rankings";
+import { listingRobots } from "@/lib/seo";
 import type { Skill } from "@/types";
 import SkillsClient from "./SkillsClient";
 
@@ -7,24 +10,28 @@ interface SkillsListResponse {
   isCache: boolean;
 }
 
+type ListingParams = Promise<{ category?: string; search?: string }>;
+
+export async function generateMetadata({ searchParams }: { searchParams: ListingParams }): Promise<Metadata> {
+  const params = await searchParams;
+  return { robots: listingRobots(params) };
+}
+
 export default async function SkillsPage({
   searchParams,
 }: {
-  searchParams: Promise<{ category?: string; search?: string }>;
+  searchParams: ListingParams;
 }) {
   const params = await searchParams;
-  const qs = new URLSearchParams();
-  if (params.search) qs.set("search", params.search);
-  if (params.category && params.category !== "All") qs.set("category", params.category);
-
-  const qsStr = qs.toString();
-  const response = await fetchApi<SkillsListResponse>(`/skills${qsStr ? `?${qsStr}` : ""}`);
+  // Whole index; filtering happens client-side in the ranked list.
+  const [response, ranked] = await Promise.all([fetchApi<SkillsListResponse>("/skills?limit=100"), loadOrders("skill")]);
   const initialData = response?.data ?? [];
 
   return (
     <SkillsClient
       initialData={initialData}
       initialParams={{ category: params.category, search: params.search }}
+      ranked={ranked}
     />
   );
 }

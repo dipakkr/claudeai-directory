@@ -2,101 +2,68 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import ReactMarkdown from "react-markdown";
+import { ExternalLink, Search, Wrench } from "lucide-react";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
 import ResourceReplies from "@/components/shared/ResourceReplies";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
-  ExternalLink,
-  BookOpen,
-  Copy,
-  Wrench,
-  Unlock,
-  Globe,
-  Shield as ShieldIcon,
-  FileText,
-  LifeBuoy,
-  Lock,
-  Plug,
-  Terminal,
-  Search,
-} from "lucide-react";
+  CodeBlock,
+  ConfigCard,
+  CopyButton,
+  DetailHeader,
+  DetailPage,
+  IconTile,
+  SectionLabel,
+  StatPill,
+  TagList,
+} from "@/components/directory/detail";
+import { InstallActions, InstallPanel } from "@/components/directory/InstallPanel";
+import type { InstallResolution } from "@/lib/install";
 import { useMCPServer, useMCPServers } from "@/hooks/use-mcp-servers";
-import { toast } from "sonner";
-import PageBreadcrumb from "@/components/layout/PageBreadcrumb";
-import ReactMarkdown from "react-markdown";
+import { faviconFor } from "@/lib/directory";
 import type { MCPServer } from "@/types";
 
-function getFaviconUrl(iconUrl?: string): string | null {
-  if (!iconUrl) return null;
-  try {
-    const hostname = new URL(iconUrl).hostname;
-    return `https://www.google.com/s2/favicons?domain=${hostname}&sz=64`;
-  } catch {
-    return null;
-  }
+/** Project-scoped config for teams, generated from the same validated fields as the command. */
+function projectConfig(resolution: InstallResolution): string {
+  if (resolution.method !== "mcp_http") return "";
+  return JSON.stringify({ mcpServers: { [resolution.name]: { type: resolution.transport, url: resolution.url } } }, null, 2);
 }
 
-function ServerIcon({ iconUrl, name, size = 48 }: { iconUrl?: string; name: string; size?: number }) {
-  const [failed, setFailed] = useState(false);
-  const favicon = getFaviconUrl(iconUrl);
+const toolTone = (name: string) => {
+  if (/^(delete|remove|destroy|purge|drop)/.test(name)) return { label: "delete", cls: "text-destructive" };
+  if (/^(create|add|insert|post|send|upload|generate|set|put|write|import|push|submit|publish)/.test(name))
+    return { label: "write", cls: "text-success" };
+  if (/^(update|edit|modify|patch|rename|move|merge|sync|toggle|enable|disable|assign|unassign)/.test(name))
+    return { label: "update", cls: "text-amber-700 dark:text-amber-400" };
+  if (/^(get|list|search|find|fetch|query|check|count|read|show|view|describe|lookup)/.test(name))
+    return { label: "read", cls: "text-sky-700 dark:text-sky-400" };
+  return { label: "action", cls: "text-muted-foreground" };
+};
 
-  if (favicon && !failed) {
-    return (
-      <img
-        src={favicon}
-        alt={name}
-        width={size}
-        height={size}
-        className="rounded-lg object-contain shrink-0"
-        style={{ width: size, height: size }}
-        onError={() => setFailed(true)}
-      />
-    );
-  }
-
-  return (
-    <div
-      className="rounded-lg bg-primary/10 flex items-center justify-center text-primary font-semibold shrink-0"
-      style={{ width: size, height: size, fontSize: size * 0.38 }}
-    >
-      {name[0]?.toUpperCase()}
-    </div>
-  );
-}
-
-export default function MCPServerDetail({ server: initialServer, slug }: { server: MCPServer | null; slug: string }) {
+export default function MCPServerDetail({
+  server: initialServer,
+  slug,
+  resolution,
+}: {
+  server: MCPServer | null;
+  slug: string;
+  resolution: InstallResolution;
+}) {
   const { data: fetchedServer } = useMCPServer(initialServer ? "" : slug);
   const server = initialServer ?? fetchedServer ?? null;
-  const { data: relatedServers } = useMCPServers({
-    category: server?.category || undefined,
-    limit: 7,
-  });
+  const { data: relatedServers } = useMCPServers({ category: server?.category || undefined, limit: 7 });
   const [toolSearch, setToolSearch] = useState("");
-
-  const copyCommand = (text: string) => {
-    navigator.clipboard.writeText(text);
-    toast.success("Copied to clipboard!");
-  };
-
-  const related = (relatedServers ?? []).filter((s) => s.slug !== server?.slug && s.id !== server?.id).slice(0, 6);
 
   if (!server) {
     return (
-      <div className="min-h-screen bg-background flex flex-col">
+      <div className="flex min-h-screen flex-col bg-background">
         <Header />
-        <main className="flex-1 flex items-center justify-center">
+        <main className="flex flex-1 items-center justify-center px-4">
           <div className="text-center">
-            <h1 className="text-2xl font-medium text-foreground mb-2">
-              Connector not found
-            </h1>
-            <Link href="/mcp">
-              <Button variant="outline" size="sm">
-                Back to MCP Connectors
-              </Button>
+            <h1 className="mb-4 text-3xl text-foreground">MCP server not found</h1>
+            <Link href="/mcp" className="text-sm text-muted-foreground underline underline-offset-4 hover:text-foreground">
+              Back to MCP servers
             </Link>
           </div>
         </main>
@@ -105,492 +72,228 @@ export default function MCPServerDetail({ server: initialServer, slug }: { serve
     );
   }
 
-  const authorName =
-    typeof server.author === "object" ? server.author?.name : server.author;
-  const authorUrl =
-    typeof server.author === "object" ? server.author?.url : undefined;
-  const tools = server.capabilities?.tools ?? [];
-  const worksWithList = server.capabilities?.works_with ?? [];
-  const connUrl = server.connection?.url ?? "";
-  const claudeCmd = server.connection?.claude_code_command ?? server.install_command ?? "";
-  const docsUrl = server.links?.documentation ?? server.documentation_url ?? "";
-  const supportUrl = server.links?.support ?? "";
-  const privacyUrl = server.links?.privacy_policy ?? "";
-  const repoUrl = server.links?.repository ?? server.github_url ?? "";
-  const directoryUrl = server.links?.directory_url ?? "";
-  const permissions = server.capabilities?.permissions ?? "";
-  const isAuthless = server.connection?.is_authless ?? false;
-  const hasMcpApp = server.capabilities?.has_mcp_app ?? false;
-  const version = server.version ?? "";
+  const authorName = typeof server.author === "object" ? server.author?.name : server.author;
+  const authorUrl = typeof server.author === "object" ? server.author?.url : undefined;
+  const tools = (server.capabilities?.tools ?? []).map((t) => (typeof t === "string" ? t : (t as { name: string }).name));
+  const filteredTools = toolSearch ? tools.filter((t) => t.toLowerCase().includes(toolSearch.toLowerCase())) : tools;
+  const worksWith = server.capabilities?.works_with ?? [];
+  const jsonConfig = projectConfig(resolution);
   const images = server.branding?.images ?? [];
+  const related = (relatedServers ?? []).filter((s) => s.slug !== server.slug && s.id !== server.id).slice(0, 6);
+
+  const facts = [
+    { label: "Developer", value: authorName || "Community", href: authorUrl },
+    { label: "Category", value: server.category },
+    { label: "Transport", value: server.connection?.transport },
+    { label: "Auth", value: server.connection ? (server.connection.is_authless ? "None required" : "Sign-in required") : "" },
+    { label: "Permissions", value: server.capabilities?.permissions },
+    { label: "Version", value: server.version },
+  ].filter((f) => f.value);
+
+  const links = [
+    { label: "Documentation", href: server.links?.documentation ?? server.documentation_url },
+    { label: "Repository", href: server.links?.repository ?? server.github_url },
+    { label: "Support", href: server.links?.support },
+    { label: "Privacy policy", href: server.links?.privacy_policy },
+    { label: "Anthropic directory", href: server.links?.directory_url },
+  ].filter((l): l is { label: string; href: string } => Boolean(l.href));
+
+  const chips = [
+    server.official ? "official" : "",
+    server.connection?.is_authless ? "no auth" : "",
+    server.capabilities?.has_mcp_app ? "mcp app" : "",
+    ...worksWith.map((w) => w.replace("-", " ")),
+  ].filter(Boolean);
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div className="min-h-screen bg-background">
       <Header />
-      <main className="flex-1">
-        <div className="container py-8">
-          <PageBreadcrumb items={[
-            { label: "MCP Connectors", href: "/mcp" },
-            { label: server?.name || "..." },
-          ]} />
-          <div className="grid gap-8 lg:grid-cols-3">
-            {/* Main Content */}
-            <div className="lg:col-span-2 space-y-6">
-              {/* Header */}
-              <div>
-                <div className="flex items-start gap-4 mb-4">
-                  <ServerIcon iconUrl={server.branding?.icon_url} name={server.name} size={48} />
-                  <div className="flex-1 min-w-0">
-                    <h1 className="text-2xl md:text-3xl font-medium text-foreground mb-1">
-                      {server.name}
-                    </h1>
-                    {server.one_liner && (
-                      <p className="text-sm text-muted-foreground mb-2">
-                        {server.one_liner}
-                      </p>
-                    )}
-                    <div className="flex items-center gap-2 flex-wrap">
-                      {server.category && (
-                        <Badge variant="secondary" className="text-xs">
-                          {server.category}
-                        </Badge>
-                      )}
-                      {isAuthless && (
-                        <Badge className="text-xs bg-emerald-400/10 text-emerald-400 border-0">
-                          <Unlock className="mr-1 h-3 w-3" />
-                          No auth required
-                        </Badge>
-                      )}
-                      {hasMcpApp && (
-                        <Badge className="text-xs bg-primary/10 text-primary border-0">
-                          <Plug className="mr-1 h-3 w-3" />
-                          MCP App
-                        </Badge>
-                      )}
-                      {server.official && (
-                        <Badge variant="outline" className="text-xs">
-                          Official
-                        </Badge>
-                      )}
-                    </div>
-                  </div>
-                </div>
+      <main>
+        <DetailPage backHref="/mcp" backLabel="MCP servers">
+          <DetailHeader
+            icon={<IconTile src={faviconFor(server.branding?.icon_url)} name={server.name} />}
+            title={server.name}
+            stats={
+              tools.length > 0 ? (
+                <StatPill icon={<Wrench className="h-3.5 w-3.5" />} title={`${tools.length} tools`}>
+                  {tools.length}
+                </StatPill>
+              ) : undefined
+            }
+          />
 
-                <div className="text-sm text-muted-foreground leading-relaxed prose prose-invert prose-sm max-w-none prose-p:text-muted-foreground prose-strong:text-foreground prose-li:text-muted-foreground prose-a:text-primary prose-headings:text-foreground">
-                  <ReactMarkdown>
-                    {(server.description || "")
-                      .replace(/\s*•\s*/g, "\n- ")
-                      .replace(/\*\*Note:\*\*/g, "\n\n**Note:**")
-                    }
-                  </ReactMarkdown>
-                </div>
+          <p className="mt-2 font-mono text-[12px] uppercase tracking-wide text-muted-foreground">
+            MCP server{authorName ? ` · by ${authorName}` : ""}
+          </p>
+          {server.one_liner && <p className="mt-5 text-[17px] leading-relaxed text-foreground/90">{server.one_liner}</p>}
+          {server.description && server.description !== server.one_liner && (
+            <div className="prose prose-sm mt-3 max-w-none text-muted-foreground dark:prose-invert prose-p:text-muted-foreground prose-a:text-primary prose-strong:text-foreground prose-li:text-muted-foreground">
+              <ReactMarkdown>
+                {server.description.replace(/\s*•\s*/g, "\n- ").replace(/\*\*Note:\*\*/g, "\n\n**Note:**")}
+              </ReactMarkdown>
+            </div>
+          )}
 
-                {/* Works with */}
-                {worksWithList.length > 0 && (
-                  <div className="flex items-center gap-2 mt-4">
-                    <span className="text-xs text-muted-foreground">
-                      Works with:
-                    </span>
-                    {worksWithList.map((w) => (
-                      <Badge
-                        key={w}
-                        variant="outline"
-                        className="text-[10px] capitalize"
-                      >
-                        {w.replace("-", " ")}
-                      </Badge>
-                    ))}
-                  </div>
-                )}
-              </div>
+          <InstallActions resolution={resolution} kind="mcp" resourceId={slug} name={server.name} href={`/mcp/${slug}`} />
 
-              <Separator />
+          {chips.length > 0 && (
+            <div className="mt-8">
+              <TagList tags={chips} />
+            </div>
+          )}
 
-              {/* Connection / Installation */}
-              {(claudeCmd || connUrl) && (
-                <>
-                  <div>
-                    <h2 className="text-lg font-medium text-foreground mb-4">
-                      Connection
-                    </h2>
+          <InstallPanel resolution={resolution} kind="mcp" resourceId={slug} />
+          {jsonConfig && (
+            <div className="mt-3">
+              <ConfigCard
+                badge="JSON"
+                title=".mcp.json for a shared project"
+                note="Commit this file so everyone on the project gets the same server."
+                actions={<CopyButton text={jsonConfig} event="mcp_command_copied" eventProps={{ resource_type: "mcp", resource_id: slug }} />}
+              >
+                <CodeBlock>{jsonConfig}</CodeBlock>
+              </ConfigCard>
+            </div>
+          )}
 
-                    {claudeCmd && (
-                      <Card className="mb-3">
-                        <CardHeader>
-                          <div className="flex items-center justify-between">
-                            <CardTitle className="text-sm flex items-center gap-2">
-                              <Terminal className="h-4 w-4" />
-                              Claude Code
-                            </CardTitle>
-                            <Button
-                              size="sm"
-                              variant="ghost"
-                              onClick={() => copyCommand(claudeCmd)}
-                              className="h-7 text-xs"
-                            >
-                              <Copy className="h-3 w-3" />
-                            </Button>
-                          </div>
-                        </CardHeader>
-                        <CardContent>
-                          <code className="text-sm bg-muted px-3 py-2 rounded-md block font-mono break-all">
-                            {claudeCmd}
-                          </code>
-                        </CardContent>
-                      </Card>
-                    )}
-
-                    {connUrl && (
-                      <Card>
-                        <CardHeader>
-                          <div className="flex items-center justify-between">
-                            <CardTitle className="text-sm flex items-center gap-2">
-                              <Globe className="h-4 w-4" />
-                              Connector URL
-                            </CardTitle>
-                            <Button
-                              size="sm"
-                              variant="ghost"
-                              onClick={() => copyCommand(connUrl)}
-                              className="h-7 text-xs"
-                            >
-                              <Copy className="h-3 w-3" />
-                            </Button>
-                          </div>
-                        </CardHeader>
-                        <CardContent>
-                          <code className="text-sm bg-muted px-3 py-2 rounded-md block font-mono break-all">
-                            {connUrl}
-                          </code>
-                        </CardContent>
-                      </Card>
-                    )}
-                  </div>
-                  <Separator />
-                </>
-              )}
-
-              {/* Tools */}
-              {tools.length > 0 && (
-                <>
-                  <div>
-                    <h2 className="text-lg font-medium text-foreground mb-4">
-                      Tools{" "}
-                      <span className="text-sm text-muted-foreground font-normal">
-                        ({tools.length})
-                      </span>
-                    </h2>
-                    {tools.length > 5 && (
-                      <div className="relative mb-3">
-                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
-                        <input
-                          type="text"
-                          placeholder="Filter tools..."
-                          value={toolSearch}
-                          onChange={(e) => setToolSearch(e.target.value)}
-                          className="w-full pl-9 pr-3 py-1.5 text-xs rounded-md border border-border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
-                        />
-                      </div>
-                    )}
-                    <div className="rounded-lg border border-border overflow-hidden">
-                      {tools.filter((tool) => {
-                        if (!toolSearch) return true;
-                        const name = typeof tool === "string" ? tool : (tool as { name: string }).name;
-                        return name.toLowerCase().includes(toolSearch.toLowerCase());
-                      }).map((tool, i) => {
-                        const name = typeof tool === "string" ? tool : (tool as { name: string }).name;
-                        const isRead = /^(get|list|search|find|fetch|query|check|count|read|show|view|describe|lookup)/.test(name);
-                        const isDelete = /^(delete|remove|destroy|purge|drop)/.test(name);
-                        const isWrite = /^(create|add|insert|post|send|upload|generate|set|put|write|import|push|submit|publish)/.test(name);
-                        const isUpdate = /^(update|edit|modify|patch|rename|move|merge|sync|toggle|enable|disable|assign|unassign)/.test(name);
-                        const actionColor = isDelete
-                          ? "text-red-400 bg-red-400/10"
-                          : isWrite
-                            ? "text-emerald-400 bg-emerald-400/10"
-                            : isUpdate
-                              ? "text-yellow-400 bg-yellow-400/10"
-                              : isRead
-                                ? "text-blue-400 bg-blue-400/10"
-                                : "text-muted-foreground bg-muted/50";
-                        const actionLabel = isDelete ? "DELETE" : isWrite ? "CREATE" : isUpdate ? "UPDATE" : isRead ? "READ" : "ACTION";
-
-                        return (
-                          <div
-                            key={name}
-                            className={`flex items-center gap-3 px-4 py-2.5 ${i > 0 ? "border-t border-border" : ""} hover:bg-muted/30 transition-colors`}
-                          >
-                            <span className={`text-[9px] font-bold tracking-wider px-1.5 py-0.5 rounded ${actionColor} shrink-0 w-14 text-center`}>
-                              {actionLabel}
-                            </span>
-                            <code className="text-xs text-foreground/90 font-mono">
-                              {name}
-                            </code>
-                          </div>
-                        );
-                      })}
-                      {toolSearch && tools.every((t) => {
-                        const n = typeof t === "string" ? t : (t as { name: string }).name;
-                        return !n.toLowerCase().includes(toolSearch.toLowerCase());
-                      }) && (
-                          <div className="px-4 py-6 text-center text-xs text-muted-foreground">
-                            No tools matching &ldquo;{toolSearch}&rdquo;
-                          </div>
-                        )}
-                    </div>
-                  </div>
-                  <Separator />
-                </>
-              )}
-
-              {/* Rich HTML content */}
-              {server.html_content && (
-                <>
-                  <div>
-                    <h2 className="text-lg font-medium text-foreground mb-4">
-                      About
-                    </h2>
-                    <div
-                      className="prose prose-sm prose-invert max-w-none text-muted-foreground [&_p]:mb-3 [&_br]:mb-1"
-                      dangerouslySetInnerHTML={{
-                        __html: server.html_content,
-                      }}
+          {tools.length > 0 && (
+            <>
+              <SectionLabel>{`${tools.length} tools`}</SectionLabel>
+              <div className="overflow-hidden rounded-xl border border-border">
+                {tools.length > 8 && (
+                  <label className="relative block border-b border-border">
+                    <Search className="pointer-events-none absolute left-4 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
+                    <input
+                      type="text"
+                      value={toolSearch}
+                      onChange={(e) => setToolSearch(e.target.value)}
+                      placeholder="Filter tools…"
+                      className="h-11 w-full bg-transparent pl-10 pr-4 text-sm text-foreground outline-none placeholder:text-muted-foreground"
                     />
-                  </div>
-                  <Separator />
-                </>
-              )}
+                  </label>
+                )}
+                <ul className="max-h-[420px] overflow-y-auto">
+                  {filteredTools.map((name) => {
+                    const tone = toolTone(name);
+                    return (
+                      <li key={name} className="flex items-center gap-4 border-b border-border/60 px-4 py-2.5 last:border-b-0">
+                        <span className={`w-14 shrink-0 font-mono text-[10.5px] uppercase ${tone.cls}`}>{tone.label}</span>
+                        <code className="truncate font-mono text-[13px] text-foreground/90">{name}</code>
+                      </li>
+                    );
+                  })}
+                  {filteredTools.length === 0 && (
+                    <li className="px-4 py-6 text-center text-sm text-muted-foreground">No tools match &ldquo;{toolSearch}&rdquo;</li>
+                  )}
+                </ul>
+              </div>
+            </>
+          )}
 
-              {/* Promo images */}
-              {images.length > 0 && (
-                <div>
-                  <h2 className="text-lg font-medium text-foreground mb-4">
-                    Examples
-                  </h2>
-                  <div className="grid gap-4 sm:grid-cols-2">
-                    {images.map((img, i) => (
-                      <div key={i} className="space-y-2">
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img
-                          src={img.imageUrl}
-                          alt={img.prompt}
-                          className="rounded-lg border border-border w-full"
-                        />
-                        <p className="text-xs text-muted-foreground italic">
-                          &ldquo;{img.prompt}&rdquo;
-                        </p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
+          {server.html_content && (
+            <>
+              <SectionLabel>About</SectionLabel>
+              <div
+                className="prose prose-sm max-w-none text-muted-foreground dark:prose-invert [&_br]:mb-1 [&_p]:mb-3"
+                dangerouslySetInnerHTML={{ __html: server.html_content }}
+              />
+            </>
+          )}
 
-              {/* Legacy features (for old seed data) */}
-              {(server.features?.length ?? 0) > 0 && !server.html_content && (
-                <>
-                  <div>
-                    <h2 className="text-lg font-medium text-foreground mb-4">
-                      Features
-                    </h2>
-                    <div className="grid gap-2 sm:grid-cols-2">
-                      {server.features.map((feature, i) => (
-                        <div key={i} className="flex items-start gap-2">
-                          <div className="h-1.5 w-1.5 rounded-full bg-primary mt-1.5 shrink-0" />
-                          <span className="text-sm text-muted-foreground">
-                            {feature}
-                          </span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                  <Separator />
-                </>
-              )}
+          {images.length > 0 && (
+            <>
+              <SectionLabel>Examples</SectionLabel>
+              <div className="grid gap-4 sm:grid-cols-2">
+                {images.map((img, i) => (
+                  <figure key={i}>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={img.imageUrl} alt={img.prompt} className="w-full rounded-xl border border-border" />
+                    <figcaption className="mt-2 text-xs italic text-muted-foreground">&ldquo;{img.prompt}&rdquo;</figcaption>
+                  </figure>
+                ))}
+              </div>
+            </>
+          )}
 
-              {/* Related MCP Servers */}
-              {related.length > 0 && (
-                <div>
-                  <h2 className="text-lg font-medium text-foreground mb-4">
-                    Related in {server.category}
-                  </h2>
-                  <div className="grid gap-3 sm:grid-cols-2">
-                    {related.map((rel) => (
-                      <Link
-                        key={rel.id}
-                        href={`/mcp/${rel.slug || rel.id}`}
-                        className="group flex items-start gap-3 rounded-lg border border-border bg-card p-3 hover:bg-accent/50 hover:border-primary/20 transition-all"
-                      >
-                        <ServerIcon iconUrl={rel.branding?.icon_url} name={rel.name} size={32} />
-                        <div className="min-w-0 flex-1">
-                          <h3 className="text-sm font-medium text-foreground group-hover:text-primary transition-colors truncate">
-                            {rel.name}
-                          </h3>
-                          <p className="text-xs text-muted-foreground line-clamp-1">
-                            {rel.one_liner || rel.description}
-                          </p>
-                        </div>
-                      </Link>
-                    ))}
-                  </div>
-                </div>
-              )}
+          {(server.features?.length ?? 0) > 0 && !server.html_content && (
+            <>
+              <SectionLabel>Features</SectionLabel>
+              <ul className="space-y-2">
+                {server.features.map((feature, i) => (
+                  <li key={i} className="flex gap-3 text-sm text-muted-foreground">
+                    <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-primary" />
+                    {feature}
+                  </li>
+                ))}
+              </ul>
+            </>
+          )}
 
-              <ResourceReplies resourceType="mcp" resourceId={slug} />
+          <SectionLabel>Details</SectionLabel>
+          <dl className="grid grid-cols-1 overflow-hidden rounded-xl border border-border sm:grid-cols-2">
+            {facts.map((fact) => (
+              <div key={fact.label} className="flex items-center justify-between gap-4 border-b border-border/60 px-4 py-3 sm:[&:nth-last-child(-n+2)]:border-b-0">
+                <dt className="text-sm text-muted-foreground">{fact.label}</dt>
+                <dd className="truncate text-right text-sm text-foreground first-letter:uppercase">
+                  {fact.href ? (
+                    <a href={fact.href} target="_blank" rel="noopener noreferrer" className="hover:text-primary">
+                      {fact.value}
+                    </a>
+                  ) : (
+                    fact.value
+                  )}
+                </dd>
+              </div>
+            ))}
+          </dl>
+
+          {links.length > 0 && (
+            <div className="mt-4 flex flex-wrap gap-2">
+              {links.map((link) => (
+                <a
+                  key={link.label}
+                  href={link.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex h-8 items-center gap-1.5 rounded-full border border-border px-3 text-[13px] text-muted-foreground transition-colors hover:border-[var(--cad-line-hover)] hover:text-foreground"
+                >
+                  {link.label}
+                  <ExternalLink className="h-3 w-3" />
+                </a>
+              ))}
             </div>
+          )}
 
-            {/* Sidebar */}
-            <div className="space-y-4">
-              {/* Quick Info */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-sm">Details</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  <div>
-                    <p className="text-xs text-muted-foreground mb-1">
-                      Developer
-                    </p>
-                    {authorUrl ? (
-                      <a
-                        href={authorUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-sm font-medium text-foreground hover:text-primary transition-colors inline-flex items-center gap-1"
-                      >
-                        {authorName}
-                        <ExternalLink className="h-3 w-3" />
-                      </a>
-                    ) : (
-                      <p className="text-sm font-medium text-foreground">
-                        {authorName || "Community"}
-                      </p>
-                    )}
-                  </div>
-                  {version && (
-                    <div>
-                      <p className="text-xs text-muted-foreground mb-1">
-                        Version
-                      </p>
-                      <p className="text-sm font-medium text-foreground">
-                        {version}
-                      </p>
-                    </div>
-                  )}
-                  {permissions && (
-                    <div>
-                      <p className="text-xs text-muted-foreground mb-1">
-                        Permissions
-                      </p>
-                      <p className="text-sm font-medium text-foreground flex items-center gap-1.5">
-                        {permissions.toLowerCase().includes("write") ? (
-                          <ShieldIcon className="h-3 w-3 text-amber-400" />
-                        ) : (
-                          <Lock className="h-3 w-3 text-emerald-400" />
-                        )}
-                        {permissions}
-                      </p>
-                    </div>
-                  )}
-                  {server.connection?.transport && (
-                    <div>
-                      <p className="text-xs text-muted-foreground mb-1">
-                        Transport
-                      </p>
-                      <p className="text-sm font-medium text-foreground">
-                        {server.connection.transport}
-                      </p>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
+          {(server.tags?.length ?? 0) > 0 && (
+            <>
+              <SectionLabel>Tags</SectionLabel>
+              <TagList tags={server.tags} />
+            </>
+          )}
 
-              {/* Links */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-sm">Links</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-2">
-                  {docsUrl && (
-                    <a
-                      href={docsUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
-                    >
-                      <BookOpen className="h-3.5 w-3.5" />
-                      Documentation
-                    </a>
-                  )}
-                  {supportUrl && (
-                    <a
-                      href={supportUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
-                    >
-                      <LifeBuoy className="h-3.5 w-3.5" />
-                      Support
-                    </a>
-                  )}
-                  {privacyUrl && (
-                    <a
-                      href={privacyUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
-                    >
-                      <FileText className="h-3.5 w-3.5" />
-                      Privacy Policy
-                    </a>
-                  )}
-                  {repoUrl && (
-                    <a
-                      href={repoUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
-                    >
-                      <ExternalLink className="h-3.5 w-3.5" />
-                      Repository
-                    </a>
-                  )}
-                  {directoryUrl && (
-                    <a
-                      href={directoryUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
-                    >
-                      <Globe className="h-3.5 w-3.5" />
-                      Anthropic Directory
-                    </a>
-                  )}
-                </CardContent>
-              </Card>
+          {related.length > 0 && (
+            <>
+              <SectionLabel>{`More in ${server.category}`}</SectionLabel>
+              <ul className="border-t border-border">
+                {related.map((rel) => (
+                  <li key={rel.id}>
+                    <Link href={`/mcp/${rel.slug || rel.id}`} className="group flex items-center gap-3 border-b border-border/70 py-3">
+                      <IconTile src={faviconFor(rel.branding?.icon_url)} name={rel.name} size={36} />
+                      <span className="min-w-0">
+                        <span className="block truncate text-[15px] text-foreground group-hover:text-primary">{rel.name}</span>
+                        <span className="block truncate text-[13px] text-muted-foreground">{rel.one_liner || rel.description}</span>
+                      </span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </>
+          )}
 
-              {/* Tags */}
-              {(server.tags?.length ?? 0) > 0 && (
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="text-sm">Tags</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="flex flex-wrap gap-1.5">
-                      {server.tags.map((tag) => (
-                        <Badge
-                          key={tag}
-                          variant="outline"
-                          className="text-[10px]"
-                        >
-                          {tag}
-                        </Badge>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
-              )}
-            </div>
+          <div className="mt-14">
+            <ResourceReplies resourceType="mcp" resourceId={slug} />
           </div>
-        </div>
+        </DetailPage>
       </main>
       <Footer />
     </div>
