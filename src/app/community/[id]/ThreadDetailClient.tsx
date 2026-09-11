@@ -11,6 +11,7 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ChevronUp } from "lucide-react";
 import PageBreadcrumb from "@/components/layout/PageBreadcrumb";
+import UserMarkdown from "@/components/shared/UserMarkdown";
 import { useThread, useReplies, useCreateReply } from "@/hooks/use-community";
 import { useAuth } from "@/lib/auth";
 import { toast } from "sonner";
@@ -118,9 +119,7 @@ function ReplyCard({
             <span className="text-border">·</span>
             <span>{timeAgo(reply.created_at)}</span>
           </div>
-          <div className="text-sm text-foreground whitespace-pre-wrap leading-relaxed">
-            {reply.body}
-          </div>
+          <UserMarkdown compact>{reply.body}</UserMarkdown>
           <div className="flex items-center gap-3 mt-2 text-[11px] text-muted-foreground">
             {reply.upvotes > 0 && (
               <span className="flex items-center gap-1">
@@ -285,9 +284,7 @@ export default function ThreadDetail({
 
                 {/* Thread body */}
                 <div className="rounded-lg border border-border bg-card p-5 mb-8">
-                  <div className="text-sm text-foreground whitespace-pre-wrap leading-relaxed">
-                    {thread.body}
-                  </div>
+                  <UserMarkdown>{thread.body}</UserMarkdown>
                 </div>
 
                 {/* Replies */}
