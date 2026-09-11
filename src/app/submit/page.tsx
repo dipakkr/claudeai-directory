@@ -1,330 +1,420 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
-import { toast } from "sonner";
-import { ArrowRight, BadgeCheck, CheckCircle2, Clipboard, ExternalLink, ShieldCheck } from "lucide-react";
-
+import { AlertTriangle, ArrowRight, CheckCircle2, ExternalLink, Loader2, Star } from "lucide-react";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { ApiError } from "@/lib/api";
+import { ApiError, api } from "@/lib/api";
+import { track } from "@/lib/analytics";
 import { useAuth } from "@/lib/auth";
-import {
-  useMyShowcaseProjects,
-  useSubmitShowcaseProject,
-  useVerifyShowcaseBadge,
-} from "@/hooks/use-showcase";
-import type { ShowcaseProject } from "@/types";
+import type { ResourceInstall, ResourceKind } from "@/lib/install";
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.claudeai.directory";
+// CLAUDE.md "Submit" + INSTALL_REGISTRY.md "Skill Submission Flow":
+// GitHub URL + type, we detect what we can, the creator reviews, a human approves.
 
-function splitList(value: string) {
-  return value
-    .split(",")
-    .map((item) => item.trim())
-    .filter(Boolean);
+interface Detected {
+  path: string;
+  name: string;
+  description?: string;
 }
 
-function badgeSnippet(project?: ShowcaseProject | null) {
-  if (project?.badge_html) return project.badge_html;
-  const href = project ? `${SITE_URL}/showcase/${project.id}` : SITE_URL;
-  return `<a href="${href}" target="_blank" rel="noopener">Listed on Claude AI Directory</a>`;
+interface DetectResult {
+  repo: {
+    owner: string;
+    name: string;
+    default_branch: string;
+    description?: string;
+    stars?: number;
+    license?: string;
+    html_url: string;
+  };
+  detected: {
+    plugin_json: boolean;
+    marketplace_json: boolean;
+    mcp_json: unknown | null;
+    skills: Detected[];
+    agents: Detected[];
+  };
+  resolution: ResourceInstall | null;
+  warnings: string[];
 }
 
-export default function SubmitAppPage() {
-  const { isAuthenticated, isLoading } = useAuth();
-  const submitApp = useSubmitShowcaseProject();
-  const verifyBadge = useVerifyShowcaseBadge();
-  const { data: myApps } = useMyShowcaseProjects({ enabled: !isLoading && isAuthenticated });
-  const [createdApp, setCreatedApp] = useState<ShowcaseProject | null>(null);
-  const [form, setForm] = useState({
-    title: "",
-    tagline: "",
-    app_url: "",
-    badge_page_url: "",
-    github_url: "",
-    category: "Claude app",
-    description: "",
-    tech_stack: "Claude, MCP",
-    use_cases: "",
-    feedback_prompt: "What would make this more useful for Claude builders?",
-  });
+const TYPES: { value: ResourceKind; label: string }[] = [
+  { value: "skill", label: "Skill" },
+  { value: "mcp", label: "MCP" },
+  { value: "agent", label: "Agent" },
+];
 
-  const activeApp = createdApp ?? myApps?.[0] ?? null;
-  const snippet = useMemo(() => badgeSnippet(activeApp), [activeApp]);
+const CATEGORIES: Record<ResourceKind, string[]> = {
+  skill: ["Coding", "Frontend", "Testing", "Research", "Productivity", "Data", "Marketing", "DevOps"],
+  mcp: ["Developer Tools", "Databases", "Browser", "Productivity", "Communication", "Observability", "Data"],
+  agent: ["Coding", "Testing", "Code Review", "Debugging", "Security", "Research", "DevOps"],
+};
 
-  const update = (field: keyof typeof form, value: string) => {
-    setForm((current) => ({ ...current, [field]: value }));
+const GITHUB_REPO = /^https:\/\/github\.com\/[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+\/?(?:#.*)?$/;
+
+const inputClass =
+  "h-11 w-full rounded-lg border border-border bg-card px-3.5 text-[15px] text-foreground outline-none placeholder:text-muted-foreground focus:border-[var(--cad-line-hover)]";
+
+function errorMessage(error: unknown, fallback: string) {
+  if (error instanceof ApiError && error.data && typeof error.data === "object" && "detail" in error.data) {
+    const detail = (error.data as { detail: unknown }).detail;
+    if (typeof detail === "string") return detail;
+  }
+  return fallback;
+}
+
+export default function SubmitPage() {
+  const { isAuthenticated, isLoading: authLoading } = useAuth();
+  const [url, setUrl] = useState("");
+  const [type, setType] = useState<ResourceKind>("skill");
+  const [detecting, setDetecting] = useState(false);
+  const [error, setError] = useState("");
+  const [result, setResult] = useState<DetectResult | null>(null);
+  const [form, setForm] = useState({ source_path: "", name: "", title: "", description: "", category: "" });
+  const [submitting, setSubmitting] = useState(false);
+  const [done, setDone] = useState(false);
+
+  const components = result ? (type === "agent" ? result.detected.agents : type === "skill" ? result.detected.skills : []) : [];
+
+  const pick = (component: Detected | undefined, repo: DetectResult["repo"]) => {
+    setForm({
+      source_path: component?.path ?? "",
+      name: component?.name ?? repo.name,
+      title: component?.name ?? repo.name,
+      // The creator's own text, trimmed. We never generate descriptions.
+      description: (component?.description ?? repo.description ?? "").slice(0, 300),
+      category: "",
+    });
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    if (!form.title || !form.app_url || !form.badge_page_url || !form.description) {
-      toast.error("App name, URL, badge page, and description are required");
+  const detect = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
+    setResult(null);
+    const trimmed = url.trim();
+    if (!GITHUB_REPO.test(trimmed)) {
+      setError("Paste a GitHub repository URL, like https://github.com/owner/repo");
       return;
     }
+    setDetecting(true);
+    try {
+      const data = await api.post<DetectResult>("/submissions/detect", { github_url: trimmed, resource_type: type });
+      setResult(data);
+      const list = type === "agent" ? data.detected.agents : type === "skill" ? data.detected.skills : [];
+      pick(list[0], data.repo);
+    } catch (err) {
+      setError(errorMessage(err, "We could not read that repository right now. Check the URL and try again."));
+    } finally {
+      setDetecting(false);
+    }
+  };
 
-    submitApp.mutate(
-      {
+  const submit = async () => {
+    if (!result) return;
+    setSubmitting(true);
+    setError("");
+    try {
+      await api.post("/submissions", {
+        github_url: url.trim(),
+        resource_type: type,
+        source_path: form.source_path,
+        name: form.name,
         title: form.title,
-        tagline: form.tagline,
         description: form.description,
-        app_url: form.app_url,
-        demo_url: form.app_url,
-        github_url: form.github_url || undefined,
         category: form.category,
-        tech_stack: splitList(form.tech_stack),
-        skills_used: [],
-        use_cases: splitList(form.use_cases),
-        feedback_prompt: form.feedback_prompt,
-        badge_page_url: form.badge_page_url,
-      },
-      {
-        onSuccess: (project) => {
-          setCreatedApp(project);
-          toast.success("Application created. Add the badge, then verify it.");
-        },
-        onError: (error) => {
-          if (error instanceof ApiError && error.status === 409) {
-            toast.error("That app URL is already submitted.");
-            return;
-          }
-          toast.error("Could not submit the app. Please try again.");
-        },
-      }
-    );
+        install,
+      });
+      track("resource_submitted", { resource_type: type });
+      setDone(true);
+    } catch (err) {
+      setError(errorMessage(err, "Submission failed. Please try again."));
+    } finally {
+      setSubmitting(false);
+    }
   };
 
-  const handleVerify = (project: ShowcaseProject) => {
-    verifyBadge.mutate(
-      { slug: project.id, badge_page_url: project.badge_page_url || form.badge_page_url },
-      {
-        onSuccess: (updated) => {
-          setCreatedApp(updated);
-          toast.success("Badge verified. Your app is now listed.");
-        },
-        onError: (error) => {
-          const detail = error instanceof ApiError && typeof error.data === "object" && error.data && "detail" in error.data
-            ? String((error.data as { detail: unknown }).detail)
-            : "Badge was not found yet.";
-          toast.error(detail);
-        },
-      }
-    );
-  };
+  // Detection resolves the first component it finds; follow the one the creator picked.
+  const install: ResourceInstall | null = (() => {
+    const base = result?.resolution ?? null;
+    if (!base || base.method !== "plugin_marketplace" || !form.source_path) return base;
+    const chosen = components.find((c) => c.path === form.source_path);
+    const fallback = form.source_path.replace(/\.md$/, "").split("/").pop() ?? "";
+    return { ...base, source_path: form.source_path, plugin_name: pluginSlug(chosen?.name || fallback) || base.plugin_name };
+  })();
 
-  const copySnippet = async () => {
-    await navigator.clipboard.writeText(snippet);
-    toast.success("Badge snippet copied");
-  };
+  const noComponents = result && type !== "mcp" && components.length === 0;
+  const canSubmit = result && !noComponents && form.title.trim() && form.description.trim() && form.category;
 
-  if (isLoading) return null;
+  return (
+    <div className="min-h-screen bg-background">
+      <Header />
+      <main className="mx-auto max-w-[680px] px-4 pb-10 pt-16 md:px-8 md:pt-20">
+        <h1 className="text-[clamp(36px,5vw,52px)] font-normal leading-[1.05] text-foreground">Publish to Claude Directory</h1>
+        <p className="mt-4 text-[16px] leading-relaxed text-muted-foreground">
+          Submit your Skill, MCP or Agent. We turn verified setup metadata into a simple install experience for Claude
+          users.
+        </p>
 
-  if (!isAuthenticated) {
-    return (
-      <div className="min-h-screen bg-background flex flex-col">
-        <Header />
-        <main className="flex-1">
-          <section className="mx-auto grid max-w-[1080px] gap-8 px-6 py-14 sm:px-8 lg:grid-cols-[minmax(0,1fr)_360px] lg:items-start">
-            <div>
-              <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-border bg-card px-3 py-1.5 text-[13px] font-medium text-primary">
-                <BadgeCheck className="h-3.5 w-3.5" />
-                App applications
-              </div>
-              <h1 className="max-w-[13ch] text-balance text-[clamp(34px,7vw,52px)] font-medium leading-[1.04]">
-                Sign in to list your Claude app
-              </h1>
-              <p className="mt-4 max-w-[62ch] text-base leading-[1.65] text-muted-foreground">
-                App profiles are tied to member accounts so builders can verify
-                their badge, manage status, and receive community feedback.
-              </p>
-              <div className="mt-7 flex flex-wrap gap-3">
-                <Button asChild>
-                  <Link href="/login">
-                    Sign in to submit
-                    <ArrowRight className="h-4 w-4" />
-                  </Link>
-                </Button>
-                <Button variant="outline" asChild>
-                  <Link href="/showcase">View listed apps</Link>
-                </Button>
-              </div>
+        {done ? (
+          <div className="mt-10 rounded-xl border border-border bg-card/40 p-6">
+            <CheckCircle2 className="h-5 w-5 text-success" />
+            <p className="mt-3 text-[15px] text-foreground">Submitted for review</p>
+            <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
+              We check the repository and the install details by hand before anything is published. Install commands appear
+              on the listing only after that.
+            </p>
+            <div className="mt-5 flex gap-2.5">
+              <button
+                type="button"
+                onClick={() => {
+                  setDone(false);
+                  setResult(null);
+                  setUrl("");
+                }}
+                className="inline-flex h-9 items-center rounded-full border border-border px-4 text-sm text-foreground"
+              >
+                Submit another
+              </button>
+              <Link href="/" className="inline-flex h-9 items-center rounded-full px-4 text-sm text-muted-foreground hover:text-foreground">
+                Back to the directory
+              </Link>
             </div>
-
-            <div className="rounded-[14px] border border-border bg-card p-5">
-              <div className="flex items-start gap-3">
-                <ShieldCheck className="mt-0.5 h-5 w-5 text-primary" />
-                <div>
-                  <h2 className="text-lg font-semibold">How approval works</h2>
-                  <ol className="mt-3 space-y-3 text-sm leading-6 text-muted-foreground">
-                    <li>Submit your app details from a member account.</li>
-                    <li>Add the Claude AI Directory badge to your app site.</li>
-                    <li>Verify the badge to publish your nofollow app profile.</li>
-                  </ol>
+          </div>
+        ) : (
+          <>
+            <form onSubmit={detect} className="mt-10 space-y-5">
+              <label className="block">
+                <span className="mb-2 block text-sm text-foreground">GitHub repository URL</span>
+                <input
+                  type="url"
+                  required
+                  value={url}
+                  onChange={(e) => setUrl(e.target.value)}
+                  placeholder="https://github.com/owner/repo"
+                  className={inputClass}
+                />
+              </label>
+              <fieldset>
+                <legend className="mb-2 text-sm text-foreground">Resource type</legend>
+                <div className="flex gap-2">
+                  {TYPES.map((t) => (
+                    <button
+                      key={t.value}
+                      type="button"
+                      aria-pressed={type === t.value}
+                      onClick={() => {
+                        setType(t.value);
+                        setResult(null);
+                      }}
+                      className={`h-9 rounded-full border px-4 text-sm transition-colors ${
+                        type === t.value
+                          ? "border-foreground bg-foreground text-background"
+                          : "border-border text-muted-foreground hover:text-foreground"
+                      }`}
+                    >
+                      {t.label}
+                    </button>
+                  ))}
                 </div>
+              </fieldset>
+              {!result && (
+                <button
+                  type="submit"
+                  disabled={detecting}
+                  className="inline-flex h-10 items-center gap-2 rounded-full bg-foreground px-5 text-sm font-medium text-background disabled:opacity-60"
+                >
+                  {detecting ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
+                  {detecting ? "Reading repository" : "Continue"}
+                  {!detecting && <ArrowRight className="h-3.5 w-3.5" />}
+                </button>
+              )}
+            </form>
+
+            {error && (
+              <p className="mt-5 flex gap-2 text-sm text-destructive">
+                <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" />
+                {error}
+              </p>
+            )}
+
+            {result && (
+              <div className="mt-10 space-y-6 border-t border-border pt-8">
+                <a
+                  href={result.repo.html_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-start justify-between gap-4 rounded-xl border border-border p-4 hover:border-[var(--cad-line-hover)]"
+                >
+                  <span className="min-w-0">
+                    <span className="flex items-center gap-1.5 text-[15px] text-foreground">
+                      {result.repo.owner}/{result.repo.name}
+                      <ExternalLink className="h-3.5 w-3.5 text-muted-foreground" />
+                    </span>
+                    {result.repo.description && (
+                      <span className="mt-1 block text-sm text-muted-foreground">{result.repo.description}</span>
+                    )}
+                  </span>
+                  <span className="flex shrink-0 flex-col items-end gap-1 font-mono text-[12px] text-muted-foreground">
+                    {result.repo.stars !== undefined && (
+                      <span className="flex items-center gap-1">
+                        <Star className="h-3 w-3" />
+                        {result.repo.stars.toLocaleString()}
+                      </span>
+                    )}
+                    {result.repo.license && <span>{result.repo.license}</span>}
+                  </span>
+                </a>
+
+                {noComponents ? (
+                  <div className="rounded-xl border border-dashed border-border p-5 text-sm leading-relaxed text-muted-foreground">
+                    <p className="text-[15px] text-foreground">We could not find a {type === "skill" ? "SKILL.md" : "agent file"} in this repo</p>
+                    <p className="mt-1.5">
+                      {type === "skill"
+                        ? "Add a folder with a SKILL.md (for example skills/your-skill/SKILL.md) with a name and description in its frontmatter, then try again."
+                        : "Add a Markdown file under agents/ with name and description frontmatter, then try again."}
+                    </p>
+                  </div>
+                ) : (
+                  <>
+                    {components.length > 1 && (
+                      <label className="block">
+                        <span className="mb-2 block text-sm text-foreground">Which {type} are you submitting?</span>
+                        <select
+                          value={form.source_path}
+                          onChange={(e) => pick(components.find((c) => c.path === e.target.value), result.repo)}
+                          className={inputClass}
+                        >
+                          {components.map((c) => (
+                            <option key={c.path} value={c.path}>
+                              {c.name} ({c.path})
+                            </option>
+                          ))}
+                        </select>
+                      </label>
+                    )}
+                    <label className="block">
+                      <span className="mb-2 block text-sm text-foreground">Name</span>
+                      <input value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} className={inputClass} />
+                    </label>
+                    <label className="block">
+                      <span className="mb-2 block text-sm text-foreground">Short description</span>
+                      <textarea
+                        value={form.description}
+                        maxLength={300}
+                        rows={3}
+                        onChange={(e) => setForm({ ...form, description: e.target.value })}
+                        className={`${inputClass} h-auto py-3`}
+                      />
+                    </label>
+                    <label className="block">
+                      <span className="mb-2 block text-sm text-foreground">Category</span>
+                      <select value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} className={inputClass}>
+                        <option value="">Choose a category</option>
+                        {CATEGORIES[type].map((c) => (
+                          <option key={c} value={c.toLowerCase().replace(/\s+/g, "-")}>
+                            {c}
+                          </option>
+                        ))}
+                      </select>
+                    </label>
+
+                    <InstallPreview install={install} />
+
+                    {result.warnings.length > 0 && (
+                      <ul className="space-y-1.5 text-sm text-muted-foreground">
+                        {result.warnings.map((w) => (
+                          <li key={w} className="flex gap-2">
+                            <AlertTriangle className="mt-0.5 h-3.5 w-3.5 shrink-0" />
+                            {w}
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+
+                    {authLoading ? null : isAuthenticated ? (
+                      <button
+                        type="button"
+                        onClick={submit}
+                        disabled={!canSubmit || submitting}
+                        className="inline-flex h-10 items-center gap-2 rounded-full bg-foreground px-5 text-sm font-medium text-background disabled:opacity-50"
+                      >
+                        {submitting && <Loader2 className="h-4 w-4 animate-spin" />}
+                        Submit for review
+                      </button>
+                    ) : (
+                      <Link
+                        href="/login"
+                        className="inline-flex h-10 items-center rounded-full bg-foreground px-5 text-sm font-medium text-background"
+                      >
+                        Sign in to submit
+                      </Link>
+                    )}
+                  </>
+                )}
               </div>
-            </div>
-          </section>
-        </main>
-        <Footer />
-      </div>
-    );
+            )}
+          </>
+        )}
+
+        <p className="mt-14 text-sm text-muted-foreground">
+          Listing a Claude-powered app instead?{" "}
+          <Link href="/showcase/submit" className="text-foreground underline underline-offset-4 hover:text-primary">
+            Submit it to the showcase
+          </Link>
+        </p>
+      </main>
+      <Footer />
+    </div>
+  );
+}
+
+/** Structured install details we detected. Shown as fields, not a runnable command, until reviewed. */
+/** Same rule as the backend's sanitize_slug: lowercase [a-z0-9-], max 64. */
+function pluginSlug(value: string) {
+  return value.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 64).replace(/-+$/, "");
+}
+
+function InstallPreview({ install }: { install: ResourceInstall | null }) {
+  const rows: [string, string][] = [];
+  if (install) {
+    const methodLabel: Record<ResourceInstall["method"], string> = {
+      plugin_marketplace: "Claude Code plugin marketplace",
+      mcp_http: "Remote MCP (HTTP)",
+      mcp_stdio: "Local MCP (runs a command)",
+      manual: "Manual setup",
+    };
+    rows.push(["Install method", methodLabel[install.method]]);
+    if (install.source_path) rows.push(["Path", install.source_path]);
+    if (install.url) rows.push(["Server URL", install.url]);
+    if (install.command) rows.push(["Command", [install.command, ...(install.args ?? [])].join(" ")]);
+    if (install.env_keys?.length) rows.push(["Needs", install.env_keys.join(", ")]);
+    if (install.oauth_required) rows.push(["Sign-in", "OAuth required"]);
   }
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
-      <Header />
-      <main className="flex-1">
-        <section className="mx-auto grid max-w-[1180px] grid-cols-1 gap-8 px-6 py-12 sm:px-8 lg:grid-cols-[minmax(0,1fr)_380px]">
-          <div>
-            <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-border bg-card px-3 py-1.5 text-[13px] font-medium text-primary">
-              <BadgeCheck className="h-3.5 w-3.5" />
-              App applications
+    <div className="rounded-xl border border-border">
+      <p className="border-b border-border px-4 py-3 font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
+        Detected install details
+      </p>
+      {rows.length > 0 ? (
+        <dl>
+          {rows.map(([k, v]) => (
+            <div key={k} className="flex justify-between gap-4 border-b border-border/60 px-4 py-2.5 text-sm last:border-b-0">
+              <dt className="text-muted-foreground">{k}</dt>
+              <dd className="break-all text-right font-mono text-[13px] text-foreground">{v}</dd>
             </div>
-            <h1 className="max-w-[13ch] text-balance text-[clamp(34px,7vw,52px)] font-medium leading-[1.04]">
-              List your Claude app
-            </h1>
-            <p className="mt-4 max-w-[64ch] text-[16px] leading-[1.65] text-muted-foreground">
-              Submit an app, add the Claude AI Directory badge to your site, then
-              verify it to unlock a public profile and community feedback.
-            </p>
-
-            <form onSubmit={handleSubmit} className="mt-8 grid gap-5 rounded-[14px] border border-border bg-card p-5">
-              <div className="grid gap-5 md:grid-cols-2">
-                <div className="space-y-2">
-                  <Label htmlFor="title">App name</Label>
-                  <Input id="title" value={form.title} onChange={(e) => update("title", e.target.value)} placeholder="Claude Desk" required />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="category">Category</Label>
-                  <Input id="category" value={form.category} onChange={(e) => update("category", e.target.value)} placeholder="Claude app" />
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="tagline">Short tagline</Label>
-                <Input id="tagline" value={form.tagline} onChange={(e) => update("tagline", e.target.value)} placeholder="Turn customer notes into Claude-ready workflows" />
-              </div>
-
-              <div className="grid gap-5 md:grid-cols-2">
-                <div className="space-y-2">
-                  <Label htmlFor="app_url">App URL</Label>
-                  <Input id="app_url" type="url" value={form.app_url} onChange={(e) => update("app_url", e.target.value)} placeholder="https://yourapp.com" required />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="badge_page_url">Badge page URL</Label>
-                  <Input id="badge_page_url" type="url" value={form.badge_page_url} onChange={(e) => update("badge_page_url", e.target.value)} placeholder="https://yourapp.com" required />
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="description">What does it do?</Label>
-                <Textarea id="description" value={form.description} onChange={(e) => update("description", e.target.value)} placeholder="Describe who it is for, what Claude workflow it improves, and what feedback you want." className="min-h-[120px]" required />
-              </div>
-
-              <div className="grid gap-5 md:grid-cols-2">
-                <div className="space-y-2">
-                  <Label htmlFor="tech_stack">Tags / stack</Label>
-                  <Input id="tech_stack" value={form.tech_stack} onChange={(e) => update("tech_stack", e.target.value)} placeholder="Claude, MCP, Next.js" />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="use_cases">Use cases</Label>
-                  <Input id="use_cases" value={form.use_cases} onChange={(e) => update("use_cases", e.target.value)} placeholder="support, research, writing" />
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="github_url">GitHub URL</Label>
-                <Input id="github_url" type="url" value={form.github_url} onChange={(e) => update("github_url", e.target.value)} placeholder="https://github.com/..." />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="feedback_prompt">Feedback request</Label>
-                <Input id="feedback_prompt" value={form.feedback_prompt} onChange={(e) => update("feedback_prompt", e.target.value)} />
-              </div>
-
-              <div className="flex flex-wrap gap-3 pt-2">
-                <Button type="submit" disabled={submitApp.isPending}>
-                  {submitApp.isPending ? "Creating application..." : "Create application"}
-                  <ArrowRight className="h-4 w-4" />
-                </Button>
-                <Button type="button" variant="outline" asChild>
-                  <Link href="/showcase">View listed apps</Link>
-                </Button>
-              </div>
-            </form>
-          </div>
-
-          <aside className="space-y-4">
-            <div className="rounded-[14px] border border-border bg-card p-5">
-              <div className="flex items-start gap-3">
-                <ShieldCheck className="mt-0.5 h-5 w-5 text-primary" />
-                <div>
-                  <h2 className="text-lg font-semibold">Badge required</h2>
-                  <p className="mt-2 text-sm leading-[1.6] text-muted-foreground">
-                    Add this badge to your app site. Once verified, your listing goes public with a nofollow app link.
-                  </p>
-                </div>
-              </div>
-              <pre className="mt-4 max-h-[180px] overflow-auto rounded-[10px] border border-border bg-background p-3 text-xs leading-relaxed text-muted-foreground">
-                {snippet}
-              </pre>
-              <div className="mt-3 flex flex-wrap gap-2">
-                <Button type="button" variant="outline" size="sm" onClick={copySnippet}>
-                  <Clipboard className="h-3.5 w-3.5" />
-                  Copy badge
-                </Button>
-                {activeApp && (
-                  <Button type="button" size="sm" onClick={() => handleVerify(activeApp)} disabled={verifyBadge.isPending || activeApp.badge_verified}>
-                    <CheckCircle2 className="h-3.5 w-3.5" />
-                    {activeApp.badge_verified ? "Verified" : verifyBadge.isPending ? "Checking..." : "Verify badge"}
-                  </Button>
-                )}
-              </div>
-            </div>
-
-            <div className="rounded-[14px] border border-border bg-card p-5">
-              <h2 className="text-lg font-semibold">Your app profile</h2>
-              <p className="mt-2 text-sm leading-[1.6] text-muted-foreground">
-                Listed apps get a public profile, community feedback entry point, and a nofollow app link.
-              </p>
-              <div className="mt-4 space-y-2">
-                {(myApps ?? []).slice(0, 4).map((app) => (
-                  <div key={app.id} className="rounded-[10px] border border-border bg-background p-3">
-                    <div className="flex items-center justify-between gap-3">
-                      <div className="min-w-0">
-                        <div className="truncate text-sm font-medium">{app.title}</div>
-                        <div className="mt-1 text-xs text-[var(--cad-faint)]">
-                          {app.badge_verified ? "Listed" : "Waiting for badge"}
-                        </div>
-                      </div>
-                      {app.badge_verified ? (
-                        <Link href={`/showcase/${app.id}`} className="text-primary hover:text-[var(--cad-accent-hover)]">
-                          <ExternalLink className="h-4 w-4" />
-                        </Link>
-                      ) : (
-                        <span className="rounded-md border border-border px-2 py-1 text-[11px] text-muted-foreground">
-                          Pending
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                ))}
-                {(myApps ?? []).length === 0 && (
-                  <p className="rounded-[10px] border border-dashed border-border p-4 text-sm text-muted-foreground">
-                    Your submitted apps will appear here after you create an application.
-                  </p>
-                )}
-              </div>
-            </div>
-          </aside>
-        </section>
-      </main>
-      <Footer />
+          ))}
+        </dl>
+      ) : (
+        <p className="px-4 py-3 text-sm text-muted-foreground">
+          Nothing installable was detected yet. You can still submit; a reviewer will follow up.
+        </p>
+      )}
+      <p className="border-t border-border px-4 py-3 text-[13px] text-muted-foreground">
+        Reviewed by a person before any install command is shown publicly.
+      </p>
     </div>
   );
 }

@@ -76,7 +76,7 @@ export default function ShowcaseClient({
                 listing after adding the Claude AI Directory badge.
               </p>
               <Button className="mt-4 w-full" asChild>
-                <Link href="/submit">
+                <Link href="/showcase/submit">
                   Start submission
                   <ArrowRight className="h-4 w-4" />
                 </Link>
@@ -176,7 +176,7 @@ export default function ShowcaseClient({
                 Listings go public after the directory badge is verified.
               </p>
               <Button className="mt-5" asChild>
-                <Link href="/submit">Submit an app</Link>
+                <Link href="/showcase/submit">Submit an app</Link>
               </Button>
             </div>
           )}

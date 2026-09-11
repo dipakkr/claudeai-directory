@@ -10,13 +10,11 @@ import { useAuth } from "@/lib/auth";
 import { BadgeCheck, CalendarDays, ArrowLeft, Globe, Github, Twitter, Pencil, ArrowRight, ExternalLink } from "lucide-react";
 import type { PublicProfile } from "@/types";
 
+// Warm banners that sit inside the site palette in both themes.
 const BANNER_COLORS = [
-  "from-violet-500/20 to-purple-500/5",
-  "from-sky-500/20 to-blue-500/5",
-  "from-emerald-500/20 to-teal-500/5",
-  "from-rose-500/20 to-pink-500/5",
-  "from-amber-500/20 to-orange-500/5",
-  "from-indigo-500/20 to-violet-500/5",
+  "from-[var(--cad-accent-soft)] to-secondary",
+  "from-secondary to-[var(--cad-accent-soft)]",
+  "from-[var(--cad-accent-soft)] to-background",
 ];
 
 function bannerGradient(username: string) {
@@ -244,7 +242,7 @@ export default function PublicProfilePage({
                     </Link>
                   </Button>
                   <Button size="sm" asChild>
-                    <Link href="/submit">Submit app</Link>
+                    <Link href="/showcase/submit">Submit app</Link>
                   </Button>
                 </div>
               </div>

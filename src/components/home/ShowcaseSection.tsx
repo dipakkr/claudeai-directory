@@ -19,12 +19,12 @@ const ShowcaseSection = ({
             </h2>
             <p className="mt-1 max-w-[62ch] text-sm text-muted-foreground">
               Show it to people who actually use Claude. Listed apps get a page, a
-              backlink, and a spot in the directory — free.
+              backlink, and a spot in the directory: free.
             </p>
           </div>
           <Link
-            href="/submit"
-            className="inline-flex min-h-10 shrink-0 items-center justify-center rounded-lg bg-primary px-5 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90"
+            href="/showcase/submit"
+            className="inline-flex min-h-10 shrink-0 items-center justify-center rounded-lg bg-foreground px-5 text-sm font-medium text-background transition-opacity hover:opacity-90"
           >
             Submit your app
           </Link>
@@ -34,7 +34,7 @@ const ShowcaseSection = ({
           <div className="rounded-lg border border-dashed border-border p-8 text-center">
             <p className="text-sm text-foreground">No apps listed yet</p>
             <p className="mt-1 text-xs text-muted-foreground">
-              Be the first — submissions are reviewed and usually live the same week.
+              Be the first: submissions are reviewed and usually live the same week.
             </p>
           </div>
         ) : (
