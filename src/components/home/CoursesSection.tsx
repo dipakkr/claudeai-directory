@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
 import { getFeaturedCourses, getCourseStatusLabel } from "@/data/courses";
 import { ArrowRight, BookOpen, CheckCircle2, Clock3 } from "lucide-react";
 
@@ -7,70 +6,52 @@ const CoursesSection = () => {
   const courses = getFeaturedCourses();
 
   return (
-    <section className="border-y border-border bg-muted/10 py-14">
-      <div className="container max-w-7xl">
-        <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-          <div className="max-w-2xl">
-            <div className="mb-2 text-xs uppercase tracking-wider text-primary">
-              New paid learning path
-            </div>
-            <h2 className="text-3xl font-medium tracking-tight text-foreground">
-              7-day Claude courses for real work.
-            </h2>
-            <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-              The directory remains free discovery. The product becomes short,
-              practical courses with prompts, templates and role-specific outcomes.
-            </p>
-          </div>
-          <Button asChild variant="outline">
-            <Link href="/courses">
-              View all courses
-              <ArrowRight className="h-4 w-4" />
-            </Link>
-          </Button>
+    <section className="mx-auto mt-16 max-w-[840px] px-4 md:px-8">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <p className="font-mono text-xs uppercase tracking-[0.16em] text-muted-foreground">Claude courses</p>
+          <h2 className="mt-2 text-2xl leading-tight text-foreground">Learn Claude for GTM and SEO</h2>
         </div>
+        <Link href="/courses" className="inline-flex items-center gap-2 py-2 text-sm text-foreground underline underline-offset-4">
+          View all courses <ArrowRight className="h-4 w-4" />
+        </Link>
+      </div>
+      <p className="mt-2 text-sm leading-6 text-muted-foreground">
+        Short courses with prompts, templates and one finished work system at the end.
+      </p>
 
-        <div className="grid gap-4 lg:grid-cols-3">
+      <div className="mt-5 border-y border-border">
           {courses.map((course) => (
             <Link
               key={course.slug}
               href={`/courses/${course.slug}`}
-              className="group rounded-2xl border border-border bg-card p-5 transition-colors hover:border-primary/50"
+            className="group flex items-start gap-4 border-b border-border py-5 last:border-b-0 transition-colors hover:bg-card/45"
             >
-              <div className="mb-5 flex items-start justify-between gap-3">
-                <div className="rounded-xl border border-primary/20 bg-primary/10 p-2 text-primary">
-                  <BookOpen className="h-5 w-5" />
-                </div>
-                <span className="rounded-full border border-border bg-background px-2.5 py-1 text-[11px] text-muted-foreground">
-                  {getCourseStatusLabel(course.status)}
-                </span>
-              </div>
-              <div className="mb-2 text-xs uppercase tracking-wider text-muted-foreground">
-                {course.durationDays} days / ${course.price}
-              </div>
-              <h3 className="mb-3 text-xl font-medium leading-tight text-foreground">
-                {course.title}
-              </h3>
-              <p className="mb-5 text-sm leading-relaxed text-muted-foreground">
-                {course.promise}
-              </p>
-              <div className="mb-5 grid gap-2 text-xs text-muted-foreground">
-                <div className="flex items-center gap-2">
-                  <Clock3 className="h-3.5 w-3.5 text-primary" />
-                  {course.dailyMinutes} minutes per day
-                </div>
-                <div className="flex items-center gap-2">
-                  <CheckCircle2 className="h-3.5 w-3.5 text-primary" />
-                  Templates and final work artifact included
-                </div>
-              </div>
-              <span className="inline-flex items-center gap-1 text-sm font-medium text-primary">
-                Open course
-                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-border bg-background text-primary shadow-sm">
+              <BookOpen className="h-5 w-5" aria-hidden="true" />
+            </span>
+            <span className="min-w-0 flex-1">
+              <span className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+                <span>{course.category}</span>
+                <span>{course.durationDays} days</span>
+                <span>{getCourseStatusLabel(course.status)}</span>
               </span>
+              <span className="mt-2 block text-lg font-medium leading-tight text-foreground">{course.title}</span>
+              <span className="mt-1.5 block text-sm leading-6 text-muted-foreground">{course.promise}</span>
+              <span className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted-foreground">
+                <span className="inline-flex items-center gap-1.5">
+                  <Clock3 className="h-3.5 w-3.5 text-primary" aria-hidden="true" />
+                  {course.dailyMinutes} minutes per day
+                </span>
+                <span className="inline-flex items-center gap-1.5">
+                  <CheckCircle2 className="h-3.5 w-3.5 text-primary" aria-hidden="true" />
+                  Templates and final work artifact included
+                </span>
+              </span>
+            </span>
+            <span className="hidden shrink-0 pt-2 text-sm text-foreground group-hover:underline sm:inline">Open</span>
             </Link>
           ))}
-        </div>
       </div>
     </section>
   );

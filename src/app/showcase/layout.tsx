@@ -1,14 +1,14 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Claude App Showcase: Claude AI Community",
+  title: "Claude App Showcase: MCP Apps, Agents & Workflows",
   description:
-    "Discover verified apps built by Claude AI community members, submit your app, and get practical feedback from builders.",
+    "Explore apps launched by Claude community builders. Meet the makers, read their product descriptions and share feedback, or submit your own app.",
   alternates: { canonical: "/showcase" },
   openGraph: {
-    title: "Claude App Showcase: Claude AI Community",
+    title: "Claude App Showcase: MCP Apps, Agents & Workflows",
     description:
-      "Discover verified apps built by Claude AI community members.",
+      "Explore apps launched by Claude community builders. Meet the makers and share feedback on their products.",
     url: "/showcase",
   },
 };

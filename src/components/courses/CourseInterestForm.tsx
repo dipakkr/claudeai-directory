@@ -12,6 +12,8 @@ type CourseInterestFormProps = {
 };
 
 const roles = [
+  "GTM",
+  "SEO",
   "Product",
   "Marketing",
   "Excel or Sheets",

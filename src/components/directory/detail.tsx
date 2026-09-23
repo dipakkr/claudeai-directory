@@ -10,15 +10,21 @@ import { track, type AnalyticsEvent, type EventProps } from "@/lib/analytics";
 
 export function DetailPage({ backHref, backLabel, children }: { backHref: string; backLabel: string; children: ReactNode }) {
   return (
-    <div className="mx-auto max-w-[860px] px-4 pb-8 pt-10 md:px-8 md:pt-14">
-      <Link
-        href={backHref}
-        className="mb-10 inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground"
-      >
-        <ArrowLeft className="h-3.5 w-3.5" />
-        {backLabel}
-      </Link>
-      {children}
+    <div className="relative">
+      {/* Background gradient decoration */}
+      <div className="absolute inset-x-0 top-0 h-80 bg-[radial-gradient(circle_at_15%_25%,rgba(168,85,247,0.08),transparent_40%),radial-gradient(circle_at_85%_10%,rgba(59,130,246,0.06),transparent_35%)] pointer-events-none" />
+
+      <div className="mx-auto max-w-[860px] px-4 pb-8 pt-10 md:px-8 md:pt-14 relative z-10">
+        <Link
+          href={backHref}
+          aria-label={`Back to ${backLabel}`}
+          className="mb-10 inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground"
+        >
+          <ArrowLeft className="h-3.5 w-3.5" />
+          {backLabel}
+        </Link>
+        {children}
+      </div>
     </div>
   );
 }
@@ -36,7 +42,7 @@ export function DetailHeader({
     <div className="flex items-start justify-between gap-4">
       <div className="flex min-w-0 items-center gap-4">
         {icon}
-        <h1 className="min-w-0 break-words text-[clamp(28px,4vw,40px)] font-normal leading-tight text-foreground">{title}</h1>
+        <h1 className="min-w-0 break-words text-3xl font-normal leading-tight text-foreground sm:text-4xl">{title}</h1>
       </div>
       {stats && <div className="flex shrink-0 items-center gap-2 pt-1.5">{stats}</div>}
     </div>

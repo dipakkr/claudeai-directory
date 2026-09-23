@@ -37,6 +37,7 @@ import {
 import { toast } from "sonner";
 
 const links = [
+  { href: "/dashboard/resources", label: "My Resources", icon: Wrench },
   { href: "/feed", label: "Feed", icon: Newspaper },
   { href: "/community", label: "Discussions", icon: MessageSquare },
   { href: "/saved", label: "Saved", icon: Bookmark },

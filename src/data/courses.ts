@@ -25,20 +25,125 @@ export interface Course {
   description: string;
   price: number;
   compareAtPrice?: number;
+  isFree?: boolean;
   durationDays: number;
   dailyMinutes: number;
   status: CourseStatus;
   level: "Beginner" | "Intermediate";
-  category: "Product" | "Marketing" | "Excel" | "Freelance" | "Claude Code";
+  category: "Foundation" | "Product" | "GTM" | "SEO" | "Marketing" | "Excel" | "Freelance" | "Claude Code";
   checkoutUrl: string;
   previewHref?: string;
   previewAssets?: CoursePreviewAsset[];
   includes: string[];
   outcomes: string[];
   lessons: CourseLesson[];
+  freeModuleCount?: number;
+  isFreemium?: boolean;
 }
 
 export const COURSES: Course[] = [
+  {
+    slug: "claude-mastery",
+    title: "Claude Mastery",
+    eyebrow: "Free course",
+    audience: "Claude users, power users, developers and builders who want repeatable workflows",
+    promise: "Go from prompting Claude to working with Claude through context, delegation, tools, Claude Code and verification.",
+    description:
+      "A free practical Claude course for learning the mental models, workflows and reliability habits behind effective Claude, Claude Code, MCP, Skills and agentic work.",
+    price: 0,
+    isFree: true,
+    durationDays: 9,
+    dailyMinutes: 20,
+    status: "ready-preview",
+    level: "Beginner",
+    category: "Foundation",
+    checkoutUrl: "",
+    previewAssets: [
+      {
+        label: "Task judgment checklist",
+        description: "Decide whether Claude should answer, ask for context, use a tool or require human verification.",
+        href: "/downloads/courses/claude-mastery/task-judgment-checklist.md",
+      },
+      {
+        label: "Context package template",
+        description: "Package permanent, project, task and input context without dumping irrelevant material.",
+        href: "/downloads/courses/claude-mastery/context-package-template.md",
+      },
+      {
+        label: "Prompt upgrade checklist",
+        description: "Improve weak prompts with context, constraints, examples and output contracts.",
+        href: "/downloads/courses/claude-mastery/prompt-upgrade-checklist.md",
+      },
+    ],
+    includes: [
+      "9 modules covering Claude, context, prompting, Claude Code, tools, MCP, Skills, agents and verification",
+      "Hands-on labs that produce reusable prompts, checklists and workflow artifacts",
+      "Downloadable templates for task judgment, context packaging and prompt improvement",
+      "Checkpoint challenges that train Claude judgment instead of memorized prompt tricks",
+      "A capstone path for building your personal Claude operating system",
+    ],
+    outcomes: [
+      "Give Claude better context and clearer output contracts.",
+      "Delegate real work without micromanaging every step.",
+      "Use Claude Code, MCP, Skills and agentic workflows with practical verification habits.",
+    ],
+    lessons: [
+      {
+        day: 1,
+        title: "Understanding Claude",
+        outcome: "Learn what Claude is strong at, where it fails and when human verification is required.",
+        artifact: "Task judgment checklist",
+      },
+      {
+        day: 2,
+        title: "Context Engineering",
+        outcome: "Build context packages that give Claude the right information without overloading the task.",
+        artifact: "Context package template",
+      },
+      {
+        day: 3,
+        title: "Prompting That Actually Works",
+        outcome: "Use direct instructions, examples, XML structure and output contracts.",
+        artifact: "Prompt upgrade checklist",
+      },
+      {
+        day: 4,
+        title: "Working With Claude",
+        outcome: "Choose when to ask, collaborate, delegate, execute or verify.",
+        artifact: "Delegation prompt template",
+      },
+      {
+        day: 5,
+        title: "Claude Code",
+        outcome: "Work with repositories, CLAUDE.md, Git, tests and safe implementation loops.",
+        artifact: "CLAUDE.md starter",
+      },
+      {
+        day: 6,
+        title: "Tools, MCP and Skills",
+        outcome: "Understand when Claude needs tools, MCP servers or reusable Skills.",
+        artifact: "Skill and MCP evaluation templates",
+      },
+      {
+        day: 7,
+        title: "Agentic Workflows",
+        outcome: "Design workflows and agents with clear tool boundaries and human checkpoints.",
+        artifact: "Agent workflow canvas",
+      },
+      {
+        day: 8,
+        title: "Reliability and Verification",
+        outcome: "Define success criteria, evidence requirements and verification loops.",
+        artifact: "Verification checklist",
+      },
+      {
+        day: 9,
+        title: "Build Your Claude System",
+        outcome: "Package your instructions, skill, workflow and verification criteria into one reusable system.",
+        artifact: "Personal Claude system",
+      },
+    ],
+  },
   {
     slug: "claude-for-product-managers",
     title: "Claude for Product Managers",
@@ -55,6 +160,8 @@ export const COURSES: Course[] = [
     level: "Beginner",
     category: "Product",
     checkoutUrl: `${STORE}/${COURSE_CHECKOUT_PLACEHOLDER}-claude-for-product-managers`,
+    freeModuleCount: 2,
+    isFreemium: true,
     previewHref: "/downloads/courses/claude-for-product-managers-preview.md",
     previewAssets: [
       {
@@ -128,6 +235,86 @@ export const COURSES: Course[] = [
         outcome: "Save a repeatable Claude workflow for future features.",
         artifact: "Reusable PM prompt library",
       },
+    ],
+  },
+  {
+    slug: "claude-for-gtm",
+    title: "Claude for GTM",
+    eyebrow: "Go-to-market",
+    audience: "Founders, marketers and revenue teams turning one offer into pipeline",
+    promise: "Build a practical GTM system with ICP research, positioning, outbound, landing copy and sales enablement.",
+    description:
+      "A 7-day Claude course for go-to-market work: ideal customer profiles, positioning, competitor angles, outbound sequences, launch content, sales notes and weekly pipeline review.",
+    price: 19,
+    compareAtPrice: 49,
+    durationDays: 7,
+    dailyMinutes: 15,
+    status: "launching",
+    level: "Beginner",
+    category: "GTM",
+    checkoutUrl: `${STORE}/${COURSE_CHECKOUT_PLACEHOLDER}-claude-for-gtm`,
+    freeModuleCount: 2,
+    isFreemium: true,
+    includes: [
+      "ICP and pains worksheet",
+      "Positioning and offer prompt pack",
+      "Competitor angle research prompt",
+      "Outbound email and LinkedIn sequence templates",
+      "Landing page, sales call and pipeline review prompts",
+    ],
+    outcomes: [
+      "Define a sharper ICP and buying trigger for one offer.",
+      "Turn Claude into a GTM assistant for positioning, outreach and content.",
+      "Leave with a reusable weekly GTM operating system.",
+    ],
+    lessons: [
+      { day: 1, title: "Pick the GTM wedge", outcome: "Narrow a broad audience into one urgent segment and buying trigger.", artifact: "ICP wedge brief" },
+      { day: 2, title: "Write positioning that does not sound generic", outcome: "Clarify pain, promise, proof and objections.", artifact: "Positioning one-pager" },
+      { day: 3, title: "Research competitors and alternatives", outcome: "Compare direct competitors, status quo options and gaps to exploit.", artifact: "Competitor angle map" },
+      { day: 4, title: "Build the outbound message system", outcome: "Create first-touch, follow-up and referral prompts grounded in the ICP.", artifact: "Outbound sequence" },
+      { day: 5, title: "Draft the GTM landing page", outcome: "Turn the offer into hero copy, proof points, FAQ and CTA.", artifact: "Landing page draft" },
+      { day: 6, title: "Create sales enablement notes", outcome: "Prepare discovery questions, objection handling and demo talk tracks.", artifact: "Sales call brief" },
+      { day: 7, title: "Run the weekly GTM review", outcome: "Analyze replies, calls and content performance to decide next actions.", artifact: "GTM review workflow" },
+    ],
+  },
+  {
+    slug: "claude-for-seo",
+    title: "Claude for SEO",
+    eyebrow: "Search growth",
+    audience: "SEO operators, founders and content teams building organic demand",
+    promise: "Use Claude to plan topical maps, briefs, refreshes and technical SEO workflows without low-quality AI content.",
+    description:
+      "A 7-day Claude course for SEO work: keyword clustering, search intent, content briefs, internal links, refresh plans, technical checks and reporting.",
+    price: 19,
+    compareAtPrice: 49,
+    durationDays: 7,
+    dailyMinutes: 15,
+    status: "launching",
+    level: "Beginner",
+    category: "SEO",
+    checkoutUrl: `${STORE}/${COURSE_CHECKOUT_PLACEHOLDER}-claude-for-seo`,
+    freeModuleCount: 2,
+    isFreemium: true,
+    includes: [
+      "Topical map prompt pack",
+      "Search intent and SERP notes worksheet",
+      "SEO content brief template",
+      "Content refresh and internal linking prompts",
+      "Technical SEO triage and reporting templates",
+    ],
+    outcomes: [
+      "Build a keyword-to-page plan around real search intent.",
+      "Create useful briefs that avoid generic AI-written articles.",
+      "Set up a repeatable refresh and reporting workflow.",
+    ],
+    lessons: [
+      { day: 1, title: "Build a topical map", outcome: "Group keywords by audience, intent and business value.", artifact: "Topical map" },
+      { day: 2, title: "Analyze search intent", outcome: "Turn SERP notes into page type, angle and must-cover sections.", artifact: "Intent brief" },
+      { day: 3, title: "Write the content brief", outcome: "Create a brief for a human-quality page with examples, constraints and internal links.", artifact: "SEO content brief" },
+      { day: 4, title: "Refresh existing content", outcome: "Find decay, missing sections and update opportunities without rewriting blindly.", artifact: "Refresh plan" },
+      { day: 5, title: "Plan internal links", outcome: "Map source pages, target pages and anchor ideas.", artifact: "Internal link map" },
+      { day: 6, title: "Triage technical SEO issues", outcome: "Use Claude to explain crawls, logs and page issues in plain English.", artifact: "Technical SEO checklist" },
+      { day: 7, title: "Build the SEO operating system", outcome: "Package keyword, brief, refresh and report prompts into one workflow.", artifact: "SEO workflow library" },
     ],
   },
   {
@@ -279,7 +466,8 @@ export function getCourse(slug: string): Course | undefined {
 }
 
 export function getFeaturedCourses(): Course[] {
-  return COURSES.slice(0, 3);
+  const featured = ["claude-mastery", "claude-for-gtm", "claude-for-seo"];
+  return featured.map((slug) => getCourse(slug)).filter((course): course is Course => Boolean(course));
 }
 
 export function isCourseCheckoutLive(url: string): boolean {

@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { ArrowUp, Download, Search, Star, Wrench } from "lucide-react";
+import FavoriteButton, { favoriteTargetType } from "@/components/shared/FavoriteButton";
 import { track } from "@/lib/analytics";
 import { DIRECTORY_TYPES, type DirectoryItem, type DirectoryType, type SortKey } from "@/lib/directory";
 
@@ -18,6 +19,8 @@ interface DirectoryListProps {
   pageSize?: number;
   /** Category chips under the search box (raw category values). */
   categories?: string[];
+  /** Hide the search input while preserving filters, sort tabs, and rows. */
+  hideSearch?: boolean;
   initialCategory?: string;
   initialQuery?: string;
   /** Mirror search + category into the URL so filtered views are shareable (not indexed). */
@@ -51,6 +54,7 @@ export default function DirectoryList({
   searchPlaceholder = "Search Skills, MCPs and Agents...",
   pageSize = 30,
   categories = [],
+  hideSearch = false,
   initialCategory = "",
   initialQuery = "",
   syncUrl = false,
@@ -66,6 +70,7 @@ export default function DirectoryList({
 
   // "/" jumps to search, like most directories and docs sites.
   useEffect(() => {
+    if (hideSearch) return;
     const onKey = (e: KeyboardEvent) => {
       const target = e.target as HTMLElement;
       if (e.key !== "/" || target.closest("input, textarea, [contenteditable=true]")) return;
@@ -74,7 +79,7 @@ export default function DirectoryList({
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, []);
+  }, [hideSearch]);
 
   useEffect(() => {
     if (!syncUrl) return;
@@ -134,26 +139,28 @@ export default function DirectoryList({
 
   return (
     <div>
-      <div className="mx-auto max-w-[600px]">
-        <label className="relative block">
-          <Search className="pointer-events-none absolute left-5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-          <input
-            ref={searchRef}
-            type="search"
-            value={query}
-            onChange={(e) => {
-              setQuery(e.target.value);
-              reset();
-            }}
-            placeholder={searchPlaceholder}
-            aria-label="Search the directory"
-            className="h-14 w-full rounded-full border border-border bg-card pl-12 pr-12 text-[15px] text-foreground outline-none transition-colors placeholder:text-muted-foreground focus:border-[var(--cad-line-hover)]"
-          />
-          <kbd className="pointer-events-none absolute right-5 top-1/2 hidden -translate-y-1/2 rounded border border-border px-1.5 font-mono text-[11px] text-muted-foreground sm:block">
-            /
-          </kbd>
-        </label>
-      </div>
+      {!hideSearch && (
+        <div className="mx-auto max-w-[600px]">
+          <label className="relative block">
+            <Search className="pointer-events-none absolute left-5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            <input
+              ref={searchRef}
+              type="search"
+              value={query}
+              onChange={(e) => {
+                setQuery(e.target.value);
+                reset();
+              }}
+              placeholder={searchPlaceholder}
+              aria-label="Search the directory"
+              className="h-14 w-full rounded-lg border border-border bg-card pl-12 pr-12 text-[15px] text-foreground outline-none transition-colors placeholder:text-muted-foreground focus:border-[var(--cad-line-hover)]"
+            />
+            <kbd className="pointer-events-none absolute right-5 top-1/2 hidden -translate-y-1/2 rounded border border-border px-1.5 font-mono text-[11px] text-muted-foreground sm:block">
+              /
+            </kbd>
+          </label>
+        </div>
+      )}
 
       {categories.length > 0 && (
         <div className="mx-auto mt-6 flex max-w-[720px] flex-wrap justify-center gap-2">
@@ -172,7 +179,7 @@ export default function DirectoryList({
         </div>
       )}
 
-      <div id={feedId} className="mt-12 scroll-mt-24">
+      <div id={feedId} className={hideSearch && categories.length === 0 ? "scroll-mt-24" : "mt-12 scroll-mt-24"}>
         {(orders || showTypes) && (
           <div className="flex flex-wrap items-end justify-between gap-x-6 gap-y-3 border-b border-border">
             {orders ? (
@@ -238,7 +245,7 @@ export default function DirectoryList({
             <button
               type="button"
               onClick={() => setVisible((v) => v + pageSize)}
-              className="h-9 rounded-full border border-border px-5 text-sm text-muted-foreground transition-colors hover:border-[var(--cad-line-hover)] hover:text-foreground"
+              className="h-9 rounded-lg border border-border px-5 text-sm text-muted-foreground transition-colors hover:border-[var(--cad-line-hover)] hover:text-foreground"
             >
               Show more
               <span className="ml-2 font-mono text-[11px]">{filtered.length - visible}</span>
@@ -266,7 +273,7 @@ function Chip({
       type="button"
       aria-pressed={active}
       onClick={onClick}
-      className={`inline-flex items-center rounded-full border transition-colors ${small ? "h-7 px-3 text-[12.5px]" : "h-8 px-3.5 text-[13px]"} ${
+      className={`inline-flex items-center rounded-lg border transition-colors ${small ? "h-7 px-3 text-[12.5px]" : "h-8 px-3.5 text-[13px]"} ${
         active
           ? "border-foreground bg-foreground text-background"
           : "border-border text-muted-foreground hover:border-[var(--cad-line-hover)] hover:text-foreground"
@@ -280,14 +287,15 @@ function Chip({
 function DirectoryRow({ item, rank, showType }: { item: DirectoryItem; rank: number; showType: boolean }) {
   const chip = DIRECTORY_TYPES.find((t) => t.type === item.type)?.chip;
   const MetricIcon = item.metric?.icon ? metricIcons[item.metric.icon] : null;
+  const targetId = item.key.split(":").slice(1).join(":") || item.key;
 
   return (
-    <li>
+    <li className="grid grid-cols-[2rem_2.25rem_minmax(0,1fr)_auto_auto] items-center gap-3 border-b border-border/70 py-3.5 sm:grid-cols-[3rem_2.25rem_minmax(0,1fr)_auto_auto]">
+      <span className={`font-mono text-[13px] ${rank <= 3 ? "text-primary" : "text-muted-foreground"}`}>{rank}</span>
       <Link
         href={item.href}
-        className="group grid grid-cols-[2rem_2.25rem_minmax(0,1fr)_auto] items-center gap-3 border-b border-border/70 py-3.5 sm:grid-cols-[3rem_2.25rem_minmax(0,1fr)_auto]"
+        className="group contents"
       >
-        <span className={`font-mono text-[13px] ${rank <= 3 ? "text-primary" : "text-muted-foreground"}`}>{rank}</span>
         <ItemIcon item={item} />
         <span className="min-w-0">
           <span className="flex items-center gap-2">
@@ -313,6 +321,7 @@ function DirectoryRow({ item, rank, showType }: { item: DirectoryItem; rank: num
           )}
         </span>
       </Link>
+      <FavoriteButton targetType={favoriteTargetType(item.type)} targetId={targetId} compact className="shrink-0" />
     </li>
   );
 }
@@ -320,7 +329,7 @@ function DirectoryRow({ item, rank, showType }: { item: DirectoryItem; rank: num
 function ItemIcon({ item }: { item: DirectoryItem }) {
   const [failed, setFailed] = useState(false);
   return (
-    <span className="flex h-9 w-9 items-center justify-center overflow-hidden rounded-lg border border-border bg-card font-mono text-[13px] text-muted-foreground">
+    <span className="flex h-9 w-9 items-center justify-center overflow-hidden rounded-md border border-border bg-card font-mono text-[13px] text-muted-foreground">
       {item.iconUrl && !failed ? (
         // eslint-disable-next-line @next/next/no-img-element
         <img
