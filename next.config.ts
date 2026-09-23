@@ -23,6 +23,16 @@ const nextConfig: NextConfig = {
         destination: "/mcp/:slug",
         permanent: true,
       },
+      {
+        source: "/showcase/:path*",
+        destination: "/launches/:path*",
+        permanent: true,
+      },
+      {
+        source: "/showcase",
+        destination: "/launches",
+        permanent: true,
+      },
     ];
   },
   async headers() {

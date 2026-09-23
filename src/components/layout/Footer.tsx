@@ -15,6 +15,7 @@ const footerLinks = [
       { label: "MCP servers", href: "/mcp" },
       { label: "Agents", href: "/agents" },
       { label: "Jobs", href: "/jobs" },
+      { label: "Courses", href: "/courses" },
       { label: "Prompts", href: "/prompts" },
       { label: "Connectors", href: "/connectors" },
     ],
@@ -24,7 +25,7 @@ const footerLinks = [
     links: [
       { label: "Discussions", href: "/community" },
       { label: "Members", href: "/members" },
-      { label: "Showcase", href: "/showcase" },
+      { label: "Launches", href: "/launches" },
       { label: "Discord", href: SOCIAL_LINKS.discord },
     ],
   },
@@ -43,7 +44,9 @@ const footerLinks = [
     title: "Contribute",
     links: [
       { label: "Submit a resource", href: "/submit" },
-      { label: "Submit your app", href: "/showcase/submit" },
+      { label: "Submit your app", href: "/launches/submit" },
+      { label: "Partner with us", href: "/partners" },
+      { label: "Advertise", href: "/advertise" },
       { label: "Sign up", href: "/signup" },
       { label: "About", href: "/about" },
       { label: "Privacy", href: "/privacy" },

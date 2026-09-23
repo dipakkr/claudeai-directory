@@ -214,6 +214,23 @@ export interface ShowcaseProject {
   badge_verified?: boolean;
   badge_verified_at?: string;
   listed_at?: string;
+  gallery_images?: string[];
+  demo_video_url?: string;
+  overview?: {
+    audience?: string;
+    problem?: string;
+    solution?: string;
+    unique?: string;
+  };
+  collections?: string[];
+  platforms?: string[];
+  comparisons?: string[];
+  blog_post_url?: string;
+  creator_socials?: {
+    twitter?: string;
+    github?: string;
+    linkedin?: string;
+  };
   created_at: string;
   updated_at?: string;
 }

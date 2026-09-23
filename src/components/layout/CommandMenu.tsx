@@ -41,7 +41,7 @@ const typeRoutes: Record<string, string> = {
   mcp_server: "/mcp",
   prompt: "/prompts",
   job: "/jobs",
-  showcase: "/showcase",
+  launches: "/launches",
   blog: "/blog",
 };
 

@@ -1,4 +1,7 @@
 import type { MetadataRoute } from "next";
+import { COURSES } from "@/data/courses";
+import { getCourseContent } from "@/data/course-content";
+import { reviewedAgents } from "@/data/resource-guides";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.claudeai.directory";
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api";
@@ -55,11 +58,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${SITE_URL}/submit`, changeFrequency: "monthly", priority: 0.5 },
     { url: `${SITE_URL}/prompts`, changeFrequency: "daily", priority: 0.9 },
     { url: `${SITE_URL}/jobs`, changeFrequency: "daily", priority: 0.8 },
+    { url: `${SITE_URL}/courses`, changeFrequency: "weekly", priority: 0.8 },
+    { url: `${SITE_URL}/launches`, changeFrequency: "weekly", priority: 0.7 },
     { url: `${SITE_URL}/showcase`, changeFrequency: "weekly", priority: 0.7 },
     { url: `${SITE_URL}/resources`, changeFrequency: "weekly", priority: 0.7 },
     { url: `${SITE_URL}/guides`, changeFrequency: "weekly", priority: 0.7 },
     { url: `${SITE_URL}/blog`, changeFrequency: "daily", priority: 0.8 },
     { url: `${SITE_URL}/learn`, changeFrequency: "weekly", priority: 0.7 },
+    { url: `${SITE_URL}/advertise`, changeFrequency: "monthly", priority: 0.6 },
+    { url: `${SITE_URL}/partners`, changeFrequency: "monthly", priority: 0.6 },
     { url: `${SITE_URL}/community`, changeFrequency: "daily", priority: 0.6 },
     { url: `${SITE_URL}/feed`, changeFrequency: "daily", priority: 0.6 },
     { url: `${SITE_URL}/llm-api-pricing`, changeFrequency: "weekly", priority: 0.7 },
@@ -87,7 +94,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.8,
   }));
 
-  const agentPages: MetadataRoute.Sitemap = agentSlugs.map((slug) => ({
+  const agentPages: MetadataRoute.Sitemap = [...new Set([...agentSlugs, ...reviewedAgents.map(agent => agent.id)])].map((slug) => ({
     url: `${SITE_URL}/agents/${slug}`,
     changeFrequency: "weekly",
     priority: 0.8,
@@ -143,6 +150,28 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.6,
   }));
 
+  const coursePages: MetadataRoute.Sitemap = COURSES.flatMap((course) => [
+    {
+      url: `${SITE_URL}/courses/${course.slug}`,
+      changeFrequency: "weekly" as const,
+      priority: 0.7,
+    },
+    {
+      url: `${SITE_URL}/courses/${course.slug}/learn`,
+      changeFrequency: "weekly" as const,
+      priority: 0.6,
+    },
+  ]);
+
+  const courseModulePages: MetadataRoute.Sitemap = COURSES.flatMap((course) => {
+    const content = getCourseContent(course.slug);
+    return (content?.modules ?? []).map((module) => ({
+      url: `${SITE_URL}/courses/${course.slug}/learn/${module.id}`,
+      changeFrequency: "weekly" as const,
+      priority: course.isFree ? 0.7 : 0.55,
+    }));
+  });
+
   return [
     ...staticPages,
     ...mcpPages,
@@ -155,5 +184,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...resourcePages,
     ...blogPages,
     ...threadPages,
+    ...coursePages,
+    ...courseModulePages,
   ];
 }
