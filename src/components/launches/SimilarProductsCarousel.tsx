@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { faviconFor } from "@/lib/directory";
+import { FaviconBox } from "./FaviconBox";
 import type { ShowcaseProject } from "@/types";
 
 interface SimilarProductsCarouselProps {
@@ -12,7 +13,10 @@ export function SimilarProductsCarousel({
   currentProject,
   projects,
 }: SimilarProductsCarouselProps) {
-  // Filter similar products: same category or overlapping tech stack
+  // Filter similar products: same category or overlapping tech stack.
+  // Dedupe by title so near-identical listings (e.g. resubmissions) don't
+  // show up twice in the same grid.
+  const seenTitles = new Set<string>([currentProject.title.trim().toLowerCase()]);
   const similar = projects
     .filter((p) => p.id !== currentProject.id)
     .filter(
@@ -20,6 +24,12 @@ export function SimilarProductsCarousel({
         p.category === currentProject.category ||
         (currentProject.tech_stack?.some((tech) => p.tech_stack?.includes(tech)) ?? false)
     )
+    .filter((p) => {
+      const key = p.title.trim().toLowerCase();
+      if (seenTitles.has(key)) return false;
+      seenTitles.add(key);
+      return true;
+    })
     .slice(0, 6);
 
   if (similar.length === 0) {
@@ -41,20 +51,11 @@ export function SimilarProductsCarousel({
               className="group rounded-2xl border border-border bg-card/40 p-4 transition-all hover:border-primary/50 hover:bg-card/60"
             >
               <div className="flex items-start justify-between gap-3 mb-3">
-                <div className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-border bg-background text-sm font-semibold text-muted-foreground">
-                  {logo ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img
-                      src={logo}
-                      alt=""
-                      className="h-full w-full object-cover"
-                      loading="lazy"
-                      referrerPolicy="no-referrer"
-                    />
-                  ) : (
-                    project.title[0]?.toUpperCase()
-                  )}
-                </div>
+                <FaviconBox
+                  src={logo}
+                  name={project.title}
+                  className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-border bg-background text-sm font-semibold text-muted-foreground"
+                />
                 <ArrowRight className="h-4 w-4 shrink-0 text-muted-foreground group-hover:text-primary transition-colors" />
               </div>
               <h3 className="font-semibold text-sm text-foreground truncate">

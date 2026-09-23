@@ -17,8 +17,10 @@ export const metadata: Metadata = {
 const prioritySlugs = new Set(["claude-mastery", "claude-for-gtm", "claude-for-seo"]);
 
 export default function CoursesPage() {
-  const priorityCourses = COURSES.filter((course) => prioritySlugs.has(course.slug));
-  const otherCourses = COURSES.filter((course) => !prioritySlugs.has(course.slug));
+  // Fully-free courses get their own section above, so specialization/coming-soon
+  // lists only need the ones that still require a subscription to unlock.
+  const priorityCourses = COURSES.filter((course) => prioritySlugs.has(course.slug) && !course.isFree);
+  const otherCourses = COURSES.filter((course) => !prioritySlugs.has(course.slug) && !course.isFree);
   const freeCourses = COURSES.filter((course) => course.isFree);
 
   return (
@@ -140,6 +142,14 @@ function CourseRow({
 }) {
   const statusLabel = course.isFree ? "Open course" : freemium ? "Free preview" : getCourseStatusLabel(course.status);
   const priceLabel = course.isFree ? "Free course" : freemium ? "From $19 • 2 days free" : `$${course.price} launch price`;
+  // "Open" implies the course is ready to start today - only true for free/
+  // freemium/preview-ready courses. Anything still launching or planned gets
+  // a softer CTA since the link just leads to a waitlist, not the course.
+  const ctaLabel = freemium
+    ? "Try free"
+    : course.isFree || course.status === "ready-preview"
+      ? "Open"
+      : "Learn more";
 
   return (
     <Link
@@ -172,7 +182,7 @@ function CourseRow({
         </span>
       </span>
       <span className="hidden shrink-0 items-center gap-1.5 pt-2 text-sm font-medium text-foreground group-hover:underline sm:inline-flex">
-        {freemium ? "Try free" : "Open"} <ArrowRight className="h-4 w-4" aria-hidden="true" />
+        {ctaLabel} <ArrowRight className="h-4 w-4" aria-hidden="true" />
       </span>
     </Link>
   );

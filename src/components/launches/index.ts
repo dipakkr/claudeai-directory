@@ -5,3 +5,4 @@ export { DemoVideoSection } from "./DemoVideoSection";
 export { SimilarProductsCarousel } from "./SimilarProductsCarousel";
 export { CollectionsSection } from "./CollectionsSection";
 export { EnhancedCreatorCard } from "./EnhancedCreatorCard";
+export { FaviconBox } from "./FaviconBox";

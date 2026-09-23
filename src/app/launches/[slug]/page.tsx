@@ -18,7 +18,6 @@ import {
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import FavoriteButton from "@/components/shared/FavoriteButton";
-import { TagList } from "@/components/directory/detail";
 import { faviconFor } from "@/lib/directory";
 import { fetchApi } from "@/lib/api-server";
 import type { ShowcaseProject } from "@/types";
@@ -30,6 +29,7 @@ import {
   SimilarProductsCarousel,
   CollectionsSection,
   EnhancedCreatorCard,
+  FaviconBox,
 } from "@/components/launches";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.claudeai.directory";
@@ -53,6 +53,9 @@ function formatDate(value?: string) {
 function splitUseCases(useCases?: string[]) {
   return (useCases ?? [])
     .flatMap((item) => item.split(";"))
+    // Some listings pack use cases into one string as "1. ... 2. ... 3. ...";
+    // split those into separate items too.
+    .flatMap((item) => item.split(/(?:^|\s)\d+\.\s+/))
     .map((item) => item.trim())
     .filter(Boolean);
 }
@@ -65,14 +68,15 @@ function splitDescription(description: string) {
 }
 
 function featureItems(project: ShowcaseProject) {
+  // Tech stack already has its own sidebar card, so features are built from
+  // skills/description only - listing the same tech pills twice reads as
+  // filler rather than real feature copy.
   const fromSkills = (project.skills_used ?? []).map((skill) => `Works with ${skill}`);
-  const fromStack = (project.tech_stack ?? []).map((tech) => tech.charAt(0).toUpperCase() + tech.slice(1));
   const fromDescription = splitDescription(project.description)
     .filter((sentence) => sentence.length > 28)
-    .slice(0, 2);
+    .slice(0, 3);
 
-  const explicitItems = [...fromSkills, ...fromStack];
-  const items = (explicitItems.length ? explicitItems : fromDescription)
+  const items = (fromSkills.length ? fromSkills : fromDescription)
     .map((item) => item.replace(/\.$/, ""))
     .filter(Boolean);
 
@@ -92,15 +96,6 @@ function fallbackUseCases(project: ShowcaseProject) {
   ].slice(0, 4);
 }
 
-function initials(name: string) {
-  return name
-    .split(/\s+/)
-    .map((part) => part[0])
-    .join("")
-    .slice(0, 2)
-    .toUpperCase();
-}
-
 function SectionTitle({ children }: { children: ReactNode }) {
   return (
     <h2 className="font-mono text-[11px] font-normal uppercase tracking-[0.18em] text-muted-foreground">
@@ -113,68 +108,11 @@ function ProductLogo({ src, name, size = "base" }: { src?: string | null; name: 
   const dimension = size === "large" ? "h-20 w-20 rounded-2xl text-2xl" : "h-14 w-14 rounded-xl text-lg";
 
   return (
-    <div className={`flex shrink-0 items-center justify-center overflow-hidden border border-border bg-card font-semibold text-muted-foreground shadow-sm ${dimension}`}>
-      {src ? (
-        <img src={src} alt="" className="h-full w-full object-cover" loading="lazy" referrerPolicy="no-referrer" />
-      ) : (
-        initials(name)
-      )}
-    </div>
-  );
-}
-
-function ProductPreview({
-  project,
-  image,
-  logo,
-  tags,
-}: {
-  project: ShowcaseProject;
-  image?: string;
-  logo?: string | null;
-  tags: string[];
-}) {
-  if (image) {
-    return (
-      <div className="overflow-hidden rounded-2xl border border-border bg-card/50">
-        <img
-          src={image}
-          alt={`${project.title} screenshot`}
-          className="aspect-[16/10] h-full w-full object-cover"
-          loading="eager"
-          referrerPolicy="no-referrer"
-        />
-      </div>
-    );
-  }
-
-  return (
-    <div className="relative overflow-hidden rounded-2xl border border-border bg-[radial-gradient(circle_at_20%_18%,rgba(255,154,100,0.18),transparent_30%),linear-gradient(135deg,rgba(255,255,255,0.08),rgba(255,255,255,0.02))] p-8 shadow-[0_24px_90px_rgba(0,0,0,0.22)]">
-      <div className="absolute inset-x-8 top-8 h-px bg-border/80" />
-      <div className="absolute bottom-8 right-8 h-28 w-28 rounded-full border border-border/80" />
-      <div className="relative flex min-h-[300px] flex-col justify-between">
-        <div className="flex items-center justify-between gap-4">
-          <ProductLogo src={logo} name={project.title} size="large" />
-          <div className="rounded-full border border-border bg-background/70 px-3 py-1 font-mono text-[11px] uppercase tracking-[0.16em] text-muted-foreground">
-            Claude launch
-          </div>
-        </div>
-        <div className="max-w-[620px]">
-          <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-primary">{project.category || "Claude app"}</p>
-          <h2 className="mt-3 text-balance text-3xl font-normal leading-tight text-foreground sm:text-4xl">{project.title}</h2>
-          <p className="mt-4 max-w-[560px] text-base leading-7 text-muted-foreground">{project.tagline || project.description}</p>
-          {tags.length > 0 && (
-            <div className="mt-6 flex flex-wrap gap-2">
-              {tags.slice(0, 4).map((tag) => (
-                <span key={tag} className="rounded-full border border-border bg-background/65 px-3 py-1 text-xs text-muted-foreground">
-                  {tag}
-                </span>
-              ))}
-            </div>
-          )}
-        </div>
-      </div>
-    </div>
+    <FaviconBox
+      src={src}
+      name={name}
+      className={`flex shrink-0 items-center justify-center overflow-hidden border border-border bg-card font-semibold text-muted-foreground shadow-sm ${dimension}`}
+    />
   );
 }
 
@@ -237,7 +175,6 @@ export default async function LaunchDetailPage({
   const appUrl = project.app_url || project.demo_url;
   const listedDate = formatDate(project.listed_at || project.created_at);
   const feedbackHref = `/community?search=${encodeURIComponent(project.title)}`;
-  const techStack = project.tech_stack ?? [];
   const useCases = fallbackUseCases(project);
   const features = featureItems(project);
   const resourceType = project.category || "Claude app";
@@ -338,10 +275,8 @@ export default async function LaunchDetailPage({
         </section>
 
         <div className="mt-9">
-          {galleryImages.length > 0 ? (
+          {galleryImages.length > 0 && (
             <GalleryCarousel images={galleryImages} title={project.title} />
-          ) : (
-            <ProductPreview project={project} image={gallery[0]} logo={logo} tags={techStack} />
           )}
         </div>
 
@@ -444,15 +379,6 @@ export default async function LaunchDetailPage({
                 </div>
               </dl>
             </section>
-
-            {techStack.length > 0 && (
-              <section className="rounded-2xl border border-border bg-card/40 p-5">
-                <SectionTitle>Tags</SectionTitle>
-                <div className="mt-4">
-                  <TagList tags={techStack} />
-                </div>
-              </section>
-            )}
           </aside>
         </div>
       </main>
