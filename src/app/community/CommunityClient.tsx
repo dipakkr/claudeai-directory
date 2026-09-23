@@ -18,7 +18,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
-import { MessageSquare, Plus, Users, Search, Eye, Tag, ArrowRight } from "lucide-react";
+import { MessageSquare, Plus, Users, Search, Tag, ArrowRight } from "lucide-react";
 import { useThreads, useCreateThread } from "@/hooks/use-community";
 import { useAuth } from "@/lib/auth";
 import { toast } from "sonner";
@@ -282,15 +282,6 @@ export default function CommunityClient({
                             <span>{thread.author}</span>
                             <span className="text-border">·</span>
                             <span>{timeAgo(thread.created_at)}</span>
-                            {thread.views > 0 && (
-                              <>
-                                <span className="text-border">·</span>
-                                <span className="flex items-center gap-0.5">
-                                  <Eye className="h-3 w-3" />
-                                  {thread.views}
-                                </span>
-                              </>
-                            )}
                           </div>
                         </div>
                         <div className="flex shrink-0 items-center gap-1.5 rounded-full border border-border bg-[var(--cad-raised)] px-2.5 py-1 text-xs text-muted-foreground">

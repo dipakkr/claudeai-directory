@@ -25,7 +25,7 @@ export const metadata: Metadata = {
 };
 
 export default async function MembersPage() {
-  const data = (await serverFetch("/users?per_page=200").catch(
+  const data = (await serverFetch("/users?per_page=12").catch(
     () => null
   )) as MembersResponse | null;
 

@@ -1,14 +1,24 @@
 import type { Metadata } from "next";
-import { fetchApi } from "@/lib/api-server";
+import { notFound } from "next/navigation";
+import { resourceGuides } from "@/data/resource-guides";
+import { loadSkill, loadSkills } from "@/lib/server/skills";
 import { loadRegistryIndex } from "@/lib/server/registry";
 import { resolvePluginInstall } from "@/lib/install";
 import { skillSource } from "@/lib/resource-source";
 import { resourceTitle } from "@/lib/seo";
-import type { Skill } from "@/types";
 import SkillDetailClient from "./SkillDetailClient";
 import { SoftwareApplicationSchema, BreadcrumbSchema } from "@/components/seo/JsonLd";
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.claudeai.directory";
+const SITE_URL = "https://www.claudeai.directory";
+
+export const revalidate = 300;
+
+// Published skills ship as ready-to-serve HTML. New slugs can still render on
+// demand, and ISR refreshes existing pages without blocking a reader.
+export async function generateStaticParams() {
+  const skills = await loadSkills();
+  return skills.map(skill => ({ id: skill.id }));
+}
 
 export async function generateMetadata({
   params,
@@ -16,24 +26,25 @@ export async function generateMetadata({
   params: Promise<{ id: string }>;
 }): Promise<Metadata> {
   const { id } = await params;
-  const skill = await fetchApi<Skill>(`/skills/${id}`);
+  const skill = await loadSkill(id);
 
   if (!skill) {
     return { title: "Skill Not Found" };
   }
 
-  const title = resourceTitle(skill.title || skill.name, skill.description);
+  const guide = resourceGuides[`skill/${id}`];
+  const title = guide?.title || resourceTitle(skill.title || skill.name, skill.description);
   const description =
-    skill.description?.slice(0, 160) || `${skill.title || skill.name} skill for Claude`;
+    guide?.metaDescription || skill.description?.slice(0, 160) || `${skill.title || skill.name} skill for Claude`;
 
   return {
     title: { absolute: title },
     description,
-    alternates: { canonical: `/skills/${id}` },
+    alternates: { canonical: `${SITE_URL}/skills/${id}` },
     openGraph: {
       title,
       description,
-      url: `/skills/${id}`,
+      url: `${SITE_URL}/skills/${id}`,
       type: "website",
     },
     twitter: {
@@ -50,7 +61,8 @@ export default async function SkillDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const [skill, registry] = await Promise.all([fetchApi<Skill>(`/skills/${id}`), loadRegistryIndex()]);
+  const [skill, registry] = await Promise.all([loadSkill(id), loadRegistryIndex(3000)]);
+  if (!skill) notFound();
   const source = skill ? skillSource(skill) : null;
   const resolution = resolvePluginInstall({
     match: source ? registry.get(source.repo, source.path) : null,
@@ -62,8 +74,8 @@ export default async function SkillDetailPage({
       {skill && (
         <>
           <SoftwareApplicationSchema
-            name={skill.title || skill.name}
-            description={skill.description}
+            name={resourceGuides[`skill/${id}`]?.name || skill.title || skill.name}
+            description={resourceGuides[`skill/${id}`]?.summary || skill.description}
             url={`${SITE_URL}/skills/${id}`}
             category="DeveloperApplication"
           />

@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
+import { resourceGuides } from "@/data/resource-guides";
 import { fetchApi } from "@/lib/api-server";
 import type { MCPServer } from "@/types";
 import MCPServerDetail from "./McpDetailClient";
@@ -6,7 +8,7 @@ import { resolveMcpInstall } from "@/lib/install";
 import { resourceTitle } from "@/lib/seo";
 import { SoftwareApplicationSchema, BreadcrumbSchema } from "@/components/seo/JsonLd";
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.claudeai.directory";
+const SITE_URL = "https://www.claudeai.directory";
 
 export async function generateMetadata({
   params,
@@ -14,21 +16,22 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const server = await fetchApi<MCPServer>(`/mcp-servers/${slug}`);
+  const server = await fetchApi<MCPServer>(`/mcp-servers/${slug}`, { throwOnError: true });
 
   if (!server) {
     return { title: "MCP Server Not Found" };
   }
 
-  const title = resourceTitle(server.name, server.one_liner || server.description);
+  const guide = resourceGuides[`mcp/${slug}`];
+  const title = guide?.title || resourceTitle(server.name, server.one_liner || server.description);
   const description =
-    server.one_liner || server.description?.slice(0, 160) || `${server.name} MCP server for Claude AI`;
+    guide?.metaDescription || server.one_liner || server.description?.slice(0, 160) || `${server.name} MCP server for Claude AI`;
   const ogImageUrl = `${SITE_URL}/mcp/${slug}/opengraph-image`;
 
   return {
     title: { absolute: title },
     description,
-    alternates: { canonical: `/mcp/${slug}` },
+    alternates: { canonical: `${SITE_URL}/mcp/${slug}` },
     openGraph: {
       title,
       description,
@@ -51,7 +54,8 @@ export default async function MCPDetailPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const server = await fetchApi<MCPServer>(`/mcp-servers/${slug}`);
+  const server = await fetchApi<MCPServer>(`/mcp-servers/${slug}`, { throwOnError: true });
+  if (!server) notFound();
   const resolution = resolveMcpInstall({
     install: server?.install,
     slug: server?.slug || slug,
@@ -68,9 +72,9 @@ export default async function MCPDetailPage({
         <>
           <SoftwareApplicationSchema
             name={server.name}
-            description={server.one_liner || server.description}
+            description={resourceGuides[`mcp/${slug}`]?.summary || server.one_liner || server.description}
             url={`${SITE_URL}/mcp/${slug}`}
-            author={typeof server.author === "object" ? server.author?.name : server.author}
+            author={resourceGuides[`mcp/${slug}`]?.publisher || (typeof server.author === "object" ? server.author?.name : server.author)}
             category="DeveloperApplication"
           />
           <BreadcrumbSchema

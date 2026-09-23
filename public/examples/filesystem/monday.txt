@@ -1,0 +1,8 @@
+Illustrative meeting notes for the Filesystem MCP exercise. No real customer data.
+
+Monday planning meeting
+Project: Helpdesk pilot
+Decision: Launch the pilot on October 10.
+Decision: Mira owns the launch checklist.
+Decision: The pilot includes 20 support agents.
+Open question: Has the accessibility review been completed?

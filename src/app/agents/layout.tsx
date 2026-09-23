@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 
-const TITLE = "Claude Agents: Discover Agents for Claude Code";
+const TITLE = "Claude Agents Directory: Browse Claude Code Agents";
 const DESCRIPTION =
-  "Discover community-built Claude Agents for coding, testing, debugging, research and other Claude Code workflows.";
+  "Find Claude Code agents for coding, testing, debugging, research and DevOps workflows. Browse community agents and reusable AI teammates for Claude.";
 
 export const metadata: Metadata = {
   title: { absolute: TITLE },

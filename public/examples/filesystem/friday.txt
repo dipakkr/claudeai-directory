@@ -1,0 +1,8 @@
+Illustrative meeting notes for the Filesystem MCP exercise. No real customer data.
+
+Friday readiness meeting
+Project: Helpdesk pilot
+Decision: Move the pilot launch to October 12 to allow more testing.
+Decision: Mira still owns the launch checklist.
+Decision: Reduce the pilot to 10 support agents.
+Status: The accessibility review is still pending.

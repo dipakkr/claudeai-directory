@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 
-const TITLE = "Claude Skills: Discover the Best Skills for Claude";
+const TITLE = "Claude Skills Directory: Browse Claude Code Skills";
 const DESCRIPTION =
-  "Discover community-built Claude Skills for coding, research, testing, productivity and more. Explore trending Skills and install what you need.";
+  "Find Claude Code skills for coding, research, testing, productivity and more. Browse community-built skills and install reusable Claude workflows.";
 
 export const metadata: Metadata = {
   title: { absolute: TITLE },

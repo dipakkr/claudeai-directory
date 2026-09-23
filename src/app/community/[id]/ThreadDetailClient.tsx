@@ -95,7 +95,7 @@ function ReplyCard({
 }) {
   const [composerOpen, setComposerOpen] = useState(false);
   return (
-    <div className={nested ? "py-3" : "py-4"}>
+    <div className={nested ? "py-2.5" : "py-4"}>
       <div className="flex items-start gap-3">
         <div className={`${nested ? "h-6 w-6 text-[10px]" : "h-7 w-7 text-[11px]"} rounded-full bg-muted flex items-center justify-center font-medium text-muted-foreground shrink-0 mt-0.5`}>
           {reply.author_avatar ? (
@@ -321,7 +321,7 @@ export default function ThreadDetail({
                         <div key={reply.id}>
                           <ReplyCard reply={reply} threadId={id} />
                           {children.length > 0 && (
-                            <div className="ml-5 sm:ml-9 border-l-2 border-border pl-4 mb-2">
+                            <div className="ml-4 sm:ml-8 border-l border-border/80 pl-3.5 transition-colors hover:border-border">
                               {children.map((child) => {
                                 const directParent =
                                   child.parent_id && child.parent_id !== reply.id

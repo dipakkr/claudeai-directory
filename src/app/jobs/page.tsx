@@ -13,7 +13,7 @@ export default async function JobsPage({
   if (params.type && params.type !== "All") qs.set("type", params.type.toLowerCase());
 
   const qsStr = qs.toString();
-  const initialData = await fetchApi<Job[]>(`/jobs${qsStr ? `?${qsStr}` : ""}`) ?? [];
+  const initialData = await fetchApi<Job[]>(`/jobs${qsStr ? `?${qsStr}` : ""}`).then((jobs) => jobs ?? []);
 
   return (
     <JobsClient

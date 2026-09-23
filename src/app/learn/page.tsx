@@ -7,8 +7,9 @@ import Footer from "@/components/layout/Footer";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Search } from "lucide-react";
+import { ArrowRight, BookOpen, Search } from "lucide-react";
 import { useBlogPosts } from "@/hooks/use-blog";
+import { COURSES } from "@/data/courses";
 import type { BlogPost } from "@/types";
 
 const categories = ["All", "Tutorial", "Guide", "Deep Dive", "News", "Case Study"];
@@ -99,16 +100,74 @@ const Learn = () => {
 
   const featured = (posts ?? []).filter((p) => p.featured);
   const rest = (posts ?? []).filter((p) => !p.featured);
+  const mastery = COURSES.find((course) => course.slug === "claude-mastery");
+  const roleCourses = COURSES.filter((course) => ["claude-for-gtm", "claude-for-seo"].includes(course.slug));
+  const learningCourses = [mastery, ...roleCourses].filter(
+    (course): course is (typeof COURSES)[number] => Boolean(course),
+  );
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <Header />
       <main className="flex-1">
-        <div className="container py-10">
-          <div className="mb-8">
-            <h1 className="text-2xl font-semibold text-foreground mb-2">Learn</h1>
+        <div className="mx-auto max-w-[1120px] px-4 py-10 md:px-8">
+          <section className="mb-12">
+            <p className="font-mono text-xs uppercase tracking-[0.16em] text-muted-foreground">Learn Claude</p>
+            <div className="mt-3 grid gap-6 lg:grid-cols-[minmax(0,1fr)_340px] lg:items-start">
+              <div>
+                <h1 className="max-w-[760px] text-balance text-[36px] font-normal leading-tight text-foreground md:text-[52px]">
+                  From prompting Claude to working with Claude.
+                </h1>
+                <p className="mt-5 max-w-[680px] text-base leading-7 text-muted-foreground">
+                  Start with the free Claude Mastery course, then use role-specific courses and guides to apply the
+                  same mental models to GTM, SEO, product work and Claude Code.
+                </p>
+                {mastery ? (
+                  <div className="mt-7 flex flex-wrap gap-3">
+                    <Link
+                      href={`/courses/${mastery.slug}/learn`}
+                      className="inline-flex h-10 items-center gap-2 rounded-full bg-foreground px-5 text-sm font-medium text-background transition-colors hover:bg-foreground/85"
+                    >
+                      Start free course <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                    </Link>
+                    <Link
+                      href={`/courses/${mastery.slug}`}
+                      className="inline-flex h-10 items-center rounded-full border border-border px-5 text-sm text-foreground transition-colors hover:border-[var(--cad-line-hover)]"
+                    >
+                      View course path
+                    </Link>
+                  </div>
+                ) : null}
+              </div>
+              <div className="rounded-xl border border-border bg-card/45 p-5">
+                <p className="text-sm font-medium text-foreground">Featured learning path</p>
+                <div className="mt-4 space-y-4">
+                  {learningCourses.map((course) => (
+                    <Link
+                      key={course.slug}
+                      href={`/courses/${course.slug}`}
+                      className="flex gap-3 border-t border-border pt-4 first:border-t-0 first:pt-0"
+                    >
+                      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-border bg-background text-primary">
+                        <BookOpen className="h-4 w-4" aria-hidden="true" />
+                      </span>
+                      <span>
+                        <span className="block text-sm font-medium text-foreground">{course.title}</span>
+                        <span className="mt-1 block text-xs leading-5 text-muted-foreground">
+                          {course.isFree ? "Free public course" : `${course.category} workflow course`}
+                        </span>
+                      </span>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <div className="mb-8 border-t border-border pt-10">
+            <h2 className="text-2xl font-normal text-foreground mb-2">Articles and guides</h2>
             <p className="text-sm text-muted-foreground">
-              Tutorials, guides, and articles about Claude AI
+              Tutorials, guides, and articles about Claude AI.
             </p>
           </div>
 

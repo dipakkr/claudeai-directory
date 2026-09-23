@@ -16,6 +16,7 @@ import { Copy, ThumbsUp, CheckCircle, ArrowRight, Pencil, RotateCcw } from "luci
 import { usePrompt, usePrompts } from "@/hooks/use-prompts";
 import { toast } from "sonner";
 import { DetailHeader, DetailPage, IconTile, SectionLabel, StatPill, TagList } from "@/components/directory/detail";
+import FavoriteButton from "@/components/shared/FavoriteButton";
 import ResourceReplies from "@/components/shared/ResourceReplies";
 import type { Prompt } from "@/types";
 
@@ -147,6 +148,7 @@ export default function PromptDetailClient({ prompt: initialPrompt, id }: { prom
               <Pencil className="h-3.5 w-3.5 text-muted-foreground" />
               Customize
             </button>
+            <FavoriteButton targetType="prompt" targetId={id} />
           </div>
 
           <div className="mt-8 flex flex-wrap gap-2">

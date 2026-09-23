@@ -19,6 +19,8 @@ import {
   TagList,
 } from "@/components/directory/detail";
 import { InstallActions, InstallPanel } from "@/components/directory/InstallPanel";
+import { ResourceGuide } from "@/components/directory/ResourceGuide";
+import { resourceGuides } from "@/data/resource-guides";
 import type { InstallResolution } from "@/lib/install";
 import { useMCPServer, useMCPServers } from "@/hooks/use-mcp-servers";
 import { faviconFor } from "@/lib/directory";
@@ -72,7 +74,8 @@ export default function MCPServerDetail({
     );
   }
 
-  const authorName = typeof server.author === "object" ? server.author?.name : server.author;
+  const guide = resourceGuides[`mcp/${slug}`];
+  const authorName = guide?.publisher || (typeof server.author === "object" ? server.author?.name : server.author);
   const authorUrl = typeof server.author === "object" ? server.author?.url : undefined;
   const tools = (server.capabilities?.tools ?? []).map((t) => (typeof t === "string" ? t : (t as { name: string }).name));
   const filteredTools = toolSearch ? tools.filter((t) => t.toLowerCase().includes(toolSearch.toLowerCase())) : tools;
@@ -99,7 +102,7 @@ export default function MCPServerDetail({
   ].filter((l): l is { label: string; href: string } => Boolean(l.href));
 
   const chips = [
-    server.official ? "official" : "",
+    server.official && !guide ? "Publisher listed as official" : "",
     server.connection?.is_authless ? "no auth" : "",
     server.capabilities?.has_mcp_app ? "mcp app" : "",
     ...worksWith.map((w) => w.replace("-", " ")),
@@ -125,8 +128,8 @@ export default function MCPServerDetail({
           <p className="mt-2 font-mono text-[12px] uppercase tracking-wide text-muted-foreground">
             MCP server{authorName ? ` · by ${authorName}` : ""}
           </p>
-          {server.one_liner && <p className="mt-5 text-[17px] leading-relaxed text-foreground/90">{server.one_liner}</p>}
-          {server.description && server.description !== server.one_liner && (
+          {(guide?.summary || server.one_liner) && <p className="mt-5 text-[17px] leading-relaxed text-foreground/90">{guide?.summary || server.one_liner}</p>}
+          {!guide && server.description && server.description !== server.one_liner && (
             <div className="prose prose-sm mt-3 max-w-none text-muted-foreground dark:prose-invert prose-p:text-muted-foreground prose-a:text-primary prose-strong:text-foreground prose-li:text-muted-foreground">
               <ReactMarkdown>
                 {server.description.replace(/\s*•\s*/g, "\n- ").replace(/\*\*Note:\*\*/g, "\n\n**Note:**")}
@@ -141,6 +144,8 @@ export default function MCPServerDetail({
               <TagList tags={chips} />
             </div>
           )}
+
+          {guide ? <ResourceGuide guide={guide} /> : null}
 
           <InstallPanel resolution={resolution} kind="mcp" resourceId={slug} />
           {jsonConfig && (
@@ -190,7 +195,7 @@ export default function MCPServerDetail({
             </>
           )}
 
-          {server.html_content && (
+          {!guide && server.html_content && (
             <>
               <SectionLabel>About</SectionLabel>
               <div
@@ -215,7 +220,7 @@ export default function MCPServerDetail({
             </>
           )}
 
-          {(server.features?.length ?? 0) > 0 && !server.html_content && (
+          {!guide && (server.features?.length ?? 0) > 0 && !server.html_content && (
             <>
               <SectionLabel>Features</SectionLabel>
               <ul className="space-y-2">

@@ -11,6 +11,7 @@ import { useAuth } from "@/lib/auth";
 import type { PublicProfile } from "@/types";
 
 const PAGE_SIZE = 60;
+const PUBLIC_PREVIEW_SIZE = 12;
 
 // Muted, warm-leaning hues for letter avatars; picked by a stable hash of the username.
 const AVATAR_HUES = [14, 32, 48, 95, 160, 195, 225, 265, 320];
@@ -81,14 +82,17 @@ export default function MembersClient({ initialData }: { initialData: MembersRes
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState<Sort>("recent");
   const [visible, setVisible] = useState(PAGE_SIZE);
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, isLoading: isAuthLoading } = useAuth();
+  const isPreview = !isAuthenticated;
+  const pageSize = isPreview ? PUBLIC_PREVIEW_SIZE : PAGE_SIZE;
+  const memberQueryParams = useMemo(() => ({ per_page: isPreview ? PUBLIC_PREVIEW_SIZE : 200 }), [isPreview]);
 
-  const { data, isLoading } = useMembers({ per_page: 200 }, { initialData: initialData ?? undefined });
+  const { data, isLoading } = useMembers(memberQueryParams, { initialData: isPreview ? initialData ?? undefined : undefined });
   const members = useMemo(() => data?.members ?? [], [data?.members]);
   const total = data?.total ?? members.length;
 
   const filtered = useMemo(() => {
-    const q = search.trim().toLowerCase();
+    const q = isPreview ? "" : search.trim().toLowerCase();
     const list = q
       ? members.filter(
           (m) =>
@@ -98,65 +102,69 @@ export default function MembersClient({ initialData }: { initialData: MembersRes
         )
       : members;
     // The API already returns newest first.
-    return sort === "name"
+    return !isPreview && sort === "name"
       ? [...list].sort((a, b) => (a.name || a.username).localeCompare(b.name || b.username))
       : list;
-  }, [members, search, sort]);
+  }, [isPreview, members, search, sort]);
 
-  const shown = filtered.slice(0, visible);
+  const shown = filtered.slice(0, isPreview ? PUBLIC_PREVIEW_SIZE : visible);
 
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      <main className="mx-auto max-w-[1180px] px-4 pb-24 pt-14 md:px-8 md:pt-16">
+      <main className="mx-auto max-w-[1120px] px-5 pb-24 pt-14 sm:px-6 md:px-8 md:pt-16">
         <div className="flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
           <div>
             <h1 className="text-[clamp(36px,5vw,52px)] font-normal leading-[1.05] text-foreground">Members</h1>
             <p className="mt-3 text-[16px] text-muted-foreground">
-              {total > 0 ? `${total.toLocaleString()} people` : "People"} building with Claude and sharing what they make.
+              {isPreview
+                ? "Preview a few Claude builders. Sign in to browse the full community."
+                : `${total > 0 ? total.toLocaleString() : "People"} people building with Claude and sharing what they make.`}
             </p>
           </div>
-          {!isAuthenticated && (
+          {isPreview && !isAuthLoading && (
             <Link
               href="/login"
               className="inline-flex h-10 shrink-0 items-center self-start rounded-full border border-border px-4 text-sm text-foreground transition-colors hover:border-[var(--cad-line-hover)]"
             >
-              Join the community
+              Sign in to see all members
             </Link>
           )}
         </div>
 
-        <div className="mt-10 flex flex-col gap-3 sm:flex-row">
-          <label className="relative block flex-1 sm:max-w-[520px]">
-            <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-            <input
-              type="search"
-              value={search}
-              onChange={(e) => {
-                setSearch(e.target.value);
-                setVisible(PAGE_SIZE);
-              }}
-              placeholder={members.length > 0 ? `Search ${members.length.toLocaleString()} members by name...` : "Search members by name..."}
-              aria-label="Search members"
-              className="h-11 w-full rounded-full border border-border bg-card pl-11 pr-4 text-[14px] text-foreground outline-none transition-colors placeholder:text-muted-foreground focus:border-[var(--cad-line-hover)]"
-            />
-          </label>
-          <label className="relative block sm:w-44">
-            <select
-              value={sort}
-              onChange={(e) => setSort(e.target.value as Sort)}
-              aria-label="Sort members"
-              className="h-11 w-full appearance-none rounded-full border border-border bg-card pl-4 pr-10 text-[14px] text-foreground outline-none transition-colors focus:border-[var(--cad-line-hover)]"
-            >
-              <option value="recent">Recent</option>
-              <option value="name">Name A to Z</option>
-            </select>
-            <ChevronDown className="pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-          </label>
-        </div>
+        {!isPreview && (
+          <div className="mt-10 flex flex-col gap-3 sm:flex-row">
+            <label className="relative block flex-1 sm:max-w-[520px]">
+              <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <input
+                type="search"
+                value={search}
+                onChange={(e) => {
+                  setSearch(e.target.value);
+                  setVisible(pageSize);
+                }}
+                placeholder={members.length > 0 ? `Search ${members.length.toLocaleString()} members by name...` : "Search members by name..."}
+                aria-label="Search members"
+                className="h-11 w-full rounded-full border border-border bg-card pl-11 pr-4 text-[14px] text-foreground outline-none transition-colors placeholder:text-muted-foreground focus:border-[var(--cad-line-hover)]"
+              />
+            </label>
+            <label className="relative block sm:w-44">
+              <select
+                value={sort}
+                onChange={(e) => setSort(e.target.value as Sort)}
+                aria-label="Sort members"
+                className="h-11 w-full appearance-none rounded-full border border-border bg-card pl-4 pr-10 text-[14px] text-foreground outline-none transition-colors focus:border-[var(--cad-line-hover)]"
+              >
+                <option value="recent">Recent</option>
+                <option value="name">Name A to Z</option>
+              </select>
+              <ChevronDown className="pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            </label>
+          </div>
+        )}
 
-        <div className="mt-6">
-          {isLoading && !initialData ? (
+        <div className={isPreview ? "mt-10" : "mt-6"}>
+          {isLoading && !data ? (
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
               {Array.from({ length: 18 }).map((_, i) => (
                 <MemberCardSkeleton key={i} />
@@ -169,11 +177,24 @@ export default function MembersClient({ initialData }: { initialData: MembersRes
                   <MemberCard key={member.id} member={member} />
                 ))}
               </div>
-              {filtered.length > visible && (
+              {isPreview && total > shown.length && (
+                <div className="mt-8 flex flex-col items-center gap-3 rounded-xl border border-border bg-card/40 px-4 py-6 text-center">
+                  <p className="max-w-[48ch] text-sm leading-6 text-muted-foreground">
+                    Showing {shown.length} of {total.toLocaleString()} members. Sign in to browse every profile and find collaborators.
+                  </p>
+                  <Link
+                    href="/login"
+                    className="inline-flex h-10 items-center rounded-full bg-primary px-5 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90"
+                  >
+                    See all members
+                  </Link>
+                </div>
+              )}
+              {!isPreview && filtered.length > visible && (
                 <div className="mt-8 flex justify-center">
                   <button
                     type="button"
-                    onClick={() => setVisible((v) => v + PAGE_SIZE)}
+                    onClick={() => setVisible((v) => v + pageSize)}
                     className="h-9 rounded-full border border-border px-5 text-sm text-muted-foreground transition-colors hover:border-[var(--cad-line-hover)] hover:text-foreground"
                   >
                     Show more

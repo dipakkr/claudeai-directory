@@ -1,5 +1,7 @@
 // Server-side fetch utility for generateMetadata and server components
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api";
+const API_BASE = process.env.API_INTERNAL_URL
+  ? `${process.env.API_INTERNAL_URL.replace(/\/$/, "")}/api`
+  : process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api";
 
 function normalizeIds(data: unknown): unknown {
   if (Array.isArray(data)) return data.map(normalizeIds);
@@ -18,15 +20,19 @@ function normalizeIds(data: unknown): unknown {
   return data;
 }
 
-export async function fetchApi<T>(endpoint: string): Promise<T | null> {
+export async function fetchApi<T>(endpoint: string, options: { throwOnError?: boolean; timeoutMs?: number } = {}): Promise<T | null> {
   try {
     const res = await fetch(`${API_BASE}${endpoint}`, {
       next: { revalidate: 300 },
+      signal: AbortSignal.timeout(options.timeoutMs ?? 15000),
     });
-    if (!res.ok) return null;
+    if (res.status === 404) return null;
+    if (!res.ok) throw new Error(`Directory API returned ${res.status} for ${endpoint}`);
     const json = await res.json();
     return normalizeIds(json) as T;
-  } catch {
+  } catch (error) {
+    // Detail routes must not turn an upstream outage into a cached missing page.
+    if (options.throwOnError) throw error;
     return null;
   }
 }

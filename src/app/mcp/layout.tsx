@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 
-const TITLE = "Claude MCP Servers: Discover and Install MCPs";
+const TITLE = "Claude MCP Servers Directory: Browse & Install MCPs";
 const DESCRIPTION =
-  "Discover MCP servers for Claude Code. Explore popular community MCPs and copy verified install commands for development, data and productivity tools.";
+  "Find MCP servers for Claude Code and Claude Desktop. Browse categories, compare tools and copy install commands for developer, research and business workflows.";
 
 export const metadata: Metadata = {
   title: { absolute: TITLE },

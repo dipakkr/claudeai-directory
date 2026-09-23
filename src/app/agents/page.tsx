@@ -6,6 +6,7 @@ import { agentToItem, buildOrders } from "@/lib/directory";
 import { loadOrders } from "@/lib/server/rankings";
 import { listingRobots } from "@/lib/seo";
 import type { Agent } from "@/types";
+import { reviewedAgents } from "@/data/resource-guides";
 
 type ListingParams = Promise<{ category?: string; search?: string }>;
 
@@ -19,7 +20,8 @@ export default async function AgentsPage({ searchParams }: { searchParams: Listi
     fetchApi<{ data: Agent[] }>("/agents?limit=200"),
     loadOrders("agent"),
   ]);
-  const items = (response?.data ?? []).map(agentToItem);
+  const agents = response?.data ?? [];
+  const items = [...agents, ...reviewedAgents.filter(reviewed => !agents.some(agent => agent.id === reviewed.id))].map(agentToItem);
 
   return (
     <ListingPage

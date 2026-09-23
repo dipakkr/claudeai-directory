@@ -8,9 +8,12 @@ import { InstallActions, InstallPanel } from "@/components/directory/InstallPane
 import { compactNumber } from "@/lib/directory";
 import type { InstallResolution } from "@/lib/install";
 import type { Agent } from "@/types";
+import { ResourceGuide } from "@/components/directory/ResourceGuide";
+import { resourceGuides } from "@/data/resource-guides";
 
 export default function AgentDetail({ agent, resolution }: { agent: Agent; resolution: InstallResolution }) {
   const name = agent.title || agent.name;
+  const guide = resourceGuides[`agent/${agent.id}`];
   const chips = [agent.category, agent.license, agent.model ? `model: ${agent.model}` : "", ...(agent.tags ?? [])].filter(
     (chip, i, all): chip is string => Boolean(chip) && all.indexOf(chip) === i,
   );
@@ -21,7 +24,7 @@ export default function AgentDetail({ agent, resolution }: { agent: Agent; resol
         icon={<IconTile name={name} />}
         title={name}
         stats={
-          agent.stars ? (
+          !guide && agent.stars ? (
             <StatPill icon={<Star className="h-3.5 w-3.5" />} title={`${agent.stars.toLocaleString()} GitHub stars on the source repo`}>
               {compactNumber(agent.stars)}
             </StatPill>
@@ -32,7 +35,7 @@ export default function AgentDetail({ agent, resolution }: { agent: Agent; resol
         Agent{agent.author?.name ? ` · by ${agent.author.name}` : ""}
       </p>
 
-      <p className="mt-5 text-[17px] leading-relaxed text-foreground/90">{agent.description}</p>
+      <p className="mt-5 text-[17px] leading-relaxed text-foreground/90">{guide?.summary || agent.description}</p>
 
       <InstallActions resolution={resolution} kind="agent" resourceId={agent.id} name={name} href={`/agents/${agent.id}`} />
 
@@ -42,6 +45,7 @@ export default function AgentDetail({ agent, resolution }: { agent: Agent; resol
         </div>
       )}
 
+      {guide && <ResourceGuide guide={guide} />}
       <InstallPanel resolution={resolution} kind="agent" resourceId={agent.id} />
 
       {(agent.tools?.length ?? 0) > 0 && (
@@ -51,7 +55,7 @@ export default function AgentDetail({ agent, resolution }: { agent: Agent; resol
         </>
       )}
 
-      {agent.content && (
+      {agent.content && !guide && (
         <>
           <SectionLabel>Agent definition</SectionLabel>
           <div className="rounded-xl border border-border bg-card/40 p-6 sm:p-8">

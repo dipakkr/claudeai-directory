@@ -18,7 +18,7 @@ export function OrganizationSchema() {
         name: "ClaudeAI Directory",
         url: SITE_URL,
         description:
-          "The community directory for Claude AI: skills, MCP servers, prompts, and more.",
+          "A community directory for Claude MCP servers, Claude Code skills, agents, prompts and setup guides.",
       }}
     />
   );
@@ -31,6 +31,8 @@ export function WebSiteSchema() {
         "@context": "https://schema.org",
         "@type": "WebSite",
         name: "ClaudeAI Directory",
+        description:
+          "Find Claude MCP servers, Claude Code skills, agents and prompts. Browse install commands and setup guides for building with Claude.",
         url: SITE_URL,
         potentialAction: {
           "@type": "SearchAction",
@@ -113,7 +115,6 @@ export function SoftwareApplicationSchema({
     description,
     url,
     applicationCategory: category || "DeveloperApplication",
-    operatingSystem: "Any",
   };
   if (author) data.author = { "@type": "Organization", name: author };
   if (ratingValue && ratingCount) {
@@ -123,12 +124,8 @@ export function SoftwareApplicationSchema({
       ratingCount,
     };
   }
-  // Required for SoftwareApplication
-  data.offers = {
-    "@type": "Offer",
-    price: "0",
-    priceCurrency: "USD",
-  };
+  // Omit offers unless a real, visible price is available. Rich-result
+  // eligibility does not justify assuming every resource is free.
   return <JsonLd data={data} />;
 }
 
@@ -211,7 +208,6 @@ export function DiscussionForumPostingSchema({
   url,
   datePublished,
   author,
-  views,
   comments,
 }: {
   title: string;
@@ -219,7 +215,6 @@ export function DiscussionForumPostingSchema({
   url: string;
   datePublished: string;
   author?: string;
-  views?: number;
   comments?: { body: string; author?: string; datePublished: string }[];
 }) {
   const interactionStatistic: Record<string, unknown>[] = [
@@ -229,13 +224,6 @@ export function DiscussionForumPostingSchema({
       userInteractionCount: comments?.length ?? 0,
     },
   ];
-  if (typeof views === "number" && views > 0) {
-    interactionStatistic.push({
-      "@type": "InteractionCounter",
-      interactionType: "https://schema.org/ViewAction",
-      userInteractionCount: views,
-    });
-  }
 
   return (
     <JsonLd

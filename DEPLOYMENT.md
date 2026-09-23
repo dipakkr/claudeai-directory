@@ -80,6 +80,17 @@ expires. That is normal — do not assume the write failed.
 
 ## Frontend environment
 
+Server-side reads prefer `API_INTERNAL_URL` (origin only, without `/api`).
+Docker Compose sets it to `http://host.docker.internal:8000`, reaching the API
+through the host gateway. Browser requests still use `NEXT_PUBLIC_API_URL`.
+If the API moves off this host, update the internal URL accordingly.
+
+Published skill detail pages are pre-rendered at build time and revalidated every
+five minutes. The skills list remains server-rendered per request to preserve
+query-specific filtering and noindex metadata, with cached API data. Rankings
+have a 1.5-second budget before falling back to the existing catalog ordering.
+An API outage must show a retry state, never an apparently empty skill catalog.
+
 `fe/.env.development.local` currently points local dev at the **production**
 API, so `npm run dev` reads and writes live data. `fe/.env.local` also holds the
 production URL. To develop against a local API, set

@@ -58,9 +58,9 @@ function pluginRepo(plugin: ManifestPlugin, marketplaceRepo: string): { repo: st
   return null;
 }
 
-async function fetchManifest(url: string): Promise<Manifest | null> {
+async function fetchManifest(url: string, timeoutMs: number): Promise<Manifest | null> {
   try {
-    const res = await fetch(url, { next: { revalidate: 600 } });
+    const res = await fetch(url, { next: { revalidate: 600 }, signal: AbortSignal.timeout(timeoutMs) });
     if (!res.ok) return null;
     return (await res.json()) as Manifest;
   } catch {
@@ -68,9 +68,9 @@ async function fetchManifest(url: string): Promise<Manifest | null> {
   }
 }
 
-export async function loadRegistryIndex(): Promise<RegistryIndex> {
+export async function loadRegistryIndex(timeoutMs = 10000): Promise<RegistryIndex> {
   const entries = new Map<string, MarketplaceMatch>();
-  const manifests = await Promise.all(MARKETPLACES.map((m) => fetchManifest(m.manifestUrl)));
+  const manifests = await Promise.all(MARKETPLACES.map((m) => fetchManifest(m.manifestUrl, timeoutMs)));
 
   manifests.forEach((manifest, i) => {
     const marketplace = MARKETPLACES[i];

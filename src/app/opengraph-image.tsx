@@ -3,7 +3,7 @@ import { readFileSync } from "fs";
 import { join } from "path";
 
 export const runtime = "nodejs";
-export const alt = "claudeai.directory: Skills, MCP Servers, Prompts & AI Jobs for Claude";
+export const alt = "ClaudeAI Directory: MCP servers, Claude Code skills and agents";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -47,7 +47,7 @@ export default function Image() {
             marginTop: 18,
           }}
         >
-          Skills, MCP servers, prompts &amp; a community forum for people building with Claude
+          MCP servers, Claude Code skills, agents and setup guides for people building with Claude
         </div>
         <div
           style={{

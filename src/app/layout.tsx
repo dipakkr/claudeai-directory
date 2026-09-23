@@ -5,6 +5,8 @@ import Providers from "@/components/providers";
 import Script from "next/script";
 import { OpenPanelComponent } from '@openpanel/nextjs';
 import { AnnouncementBanner } from "@/components/layout/AnnouncementBanner";
+import SideAdBillboards from "@/components/layout/SideAdBillboards";
+import { ExternalLinkTracker } from "@/components/tracking/ExternalLinkTracker";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -24,39 +26,43 @@ const geistMono = Geist_Mono({
 });
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.claudeai.directory";
+const DEFAULT_TITLE = "Claude AI Directory: MCP Servers, Skills & Agents";
+const DEFAULT_DESCRIPTION =
+  "Find Claude MCP servers, Claude Code skills, agents and prompts. Browse install commands, setup guides and community resources for building with Claude.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "Claude Directory: Skills, MCP Servers & Agents",
-    template: "%s | Claude Directory",
+    default: DEFAULT_TITLE,
+    template: "%s | Claude AI Directory",
   },
-  description:
-    "Discover community-built Claude Skills, MCP servers and Agents. Explore what is trending, install useful resources and publish what you build.",
+  description: DEFAULT_DESCRIPTION,
   keywords: [
+    "Claude AI directory",
+    "Claude directory",
     "Claude Skills",
+    "Claude Code skills",
     "Claude MCP servers",
     "MCP servers for Claude",
+    "MCP directory",
     "Claude Agents",
     "Claude Code Agents",
     "Claude Code",
   ],
-  authors: [{ name: "Claude Directory" }],
-  creator: "Claude Directory",
+  authors: [{ name: "ClaudeAI Directory" }],
+  creator: "ClaudeAI Directory",
   openGraph: {
     type: "website",
     locale: "en_US",
     url: SITE_URL,
-    siteName: "Claude Directory",
-    title: "Claude Directory: Skills, MCP Servers & Agents",
-    description:
-      "Discover community-built Claude Skills, MCP servers and Agents. Explore what is trending, install useful resources and publish what you build.",
+    siteName: "ClaudeAI Directory",
+    title: DEFAULT_TITLE,
+    description: DEFAULT_DESCRIPTION,
   },
   twitter: {
     card: "summary_large_image",
-    title: "Claude Directory: Skills, MCP Servers & Agents",
-    description:
-      "Discover community-built Claude Skills, MCP servers and Agents. Explore what is trending, install useful resources and publish what you build.",
+    title: DEFAULT_TITLE,
+    description: DEFAULT_DESCRIPTION,
   },
   robots: {
     index: true,
@@ -86,6 +92,8 @@ export default function RootLayout({
       >
         <Providers>
           <AnnouncementBanner />
+          <SideAdBillboards />
+          <ExternalLinkTracker />
           {children}
         </Providers>
 

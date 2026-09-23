@@ -8,6 +8,7 @@ import { ArrowUpRight } from "lucide-react";
 
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
+import FavoriteButton from "@/components/shared/FavoriteButton";
 import { Badge } from "@/components/ui/badge";
 import { BreadcrumbSchema } from "@/components/seo/JsonLd";
 import { serverFetch } from "@/lib/server/api";
@@ -108,6 +109,7 @@ export default async function ResourcePage({
                                     Editor pick
                                 </Badge>
                             )}
+                            <FavoriteButton targetType="resource" targetId={resource.id || slug} compact />
                         </div>
 
                         <h1 className="text-2xl font-semibold tracking-tight text-foreground mb-3">

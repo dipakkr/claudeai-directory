@@ -10,6 +10,7 @@ import { Search, ArrowUpRight } from "lucide-react";
 import Link from "next/link";
 import { useResources } from "@/hooks/use-resources";
 import { useDebounce } from "@/hooks/use-debounce";
+import { officialClaudeResources } from "@/data/officialClaudeResources";
 
 const categories = [
     { id: "all", label: "All" },
@@ -53,8 +54,8 @@ const Resources = () => {
                     <div className="container">
                         <h1 className="mb-2 text-lg font-medium text-foreground">Resources</h1>
                         <p className="mb-6 text-sm text-muted-foreground">
-                            Hand-picked articles, tools and guides for working with Claude, plus
-                            the best of what the community shares.
+                            Official Claude docs and hand-picked community resources for agents, subagents, skills,
+                            MCP servers and Claude Code workflows.
                         </p>
 
                         <div className="flex flex-wrap items-center gap-3">
@@ -80,6 +81,59 @@ const Resources = () => {
 
                 <section className="py-8">
                     <div className="container">
+                        <section className="mb-10">
+                            <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
+                                <div>
+                                    <p className="mb-1 text-xs font-medium uppercase tracking-[0.12em] text-primary">
+                                        Official Claude capability map
+                                    </p>
+                                    <h2 className="text-xl font-medium text-foreground">Start with Anthropic source docs</h2>
+                                </div>
+                                <a
+                                    href="https://code.claude.com/docs/llms.txt"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="inline-flex items-center gap-1.5 text-sm text-muted-foreground transition hover:text-foreground"
+                                >
+                                    Docs index
+                                    <ArrowUpRight className="h-3.5 w-3.5" />
+                                </a>
+                            </div>
+
+                            <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
+                                {officialClaudeResources.map((resource) => (
+                                    <a
+                                        key={resource.href}
+                                        href={resource.href}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="group rounded-lg border border-border bg-card/45 p-4 transition-colors hover:border-[var(--cad-line-hover)] hover:bg-card"
+                                    >
+                                        <div className="mb-3 flex items-center justify-between gap-3">
+                                            <span className="rounded-full bg-primary/10 px-2.5 py-1 text-[11px] font-medium text-primary">
+                                                {resource.label}
+                                            </span>
+                                            <ArrowUpRight className="h-4 w-4 shrink-0 text-muted-foreground transition group-hover:text-foreground" />
+                                        </div>
+                                        <h3 className="text-sm font-medium text-foreground">{resource.title}</h3>
+                                        <p className="mt-2 line-clamp-3 text-xs leading-relaxed text-muted-foreground">
+                                            {resource.description}
+                                        </p>
+                                        <div className="mt-3 flex flex-wrap gap-1.5">
+                                            {resource.tags.slice(0, 3).map((tag) => (
+                                                <span
+                                                    key={tag}
+                                                    className="rounded-full border border-border px-2 py-0.5 text-[10px] text-muted-foreground"
+                                                >
+                                                    {tag}
+                                                </span>
+                                            ))}
+                                        </div>
+                                    </a>
+                                ))}
+                            </div>
+                        </section>
+
                         <div className="mb-4 flex flex-wrap gap-2">
                             {categories.map((category) => (
                                 <button

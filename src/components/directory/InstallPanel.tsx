@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import { ChevronDown, ExternalLink, KeyRound, Terminal } from "lucide-react";
 import { CodeBlock, CopyButton, SectionLabel } from "@/components/directory/detail";
+import FavoriteButton, { favoriteTargetType } from "@/components/shared/FavoriteButton";
 import { track } from "@/lib/analytics";
 import { recordRecent } from "@/lib/recent";
 import type { InstallResolution, ResourceKind } from "@/lib/install";
@@ -113,6 +114,7 @@ export function InstallActions({
       {resolution.sourceUrl && (resolution.verified || resolution.sourceUrl !== resolution.setupUrl) && (
         <SourceLink href={resolution.sourceUrl} kind={kind} resourceId={resourceId} />
       )}
+      <FavoriteButton targetType={favoriteTargetType(kind)} targetId={resourceId} />
     </div>
   );
 }
@@ -203,8 +205,8 @@ export function InstallPanel({
             </Step>
           )}
           <p className="text-[13px] leading-relaxed text-muted-foreground">
-            On claude.ai or Claude Desktop, add it under Settings, Connectors, Add custom connector, using{" "}
-            <span className="break-all font-mono text-[12.5px] text-foreground">{resolution.url}</span>
+            These instructions target Claude Code. Check the publisher&apos;s documentation for support in other Claude
+            surfaces; a valid server URL alone does not establish compatibility.
           </p>
         </div>
       )}

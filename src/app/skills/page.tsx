@@ -1,14 +1,8 @@
 import type { Metadata } from "next";
-import { fetchApi } from "@/lib/api-server";
+import { loadSkills } from "@/lib/server/skills";
 import { loadOrders } from "@/lib/server/rankings";
 import { listingRobots } from "@/lib/seo";
-import type { Skill } from "@/types";
 import SkillsClient from "./SkillsClient";
-
-interface SkillsListResponse {
-  data: Skill[];
-  isCache: boolean;
-}
 
 type ListingParams = Promise<{ category?: string; search?: string }>;
 
@@ -24,8 +18,9 @@ export default async function SkillsPage({
 }) {
   const params = await searchParams;
   // Whole index; filtering happens client-side in the ranked list.
-  const [response, ranked] = await Promise.all([fetchApi<SkillsListResponse>("/skills?limit=100"), loadOrders("skill")]);
-  const initialData = response?.data ?? [];
+  // Rankings are optional; an unavailable ranking endpoint must not hold the
+  // whole catalog behind a 15-second loader. buildOrders supplies the fallback.
+  const [initialData, ranked] = await Promise.all([loadSkills(), loadOrders("skill", 1500)]);
 
   return (
     <SkillsClient

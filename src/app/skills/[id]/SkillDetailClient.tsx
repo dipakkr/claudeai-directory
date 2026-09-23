@@ -3,14 +3,14 @@
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeSlug from "rehype-slug";
-import { Download } from "lucide-react";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import ResourceReplies from "@/components/shared/ResourceReplies";
-import { DetailHeader, DetailPage, IconTile, SectionLabel, StatPill, TagList } from "@/components/directory/detail";
+import { DetailHeader, DetailPage, IconTile, SectionLabel, TagList } from "@/components/directory/detail";
 import { InstallActions, InstallPanel } from "@/components/directory/InstallPanel";
 import { useSkill } from "@/hooks/use-skills";
-import { compactNumber } from "@/lib/directory";
+import { ResourceGuide } from "@/components/directory/ResourceGuide";
+import { resourceGuides } from "@/data/resource-guides";
 import type { InstallResolution } from "@/lib/install";
 import type { Skill } from "@/types";
 
@@ -40,6 +40,7 @@ export default function SkillDetail({
 }
 
 function SkillBody({ skill, resolution }: { skill: Skill; resolution: InstallResolution }) {
+  const guide = resourceGuides[`skill/${skill.id}`];
   const chips = [skill.source === "official" ? "official" : skill.source, skill.category, ...skill.tags].filter(
     (chip, i, all): chip is string => Boolean(chip) && all.indexOf(chip) === i,
   );
@@ -48,20 +49,13 @@ function SkillBody({ skill, resolution }: { skill: Skill; resolution: InstallRes
     <>
       <DetailHeader
         icon={<IconTile name={skill.title || skill.name} />}
-        title={skill.title || skill.name}
-        stats={
-          skill.downloads > 0 ? (
-            <StatPill icon={<Download className="h-3.5 w-3.5" />} title={`${skill.downloads.toLocaleString()} installs`}>
-              {compactNumber(skill.downloads)}
-            </StatPill>
-          ) : undefined
-        }
+        title={guide?.name || skill.title || skill.name}
       />
       <p className="mt-2 font-mono text-[12px] uppercase tracking-wide text-muted-foreground">
         Skill{skill.source === "official" ? " · by Anthropic" : ""}
       </p>
 
-      <p className="mt-5 text-[17px] leading-relaxed text-foreground/90">{skill.description}</p>
+      <p className="mt-5 text-[17px] leading-relaxed text-foreground/90">{guide?.summary || skill.description}</p>
 
       <InstallActions
         resolution={resolution}
@@ -77,6 +71,8 @@ function SkillBody({ skill, resolution }: { skill: Skill; resolution: InstallRes
         </div>
       )}
 
+      {guide ? <ResourceGuide guide={guide} /> : null}
+
       <InstallPanel resolution={resolution} kind="skill" resourceId={skill.id} />
 
       {skill.triggers.length > 0 && (
@@ -86,7 +82,7 @@ function SkillBody({ skill, resolution }: { skill: Skill; resolution: InstallRes
         </>
       )}
 
-      {skill.content && (
+      {skill.content && !guide && (
         <>
           <SectionLabel>SKILL.md</SectionLabel>
           <div className="rounded-xl border border-border bg-card/40 p-6 sm:p-8">

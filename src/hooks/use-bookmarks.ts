@@ -10,6 +10,14 @@ export function useBookmarks() {
   });
 }
 
+export function useOptionalBookmarks(enabled: boolean) {
+  return useQuery({
+    queryKey: ["bookmarks"],
+    queryFn: () => api.get<Bookmark[]>("/bookmarks"),
+    enabled,
+  });
+}
+
 export function useAddBookmark() {
   const queryClient = useQueryClient();
   return useMutation({

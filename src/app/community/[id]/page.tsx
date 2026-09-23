@@ -57,7 +57,6 @@ export default async function CommunityThreadPage({
             url={`${SITE_URL}/community/${id}`}
             datePublished={thread.created_at}
             author={thread.author}
-            views={thread.views}
             comments={(replies ?? []).map((r) => ({
               body: r.body,
               author: r.author,

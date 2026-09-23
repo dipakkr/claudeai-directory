@@ -9,4 +9,10 @@ services:
         NEXT_PUBLIC_GOOGLE_CLIENT_ID: ${NEXT_PUBLIC_GOOGLE_CLIENT_ID}
     ports:
       - "3001:3001" # Expose for manual host Nginx
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      # The API uses host networking. Server rendering should use the local
+      # backend rather than leave the VPS through Cloudflare and return.
+      API_INTERNAL_URL: ${API_INTERNAL_URL:-http://host.docker.internal:8000}
     restart: unless-stopped
