@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Bookmark } from "lucide-react";
+import { Bookmark, FileText } from "lucide-react";
 
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
@@ -15,14 +15,15 @@ const TITLE = "Claude Feed: The Best Tweets About Claude and Claude Code";
 const DESCRIPTION =
   "The latest and most bookmarked tweets about Claude, Claude Code, MCP and Agents. Curated by the Claude Directory team, with picks from the community.";
 
-type Params = { sort?: string; source?: string; bookmarked?: string; page?: string };
+type Params = { sort?: string; source?: string; bookmarked?: string; articles?: string; page?: string };
 
 function normalize(params: Params) {
   const sort = params.sort === "top" ? "top" : "latest";
   const source = params.source === "curated" || params.source === "community" ? params.source : undefined;
   const bookmarked = params.bookmarked === "1";
+  const articles = params.articles === "1";
   const page = Math.max(1, Number.parseInt(params.page ?? "1", 10) || 1);
-  return { sort, source, bookmarked, page };
+  return { sort, source, bookmarked, articles, page };
 }
 
 export async function generateMetadata({
@@ -43,22 +44,24 @@ export async function generateMetadata({
 }
 
 export default async function FeedPage({ searchParams }: { searchParams: Promise<Params> }) {
-  const { sort, source, bookmarked, page } = normalize(await searchParams);
+  const { sort, source, bookmarked, articles, page } = normalize(await searchParams);
 
   const query = new URLSearchParams({ sort, skip: String((page - 1) * PAGE_SIZE), limit: String(PAGE_SIZE) });
   if (source) query.set("source", source);
   if (bookmarked) query.set("highly_bookmarked", "true");
+  if (articles) query.set("articles", "true");
   // No Next data cache: the API caches in redis and clears it on every write,
   // so a tweet someone just added shows up on refresh.
   const data = (await fetchApi<FeedTweetPage>(`/feed/tweets?${query}`, { revalidate: 0 })) ?? { items: [], total: 0 };
   const hasMore = page * PAGE_SIZE < data.total;
 
-  const href = (next: Partial<{ sort: string; source?: string; bookmarked: boolean; page: number }>) => {
-    const merged = { sort, source, bookmarked, page: 1, ...next };
+  const href = (next: Partial<{ sort: string; source?: string; bookmarked: boolean; articles: boolean; page: number }>) => {
+    const merged = { sort, source, bookmarked, articles, page: 1, ...next };
     const params = new URLSearchParams();
     if (merged.sort !== "latest") params.set("sort", merged.sort);
     if (merged.source) params.set("source", merged.source);
     if (merged.bookmarked) params.set("bookmarked", "1");
+    if (merged.articles) params.set("articles", "1");
     if (merged.page > 1) params.set("page", String(merged.page));
     const qs = params.toString();
     return qs ? `/feed?${qs}` : "/feed";
@@ -100,6 +103,14 @@ export default async function FeedPage({ searchParams }: { searchParams: Promise
                 Community
               </Link>
               <Link
+                href={href({ articles: !articles })}
+                className={`${pill(articles)} ${articles ? "" : "border border-border"}`}
+                aria-pressed={articles}
+              >
+                <FileText className="h-3.5 w-3.5" />
+                Articles
+              </Link>
+              <Link
                 href={href({ bookmarked: !bookmarked })}
                 className={`${pill(bookmarked)} ${bookmarked ? "" : "border border-border"}`}
                 aria-pressed={bookmarked}
@@ -124,7 +135,7 @@ export default async function FeedPage({ searchParams }: { searchParams: Promise
             <div className="mt-6 rounded-2xl border border-dashed border-border px-6 py-16 text-center">
               <p className="text-sm font-medium text-foreground">No tweets here yet.</p>
               <p className="mt-1 text-sm text-muted-foreground">
-                {source || bookmarked ? (
+                {source || bookmarked || articles ? (
                   <Link href="/feed" className="underline underline-offset-4 hover:text-foreground">
                     Clear filters
                   </Link>

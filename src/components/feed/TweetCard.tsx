@@ -1,4 +1,4 @@
-import { Bookmark, BadgeCheck, Heart, MessageCircle, Pin, Play } from "lucide-react";
+import { Bookmark, BadgeCheck, FileText, Heart, MessageCircle, Pin, Play } from "lucide-react";
 import type { ReactNode } from "react";
 
 import type { FeedTweet } from "@/types";
@@ -84,6 +84,7 @@ export function TweetCard({ tweet }: { tweet: FeedTweet }) {
   const { author } = tweet;
   const date = formatDate(tweet.tweeted_at);
   const media = tweet.media ?? [];
+  const article = tweet.article?.title ? tweet.article : null;
 
   return (
     <article id={`tweet-${tweet.id}`} className="scroll-mt-24 rounded-2xl border border-border bg-card p-5 transition-colors hover:border-[var(--cad-line-hover)]">
@@ -156,7 +157,40 @@ export function TweetCard({ tweet }: { tweet: FeedTweet }) {
         <p className="mt-3 whitespace-pre-line break-words text-[15px] leading-relaxed text-foreground">{renderText(tweet.text)}</p>
       )}
 
-      {media.length > 0 && (
+      {article && (
+        <a
+          href={tweet.url}
+          target="_blank"
+          rel={OUTBOUND_REL}
+          className="group mt-4 block overflow-hidden rounded-xl border border-border bg-background transition-colors hover:border-[var(--cad-line-hover)]"
+        >
+          {article.cover && (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={article.cover}
+              alt=""
+              loading="lazy"
+              referrerPolicy="no-referrer"
+              className="aspect-[5/2] w-full border-b border-border object-cover"
+            />
+          )}
+          <div className="p-4">
+            <span className="inline-flex items-center gap-1 font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground">
+              <FileText className="h-3 w-3" />
+              Article
+            </span>
+            <h3 className="mt-1.5 text-base font-semibold leading-snug text-foreground group-hover:text-primary">
+              {article.title}
+            </h3>
+            {article.preview && (
+              <p className="mt-1.5 line-clamp-3 whitespace-pre-line text-sm leading-6 text-muted-foreground">{article.preview}</p>
+            )}
+            <span className="mt-3 inline-block text-xs font-medium text-foreground">Read the full article on X</span>
+          </div>
+        </a>
+      )}
+
+      {!article && media.length > 0 && (
         <a
           href={tweet.url}
           target="_blank"

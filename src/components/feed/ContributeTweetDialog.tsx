@@ -17,7 +17,7 @@ import { useSubmitTweet } from "@/hooks/use-feed";
 import { ApiError } from "@/lib/api";
 import { useAuth } from "@/lib/auth";
 
-const TWEET_URL = /^https?:\/\/(www\.|mobile\.)?(x|twitter)\.com\/\w{1,15}\/status(es)?\/\d+/i;
+const TWEET_URL = /^https?:\/\/(www\.|mobile\.)?(x|twitter)\.com\/\w{1,15}\/(status(es)?|article)\/\d+/i;
 
 export function ContributeTweetDialog() {
   const router = useRouter();
@@ -48,7 +48,7 @@ export function ContributeTweetDialog() {
     }
     const value = url.trim();
     if (!TWEET_URL.test(value)) {
-      toast.error("Paste a tweet link from x.com, like x.com/user/status/123");
+      toast.error("Paste a tweet or article link from x.com, like x.com/user/status/123");
       return;
     }
     submit.mutate(value, {
@@ -80,12 +80,12 @@ export function ContributeTweetDialog() {
         <DialogHeader>
           <DialogTitle>Contribute a tweet</DialogTitle>
           <DialogDescription>
-            Share a useful tweet about Claude, Claude Code, MCP or Agents. It appears in the feed under Community.
+            Share a useful tweet or X article about Claude, Claude Code, MCP or Agents. It appears in the feed under Community.
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="mt-2 space-y-3">
           <label htmlFor="tweet-url" className="text-sm font-medium text-foreground">
-            Tweet link
+            Tweet or article link
           </label>
           <input
             id="tweet-url"

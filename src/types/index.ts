@@ -363,6 +363,7 @@ export interface FeedTweet {
     verified?: boolean;
   };
   media: { type: string; url: string }[];
+  article?: { title: string; preview: string; cover?: string | null } | null;
   likes: number;
   replies: number;
   tweeted_at?: string | null;
