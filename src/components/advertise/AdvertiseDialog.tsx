@@ -15,11 +15,7 @@ import {
 import { useAuth } from "@/lib/auth";
 
 // Facts about the placement only: no traffic numbers we can't back up.
-const INCLUDED = [
-  "Your logo, name and one line in the sidebar across the site on large screens",
-  "Grouped with tools in your category, so the right people notice it",
-  "A tracked link and a monthly click report",
-];
+const INCLUDED = ["Sidebar card", "Tracked link", "Monthly click report"];
 
 const TAGLINE_MAX = 60;
 
@@ -33,18 +29,12 @@ function normalizeUrl(value: string) {
 }
 
 function Steps({ step }: { step: 0 | 1 }) {
-  const labels = ["Category", "Your card"];
   return (
-    <ol className="flex items-center gap-3 pr-8 text-xs" aria-label={`Step ${step + 1} of 2`}>
-      {labels.map((label, i) => (
-        <li key={label} className="flex flex-1 flex-col gap-1.5">
-          <span className={`h-1 rounded-full ${i <= step ? "bg-primary" : "bg-border"}`} />
-          <span className={i === step ? "font-medium text-foreground" : "text-muted-foreground"}>
-            {i + 1}. {label}
-          </span>
-        </li>
+    <div className="flex items-center gap-1.5 pr-8" aria-label={`Step ${step + 1} of 2`}>
+      {[0, 1].map((i) => (
+        <span key={i} className={`h-1 flex-1 rounded-full ${i <= step ? "bg-primary" : "bg-border"}`} />
       ))}
-    </ol>
+    </div>
   );
 }
 
@@ -187,25 +177,21 @@ export default function AdvertiseDialog() {
         {step === 0 ? (
           <>
             <DialogHeader className="mt-1 text-left">
-              <DialogTitle className="text-lg">Put your product where Claude builders look</DialogTitle>
-              <DialogDescription className="text-[13px] leading-5">
-                People come here to pick the Skills, MCP servers and Agents they will use next. Sponsor a category and
-                your product is part of that choice.
+              <DialogTitle className="text-lg">Sponsor a category</DialogTitle>
+              <DialogDescription className="text-[13px]">
+                Your product in the sidebar, next to tools like it.
               </DialogDescription>
             </DialogHeader>
 
-            <div className="rounded-xl border border-primary/40 bg-primary/[0.06] px-3.5 py-3">
-              <div className="flex items-baseline justify-between gap-3">
-                <p className="text-[13px] font-semibold text-foreground">Category sponsor</p>
-                <p>
-                  <span className="text-lg font-semibold text-foreground">${SPONSOR_MONTHLY_PRICE}</span>
-                  <span className="ml-1 text-xs text-muted-foreground">/ month</span>
-                </p>
-              </div>
-              <ul className="mt-2 space-y-1">
+            <div className="flex items-center justify-between gap-3 rounded-xl border border-primary/40 bg-primary/[0.06] px-3.5 py-2.5">
+              <p>
+                <span className="text-lg font-semibold text-foreground">${SPONSOR_MONTHLY_PRICE}</span>
+                <span className="ml-1 text-xs text-muted-foreground">/ month</span>
+              </p>
+              <ul className="flex flex-wrap justify-end gap-x-3 gap-y-1">
                 {INCLUDED.map((item) => (
-                  <li key={item} className="flex gap-2 text-xs leading-5 text-muted-foreground">
-                    <Check className="mt-0.5 h-3.5 w-3.5 shrink-0 text-primary" aria-hidden="true" />
+                  <li key={item} className="flex items-center gap-1 text-xs text-muted-foreground">
+                    <Check className="h-3 w-3 text-primary" aria-hidden="true" />
                     {item}
                   </li>
                 ))}
@@ -213,7 +199,7 @@ export default function AdvertiseDialog() {
             </div>
 
             <div>
-              <p className="text-[13px] font-medium text-foreground">Which category fits your product?</p>
+              <p className="text-[13px] font-medium text-foreground">Pick a category</p>
               <div role="radiogroup" aria-label="Category" className="mt-2 grid grid-cols-2 gap-1.5">
                 {SPONSOR_CATEGORIES.map((c) => {
                   const active = c.title === category;
@@ -226,22 +212,18 @@ export default function AdvertiseDialog() {
                       aria-checked={active}
                       disabled={soldOut}
                       onClick={() => setCategory(c.title)}
-                      className={`flex items-center justify-between gap-2 rounded-lg border px-2.5 py-2 text-left text-[13px] transition-colors disabled:opacity-40 ${
+                      title={c.neighbors.length ? `Next to ${c.neighbors.join(" and ")}` : undefined}
+                      className={`flex items-center justify-between gap-2 rounded-lg border px-3 py-2 text-left text-[13px] transition-colors disabled:opacity-40 ${
                         active ? "border-foreground bg-foreground text-background" : "border-border bg-background text-foreground hover:border-[var(--cad-line-hover)]"
                       }`}
                     >
-                      <span className="min-w-0">
-                        <span className="block truncate font-medium">{c.label}</span>
-                        {c.neighbors.length > 0 && (
-                          <span className={`block truncate text-[10px] ${active ? "text-background/65" : "text-muted-foreground"}`}>
-                            Next to {c.neighbors.join(" and ")}
-                          </span>
-                        )}
-                      </span>
-                      <span className={`shrink-0 self-start text-[10px] ${active ? "text-background/70" : "text-muted-foreground"}`}>
-                        {/* Real availability only: no invented scarcity. */}
-                        {soldOut ? "Full" : c.openSlots === 1 ? "1 left" : "Open"}
-                      </span>
+                      <span className="truncate font-medium">{c.label}</span>
+                      {/* Real availability only: no invented scarcity. */}
+                      {(soldOut || c.openSlots === 1) && (
+                        <span className={`shrink-0 text-[10px] ${active ? "text-background/70" : "text-muted-foreground"}`}>
+                          {soldOut ? "Full" : "1 left"}
+                        </span>
+                      )}
                     </button>
                   );
                 })}
@@ -260,10 +242,8 @@ export default function AdvertiseDialog() {
         ) : (
           <form onSubmit={submit} className="space-y-4">
             <DialogHeader className="mt-1 text-left">
-              <DialogTitle className="text-lg">Set up your sponsor card</DialogTitle>
-              <DialogDescription className="text-[13px] leading-5">
-                This is what builders see in the sidebar. Watch the preview as you type.
-              </DialogDescription>
+              <DialogTitle className="text-lg">Your sponsor card</DialogTitle>
+              <DialogDescription className="text-[13px]">What builders see in the sidebar.</DialogDescription>
             </DialogHeader>
 
             <div className="flex items-center justify-between gap-3 rounded-lg border border-border bg-background px-3 py-2 text-[13px]">
@@ -292,7 +272,7 @@ export default function AdvertiseDialog() {
                     className={inputClass}
                   />
                 </Field>
-                <Field label="Email for the receipt">
+                <Field label="Email">
                   <input type="email" value={emailValue} onChange={(e) => setEmail(e.target.value)} placeholder="you@company.com" className={inputClass} />
                 </Field>
               </div>
@@ -328,8 +308,8 @@ export default function AdvertiseDialog() {
             </div>
             <p className="text-center text-[11px] text-muted-foreground">
               {SPONSOR_CHECKOUT_URL
-                ? `Secure checkout. Billed monthly for the ${selected?.label ?? "selected"} category.`
-                : `We reply by email to confirm your slot and start date. Questions: ${SPONSOR_EMAIL}`}
+                ? "Secure checkout. Billed monthly."
+                : `We confirm your slot and start date by email.`}
             </p>
           </form>
         )}
