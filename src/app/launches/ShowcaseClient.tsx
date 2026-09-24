@@ -196,7 +196,7 @@ function SponsoredLaunchSlot() {
   return (
     <button
       type="button"
-      onClick={() => openAdvertiseDialog()}
+      onClick={() => openAdvertiseDialog(undefined, "launch")}
       className="block w-full text-left border-b border-border bg-[linear-gradient(100deg,rgba(251,191,36,0.08),rgba(255,255,255,0.02),rgba(168,85,247,0.08))] transition-colors hover:bg-card/55"
     >
       <div className="grid gap-5 px-4 py-8 md:grid-cols-[72px_minmax(0,1fr)_104px] md:items-center md:px-6">
@@ -211,7 +211,7 @@ function SponsoredLaunchSlot() {
           </p>
           <p className="mt-4 inline-flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
             <span className="h-px w-8 bg-foreground" />
-            Sponsor a launch slot
+            Sponsor a launch slot · $99/month
           </p>
         </div>
         <div className="flex h-20 w-20 items-center justify-center rounded-2xl border border-border bg-background shadow-sm md:justify-self-end">

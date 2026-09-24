@@ -11,7 +11,9 @@ import {
   SPONSOR_CATEGORIES,
   SPONSOR_CHECKOUT_URL,
   SPONSOR_EMAIL,
+  SPONSOR_LAUNCH_PRICE,
   SPONSOR_MONTHLY_PRICE,
+  type SponsorSlot,
 } from "@/lib/advertise";
 import { api, ApiError } from "@/lib/api";
 import { useAuth } from "@/lib/auth";
@@ -54,6 +56,50 @@ function ProductIcon({ website, product, className }: { website: string; product
         />
       )}
     </span>
+  );
+}
+
+/** The launches list with the sponsored row lit up; in step 2 it shows their card. */
+function LaunchListMap({ card }: { card?: { product: string; website: string; tagline: string } }) {
+  const row = (i: number) => (
+    <div key={i} className="flex items-center gap-2 rounded-[3px] border border-white/10 bg-white/[0.03] px-2 py-1.5">
+      <span className="h-4 w-4 rounded-sm bg-white/10" />
+      <span className="h-1.5 flex-1 rounded-sm bg-white/10" />
+      <span className="h-3 w-3 rounded-sm bg-white/[0.07]" />
+    </div>
+  );
+  return (
+    <div className="flex h-full flex-col justify-center">
+      <div className="overflow-hidden rounded-md border border-white/10 bg-[#0b0a09] pb-2">
+        <div className="flex h-5 items-center gap-1 border-b border-white/10 px-2">
+          {[0, 1, 2].map((i) => (
+            <span key={i} className="h-1.5 w-1.5 rounded-full bg-white/15" />
+          ))}
+        </div>
+        <div className="space-y-1.5 p-2">
+          <div className="h-2 w-1/2 rounded-sm bg-white/20" />
+          {[0, 1, 2].map(row)}
+          <div className="flex items-center gap-2 rounded-[3px] border border-primary/70 bg-[#221f1b] px-2 py-2 shadow-[0_0_0_3px_rgba(217,119,87,0.18)]">
+            {card ? (
+              <>
+                <ProductIcon website={card.website} product={card.product} className="h-5 w-5 text-[9px]" />
+                <span className="min-w-0 flex-1">
+                  <span className="block truncate text-[8px] font-semibold text-white">{card.product.trim() || "Your product"}</span>
+                  <span className="block truncate text-[7px] text-white/60">{card.tagline.trim() || "Your one line"}</span>
+                </span>
+                <span className="text-[6px] uppercase tracking-wider text-white/40">Sponsored</span>
+              </>
+            ) : (
+              <span className="w-full text-center text-[8px] font-medium text-primary">You</span>
+            )}
+          </div>
+          {[3, 4].map(row)}
+        </div>
+      </div>
+      <p className="mt-2 text-[11px] leading-4 text-white/55">
+        Your row sits inside the <span className="text-white/85">launches list</span>, where builders look for new tools to try.
+      </p>
+    </div>
   );
 }
 
@@ -148,6 +194,7 @@ export default function AdvertiseDialog() {
   const { user } = useAuth();
   const [open, setOpen] = useState(false);
   const [step, setStep] = useState<0 | 1>(0);
+  const [slot, setSlot] = useState<SponsorSlot>("sidebar");
   const [category, setCategory] = useState(SPONSOR_CATEGORIES[0]?.title ?? "");
   const [product, setProduct] = useState("");
   const [website, setWebsite] = useState("");
@@ -164,14 +211,21 @@ export default function AdvertiseDialog() {
     retry: false,
   });
   const serverCheckout = !!checkout?.enabled;
-  const canPay = serverCheckout || !!SPONSOR_CHECKOUT_URL;
+  const isLaunch = slot === "launch";
+  const price = isLaunch ? SPONSOR_LAUNCH_PRICE : SPONSOR_MONTHLY_PRICE;
+  // The payment-link fallback is the $499 sidebar product only.
+  const canPay = serverCheckout || (!isLaunch && !!SPONSOR_CHECKOUT_URL);
 
   // Open from sidebar buttons (custom event) or from old /advertise links (?advertise=1).
   useEffect(() => {
     const onOpen = (event: Event) => {
-      const picked = (event as CustomEvent<{ category?: string }>).detail?.category;
+      const detail = (event as CustomEvent<{ category?: string; slot?: SponsorSlot }>).detail;
+      const picked = detail?.category;
       if (picked && SPONSOR_CATEGORIES.some((c) => c.title === picked)) setCategory(picked);
-      setStep(0);
+      const nextSlot = detail?.slot === "launch" ? "launch" : "sidebar";
+      setSlot(nextSlot);
+      // The launch row has no category, so it starts at the details step.
+      setStep(nextSlot === "launch" ? 1 : 0);
       setOpen(true);
     };
     window.addEventListener(OPEN_ADVERTISE_EVENT, onOpen);
@@ -223,7 +277,8 @@ export default function AdvertiseDialog() {
       setPaying(true);
       api
         .post<{ url: string }>("/sponsors/checkout", {
-          category,
+          slot,
+          category: isLaunch ? undefined : category,
           product: product.trim(),
           website: site,
           tagline: tagline.trim(),
@@ -239,7 +294,7 @@ export default function AdvertiseDialog() {
       return;
     }
 
-    if (SPONSOR_CHECKOUT_URL) {
+    if (!isLaunch && SPONSOR_CHECKOUT_URL) {
       window.open(checkoutUrl({ email: emailValue.trim(), category, product: product.trim(), website: site, tagline: tagline.trim() }), "_blank", "noopener");
       return;
     }
@@ -248,15 +303,17 @@ export default function AdvertiseDialog() {
     const body = [
       "Hi,",
       "",
-      `I'd like the monthly sponsor slot ($${SPONSOR_MONTHLY_PRICE}/month).`,
+      isLaunch
+        ? `I'd like the sponsored launch row ($${SPONSOR_LAUNCH_PRICE}/month).`
+        : `I'd like the monthly sponsor slot ($${SPONSOR_MONTHLY_PRICE}/month).`,
       "",
-      `Category: ${category}`,
+      `Placement: ${isLaunch ? "Launches list" : category}`,
       `Product: ${product.trim()}`,
       `Website: ${site}`,
       `One line: ${tagline.trim() || "(not set)"}`,
       `Email: ${emailValue.trim()}`,
     ].join("\n");
-    window.location.href = `mailto:${SPONSOR_EMAIL}?subject=${encodeURIComponent(`Sponsor slot: ${label || category}`)}&body=${encodeURIComponent(body)}`;
+    window.location.href = `mailto:${SPONSOR_EMAIL}?subject=${encodeURIComponent(isLaunch ? "Sponsored launch row" : `Sponsor slot: ${label || category}`)}&body=${encodeURIComponent(body)}`;
   };
 
   const primaryButton =
@@ -268,14 +325,18 @@ export default function AdvertiseDialog() {
         <div className="grid sm:grid-cols-[240px_minmax(0,1fr)]">
           {/* Left: where you appear */}
           <div className="hidden border-r border-border bg-[#141311] p-4 sm:block">
-            <SiteMap category={label} card={step === 1 ? { product, website, tagline } : undefined} />
+            {isLaunch ? (
+              <LaunchListMap card={step === 1 ? { product, website, tagline } : undefined} />
+            ) : (
+              <SiteMap category={label} card={step === 1 ? { product, website, tagline } : undefined} />
+            )}
           </div>
 
           {/* Right: the decision */}
           <div className="p-5 sm:p-6">
             <div className="flex items-center justify-between pr-6">
               <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground">Sponsorship</p>
-              <p className="font-mono text-[10px] text-muted-foreground">{step + 1} / 2</p>
+              {!isLaunch && <p className="font-mono text-[10px] text-muted-foreground">{step + 1} / 2</p>}
             </div>
 
             {step === 0 ? (
@@ -331,13 +392,25 @@ export default function AdvertiseDialog() {
               </>
             ) : (
               <form onSubmit={submit}>
-                <DialogTitle className="mt-3 text-2xl font-normal leading-tight">Your card</DialogTitle>
-                <DialogDescription className="mt-1.5 text-sm text-muted-foreground">
-                  {label} · ${SPONSOR_MONTHLY_PRICE}/month ·{" "}
-                  <button type="button" onClick={() => setStep(0)} className="text-foreground underline underline-offset-4 hover:text-primary">
-                    change
-                  </button>
-                </DialogDescription>
+                {isLaunch ? (
+                  <>
+                    <DialogTitle className="mt-3 text-2xl font-normal leading-tight">Sponsor the launches list</DialogTitle>
+                    <DialogDescription className="mt-1.5 text-sm leading-6 text-muted-foreground">
+                      <span className="text-foreground">${SPONSOR_LAUNCH_PRICE} a month.</span> A sponsored row where builders
+                      browse new tools, with a tracked link and a monthly click report.
+                    </DialogDescription>
+                  </>
+                ) : (
+                  <>
+                    <DialogTitle className="mt-3 text-2xl font-normal leading-tight">Your card</DialogTitle>
+                    <DialogDescription className="mt-1.5 text-sm text-muted-foreground">
+                      {label} · ${SPONSOR_MONTHLY_PRICE}/month ·{" "}
+                      <button type="button" onClick={() => setStep(0)} className="text-foreground underline underline-offset-4 hover:text-primary">
+                        change
+                      </button>
+                    </DialogDescription>
+                  </>
+                )}
 
                 <div className="mt-5 space-y-3">
                   <div className="grid gap-3 sm:grid-cols-2">
@@ -377,12 +450,16 @@ export default function AdvertiseDialog() {
                 </div>
 
                 <div className="mt-6 flex items-center justify-between gap-3">
-                  <button type="button" onClick={() => setStep(0)} className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground">
-                    <ArrowLeft className="h-3.5 w-3.5" aria-hidden="true" />
-                    Back
-                  </button>
+                  {isLaunch ? (
+                    <span />
+                  ) : (
+                    <button type="button" onClick={() => setStep(0)} className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground">
+                      <ArrowLeft className="h-3.5 w-3.5" aria-hidden="true" />
+                      Back
+                    </button>
+                  )}
                   <button type="submit" disabled={!ready || paying} className={primaryButton}>
-                    {paying ? "Opening checkout..." : canPay ? `Pay $${SPONSOR_MONTHLY_PRICE}` : "Request this slot"}
+                    {paying ? "Opening checkout..." : canPay ? `Pay $${price}` : "Request this slot"}
                     <ArrowRight className="h-4 w-4" aria-hidden="true" />
                   </button>
                 </div>

@@ -3,6 +3,12 @@ import { sideAdCollections } from "@/data/sideAdPlacements";
 /** Monthly price for one sidebar sponsor slot, in USD. */
 export const SPONSOR_MONTHLY_PRICE = 499;
 
+/** Monthly price for the sponsored row in the launches list, in USD. */
+export const SPONSOR_LAUNCH_PRICE = 99;
+
+/** "sidebar": a card in one category rail. "launch": the row in the launches list. */
+export type SponsorSlot = "sidebar" | "launch";
+
 /**
  * Hosted checkout for the sponsor subscription: a Stripe Payment Link
  * (https://buy.stripe.com/...) or a Lemon Squeezy checkout URL. Until it is
@@ -32,6 +38,6 @@ export const SPONSOR_CATEGORIES: SponsorCategory[] = sideAdCollections
 export const OPEN_ADVERTISE_EVENT = "cad:open-advertise";
 
 /** Open the sponsor dialog from anywhere, optionally with a category picked. */
-export function openAdvertiseDialog(category?: string) {
-  window.dispatchEvent(new CustomEvent(OPEN_ADVERTISE_EVENT, { detail: { category } }));
+export function openAdvertiseDialog(category?: string, slot: SponsorSlot = "sidebar") {
+  window.dispatchEvent(new CustomEvent(OPEN_ADVERTISE_EVENT, { detail: { category, slot } }));
 }
