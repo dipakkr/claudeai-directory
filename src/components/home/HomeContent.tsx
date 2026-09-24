@@ -3,7 +3,6 @@ import type { ReactNode } from "react";
 import { ArrowRight, Bot, Server, Sparkles } from "lucide-react";
 import DirectoryList from "@/components/directory/DirectoryList";
 import RecentlyViewed from "@/components/directory/RecentlyViewed";
-import CoursesSection from "@/components/home/CoursesSection";
 import { compactNumber, type DirectoryItem, type SortKey } from "@/lib/directory";
 import type { PublicProfile } from "@/types";
 
@@ -120,8 +119,6 @@ export default function HomeContent({ items, orders, launches, community, feed, 
       <section className="mx-auto max-w-[840px] px-4 md:px-8">
         <DirectoryList items={items} orders={orders} showTypeFilter hideSearch feedId="trending" pageSize={8} />
       </section>
-
-      <CoursesSection />
 
       {launches}
 
