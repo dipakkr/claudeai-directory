@@ -35,7 +35,7 @@ export function useUpvoteFeedItem() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (data: { type: string; id: string }) =>
-      api.post<{ ok: boolean }>("/feed/upvote", data),
+      api.post<{ ok: boolean; voted?: boolean; upvotes?: number }>("/feed/upvote", data),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["feed"] }),
   });
 }
@@ -45,5 +45,15 @@ export function useSubmitTweet() {
   return useMutation({
     mutationFn: (url: string) => api.post<{ tweet: FeedTweet; created: boolean }>("/feed/tweets", { url }),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["feed"] }),
+  });
+}
+
+/** Tweet ids the signed-in user has upvoted. One shared request per page. */
+export function useMyTweetVotes(enabled: boolean) {
+  return useQuery({
+    queryKey: ["feed", "tweet-votes"],
+    queryFn: () => api.get<string[]>("/feed/tweets/my-votes"),
+    enabled,
+    staleTime: 60_000,
   });
 }

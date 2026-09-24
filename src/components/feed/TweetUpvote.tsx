@@ -5,15 +5,19 @@ import { useRouter } from "next/navigation";
 import { ArrowUp } from "lucide-react";
 import { toast } from "sonner";
 
-import { useUpvoteFeedItem } from "@/hooks/use-feed";
+import { useMyTweetVotes, useUpvoteFeedItem } from "@/hooks/use-feed";
 import { useAuth } from "@/lib/auth";
 
 export function TweetUpvote({ id, initialCount }: { id: string; initialCount: number }) {
   const router = useRouter();
   const { isAuthenticated } = useAuth();
   const upvote = useUpvoteFeedItem();
-  const [count, setCount] = useState(initialCount);
-  const [voted, setVoted] = useState(false);
+  const { data: myVotes } = useMyTweetVotes(isAuthenticated);
+  // Server-confirmed state after a click; until then, derive it from my-votes.
+  const [confirmed, setConfirmed] = useState<{ voted: boolean; count: number } | null>(null);
+
+  const voted = confirmed?.voted ?? Boolean(myVotes?.includes(id));
+  const count = confirmed?.count ?? initialCount;
 
   const handleClick = () => {
     if (!isAuthenticated) {
@@ -22,18 +26,14 @@ export function TweetUpvote({ id, initialCount }: { id: string; initialCount: nu
       });
       return;
     }
-    // The endpoint toggles, so flip locally and roll back on failure.
-    const next = !voted;
-    setVoted(next);
-    setCount((value) => value + (next ? 1 : -1));
     upvote.mutate(
       { type: "tweet", id },
       {
-        onError: () => {
-          setVoted(!next);
-          setCount((value) => value + (next ? -1 : 1));
-          toast.error("Could not save your upvote");
+        onSuccess: (res) => {
+          const nextVoted = res.voted ?? !voted;
+          setConfirmed({ voted: nextVoted, count: res.upvotes ?? count + (nextVoted ? 1 : -1) });
         },
+        onError: () => toast.error("Could not save your upvote"),
       },
     );
   };
@@ -45,7 +45,7 @@ export function TweetUpvote({ id, initialCount }: { id: string; initialCount: nu
       disabled={upvote.isPending}
       aria-pressed={voted}
       aria-label="Upvote this tweet"
-      className={`inline-flex h-8 items-center gap-1.5 rounded-full border px-3 text-xs font-medium transition-colors ${
+      className={`inline-flex h-8 items-center gap-1.5 rounded-full border px-3 text-xs font-medium transition-colors disabled:opacity-70 ${
         voted
           ? "border-primary bg-primary/10 text-primary"
           : "border-border bg-card text-muted-foreground hover:border-primary/50 hover:text-foreground"
