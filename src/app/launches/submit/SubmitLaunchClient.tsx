@@ -100,8 +100,32 @@ function listingUrl(app: ShowcaseProject) {
   return `${SITE_URL}/launches/${app.id}`;
 }
 
-function badgeSnippet(app: ShowcaseProject) {
-  return `<a href="${listingUrl(app)}" target="_blank" rel="noopener"><img src="${SITE_URL}/logo-mark.svg" alt="" width="20" height="20" /> Launched on Claude AI Directory</a>`;
+type BadgeOption = { id: string; label: string; style: "launched" | "upvotes" | "minimal"; theme: "light" | "dark"; width: number; height: number };
+
+// Every option is an image wrapped in a link to the listing, which is what
+// badge verification looks for, so any of them verifies.
+const BADGE_OPTIONS: BadgeOption[] = [
+  { id: "launched-light", label: "Launched", style: "launched", theme: "light", width: 220, height: 54 },
+  { id: "launched-dark", label: "Launched, dark", style: "launched", theme: "dark", width: 220, height: 54 },
+  { id: "upvotes-light", label: "Live upvotes", style: "upvotes", theme: "light", width: 262, height: 54 },
+  { id: "upvotes-dark", label: "Live upvotes, dark", style: "upvotes", theme: "dark", width: 262, height: 54 },
+  { id: "minimal-light", label: "Compact", style: "minimal", theme: "light", width: 196, height: 28 },
+  { id: "minimal-dark", label: "Compact, dark", style: "minimal", theme: "dark", width: 196, height: 28 },
+];
+
+function badgePath(app: ShowcaseProject, option: BadgeOption) {
+  const params = new URLSearchParams();
+  if (option.style !== "launched") params.set("style", option.style);
+  if (option.theme !== "light") params.set("theme", option.theme);
+  const qs = params.toString();
+  return `/badge/${app.id}${qs ? `?${qs}` : ""}`;
+}
+
+function badgeSnippet(app: ShowcaseProject, option: BadgeOption, format: "html" | "markdown") {
+  const img = `${SITE_URL}${badgePath(app, option)}`;
+  const alt = `${app.title} - Launched on Claude AI Directory`;
+  if (format === "markdown") return `[![${alt}](${img})](${listingUrl(app)})`;
+  return `<a href="${listingUrl(app)}" target="_blank" rel="noopener"><img src="${img}" alt="${alt.replace(/"/g, "&quot;")}" width="${option.width}" height="${option.height}" /></a>`;
 }
 
 function errorDetail(error: unknown, fallback: string) {
@@ -326,7 +350,9 @@ function BadgeStep({
   const verify = useVerifyShowcaseBadge();
   const [badgePage, setBadgePage] = useState(app.badge_page_url || app.app_url || "");
   const [copied, setCopied] = useState(false);
-  const snippet = badgeSnippet(app);
+  const [option, setOption] = useState<BadgeOption>(BADGE_OPTIONS[0]);
+  const [format, setFormat] = useState<"html" | "markdown">("html");
+  const snippet = badgeSnippet(app, option, format);
 
   const copy = async () => {
     await navigator.clipboard.writeText(snippet);
@@ -364,9 +390,48 @@ function BadgeStep({
 
       <ol className="mt-6 space-y-6">
         <li>
-          <p className="text-sm font-medium text-foreground">1. Copy the badge code</p>
+          <p className="text-sm font-medium text-foreground">1. Pick a badge and copy the code</p>
+          <div role="radiogroup" aria-label="Badge style" className="mt-3 grid gap-2 sm:grid-cols-2">
+            {BADGE_OPTIONS.map((item) => {
+              const active = item.id === option.id;
+              return (
+                <button
+                  key={item.id}
+                  type="button"
+                  role="radio"
+                  aria-checked={active}
+                  onClick={() => setOption(item)}
+                  className={`flex flex-col items-start gap-2.5 rounded-xl border p-3 text-left transition-colors ${
+                    active ? "border-primary ring-1 ring-primary/40" : "border-border hover:border-[var(--cad-line-hover)]"
+                  } ${item.theme === "dark" ? "bg-[#2a2622]" : "bg-[#f6f3ee]"}`}
+                >
+                  <span className="flex h-[54px] items-center">
+                    {/* eslint-disable-next-line @next/next/no-img-element -- live SVG badge preview */}
+                    <img src={badgePath(app, item)} alt="" width={item.width} height={item.height} className="max-w-full" />
+                  </span>
+                  <span className={`text-xs font-medium ${item.theme === "dark" ? "text-[#e9e2d8]" : "text-[#4a4239]"}`}>
+                    {active && "✓ "}
+                    {item.label}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+          <div className="mt-4 flex items-center gap-4 text-xs">
+            {(["html", "markdown"] as const).map((item) => (
+              <button
+                key={item}
+                type="button"
+                onClick={() => setFormat(item)}
+                aria-pressed={format === item}
+                className={format === item ? "font-medium text-foreground underline underline-offset-4" : "text-muted-foreground hover:text-foreground"}
+              >
+                {item === "html" ? "HTML (website)" : "Markdown (GitHub README)"}
+              </button>
+            ))}
+          </div>
           <div className="relative mt-2">
-            <pre className="overflow-x-auto rounded-lg border border-border bg-background p-3.5 pr-24 text-xs leading-5 text-muted-foreground">
+            <pre className="whitespace-pre-wrap break-all rounded-lg border border-border bg-background p-3.5 pr-24 text-xs leading-5 text-muted-foreground">
               {snippet}
             </pre>
             <button
@@ -380,7 +445,7 @@ function BadgeStep({
           </div>
         </li>
         <li>
-          <Field label="2. Where did you add it?" htmlFor="badge_page" hint="Usually your homepage">
+          <Field label="2. Where did you add it?" htmlFor="badge_page" hint="Your homepage or GitHub README">
             <input
               id="badge_page"
               type="url"
