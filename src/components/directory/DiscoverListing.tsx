@@ -295,13 +295,13 @@ function CollectionCarousel({ collections, noun, onExplore }: { collections: Col
   const go = (d: number) => setIndex((i) => (i + d + collections.length) % collections.length);
   return (
     <div className="mt-10">
-      <div className={cn("relative overflow-hidden rounded-[11px] border border-border bg-gradient-to-b px-6 pb-10 pt-10 text-center", BANDS[index % BANDS.length])}>
+      <div className={cn("relative overflow-hidden rounded-[11px] border border-border bg-gradient-to-b px-6 pb-7 pt-7 text-center", BANDS[index % BANDS.length])}>
         <p className="text-[12px] uppercase tracking-[0.08em] text-foreground/60">Collection · {current.count} {noun}</p>
-        <h2 className="mt-2 font-sans text-[22px] font-normal text-foreground">
+        <h2 className="mt-1.5 font-sans text-[20px] font-normal text-foreground">
           {noun.charAt(0).toUpperCase() + noun.slice(1)} for {categoryLabel(current.category).toLowerCase()}
         </h2>
-        <p className="mt-1.5 text-[14px] text-foreground/75">The most-used {noun} in {categoryLabel(current.category).toLowerCase()}.</p>
-        <div className="mx-auto mt-7 flex max-w-[640px] flex-wrap items-end justify-center gap-3.5">
+        <p className="mt-1 text-[14px] text-foreground/75">The most-used {noun} in {categoryLabel(current.category).toLowerCase()}.</p>
+        <div className="mx-auto mt-5 flex max-w-[640px] flex-wrap items-end justify-center gap-3">
           {current.items.map((item, i) => (
             <Link
               key={item.key}
@@ -309,17 +309,17 @@ function CollectionCarousel({ collections, noun, onExplore }: { collections: Col
               title={item.name}
               className={cn(
                 "rounded-xl shadow-lg shadow-black/30 transition-transform hover:-translate-y-0.5",
-                i % 2 === 1 && "translate-y-3",
+                i % 2 === 1 && "translate-y-2",
               )}
             >
-              <Tile item={item} size={i % 3 === 1 ? 72 : 56} />
+              <Tile item={item} size={i % 3 === 1 ? 60 : 48} />
             </Link>
           ))}
         </div>
         <button
           type="button"
           onClick={() => onExplore(current.category)}
-          className="mt-9 inline-flex h-10 cursor-pointer items-center rounded-lg bg-background/80 px-4 text-[14px] font-medium text-foreground ring-1 ring-white/10 transition-colors hover:bg-background"
+          className="mt-6 inline-flex h-9 cursor-pointer items-center rounded-lg bg-background/80 px-4 text-[14px] font-medium text-foreground ring-1 ring-white/10 transition-colors hover:bg-background"
         >
           Explore
         </button>
