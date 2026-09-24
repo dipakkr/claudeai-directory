@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { fetchApi } from "@/lib/api-server";
-import type { Thread, Reply } from "@/types";
+import type { PublicProfile, Thread, Reply } from "@/types";
 import ThreadDetail from "./ThreadDetailClient";
 import { BreadcrumbSchema, DiscussionForumPostingSchema } from "@/components/seo/JsonLd";
 
@@ -40,6 +40,19 @@ export default async function CommunityThreadPage({
     fetchApi<Reply[]>(`/community/threads/${id}/replies`),
   ]);
 
+  // Sidebar context: the author's public profile, and related threads that
+  // share a tag (falling back to the newest threads).
+  const firstTag = thread?.tags?.[0];
+  const [authorProfile, tagged, latest] = await Promise.all([
+    thread?.author_username ? fetchApi<PublicProfile>(`/users/${thread.author_username}`) : Promise.resolve(null),
+    firstTag ? fetchApi<Thread[]>(`/community/threads?tag=${encodeURIComponent(firstTag)}&limit=6`) : Promise.resolve(null),
+    fetchApi<Thread[]>(`/community/threads?limit=6`),
+  ]);
+  const seen = new Set([id]);
+  const related = [...(tagged ?? []), ...(latest ?? [])]
+    .filter((t) => (seen.has(t.id) ? false : (seen.add(t.id), true)))
+    .slice(0, 5);
+
   return (
     <>
       {thread && (
@@ -69,6 +82,8 @@ export default async function CommunityThreadPage({
         id={id}
         initialThread={thread ?? undefined}
         initialReplies={replies ?? undefined}
+        authorProfile={authorProfile}
+        related={related}
       />
     </>
   );

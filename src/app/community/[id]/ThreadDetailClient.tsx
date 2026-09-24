@@ -7,15 +7,16 @@ import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { ChevronUp } from "lucide-react";
+import { ArrowLeft, ChevronUp, Eye, Link2, Linkedin, MessageSquare, PenSquare } from "lucide-react";
 import PageBreadcrumb from "@/components/layout/PageBreadcrumb";
 import UserMarkdown from "@/components/shared/UserMarkdown";
 import { useThread, useReplies, useCreateReply } from "@/hooks/use-community";
 import { useAuth } from "@/lib/auth";
 import { toast } from "sonner";
-import type { Reply, Thread } from "@/types";
+import { formatPlainPost } from "@/lib/format-post";
+import { countryName } from "@/lib/profile-options";
+import type { PublicProfile, Reply, Thread } from "@/types";
 
 function timeAgo(dateStr: string): string {
   const now = Date.now();
@@ -220,6 +221,17 @@ function ReplyForm({
     );
   };
 
+  if (!isAuthenticated && !compact) {
+    return (
+      <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-dashed border-border bg-card/50 px-5 py-4">
+        <p className="text-sm text-muted-foreground">Sign in to join the discussion and reply.</p>
+        <Link href="/login" className="inline-flex h-9 items-center rounded-full bg-foreground px-4 text-sm font-medium text-background hover:bg-foreground/85">
+          Sign in to reply
+        </Link>
+      </div>
+    );
+  }
+
   return (
     <form onSubmit={handleSubmit} className="space-y-2">
       <Textarea
@@ -239,156 +251,255 @@ function ReplyForm({
   );
 }
 
+function XIcon({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" className={className} fill="currentColor">
+      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+    </svg>
+  );
+}
+
+function roleOf(profile?: PublicProfile | null) {
+  if (!profile?.profession) return "";
+  return profile.profession === "Other" && profile.profession_detail ? profile.profession_detail : profile.profession;
+}
+
+function SidebarCard({ title, children }: { title: string; children: React.ReactNode }) {
+  return (
+    <section className="rounded-2xl border border-border bg-card p-5">
+      <h3 className="font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground">{title}</h3>
+      <div className="mt-3">{children}</div>
+    </section>
+  );
+}
+
+function ShareButtons({ title, url }: { title: string; url: string }) {
+  const copy = async () => {
+    await navigator.clipboard.writeText(url);
+    toast.success("Link copied");
+  };
+  const button =
+    "inline-flex h-9 flex-1 items-center justify-center gap-1.5 rounded-full border border-border bg-background text-sm text-foreground transition-colors hover:border-[var(--cad-line-hover)]";
+  return (
+    <div className="flex gap-2">
+      <a
+        href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(url)}`}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={button}
+        aria-label="Share on X"
+      >
+        <XIcon className="h-3.5 w-3.5" />
+      </a>
+      <a
+        href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={button}
+        aria-label="Share on LinkedIn"
+      >
+        <Linkedin className="h-4 w-4" />
+      </a>
+      <button type="button" onClick={copy} className={button} aria-label="Copy link">
+        <Link2 className="h-4 w-4" />
+      </button>
+    </div>
+  );
+}
+
+const SITE_URL = "https://www.claudeai.directory";
+
 export default function ThreadDetail({
   id,
   initialThread,
   initialReplies,
+  authorProfile,
+  related = [],
 }: {
   id: string;
   initialThread?: Thread;
   initialReplies?: Reply[];
+  authorProfile?: PublicProfile | null;
+  related?: Thread[];
 }) {
   const { data: thread, isLoading: threadLoading } = useThread(id, initialThread);
   const { data: replies, isLoading: repliesLoading } = useReplies(id, initialReplies);
+  const replyCount = replies?.length ?? thread?.replies ?? 0;
+  const role = roleOf(authorProfile);
+  const country = countryName(authorProfile?.country);
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div className="flex min-h-screen flex-col bg-background">
       <Header />
       <main className="flex-1">
-        <div className="container py-10">
-          <PageBreadcrumb items={[
-            { label: "Community", href: "/community" },
-            { label: thread?.title || "..." },
-          ]} />
+        <div className="mx-auto max-w-[1120px] px-4 pb-16 pt-8 md:px-8 md:pt-10">
+          <PageBreadcrumb items={[{ label: "Community", href: "/community" }, { label: thread?.title || "..." }]} />
 
           {threadLoading ? (
-            <div className="flex gap-8">
-              <div className="flex-1 space-y-4">
-                <Skeleton className="h-6 w-3/4" />
-                <Skeleton className="h-4 w-48" />
-                <Skeleton className="h-32 w-full" />
-              </div>
-              <div className="hidden lg:block w-72 shrink-0">
-                <Skeleton className="h-48 rounded-xl" />
-              </div>
+            <div className="space-y-4">
+              <Skeleton className="h-8 w-3/4" />
+              <Skeleton className="h-4 w-48" />
+              <Skeleton className="h-64 w-full" />
             </div>
           ) : thread ? (
-            <div className="flex gap-8">
-              {/* Main content */}
-              <div className="flex-1 min-w-0">
-                {/* Thread header */}
-                <h1 className="text-2xl font-normal leading-tight text-foreground mb-3 sm:text-3xl">
-                  {thread.title}
-                </h1>
-
-                <div className="flex items-center gap-2 mb-4">
-                  <AuthorAvatar src={thread.author_avatar} author={thread.author} className="h-6 w-6 text-[10px]" />
-                  <AuthorName
-                    author={thread.author}
-                    username={thread.author_username}
-                    className="text-sm font-medium text-foreground"
-                  />
-                  <span className="text-xs text-muted-foreground">{timeAgo(thread.created_at)}</span>
-                </div>
-
+            <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_300px] lg:items-start">
+              <article className="min-w-0">
                 {thread.tags && thread.tags.length > 0 && (
-                  <div className="flex flex-wrap gap-1.5 mb-4">
+                  <div className="mb-4 flex flex-wrap gap-1.5">
                     {thread.tags.map((tag) => (
-                      <Badge key={tag} variant="secondary" className="text-xs">
+                      <span key={tag} className="rounded-full border border-border bg-card px-2.5 py-0.5 text-xs text-muted-foreground">
                         {tag}
-                      </Badge>
+                      </span>
                     ))}
                   </div>
                 )}
 
-                {/* Thread body */}
-                <div className="rounded-lg border border-border bg-card p-5 mb-8">
-                  <UserMarkdown>{thread.body}</UserMarkdown>
-                </div>
+                <h1 className="text-balance text-3xl font-semibold leading-tight text-foreground md:text-[2.5rem]">{thread.title}</h1>
 
-                {/* Replies */}
-                <div className="mb-6">
-                  <h2 className="font-sans text-sm font-semibold text-foreground mb-1">
-                    {thread.replies} {thread.replies === 1 ? "Reply" : "Replies"}
-                  </h2>
-                </div>
-
-                {/* Reply form */}
-                <div className="mb-6">
-                  <ReplyForm threadId={id} />
-                </div>
-
-                {/* Reply list */}
-                {repliesLoading ? (
-                  <div className="divide-y divide-border">
-                    {Array.from({ length: 3 }).map((_, i) => (
-                      <div key={i} className="py-4 space-y-2">
-                        <div className="flex items-center gap-2">
-                          <Skeleton className="h-7 w-7 rounded-full" />
-                          <Skeleton className="h-3 w-32" />
-                        </div>
-                        <Skeleton className="h-4 w-full" />
-                        <Skeleton className="h-4 w-2/3" />
-                      </div>
-                    ))}
-                  </div>
-                ) : (replies ?? []).length > 0 ? (
-                  <div className="divide-y divide-border">
-                    {(() => {
-                      const { nodes, byId } = buildReplyTree(replies ?? []);
-                      return nodes.map(({ reply, children }) => (
-                        <div key={reply.id}>
-                          <ReplyCard reply={reply} threadId={id} />
-                          {children.length > 0 && (
-                            <div className="ml-4 sm:ml-8 border-l border-border/80 pl-3.5 transition-colors hover:border-border">
-                              {children.map((child) => {
-                                const directParent =
-                                  child.parent_id && child.parent_id !== reply.id
-                                    ? byId.get(child.parent_id)
-                                    : undefined;
-                                return (
-                                  <ReplyCard
-                                    key={child.id}
-                                    reply={child}
-                                    threadId={id}
-                                    nested
-                                    replyingToAuthor={directParent?.author}
-                                  />
-                                );
-                              })}
-                            </div>
-                          )}
-                        </div>
-                      ));
-                    })()}
-                  </div>
-                ) : (
-                  <div className="py-8 text-center">
-                    <p className="text-xs text-muted-foreground">No replies yet. Be the first!</p>
-                  </div>
-                )}
-              </div>
-
-              {/* Right sidebar */}
-              <div className="hidden lg:block w-72 shrink-0">
-                <div className="sticky top-20 space-y-4">
-                  {/* Back to community */}
-                  <div className="rounded-xl border border-border bg-card p-5">
-                    <h3 className="text-sm font-semibold text-foreground mb-2">Community</h3>
-                    <p className="text-xs text-muted-foreground mb-3">
-                      Browse more discussions and connect with others.
+                <div className="mt-5 flex flex-wrap items-center gap-3 border-b border-border pb-6">
+                  <AuthorAvatar src={thread.author_avatar} author={thread.author} className="h-10 w-10 text-sm" />
+                  <div className="min-w-0">
+                    <AuthorName author={thread.author} username={thread.author_username} className="text-sm font-semibold text-foreground" />
+                    <p className="text-xs text-muted-foreground">
+                      {[role, timeAgo(thread.created_at)].filter(Boolean).join(" · ")}
                     </p>
-                    <Link href="/community">
-                      <Button variant="outline" className="w-full text-sm">
-                        All Discussions
-                      </Button>
-                    </Link>
+                  </div>
+                  <div className="ml-auto flex items-center gap-4 text-xs text-muted-foreground">
+                    <span className="inline-flex items-center gap-1.5" title="Views">
+                      <Eye className="h-3.5 w-3.5" />
+                      {thread.views ?? 0}
+                    </span>
+                    <a href="#replies" className="inline-flex items-center gap-1.5 hover:text-foreground" title="Replies">
+                      <MessageSquare className="h-3.5 w-3.5" />
+                      {replyCount}
+                    </a>
                   </div>
                 </div>
-              </div>
+
+                <div className="mt-6 max-w-[72ch] text-[15px] [&_.prose]:text-[15px] [&_.prose]:leading-7 [&_blockquote]:border-l-primary/60 [&_blockquote]:not-italic [&_blockquote_p]:before:content-none [&_blockquote_p]:after:content-none [&_h3]:mt-8 [&_h3]:text-lg [&_li]:my-1">
+                  <UserMarkdown>{formatPlainPost(thread.body)}</UserMarkdown>
+                </div>
+
+                <section id="replies" className="mt-12 scroll-mt-24 border-t border-border pt-8">
+                  <h2 className="font-sans text-lg font-semibold text-foreground">
+                    {replyCount === 0 ? "Replies" : `${replyCount} ${replyCount === 1 ? "reply" : "replies"}`}
+                  </h2>
+
+                  <div className="mt-4">
+                    <ReplyForm threadId={id} />
+                  </div>
+
+                  {repliesLoading ? (
+                    <div className="mt-6 space-y-4">
+                      {Array.from({ length: 3 }).map((_, i) => (
+                        <Skeleton key={i} className="h-16 w-full" />
+                      ))}
+                    </div>
+                  ) : (replies ?? []).length > 0 ? (
+                    <div className="mt-4 divide-y divide-border">
+                      {(() => {
+                        const { nodes, byId } = buildReplyTree(replies ?? []);
+                        return nodes.map(({ reply, children }) => (
+                          <div key={reply.id}>
+                            <ReplyCard reply={reply} threadId={id} />
+                            {children.length > 0 && (
+                              <div className="ml-4 border-l border-border/80 pl-3.5 transition-colors hover:border-border sm:ml-8">
+                                {children.map((child) => {
+                                  const directParent =
+                                    child.parent_id && child.parent_id !== reply.id ? byId.get(child.parent_id) : undefined;
+                                  return (
+                                    <ReplyCard
+                                      key={child.id}
+                                      reply={child}
+                                      threadId={id}
+                                      nested
+                                      replyingToAuthor={directParent?.author}
+                                    />
+                                  );
+                                })}
+                              </div>
+                            )}
+                          </div>
+                        ));
+                      })()}
+                    </div>
+                  ) : (
+                    <div className="mt-6 flex flex-col items-center rounded-2xl border border-dashed border-border px-6 py-10 text-center">
+                      <span className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-primary">
+                        <MessageSquare className="h-4 w-4" />
+                      </span>
+                      <p className="mt-3 text-sm font-medium text-foreground">No replies yet</p>
+                      <p className="mt-1 text-sm text-muted-foreground">
+                        Be the first to reply to {thread.author.split(" ")[0]}. Questions and experiences both help.
+                      </p>
+                    </div>
+                  )}
+                </section>
+              </article>
+
+              <aside className="space-y-4 lg:sticky lg:top-24">
+                <SidebarCard title="Posted by">
+                  <div className="flex items-center gap-3">
+                    <AuthorAvatar src={thread.author_avatar} author={thread.author} className="h-11 w-11 text-sm" />
+                    <div className="min-w-0">
+                      <AuthorName author={thread.author} username={thread.author_username} className="block truncate text-sm font-semibold text-foreground" />
+                      {(role || country) && (
+                        <p className="truncate text-xs text-muted-foreground">{[role, country].filter(Boolean).join(" · ")}</p>
+                      )}
+                    </div>
+                  </div>
+                  {authorProfile?.bio && <p className="mt-3 text-sm leading-6 text-muted-foreground">{authorProfile.bio}</p>}
+                  {thread.author_username && (
+                    <Link
+                      href={`/u/${thread.author_username}`}
+                      className="mt-4 inline-flex h-9 w-full items-center justify-center rounded-full border border-border text-sm font-medium text-foreground hover:border-[var(--cad-line-hover)]"
+                    >
+                      View profile
+                    </Link>
+                  )}
+                </SidebarCard>
+
+                <SidebarCard title="Share this discussion">
+                  <ShareButtons title={thread.title} url={`${SITE_URL}/community/${id}`} />
+                </SidebarCard>
+
+                {related.length > 0 && (
+                  <SidebarCard title="More discussions">
+                    <ul className="-my-1 divide-y divide-border">
+                      {related.map((item) => (
+                        <li key={item.id}>
+                          <Link href={`/community/${item.id}`} className="group block py-2.5">
+                            <span className="line-clamp-2 text-sm text-foreground group-hover:text-primary">{item.title}</span>
+                            <span className="mt-0.5 block text-xs text-muted-foreground">
+                              {item.replies} {item.replies === 1 ? "reply" : "replies"} · {timeAgo(item.created_at)}
+                            </span>
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  </SidebarCard>
+                )}
+
+                <Link
+                  href="/community"
+                  className="flex items-center gap-3 rounded-2xl border border-primary/25 bg-primary/[0.06] p-4 transition-colors hover:border-primary/40"
+                >
+                  <PenSquare className="h-4 w-4 shrink-0 text-primary" />
+                  <span className="text-sm">
+                    <span className="block font-medium text-foreground">Start a discussion</span>
+                    <span className="block text-xs text-muted-foreground">Ask a question or share what you built.</span>
+                  </span>
+                </Link>
+              </aside>
             </div>
           ) : (
-            <p className="text-sm text-muted-foreground">Thread not found.</p>
+            <div className="rounded-2xl border border-dashed border-border px-6 py-16 text-center">
+              <p className="text-sm font-medium text-foreground">This discussion was not found.</p>
+              <Link href="/community" className="mt-3 inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground">
+                <ArrowLeft className="h-3.5 w-3.5" />
+                All discussions
+              </Link>
+            </div>
           )}
         </div>
       </main>

@@ -31,6 +31,10 @@ export interface PublicProfile {
   website?: string;
   twitter?: string;
   github?: string;
+  linkedin?: string;
+  profession?: string;
+  profession_detail?: string;
+  country?: string;
   created_at: string;
   apps?: ShowcaseProject[];
 }
