@@ -450,6 +450,14 @@ export default function ThreadDetail({
                 <div className="mt-6 flex items-center gap-3">
                   <AuthorAvatar src={thread.author_avatar} author={thread.author} className="h-10 w-10 text-sm" />
                   <Byline author={thread.author} username={thread.author_username} headline={thread.author_headline || role} created={thread.created_at} />
+                  <span
+                    className="ml-auto inline-flex shrink-0 items-center gap-1.5 rounded-full border border-border bg-card px-3 py-1 text-sm text-foreground"
+                    title="Times this discussion was opened"
+                  >
+                    <Eye className="h-4 w-4 text-muted-foreground" />
+                    <span className="font-medium tabular-nums">{(thread.views ?? 0).toLocaleString()}</span>
+                    <span className="text-muted-foreground">{thread.views === 1 ? "view" : "views"}</span>
+                  </span>
                 </div>
 
                 <h1 className="mt-4 text-balance font-sans text-[1.75rem] font-bold leading-tight tracking-tight text-foreground md:text-[2rem]">
@@ -477,10 +485,6 @@ export default function ThreadDetail({
                     Comment
                     <span className="tabular-nums text-muted-foreground">{replyCount}</span>
                   </a>
-                  <span className="ml-auto inline-flex items-center gap-1.5 text-xs text-muted-foreground" title="Views">
-                    <Eye className="h-3.5 w-3.5" />
-                    {thread.views ?? 0} views
-                  </span>
                 </div>
 
                 <section id="comments" className="mt-8 scroll-mt-24">
