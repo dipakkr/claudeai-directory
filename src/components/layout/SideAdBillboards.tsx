@@ -130,7 +130,7 @@ function SideStack({
         side === "left" ? "left-0 border-r" : "right-0 border-l",
       )}
     >
-      <div className="flex h-full flex-col justify-center gap-2 overflow-y-auto p-2.5 [scrollbar-width:none] min-[1760px]:p-3">
+      <div className="flex h-full flex-col justify-start gap-2 overflow-y-auto p-2.5 pt-4 [scrollbar-width:none] min-[1760px]:p-3">
         <div
           key={`header-${rail.title}`}
           className="pointer-events-auto side-ad-flip-card shrink-0 px-2 py-2 text-center"
