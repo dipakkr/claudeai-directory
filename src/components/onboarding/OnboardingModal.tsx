@@ -99,6 +99,7 @@ export default function OnboardingModal() {
   const [country, setCountry] = useState("");
   const [countryGuessed, setCountryGuessed] = useState(false);
   const [links, setLinks] = useState({ twitter: "", github: "", linkedin: "", website: "", bio: "" });
+  const bioReady = links.bio.trim().length >= 10;
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const dialogRef = useRef<HTMLDivElement>(null);
@@ -154,7 +155,7 @@ export default function OnboardingModal() {
   const firstName = (user.name || user.username).split(" ")[0];
   const faces = (community?.newest ?? []).filter((member) => member.avatar);
 
-  const save = async (withLinks: boolean) => {
+  const save = async () => {
     setSaving(true);
     setError(null);
     try {
@@ -162,15 +163,11 @@ export default function OnboardingModal() {
         profession,
         profession_detail: profession === "Other" ? professionDetail.trim() : undefined,
         country: country || undefined,
-        ...(withLinks
-          ? {
-              twitter: links.twitter.trim() || undefined,
-              github: links.github.trim() || undefined,
-              linkedin: withHttps(links.linkedin),
-              website: withHttps(links.website),
-              bio: links.bio.trim() || undefined,
-            }
-          : {}),
+        bio: links.bio.trim(),
+        twitter: links.twitter.trim() || undefined,
+        github: links.github.trim() || undefined,
+        linkedin: withHttps(links.linkedin),
+        website: withHttps(links.website),
       });
       setStep(2);
     } catch (err) {
@@ -234,7 +231,7 @@ export default function OnboardingModal() {
               Welcome, {firstName}. Meet the community.
             </h2>
             <p className="mt-2 text-sm leading-6 text-muted-foreground">
-              Two quick questions so other builders know who you are.
+              Two quick steps so other builders know who you are.
             </p>
 
             <p className="mt-6 text-sm font-medium text-foreground">What do you do?</p>
@@ -313,27 +310,38 @@ export default function OnboardingModal() {
         {step === 1 && (
           <div className="p-6">
             <h2 id="onboarding-title" className="text-2xl font-semibold text-foreground">
-              Where can people find you?
+              Introduce yourself in one line
             </h2>
             <p className="mt-2 text-sm leading-6 text-muted-foreground">
-              Optional. Links show on your profile so builders can follow your work.
+              This shows on your profile and next to your posts, so builders know who they are talking to.
             </p>
 
-            <div className="mt-5 grid gap-3 sm:grid-cols-2">
+            <label htmlFor="onboarding-bio" className="sr-only">
+              Your one-line intro
+            </label>
+            <input
+              id="onboarding-bio"
+              autoFocus
+              value={links.bio}
+              onChange={(e) => setLinks({ ...links, bio: e.target.value })}
+              maxLength={160}
+              placeholder="Building AI support agents with Claude Code at Acme"
+              className={`${inputClass} mt-5 h-11`}
+            />
+            <p className="mt-1.5 flex justify-between text-xs text-muted-foreground">
+              <span>{bioReady ? "Looks good." : "A short sentence about what you do or build."}</span>
+              <span>{links.bio.length}/160</span>
+            </p>
+
+            <p className="mt-6 text-sm font-medium text-foreground">
+              Where can people find you? <span className="font-normal text-muted-foreground">(optional)</span>
+            </p>
+            <div className="mt-2.5 grid gap-3 sm:grid-cols-2">
               <input aria-label="X handle" value={links.twitter} onChange={(e) => setLinks({ ...links, twitter: e.target.value })} placeholder="X handle" className={inputClass} />
               <input aria-label="GitHub username" value={links.github} onChange={(e) => setLinks({ ...links, github: e.target.value })} placeholder="GitHub username" className={inputClass} />
               <input aria-label="LinkedIn profile URL" value={links.linkedin} onChange={(e) => setLinks({ ...links, linkedin: e.target.value })} placeholder="linkedin.com/in/you" className={inputClass} />
               <input aria-label="Website" value={links.website} onChange={(e) => setLinks({ ...links, website: e.target.value })} placeholder="yourwebsite.com" className={inputClass} />
             </div>
-            <textarea
-              aria-label="Short bio"
-              value={links.bio}
-              onChange={(e) => setLinks({ ...links, bio: e.target.value })}
-              maxLength={160}
-              rows={2}
-              placeholder="One line about what you are building with Claude"
-              className="mt-3 w-full rounded-lg border border-border bg-background px-3 py-2.5 text-sm text-foreground placeholder:text-muted-foreground/70 focus:border-primary/60 focus:outline-none"
-            />
 
             {error && (
               <div role="alert" className="mt-4 rounded-lg border border-destructive/30 bg-destructive/10 px-3 py-2.5 text-sm text-destructive">
@@ -355,22 +363,14 @@ export default function OnboardingModal() {
               </button>
               <button
                 type="button"
-                disabled={saving}
-                onClick={() => save(true)}
+                disabled={saving || !bioReady}
+                onClick={() => save()}
                 className="inline-flex h-11 flex-1 items-center justify-center gap-2 rounded-full bg-foreground text-sm font-medium text-background transition-colors hover:bg-foreground/85 disabled:opacity-60"
               >
                 {saving && <Loader2 className="h-4 w-4 animate-spin" />}
                 {error ? "Try again" : "Join the community"}
               </button>
             </div>
-            <button
-              type="button"
-              disabled={saving}
-              onClick={() => save(false)}
-              className="mt-3 w-full text-center text-sm text-muted-foreground hover:text-foreground"
-            >
-              Skip links for now
-            </button>
           </div>
         )}
 
