@@ -26,10 +26,20 @@ export function useShowcaseProject(slug: string) {
   });
 }
 
+/** Slugs of launches the signed-in user has upvoted. */
+export function useMyLaunchUpvotes(enabled: boolean) {
+  return useQuery({
+    queryKey: ["showcase", "my-upvotes"],
+    queryFn: () => api.get<string[]>("/showcase/account/upvotes"),
+    enabled,
+  });
+}
+
+/** Toggles the user's upvote. The response carries the new count and `voted`. */
 export function useUpvoteShowcase() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (slug: string) => api.post<ShowcaseProject>(`/showcase/${slug}/upvote`),
+    mutationFn: (slug: string) => api.post<ShowcaseProject & { voted?: boolean }>(`/showcase/${slug}/upvote`),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["showcase"] }),
   });
 }

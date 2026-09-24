@@ -29,6 +29,7 @@ import {
   LaunchSection,
   Chip,
   UpvoteBox,
+  UpvoteSummary,
 } from "@/components/launches";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.claudeai.directory";
@@ -267,10 +268,7 @@ export default async function LaunchDetailPage({
           {/* Activity strip */}
           <div className="grid border-b border-border sm:grid-cols-2">
             <div className="flex items-center gap-3 border-b border-border px-5 py-5 sm:border-b-0 sm:border-r md:px-8">
-              <span className="text-2xl font-semibold tabular-nums text-foreground">{upvotes}</span>
-              <span className="text-sm text-muted-foreground">
-                {upvotes === 0 ? "No upvotes yet. Be the first." : upvotes === 1 ? "upvote" : "upvotes"}
-              </span>
+              <UpvoteSummary slug={project.id} initialCount={upvotes} />
             </div>
             <a href="#discussion" className="group flex min-w-0 items-center gap-3 px-5 py-5 transition-colors hover:bg-card/60 md:px-8">
               <MakerAvatar name={project.author_name} size="sm" />

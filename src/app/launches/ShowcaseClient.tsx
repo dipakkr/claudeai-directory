@@ -20,7 +20,7 @@ import { Button } from "@/components/ui/button";
 import { faviconFor } from "@/lib/directory";
 import { publicLaunches } from "@/lib/home-community";
 import { useAuth } from "@/lib/auth";
-import { useShowcaseProjects, useUpvoteShowcase } from "@/hooks/use-showcase";
+import { useMyLaunchUpvotes, useShowcaseProjects, useUpvoteShowcase } from "@/hooks/use-showcase";
 import type { ShowcaseProject } from "@/types";
 
 function authorLabel(project: ShowcaseProject) {
@@ -88,11 +88,13 @@ function VoteButton({
   project,
   authenticated,
   pending,
+  voted,
   onVote,
 }: {
   project: ShowcaseProject;
   authenticated: boolean;
   pending: boolean;
+  voted: boolean;
   onVote: () => void;
 }) {
   const [animating, setAnimating] = useState(false);
@@ -111,14 +113,15 @@ function VoteButton({
     <button
       type="button"
       onClick={handleClick}
-      disabled={pending || !authenticated}
-      aria-label={authenticated ? `Upvote ${project.title}` : "Sign in to upvote"}
-      title={authenticated ? "Upvote this launch" : "Sign in to upvote"}
-      className={`flex h-14 w-12 shrink-0 flex-col items-center justify-center gap-0.5 rounded-xl border transition sm:h-16 sm:w-14 ${
-        authenticated
-          ? "border-border bg-background text-foreground shadow-sm hover:border-[var(--cad-line-hover)] hover:bg-card cursor-pointer"
-          : "border-border/50 bg-background/50 text-muted-foreground cursor-not-allowed"
-      } ${animating ? "scale-105 bg-primary/10 border-primary" : ""} disabled:pointer-events-none`}
+      disabled={pending}
+      aria-pressed={voted}
+      aria-label={voted ? `Remove upvote from ${project.title}` : `Upvote ${project.title}`}
+      title={!authenticated ? "Sign in to upvote" : voted ? "You upvoted this. Click to undo." : "Upvote this launch"}
+      className={`flex h-14 w-12 shrink-0 cursor-pointer flex-col items-center justify-center gap-0.5 rounded-xl border shadow-sm transition sm:h-16 sm:w-14 ${
+        voted
+          ? "border-primary bg-primary/10 text-primary"
+          : "border-border bg-background text-foreground hover:border-[var(--cad-line-hover)] hover:bg-card"
+      } ${animating ? "scale-105" : ""} disabled:opacity-70`}
     >
       <ArrowUp className={`h-4 w-4 transition-transform ${animating ? "scale-125" : ""}`} aria-hidden="true" />
       <span className={`text-base font-semibold leading-none transition ${animating ? "scale-110" : ""}`}>
@@ -134,12 +137,14 @@ function LaunchRow({
   onVote,
   authenticated,
   pending,
+  voted,
 }: {
   project: ShowcaseProject;
   rank: number;
   onVote: (project: ShowcaseProject) => void;
   authenticated: boolean;
   pending: boolean;
+  voted: boolean;
 }) {
   const category = normalizeCategory(project);
   const tags = [category, ...(project.tech_stack ?? []).filter((tag) => tag !== category)].slice(0, 3);
@@ -178,6 +183,7 @@ function LaunchRow({
           project={project}
           authenticated={authenticated}
           pending={pending}
+          voted={voted}
           onVote={() => onVote(project)}
         />
       </div>
@@ -227,6 +233,8 @@ export default function ShowcaseClient({
   const router = useRouter();
   const { isAuthenticated } = useAuth();
   const upvote = useUpvoteShowcase();
+  const { data: myUpvotes } = useMyLaunchUpvotes(isAuthenticated);
+  const votedSlugs = useMemo(() => new Set(myUpvotes ?? []), [myUpvotes]);
   const [activeCategory, setActiveCategory] = useState("All");
   const [query, setQuery] = useState("");
 
@@ -278,8 +286,8 @@ export default function ShowcaseClient({
     }
 
     upvote.mutate(project.id, {
-      onSuccess: () => toast.success("Upvoted"),
-      onError: () => toast.error("Could not upvote this launch"),
+      onSuccess: (updated) => toast.success(updated.voted === false ? "Upvote removed" : `Upvoted ${project.title}`),
+      onError: () => toast.error("Could not save your upvote"),
     });
   };
 
@@ -346,7 +354,8 @@ export default function ShowcaseClient({
                     project={project}
                     rank={index + 1}
                     authenticated={isAuthenticated}
-                    pending={upvote.isPending}
+                    pending={upvote.isPending && upvote.variables === project.id}
+                    voted={votedSlugs.has(project.id)}
                     onVote={handleVote}
                   />
                   {index === Math.min(2, visibleProjects.length - 1) ? <SponsoredLaunchSlot /> : null}
