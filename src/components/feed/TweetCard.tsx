@@ -135,7 +135,8 @@ export function TweetCard({ tweet }: { tweet: FeedTweet }) {
         </a>
       </header>
 
-      {(tweet.pinned || tweet.highly_bookmarked || tweet.source) && (
+      {/* Only badges that tell you something: curated is the default, so it gets none. */}
+      {(tweet.pinned || tweet.highly_bookmarked || tweet.source === "community") && (
         <div className="mt-3 flex flex-wrap gap-1.5">
           {tweet.pinned && (
             <Badge tone="primary">
@@ -149,7 +150,9 @@ export function TweetCard({ tweet }: { tweet: FeedTweet }) {
               Highly bookmarked
             </Badge>
           )}
-          <Badge>{tweet.source === "curated" ? "Curated" : `Community${tweet.added_by_name ? `, added by ${tweet.added_by_name}` : ""}`}</Badge>
+          {tweet.source === "community" && (
+            <Badge>{`Community${tweet.added_by_name ? `, added by ${tweet.added_by_name}` : ""}`}</Badge>
+          )}
         </div>
       )}
 
