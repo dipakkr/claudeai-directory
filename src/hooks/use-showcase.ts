@@ -144,3 +144,20 @@ export function useLaunchVoters(slug: string) {
     enabled: !!slug,
   });
 }
+
+export type LaunchUpdate = Partial<
+  Pick<
+    ShowcaseProject,
+    | "title" | "tagline" | "description" | "category" | "tech_stack" | "use_cases" | "platforms" | "overview"
+    | "gallery_images" | "demo_video_url" | "github_url" | "feedback_prompt" | "creator_socials"
+  >
+> & { logo_url?: string; video_url?: string };
+
+/** Owner edits a launch (details and media). */
+export function useUpdateLaunch(slug: string) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (changes: LaunchUpdate) => api.put<ShowcaseProject>(`/showcase/${slug}`, changes),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["showcase"] }),
+  });
+}

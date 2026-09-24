@@ -35,8 +35,7 @@ type Media = { logo: string[]; screenshot: string[]; video: string[] };
 
 const SITE_URL = "https://www.claudeai.directory";
 
-const CATEGORIES = ["Web app", "MCP server", "Skill", "Agent", "Claude Code plugin", "Workflow"];
-const PLATFORMS = ["Web", "macOS", "Windows", "Linux", "iOS", "Android", "CLI", "Chrome extension", "API"];
+import { CATEGORIES, PLATFORMS } from "@/lib/launch-options";
 
 const STEPS = ["Details", "Badge", "Share"] as const;
 
@@ -319,6 +318,9 @@ function MyLaunches({
                 {app.badge_verified ? "Live" : app.status === "rejected" ? "Not approved" : "Waiting for badge"}
               </p>
             </div>
+            <Link href={`/launches/${app.id}/edit`} className="text-xs text-muted-foreground hover:text-foreground">
+              Edit
+            </Link>
             {app.status === "rejected" ? null : app.badge_verified ? (
               <Link href={`/launches/${app.id}`} className="text-xs font-medium text-foreground hover:text-primary">
                 View

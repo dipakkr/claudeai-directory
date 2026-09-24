@@ -30,6 +30,7 @@ import {
   Chip,
   UpvoteBox,
   UpvoteSummary,
+  OwnerEditButton,
 } from "@/components/launches";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.claudeai.directory";
@@ -261,6 +262,7 @@ export default async function LaunchDetailPage({
                   Source
                 </a>
               )}
+              <OwnerEditButton slug={project.id} authorId={project.author_id} />
               <FavoriteButton targetType="showcase" targetId={project.id} />
             </div>
           </header>

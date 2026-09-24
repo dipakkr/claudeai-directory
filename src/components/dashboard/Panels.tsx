@@ -134,6 +134,9 @@ export function LaunchesPanel({ apps, loading }: { apps: ShowcaseProject[]; load
                     {app.upvotes ?? 0}
                   </span>
                 )}
+                <Link href={`/launches/${app.id}/edit`} className="shrink-0 text-sm text-muted-foreground hover:text-foreground">
+                  Edit
+                </Link>
                 {app.badge_verified ? (
                   <Link href={`/launches/${app.id}`} className="shrink-0 text-sm font-medium text-foreground hover:text-primary">
                     View

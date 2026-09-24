@@ -6,3 +6,4 @@ export { FaviconBox } from "./FaviconBox";
 export { LaunchSection, Chip } from "./LaunchSection";
 export { UpvoteBox } from "./UpvoteBox";
 export { UpvoteSummary } from "./UpvoteSummary";
+export { OwnerEditButton } from "./OwnerEditButton";
