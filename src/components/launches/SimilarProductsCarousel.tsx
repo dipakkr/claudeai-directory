@@ -41,7 +41,7 @@ export function SimilarProductsCarousel({
     <LaunchSection title="Related launches">
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {similar.map((project) => {
-          const logo = faviconFor(project.app_url || project.demo_url);
+          const logo = project.logo_url || faviconFor(project.app_url || project.demo_url);
           return (
             <Link
               key={project.id}

@@ -170,7 +170,7 @@ export default async function LaunchDetailPage({
   const techStack = (project.tech_stack ?? []).filter((tech) => !platforms.includes(tech));
   const collections = project.collections ?? [];
   const comparisons = project.comparisons ?? [];
-  const logo = faviconFor(appUrl);
+  const logo = project.logo_url || faviconFor(appUrl);
 
   const pageUrl = `${SITE_URL}/launches/${slug}`;
   const shareText = `${project.title}: ${project.tagline || "launched on Claude Directory"}`;

@@ -226,6 +226,8 @@ export interface ShowcaseProject {
   platforms?: string[];
   comparisons?: string[];
   blog_post_url?: string;
+  logo_url?: string | null;
+  video_url?: string | null;
   creator_socials?: {
     twitter?: string;
     github?: string;

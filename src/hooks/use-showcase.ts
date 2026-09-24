@@ -60,6 +60,25 @@ export interface ShowcaseSubmission {
   platforms?: string[];
   overview?: ShowcaseProject["overview"];
   creator_socials?: ShowcaseProject["creator_socials"];
+  logo_url?: string;
+  video_url?: string;
+}
+
+export type UploadKind = "logo" | "screenshot" | "video";
+
+export interface UploadConfig {
+  enabled: boolean;
+  limits: Record<UploadKind, { max_bytes: number; types: string[] }>;
+}
+
+/** Whether direct media uploads are configured on the server. */
+export function useUploadConfig() {
+  return useQuery({
+    queryKey: ["showcase", "upload-config"],
+    queryFn: () => api.get<UploadConfig>("/showcase/uploads/config"),
+    staleTime: 10 * 60_000,
+    retry: false,
+  });
 }
 
 export interface LaunchAutofill {

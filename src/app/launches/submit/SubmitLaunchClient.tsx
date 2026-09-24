@@ -23,11 +23,15 @@ import { useAuth } from "@/lib/auth";
 import { faviconFor } from "@/lib/directory";
 import {
   useLaunchAutofill,
+  useUploadConfig,
   useMyShowcaseProjects,
   useSubmitShowcaseProject,
   useVerifyShowcaseBadge,
 } from "@/hooks/use-showcase";
+import { MediaUpload } from "@/components/launches/MediaUpload";
 import type { ShowcaseProject } from "@/types";
+
+type Media = { logo: string[]; screenshot: string[]; video: string[] };
 
 const SITE_URL = "https://www.claudeai.directory";
 
@@ -229,9 +233,9 @@ function Stepper({ step }: { step: Step }) {
   );
 }
 
-function Logo({ url, name, className }: { url?: string; name: string; className: string }) {
+function Logo({ url, logoUrl, name, className }: { url?: string; logoUrl?: string | null; name: string; className: string }) {
   const normalized = url ? normalizeUrl(url) : "";
-  const src = normalized && isValidUrl(normalized) ? faviconFor(normalized) : null;
+  const src = logoUrl || (normalized && isValidUrl(normalized) ? faviconFor(normalized) : null);
   return (
     <span className={`flex shrink-0 items-center justify-center overflow-hidden border border-border bg-card font-semibold text-muted-foreground ${className}`}>
       {src ? (
@@ -246,8 +250,8 @@ function Logo({ url, name, className }: { url?: string; name: string; className:
 
 /* ---------- right column ---------- */
 
-function LivePreview({ form }: { form: Form }) {
-  const cover = splitList(form.images)[0];
+function LivePreview({ form, media }: { form: Form; media: Media }) {
+  const cover = media.screenshot[0] || splitList(form.images)[0];
   const tags = splitList(form.tags).slice(0, 3);
   return (
     <section aria-label="Listing preview" className="overflow-hidden rounded-2xl border border-border bg-card">
@@ -269,7 +273,7 @@ function LivePreview({ form }: { form: Form }) {
       )}
       <div className="bg-gradient-to-br from-primary/10 via-primary/[0.03] to-transparent p-4">
         <div className="flex items-start gap-3">
-          <Logo url={form.app_url} name={form.title || "?"} className="h-12 w-12 rounded-xl text-base" />
+          <Logo url={form.app_url} logoUrl={media.logo[0]} name={form.title || "?"} className="h-12 w-12 rounded-xl text-base" />
           <div className="min-w-0">
             <p className="truncate text-base font-semibold text-foreground">{form.title || "Your app name"}</p>
             <p className="mt-0.5 line-clamp-2 text-sm leading-5 text-muted-foreground">
@@ -308,7 +312,7 @@ function MyLaunches({
       <ul>
         {apps.slice(0, 6).map((app) => (
           <li key={app.id} className="flex items-center gap-3 border-b border-border px-4 py-3 last:border-b-0">
-            <Logo url={app.app_url} name={app.title} className="h-8 w-8 rounded-lg text-xs" />
+            <Logo url={app.app_url} logoUrl={app.logo_url} name={app.title} className="h-8 w-8 rounded-lg text-xs" />
             <div className="min-w-0 flex-1">
               <p className="truncate text-sm font-medium text-foreground">{app.title}</p>
               <p className={`text-xs ${app.badge_verified ? "text-success" : "text-muted-foreground"}`}>
@@ -551,6 +555,11 @@ export default function SubmitLaunchClient() {
   const [activeApp, setActiveApp] = useState<ShowcaseProject | null>(null);
   const [showMore, setShowMore] = useState(false);
   const [filledFrom, setFilledFrom] = useState<string | null>(null);
+  const { data: uploadConfig } = useUploadConfig();
+  const [media, setMedia] = useState<Media>({ logo: [], screenshot: [], video: [] });
+  const [uploading, setUploading] = useState<Record<keyof Media, boolean>>({ logo: false, screenshot: false, video: false });
+  const [mediaKey, setMediaKey] = useState(0);
+  const anyUploading = Object.values(uploading).some(Boolean);
 
   const set = <K extends keyof Form>(key: K, value: Form[K]) => setForm((current) => ({ ...current, [key]: value }));
 
@@ -589,6 +598,10 @@ export default function SubmitLaunchClient() {
       toast.error("Add your app's full URL, like https://yourapp.com");
       return;
     }
+    if (anyUploading) {
+      toast.error("Wait for your uploads to finish");
+      return;
+    }
     if (!form.title.trim() || !form.description.trim()) {
       toast.error("Name and description are required");
       return;
@@ -618,7 +631,9 @@ export default function SubmitLaunchClient() {
         skills_used: [],
         use_cases: splitList(form.use_cases, /\n/),
         feedback_prompt: form.feedback_prompt.trim() || undefined,
-        gallery_images: splitList(form.images, /\s*\n\s*/).filter(isValidUrl).slice(0, 8),
+        gallery_images: [...media.screenshot, ...splitList(form.images, /\s*\n\s*/).filter(isValidUrl)].slice(0, 8),
+        logo_url: media.logo[0],
+        video_url: media.video[0],
         demo_video_url: form.demo_video_url.trim() || undefined,
         platforms: form.platforms,
         overview: Object.values(overview).some(Boolean) ? overview : undefined,
@@ -642,6 +657,9 @@ export default function SubmitLaunchClient() {
 
   const startOver = () => {
     setForm(EMPTY_FORM);
+    setMedia({ logo: [], screenshot: [], video: [] });
+    setUploading({ logo: false, screenshot: false, video: false });
+    setMediaKey((key) => key + 1);
     setFilledFrom(null);
     setActiveApp(null);
     setShowMore(false);
@@ -772,6 +790,38 @@ export default function SubmitLaunchClient() {
                         </Field>
                       </div>
 
+                      {uploadConfig?.enabled && (
+                        <div key={mediaKey} className="mt-6 space-y-5 border-t border-border pt-5">
+                          <MediaUpload
+                            kind="logo"
+                            max={1}
+                            limits={uploadConfig.limits.logo}
+                            label="Logo"
+                            hint="Square PNG, JPG or WEBP, up to 2 MB"
+                            onChange={(urls) => setMedia((m) => ({ ...m, logo: urls }))}
+                            onBusyChange={(busy) => setUploading((u) => ({ ...u, logo: busy }))}
+                          />
+                          <MediaUpload
+                            kind="screenshot"
+                            max={6}
+                            limits={uploadConfig.limits.screenshot}
+                            label="Screenshots"
+                            hint="Up to 6, 5 MB each. The first one is your cover."
+                            onChange={(urls) => setMedia((m) => ({ ...m, screenshot: urls }))}
+                            onBusyChange={(busy) => setUploading((u) => ({ ...u, screenshot: busy }))}
+                          />
+                          <MediaUpload
+                            kind="video"
+                            max={1}
+                            limits={uploadConfig.limits.video}
+                            label="Demo video"
+                            hint="MP4 or WEBM, up to 50 MB"
+                            onChange={(urls) => setMedia((m) => ({ ...m, video: urls }))}
+                            onBusyChange={(busy) => setUploading((u) => ({ ...u, video: busy }))}
+                          />
+                        </div>
+                      )}
+
                       <div className="mt-6 border-t border-border pt-5">
                         <button
                           type="button"
@@ -782,7 +832,7 @@ export default function SubmitLaunchClient() {
                           <span>
                             <span className="block text-sm font-medium text-foreground">Make your page stand out</span>
                             <span className="block text-xs text-muted-foreground">
-                              Optional. Screenshots, overview, platforms and links. Richer pages get more upvotes.
+                              Optional. Overview, platforms, tags and links. Richer pages get more upvotes.
                             </span>
                           </span>
                           <ChevronDown className={`h-4 w-4 shrink-0 text-muted-foreground transition-transform ${showMore ? "rotate-180" : ""}`} />
@@ -790,7 +840,7 @@ export default function SubmitLaunchClient() {
 
                         {showMore && (
                           <div className="mt-5 space-y-5">
-                            <Field label="Screenshots" htmlFor="images" hint="Image URLs, one per line">
+                            <Field label={uploadConfig?.enabled ? "Or paste screenshot URLs" : "Screenshots"} htmlFor="images" hint="Image URLs, one per line">
                               <textarea id="images" value={form.images} onChange={(e) => set("images", e.target.value)} rows={3} placeholder="https://yourapp.com/screenshot.png" className={textareaClass} />
                             </Field>
                             <div className="grid gap-5 sm:grid-cols-2">
@@ -827,7 +877,7 @@ export default function SubmitLaunchClient() {
                               <Field label="Tech stack and tags" htmlFor="tags" hint="Comma separated">
                                 <input id="tags" value={form.tags} onChange={(e) => set("tags", e.target.value)} placeholder="Next.js, MCP, Supabase" className={inputClass} />
                               </Field>
-                              <Field label="Demo video" htmlFor="demo_video_url" hint="YouTube link">
+                              <Field label="YouTube demo" htmlFor="demo_video_url" hint="YouTube link">
                                 <input id="demo_video_url" type="url" value={form.demo_video_url} onChange={(e) => set("demo_video_url", e.target.value)} placeholder="https://youtube.com/watch?v=..." className={inputClass} />
                               </Field>
                             </div>
@@ -855,11 +905,11 @@ export default function SubmitLaunchClient() {
                       <div className="mt-7 flex flex-wrap items-center gap-3 border-t border-border pt-5">
                         <button
                           type="submit"
-                          disabled={submit.isPending}
+                          disabled={submit.isPending || anyUploading}
                           className="inline-flex h-11 items-center gap-2 rounded-full bg-foreground px-6 text-sm font-medium text-background transition-colors hover:bg-foreground/85 disabled:opacity-60"
                         >
                           {submit.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
-                          {submit.isPending ? "Saving..." : "Continue to badge"}
+                          {submit.isPending ? "Saving..." : anyUploading ? "Uploading..." : "Continue to badge"}
                           {!submit.isPending && <ArrowRight className="h-4 w-4" />}
                         </button>
                         <p className="text-xs text-muted-foreground">Nothing is public until the badge is verified.</p>
@@ -869,7 +919,7 @@ export default function SubmitLaunchClient() {
                 </div>
 
                 <aside className="space-y-4 lg:sticky lg:top-24">
-                  {step === 0 && <LivePreview form={form} />}
+                  {step === 0 && <LivePreview form={form} media={media} />}
                   <MyLaunches apps={apps} activeId={step === 1 ? activeApp?.id : undefined} onContinue={continueApp} />
                 </aside>
               </div>

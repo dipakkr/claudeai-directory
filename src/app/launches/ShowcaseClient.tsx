@@ -44,7 +44,7 @@ function shortPitch(project: ShowcaseProject) {
 }
 
 function LaunchIcon({ project }: { project: ShowcaseProject }) {
-  const src = faviconFor(project.app_url || project.demo_url);
+  const src = project.logo_url || faviconFor(project.app_url || project.demo_url);
   const fallback = project.title.trim()[0]?.toUpperCase() || "L";
 
   return (
