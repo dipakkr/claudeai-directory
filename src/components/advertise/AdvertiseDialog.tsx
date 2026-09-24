@@ -120,7 +120,8 @@ export default function AdvertiseDialog() {
   const [product, setProduct] = useState("");
   const [website, setWebsite] = useState("");
   const [tagline, setTagline] = useState("");
-  const [email, setEmail] = useState("");
+  // null = untouched: show the account email. Once edited, the field is fully the user's (it can be cleared).
+  const [email, setEmail] = useState<string | null>(null);
 
   // Open from sidebar buttons (custom event) or from old /advertise links (?advertise=1).
   useEffect(() => {
@@ -146,8 +147,7 @@ export default function AdvertiseDialog() {
     };
   }, []);
 
-  // Default to the signed-in account's email until the user types their own.
-  const emailValue = email || user?.email || "";
+  const emailValue = email ?? user?.email ?? "";
 
   const selected = SPONSOR_CATEGORIES.find((c) => c.title === category);
   const label = selected?.label ?? "";
