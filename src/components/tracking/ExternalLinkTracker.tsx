@@ -24,37 +24,36 @@ function shouldTrack(link: HTMLAnchorElement): boolean {
   }
 }
 
-function trackExternalLinks() {
-  document.querySelectorAll<HTMLAnchorElement>('a[href^="http://"], a[href^="https://"]').forEach((link) => {
-    if (!shouldTrack(link)) {
-      return;
-    }
-
-    link.href = withUtmParams(link.href, {
-      medium: link.dataset.utmMedium || "outbound_link",
-      campaign: link.dataset.utmCampaign || "sitewide_referral",
-      content: linkContent(link),
-    });
-    link.dataset.utmTracked = "true";
+function tagLink(link: HTMLAnchorElement) {
+  if (!shouldTrack(link)) return;
+  link.href = withUtmParams(link.href, {
+    medium: link.dataset.utmMedium || "outbound_link",
+    campaign: link.dataset.utmCampaign || "sitewide_referral",
+    content: linkContent(link),
   });
+  link.dataset.utmTracked = "true";
 }
 
+/**
+ * Adds UTM params to outbound links at the moment they are used (mouse,
+ * middle click, keyboard, or "copy link" menu), not on page load.
+ *
+ * Rewriting hrefs on load used to race React hydration: content that streams
+ * in later (Suspense) was modified before React hydrated it, causing
+ * hydration mismatch errors. Tagging on interaction touches the DOM only after
+ * hydration, and every real visit still carries the UTM params.
+ */
 export function ExternalLinkTracker() {
   useEffect(() => {
-    trackExternalLinks();
-
-    let frame = 0;
-    const observer = new MutationObserver(() => {
-      window.cancelAnimationFrame(frame);
-      frame = window.requestAnimationFrame(trackExternalLinks);
-    });
-
-    observer.observe(document.body, { childList: true, subtree: true });
-
-    return () => {
-      window.cancelAnimationFrame(frame);
-      observer.disconnect();
+    const onInteract = (event: Event) => {
+      const target = event.target as Element | null;
+      const link = target?.closest?.("a[href]") as HTMLAnchorElement | null;
+      if (link) tagLink(link);
     };
+
+    const events = ["mousedown", "click", "auxclick", "contextmenu", "keydown"] as const;
+    events.forEach((name) => document.addEventListener(name, onInteract, true));
+    return () => events.forEach((name) => document.removeEventListener(name, onInteract, true));
   }, []);
 
   return null;
