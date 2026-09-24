@@ -4,9 +4,10 @@ import Link from "next/link";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "About - ClaudeAI Directory",
+  title: "About",
   description:
-    "Learn about ClaudeAI Directory, a community-driven project helping builders understand the Claude AI ecosystem.",
+    "Learn about Claude AI Directory, a community-driven project helping builders discover, install and share Skills, MCP servers and Agents for Claude.",
+  alternates: { canonical: "/about" },
 };
 
 export default function AboutPage() {

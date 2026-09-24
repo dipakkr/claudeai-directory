@@ -76,9 +76,8 @@ export const metadata: Metadata = {
       "max-snippet": -1,
     },
   },
-  alternates: {
-    canonical: SITE_URL,
-  },
+  // No site-wide canonical here: a default would point every page without its
+  // own canonical at the homepage. Each route sets `alternates.canonical`.
 };
 
 export default function RootLayout({

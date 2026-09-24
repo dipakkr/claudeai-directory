@@ -60,7 +60,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${SITE_URL}/jobs`, changeFrequency: "daily", priority: 0.8 },
     { url: `${SITE_URL}/courses`, changeFrequency: "weekly", priority: 0.8 },
     { url: `${SITE_URL}/launches`, changeFrequency: "weekly", priority: 0.7 },
-    { url: `${SITE_URL}/showcase`, changeFrequency: "weekly", priority: 0.7 },
+    { url: `${SITE_URL}/members`, changeFrequency: "weekly", priority: 0.5 },
+    { url: `${SITE_URL}/cheatsheet`, changeFrequency: "monthly", priority: 0.7 },
+    { url: `${SITE_URL}/anthropic-claude-release-timelines`, changeFrequency: "weekly", priority: 0.7 },
     { url: `${SITE_URL}/resources`, changeFrequency: "weekly", priority: 0.7 },
     { url: `${SITE_URL}/guides`, changeFrequency: "weekly", priority: 0.7 },
     { url: `${SITE_URL}/blog`, changeFrequency: "daily", priority: 0.8 },
@@ -85,6 +87,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   ]);
 
   const resourceSlugs = await fetchSlugs("/resources", "_id");
+  // Live launches only: the public list already leaves out pending and rejected ones.
+  const launchSlugs = await fetchSlugs("/showcase", "id");
   const agentSlugs = await fetchSlugs("/agents", "_id");
   const lessonPaths = await fetchGuideLessonPaths(guideSlugs);
 
@@ -122,6 +126,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     url: `${SITE_URL}/guides/${slug}`,
     changeFrequency: "weekly",
     priority: 0.7,
+  }));
+
+  const launchPages: MetadataRoute.Sitemap = launchSlugs.map((slug) => ({
+    url: `${SITE_URL}/launches/${slug}`,
+    changeFrequency: "weekly",
+    priority: 0.6,
   }));
 
   const blogPages: MetadataRoute.Sitemap = blogSlugs.map((slug) => ({
@@ -182,6 +192,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...guidePages,
     ...lessonPages,
     ...resourcePages,
+    ...launchPages,
     ...blogPages,
     ...threadPages,
     ...coursePages,

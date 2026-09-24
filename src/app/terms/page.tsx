@@ -4,8 +4,9 @@ import Link from "next/link";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Terms of Service - ClaudeAI Directory",
-  description: "Terms of service for ClaudeAI Directory (claudeai.directory).",
+  title: "Terms of Service",
+  description: "The terms for using Claude AI Directory (claudeai.directory), including listings, submissions, community posts and accounts.",
+  alternates: { canonical: "/terms" },
 };
 
 export default function TermsPage() {

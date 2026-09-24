@@ -16,7 +16,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
     return {
       title: `${name}'s Profile`,
-      description: profile.bio || `View ${name}'s profile on ClaudeAI Directory.`,
+      description:
+        profile.bio && profile.bio.length >= 70
+          ? profile.bio
+          : [profile.bio, `${name} builds with Claude. See their launches, posts and profile on Claude AI Directory.`].filter(Boolean).join(". "),
+      alternates: { canonical: `/u/${username}` },
     };
   } catch {
     return {

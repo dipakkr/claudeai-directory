@@ -4,8 +4,9 @@ import Link from "next/link";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy - ClaudeAI Directory",
-  description: "Privacy policy for ClaudeAI Directory (claudeai.directory).",
+  title: "Privacy Policy",
+  description: "How Claude AI Directory (claudeai.directory) collects, uses and protects your data, and the choices you have about it.",
+  alternates: { canonical: "/privacy" },
 };
 
 export default function PrivacyPage() {

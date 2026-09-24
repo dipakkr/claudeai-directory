@@ -13,6 +13,14 @@ const nextConfig: NextConfig = {
   },
   async redirects() {
     return [
+      // One host for search engines: send claudeai.directory to www (nginx
+      // passes the real Host header through). Localhost is never matched.
+      {
+        source: "/:path*",
+        has: [{ type: "host", value: "claudeai.directory" }],
+        destination: "https://www.claudeai.directory/:path*",
+        permanent: true,
+      },
       {
         source: "/mcp-servers",
         destination: "/mcp",

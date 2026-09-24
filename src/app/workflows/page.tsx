@@ -1,8 +1,17 @@
+import type { Metadata } from "next";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import Link from "next/link";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Workflow, Zap, FileText, Briefcase, Code2 } from "lucide-react";
+
+// Orphan placeholder: its counts are not real and its category links 404.
+// Kept out of search until it is rebuilt or removed.
+export const metadata: Metadata = {
+  title: "Claude Workflows",
+  robots: { index: false, follow: true },
+  alternates: { canonical: "/workflows" },
+};
 
 const workflowCategories = [
     {

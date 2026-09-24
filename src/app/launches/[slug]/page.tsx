@@ -99,6 +99,28 @@ function DetailRow({ label, children }: { label: string; children: ReactNode }) 
   );
 }
 
+/** Cut text at a word boundary so it fits `max` characters. */
+function fitText(text: string, max: number) {
+  if (text.length <= max) return text;
+  const cut = text.slice(0, max + 1);
+  const space = cut.lastIndexOf(" ");
+  return (space > max * 0.6 ? cut.slice(0, space) : text.slice(0, max))
+    .replace(/[\s,;:.-]+$/, "")
+    // Never end on a dangling joining word ("... clients and").
+    .replace(/\s+(and|or|the|of|for|with|to|a|an|in|on|your|&)$/i, "")
+    .replace(/[\s,;:.-]+$/, "");
+}
+
+/** "{App}: {tagline}" within 60 characters; just the app name when there is no room. */
+function launchTitle(name: string, tagline?: string | null) {
+  const clean = (tagline || "").trim().replace(/[.!]+$/, "");
+  if (!clean) return `${name}: Built with Claude`;
+  const full = `${name}: ${clean}`;
+  if (full.length <= 60) return full;
+  const room = 60 - name.length - 2;
+  return room >= 20 ? `${name}: ${fitText(clean, room)}` : name;
+}
+
 export async function generateMetadata({
   params,
 }: {
@@ -109,9 +131,15 @@ export async function generateMetadata({
 
   if (!project) return { title: "App Not Found" };
 
-  const title = `${project.title} | Claude App Showcase`;
-  const description =
-    project.tagline || project.description?.slice(0, 155) || `${project.title} in the Claude AI community`;
+  const title = { absolute: launchTitle(project.title, project.tagline) };
+  const maker = project.author_name || project.author_username;
+  const pitch = (project.tagline || project.description || "").trim().replace(/\s+/g, " ");
+  const description = fitText(
+    [pitch.replace(/[.!]*$/, "."), maker ? `Built with Claude by ${maker}.` : "Built with Claude.", "See it, upvote it and share feedback."]
+      .filter((part) => part !== ".")
+      .join(" "),
+    160,
+  );
 
   return {
     title,
@@ -129,14 +157,14 @@ export async function generateMetadata({
       },
     },
     openGraph: {
-      title,
+      title: title.absolute,
       description,
       url: `${SITE_URL}/launches/${slug}`,
       type: "website",
     },
     twitter: {
       card: "summary",
-      title,
+      title: title.absolute,
       description,
     },
   };
