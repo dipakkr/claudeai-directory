@@ -12,6 +12,7 @@ export interface User {
   github?: string;
   linkedin?: string;
   profession?: string;
+  profession_detail?: string;
   country?: string;
   /** Set by the API for new accounts that have not finished the first-run step. */
   needs_onboarding?: boolean;

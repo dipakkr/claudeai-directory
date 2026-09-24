@@ -31,6 +31,7 @@ export interface ProfileUpdate {
   github?: string;
   linkedin?: string;
   profession?: string;
+  profession_detail?: string;
   country?: string;
   email_notifications?: boolean;
 }

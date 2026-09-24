@@ -36,6 +36,7 @@ interface Member {
   name?: string;
   avatar?: string;
   profession?: string;
+  profession_detail?: string;
 }
 
 interface CommunityPreview {
@@ -93,6 +94,8 @@ export default function OnboardingModal() {
   });
   const [step, setStep] = useState<0 | 1 | 2>(0);
   const [profession, setProfession] = useState("");
+  const [professionDetail, setProfessionDetail] = useState("");
+  const professionReady = !!profession && (profession !== "Other" || professionDetail.trim().length > 1);
   const [country, setCountry] = useState("");
   const [countryGuessed, setCountryGuessed] = useState(false);
   const [links, setLinks] = useState({ twitter: "", github: "", linkedin: "", website: "", bio: "" });
@@ -157,6 +160,7 @@ export default function OnboardingModal() {
     try {
       await updateProfile({
         profession,
+        profession_detail: profession === "Other" ? professionDetail.trim() : undefined,
         country: country || undefined,
         ...(withLinks
           ? {
@@ -256,6 +260,23 @@ export default function OnboardingModal() {
               })}
             </div>
 
+            {profession === "Other" && (
+              <div className="mt-3">
+                <label htmlFor="onboarding-profession-detail" className="sr-only">
+                  Your role
+                </label>
+                <input
+                  id="onboarding-profession-detail"
+                  autoFocus
+                  value={professionDetail}
+                  onChange={(event) => setProfessionDetail(event.target.value)}
+                  maxLength={40}
+                  placeholder="What's your role? For example, Consultant"
+                  className={inputClass}
+                />
+              </div>
+            )}
+
             <label htmlFor="onboarding-country" className="mt-6 block text-sm font-medium text-foreground">
               Where are you based?
             </label>
@@ -278,7 +299,7 @@ export default function OnboardingModal() {
 
             <button
               type="button"
-              disabled={!profession}
+              disabled={!professionReady}
               onClick={() => setStep(1)}
               className="mt-7 inline-flex h-11 w-full items-center justify-center gap-2 rounded-full bg-foreground text-sm font-medium text-background transition-colors hover:bg-foreground/85 disabled:opacity-40"
             >
@@ -400,7 +421,11 @@ function WelcomeStep({
                   <img src={member.avatar} alt="" referrerPolicy="no-referrer" className="h-8 w-8 shrink-0 rounded-full object-cover" />
                   <span className="min-w-0">
                     <span className="block truncate text-sm font-medium text-foreground">{member.name || member.username}</span>
-                    {member.profession && <span className="block truncate text-xs text-muted-foreground">{member.profession}</span>}
+                    {member.profession && (
+                      <span className="block truncate text-xs text-muted-foreground">
+                        {member.profession === "Other" && member.profession_detail ? member.profession_detail : member.profession}
+                      </span>
+                    )}
                   </span>
                 </Link>
               </li>
