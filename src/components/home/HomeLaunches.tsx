@@ -38,8 +38,8 @@ export default function HomeLaunches({ projects, unavailable }: { projects: Show
 
   return (
     <section id="launches" aria-labelledby="launches-heading" className="mx-auto mt-16 max-w-[840px] scroll-mt-24 px-4 md:px-8">
-      <h2 id="launches-heading" className="text-2xl leading-tight text-foreground">Launched on Claude AI.directory</h2>
-      <p className="mt-2 text-sm leading-6 text-muted-foreground">Apps from community builders. Explore the product, meet its maker, and share feedback.</p>
+      <h2 id="launches-heading" className="text-2xl leading-tight text-foreground">Built with Claude</h2>
+      <p className="mt-2 text-sm leading-6 text-muted-foreground">Top apps launched by the community. Try them, meet the makers and share feedback.</p>
       <div className="mt-5 border-y border-border">
         {shownProjects.map((project, index) => {
           const category = normalizeCategory(project);
@@ -51,7 +51,7 @@ export default function HomeLaunches({ projects, unavailable }: { projects: Show
                 <div className="flex w-10 shrink-0 items-center justify-center text-primary">
                   <span className="text-base font-semibold leading-none">#{index + 1}</span>
                 </div>
-                <Link href={`/showcase/${encodeURIComponent(project.id)}`} className="flex min-w-0 flex-1 items-center gap-4">
+                <Link href={`/launches/${encodeURIComponent(project.id)}`} className="flex min-w-0 flex-1 items-center gap-4">
                   <LaunchIcon project={project} />
                   <div className="min-w-0 flex-1">
                     <div className="flex min-w-0 items-center gap-2">
@@ -72,7 +72,7 @@ export default function HomeLaunches({ projects, unavailable }: { projects: Show
                   </div>
                 </Link>
                 <Link
-                  href={`/showcase/${encodeURIComponent(project.id)}`}
+                  href={`/launches/${encodeURIComponent(project.id)}`}
                   aria-label={`View ${project.title}`}
                   className="flex h-14 w-12 shrink-0 flex-col items-center justify-center gap-0.5 rounded-xl border border-border bg-background text-foreground shadow-sm transition hover:border-[var(--cad-line-hover)] hover:bg-card sm:h-16 sm:w-14"
                 >
@@ -88,8 +88,8 @@ export default function HomeLaunches({ projects, unavailable }: { projects: Show
       <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <p className="max-w-[52ch] text-xs leading-5 text-muted-foreground">Free to submit. Add the launch badge to your site, then verify it to publish.</p>
         <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
-          <Link href="/showcase" className="inline-flex items-center gap-1 py-2 text-sm text-foreground hover:underline">All launches <ArrowRight className="h-4 w-4" /></Link>
-          <Link href="/showcase/submit" className="inline-flex items-center gap-2 py-2 text-sm font-medium text-foreground underline underline-offset-4"><Rocket className="h-4 w-4" />Launch your app</Link>
+          <Link href="/launches" className="inline-flex items-center gap-1 py-2 text-sm text-foreground hover:underline">All launches <ArrowRight className="h-4 w-4" /></Link>
+          <Link href="/launches/submit" className="inline-flex items-center gap-2 py-2 text-sm font-medium text-foreground underline underline-offset-4"><Rocket className="h-4 w-4" />Launch your app</Link>
         </div>
       </div>
     </section>
