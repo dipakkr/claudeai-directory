@@ -8,23 +8,7 @@ import { ArrowLeft, ArrowRight, Check, Loader2 } from "lucide-react";
 
 import { api, ApiError } from "@/lib/api";
 import { useAuth } from "@/lib/auth";
-
-// Keep in sync with PROFESSIONS in backend/app/models/user.py.
-const PROFESSIONS = [
-  "Developer",
-  "Founder",
-  "Product manager",
-  "Designer",
-  "Marketer",
-  "Data scientist",
-  "Researcher",
-  "Student",
-  "Other",
-];
-
-// ISO 3166-1 alpha-2. Names come from the browser (Intl.DisplayNames).
-const COUNTRY_CODES =
-  "AF AL DZ AR AM AU AT AZ BH BD BY BE BJ BO BA BR BG KH CM CA CL CN CO CR HR CY CZ DK DO EC EG SV EE ET FI FR GE DE GH GR GT HN HK HU IS IN ID IR IQ IE IL IT JM JP JO KZ KE KR KW KG LV LB LT LU MY MT MX MD MN MA NP NL NZ NI NG MK NO OM PK PA PY PE PH PL PT QA RO RU RW SA SN RS SG SK SI ZA ES LK SE CH TW TZ TH TN TR UG UA AE GB US UY UZ VE VN ZM ZW".split(" ");
+import { COUNTRY_CODES, PROFESSIONS } from "@/lib/profile-options";
 
 // Where the step must never block: signing in, legal pages, the old setup page.
 const EXCLUDED = ["/login", "/setup-profile", "/privacy", "/terms"];
