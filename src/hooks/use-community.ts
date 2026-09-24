@@ -59,3 +59,23 @@ export function useCreateReply(threadId: string) {
     },
   });
 }
+
+/** Thread and reply ids the signed-in user has upvoted in this thread. */
+export function useCommunityVotes(threadId: string, enabled: boolean) {
+  return useQuery({
+    queryKey: ["community", "votes", threadId],
+    queryFn: () => api.get<string[]>(`/community/threads/${threadId}/my-votes`),
+    enabled,
+  });
+}
+
+export function useCommunityUpvote(threadId: string) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ type, id }: { type: "thread" | "reply"; id: string }) =>
+      api.post<{ voted: boolean; upvotes: number }>(
+        type === "thread" ? `/community/threads/${id}/upvote` : `/community/replies/${id}/upvote`,
+      ),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["community", "votes", threadId] }),
+  });
+}

@@ -320,6 +320,8 @@ export interface Thread {
   tags: string[];
   replies: number;
   views: number;
+  upvotes?: number;
+  author_headline?: string | null;
   created_at: string;
 }
 
@@ -332,6 +334,7 @@ export interface Reply {
   author_avatar?: string;
   parent_id?: string;
   upvotes: number;
+  author_headline?: string | null;
   created_at: string;
 }
 

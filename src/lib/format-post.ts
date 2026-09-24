@@ -8,6 +8,7 @@
  *   - a short standalone line ("The workflow", "Why this is useful?") that is
  *     followed by a longer paragraph into a subheading
  *   - a standalone quoted line into a blockquote
+ *   - pasted "•" bullets (even when collapsed onto one line) into a list
  * Posts that already use Markdown are returned untouched. Display only: the
  * stored text is never changed.
  */
@@ -30,6 +31,14 @@ export function formatPlainPost(body: string): string {
 
   let i = 0;
   while (i < blocks.length) {
+    // Pasted "•" bullets, often collapsed onto one line: "• one • two • three".
+    const bullets = blocks[i].split(/\s*•\s*/).map((part) => part.trim()).filter(Boolean);
+    if (blocks[i].trim().startsWith("•") && bullets.length >= 2) {
+      out.push(bullets.map((item) => `- ${item}`).join("\n"));
+      i += 1;
+      continue;
+    }
+
     // Collect a run of short, non-sentence lines.
     let j = i;
     while (j < blocks.length && isShortLine(blocks[j], 90) && !endsLikeSentence(blocks[j]) && !/^https?:\/\//.test(blocks[j])) {

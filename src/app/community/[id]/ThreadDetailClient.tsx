@@ -5,13 +5,11 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
-import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Skeleton } from "@/components/ui/skeleton";
-import { ArrowLeft, ChevronUp, Eye, Link2, Linkedin, MessageSquare, PenSquare } from "lucide-react";
-import PageBreadcrumb from "@/components/layout/PageBreadcrumb";
+import { ArrowLeft, ArrowRight, ChevronUp, Eye, Github, Globe, Link2, Linkedin, MessageSquare, PenSquare, Share2, UserRound } from "lucide-react";
 import UserMarkdown from "@/components/shared/UserMarkdown";
-import { useThread, useReplies, useCreateReply } from "@/hooks/use-community";
+import { useThread, useReplies, useCreateReply, useCommunityVotes, useCommunityUpvote } from "@/hooks/use-community";
 import { useAuth } from "@/lib/auth";
 import { toast } from "sonner";
 import { formatPlainPost } from "@/lib/format-post";
@@ -112,64 +110,136 @@ function buildReplyTree(replies: Reply[]): { nodes: ReplyNode[]; byId: Map<strin
   };
 }
 
+/* ---------- votes ---------- */
+
+interface VoteContext {
+  voted: Set<string>;
+  onVote: (type: "thread" | "reply", id: string) => Promise<{ voted: boolean; upvotes: number } | null>;
+}
+
+function VoteButton({
+  type,
+  id,
+  count,
+  ctx,
+  size = "sm",
+}: {
+  type: "thread" | "reply";
+  id: string;
+  count: number;
+  ctx: VoteContext;
+  size?: "sm" | "lg";
+}) {
+  const [state, setState] = useState<{ voted: boolean; count: number } | null>(null);
+  const voted = state?.voted ?? ctx.voted.has(id);
+  const shown = state?.count ?? count;
+  const [busy, setBusy] = useState(false);
+
+  const click = async () => {
+    if (busy) return;
+    setBusy(true);
+    const result = await ctx.onVote(type, id);
+    if (result) setState({ voted: result.voted, count: result.upvotes });
+    setBusy(false);
+  };
+
+  if (size === "lg") {
+    return (
+      <button
+        type="button"
+        onClick={click}
+        aria-pressed={voted}
+        className={`inline-flex h-10 items-center gap-2 rounded-full border px-4 text-sm font-medium transition-colors ${
+          voted ? "border-primary bg-primary text-primary-foreground" : "border-border bg-card text-foreground hover:border-primary/60"
+        }`}
+      >
+        <ChevronUp className="h-4 w-4" strokeWidth={2.5} />
+        {voted ? "Upvoted" : "Upvote"}
+        <span className={`tabular-nums ${voted ? "" : "text-muted-foreground"}`}>{shown}</span>
+      </button>
+    );
+  }
+  return (
+    <button
+      type="button"
+      onClick={click}
+      aria-pressed={voted}
+      className={`inline-flex items-center gap-1 font-medium transition-colors ${voted ? "text-primary" : "hover:text-foreground"}`}
+    >
+      <ChevronUp className="h-3.5 w-3.5" strokeWidth={2.5} />
+      {voted ? "Upvoted" : "Upvote"}
+      {shown > 0 && <span className="tabular-nums">({shown})</span>}
+    </button>
+  );
+}
+
+/* ---------- comments ---------- */
+
+function Byline({
+  author,
+  username,
+  headline,
+  created,
+  small,
+}: {
+  author: string;
+  username?: string;
+  headline?: string | null;
+  created: string;
+  small?: boolean;
+}) {
+  return (
+    <div className={`flex flex-wrap items-baseline gap-x-1.5 ${small ? "text-[13px]" : "text-sm"}`}>
+      <AuthorName author={author} username={username} className="font-semibold text-foreground" />
+      {headline && <span className="text-muted-foreground">{headline}</span>}
+      <span className="text-xs text-muted-foreground/80">· {timeAgo(created)}</span>
+    </div>
+  );
+}
+
 function ReplyCard({
   reply,
   threadId,
   nested,
   replyingToAuthor,
+  votes,
 }: {
   reply: Reply;
   threadId: string;
   nested?: boolean;
   replyingToAuthor?: string;
+  votes: VoteContext;
 }) {
   const [composerOpen, setComposerOpen] = useState(false);
+  const shareReply = async () => {
+    await navigator.clipboard.writeText(`${SITE_URL}/community/${threadId}#${reply.id}`);
+    toast.success("Link to comment copied");
+  };
+  const avatar = nested ? "h-7 w-7 text-[11px]" : "h-9 w-9 text-xs";
   return (
-    <div className={nested ? "py-2.5" : "py-4"}>
+    <div id={reply.id} className={`scroll-mt-24 ${nested ? "pt-4" : "py-5"}`}>
       <div className="flex items-start gap-3">
-        <div className={`${nested ? "h-6 w-6 text-[10px]" : "h-7 w-7 text-[11px]"} shrink-0 mt-0.5`}>
-          <AuthorAvatar src={reply.author_avatar} author={reply.author} className={nested ? "h-6 w-6 text-[10px]" : "h-7 w-7 text-[11px]"} />
-        </div>
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 text-[11px] text-muted-foreground mb-1.5">
-            <AuthorName
-              author={reply.author}
-              username={reply.author_username}
-              className="font-medium text-foreground"
-            />
-            {replyingToAuthor && (
-              <span className="rounded bg-muted px-1.5 py-0.5 text-[10px]">
-                ↳ @{replyingToAuthor}
-              </span>
-            )}
-            <span className="text-border">·</span>
-            <span>{timeAgo(reply.created_at)}</span>
+        <AuthorAvatar src={reply.author_avatar} author={reply.author} className={`${avatar} shrink-0`} />
+        <div className="min-w-0 flex-1">
+          <Byline author={reply.author} username={reply.author_username} headline={reply.author_headline} created={reply.created_at} small={nested} />
+          <div className="mt-1.5">
+            {replyingToAuthor && <span className="mr-1 text-sm font-medium text-primary">@{replyingToAuthor}</span>}
+            <UserMarkdown compact>{reply.body}</UserMarkdown>
           </div>
-          <UserMarkdown compact>{reply.body}</UserMarkdown>
-          <div className="flex items-center gap-3 mt-2 text-[11px] text-muted-foreground">
-            {reply.upvotes > 0 && (
-              <span className="flex items-center gap-1">
-                <ChevronUp className="h-3 w-3" />
-                {reply.upvotes}
-              </span>
-            )}
-            <button
-              type="button"
-              onClick={() => setComposerOpen((v) => !v)}
-              className="font-medium hover:text-foreground transition-colors"
-            >
+          <div className="mt-2 flex items-center gap-4 text-xs text-muted-foreground">
+            <VoteButton type="reply" id={reply.id} count={reply.upvotes ?? 0} ctx={votes} />
+            <button type="button" onClick={() => setComposerOpen((v) => !v)} className="inline-flex items-center gap-1 font-medium hover:text-foreground">
+              <MessageSquare className="h-3.5 w-3.5" />
               {composerOpen ? "Cancel" : "Reply"}
+            </button>
+            <button type="button" onClick={shareReply} className="inline-flex items-center gap-1 font-medium hover:text-foreground">
+              <Share2 className="h-3.5 w-3.5" />
+              Share
             </button>
           </div>
           {composerOpen && (
             <div className="mt-3">
-              <ReplyForm
-                threadId={threadId}
-                parentId={reply.id}
-                compact
-                autoFocus
-                onPosted={() => setComposerOpen(false)}
-              />
+              <ReplyForm threadId={threadId} parentId={reply.id} compact autoFocus onPosted={() => setComposerOpen(false)} />
             </div>
           )}
         </div>
@@ -192,60 +262,67 @@ function ReplyForm({
   onPosted?: () => void;
 }) {
   const [body, setBody] = useState("");
-  const { isAuthenticated } = useAuth();
+  const [focused, setFocused] = useState(false);
+  const { isAuthenticated, user } = useAuth();
   const router = useRouter();
   const createReply = useCreateReply(threadId);
 
+  const promptSignIn = () =>
+    toast.error("Sign in to comment", { action: { label: "Sign in", onClick: () => router.push("/login") } });
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!isAuthenticated) {
-      toast.error("Sign in to reply", {
-        action: { label: "Sign in", onClick: () => router.push("/login") },
-      });
-      return;
-    }
-    if (!body.trim()) {
-      toast.error("Please write a reply");
-      return;
-    }
+    if (!isAuthenticated) return promptSignIn();
+    if (!body.trim()) return;
     createReply.mutate(
       { body: body.trim(), ...(parentId ? { parent_id: parentId } : {}) },
       {
         onSuccess: () => {
           setBody("");
-          toast.success("Reply posted!");
+          setFocused(false);
+          toast.success(parentId ? "Reply posted" : "Comment posted");
           onPosted?.();
         },
-        onError: () => toast.error("Failed to post reply"),
-      }
+        onError: () => toast.error("Could not post. Try again."),
+      },
     );
   };
 
-  if (!isAuthenticated && !compact) {
-    return (
-      <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-dashed border-border bg-card/50 px-5 py-4">
-        <p className="text-sm text-muted-foreground">Sign in to join the discussion and reply.</p>
-        <Link href="/login" className="inline-flex h-9 items-center rounded-full bg-foreground px-4 text-sm font-medium text-background hover:bg-foreground/85">
-          Sign in to reply
-        </Link>
-      </div>
-    );
-  }
+  const expanded = compact || focused || body.length > 0;
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-2">
-      <Textarea
-        placeholder={isAuthenticated ? "Write a reply..." : "Sign in to reply..."}
-        value={body}
-        onChange={(e) => setBody(e.target.value)}
-        className={compact ? "text-sm min-h-[60px]" : "text-sm min-h-[80px]"}
-        disabled={!isAuthenticated}
-        autoFocus={autoFocus}
-      />
-      <div className="flex justify-end">
-        <Button type="submit" size="sm" className="text-sm" disabled={createReply.isPending || !isAuthenticated}>
-          {createReply.isPending ? "Posting..." : "Reply"}
-        </Button>
+    <form onSubmit={handleSubmit} className="flex items-start gap-3">
+      {!compact &&
+        (user?.avatar ? (
+          <AuthorAvatar src={user.avatar} author={user.name || user.username} className="h-9 w-9 shrink-0 text-xs" />
+        ) : (
+          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-border bg-card text-muted-foreground">
+            <UserRound className="h-4 w-4" />
+          </span>
+        ))}
+      <div className="min-w-0 flex-1 rounded-2xl border border-border bg-card transition-colors focus-within:border-primary/50">
+        <Textarea
+          placeholder={parentId ? "Write a reply..." : "What do you think?"}
+          value={body}
+          onChange={(e) => setBody(e.target.value)}
+          onFocus={() => (isAuthenticated ? setFocused(true) : promptSignIn())}
+          readOnly={!isAuthenticated}
+          autoFocus={autoFocus}
+          rows={expanded ? 3 : 1}
+          className="min-h-0 resize-none border-0 bg-transparent px-4 py-3 text-sm shadow-none focus-visible:ring-0"
+        />
+        {expanded && (
+          <div className="flex items-center justify-between border-t border-border px-3 py-2">
+            <span className="text-xs text-muted-foreground">Markdown supported</span>
+            <button
+              type="submit"
+              disabled={createReply.isPending || !body.trim()}
+              className="inline-flex h-8 items-center rounded-full bg-foreground px-4 text-xs font-medium text-background transition-colors hover:bg-foreground/85 disabled:opacity-40"
+            >
+              {createReply.isPending ? "Posting..." : parentId ? "Reply" : "Comment"}
+            </button>
+          </div>
+        )}
       </div>
     </form>
   );
@@ -264,30 +341,32 @@ function roleOf(profile?: PublicProfile | null) {
   return profile.profession === "Other" && profile.profession_detail ? profile.profession_detail : profile.profession;
 }
 
-function SidebarCard({ title, children }: { title: string; children: React.ReactNode }) {
+function SidebarSection({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <section className="rounded-2xl border border-border bg-card p-5">
-      <h3 className="font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground">{title}</h3>
-      <div className="mt-3">{children}</div>
+    <section className="border-t border-border px-5 py-4 first:border-t-0">
+      <h3 className="text-xs font-medium text-muted-foreground">{title}</h3>
+      <div className="mt-2.5">{children}</div>
     </section>
   );
 }
+
+const iconButton =
+  "inline-flex h-8 w-8 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-background hover:text-foreground";
 
 function ShareButtons({ title, url }: { title: string; url: string }) {
   const copy = async () => {
     await navigator.clipboard.writeText(url);
     toast.success("Link copied");
   };
-  const button =
-    "inline-flex h-9 flex-1 items-center justify-center gap-1.5 rounded-full border border-border bg-background text-sm text-foreground transition-colors hover:border-[var(--cad-line-hover)]";
   return (
-    <div className="flex gap-2">
+    <div className="-ml-1.5 flex items-center gap-1">
       <a
         href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(url)}`}
         target="_blank"
         rel="noopener noreferrer"
-        className={button}
+        className={iconButton}
         aria-label="Share on X"
+        title="Share on X"
       >
         <XIcon className="h-3.5 w-3.5" />
       </a>
@@ -295,12 +374,13 @@ function ShareButtons({ title, url }: { title: string; url: string }) {
         href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`}
         target="_blank"
         rel="noopener noreferrer"
-        className={button}
+        className={iconButton}
         aria-label="Share on LinkedIn"
+        title="Share on LinkedIn"
       >
         <Linkedin className="h-4 w-4" />
       </a>
-      <button type="button" onClick={copy} className={button} aria-label="Copy link">
+      <button type="button" onClick={copy} className={iconButton} aria-label="Copy link" title="Copy link">
         <Link2 className="h-4 w-4" />
       </button>
     </div>
@@ -324,6 +404,25 @@ export default function ThreadDetail({
 }) {
   const { data: thread, isLoading: threadLoading } = useThread(id, initialThread);
   const { data: replies, isLoading: repliesLoading } = useReplies(id, initialReplies);
+  const { isAuthenticated } = useAuth();
+  const router = useRouter();
+  const { data: myVotes } = useCommunityVotes(id, isAuthenticated);
+  const upvote = useCommunityUpvote(id);
+  const votes: VoteContext = {
+    voted: new Set(myVotes ?? []),
+    onVote: async (type, targetId) => {
+      if (!isAuthenticated) {
+        toast.error("Sign in to upvote", { action: { label: "Sign in", onClick: () => router.push("/login") } });
+        return null;
+      }
+      try {
+        return await upvote.mutateAsync({ type, id: targetId });
+      } catch {
+        toast.error("Could not save your upvote");
+        return null;
+      }
+    },
+  };
   const replyCount = replies?.length ?? thread?.replies ?? 0;
   const role = roleOf(authorProfile);
   const country = countryName(authorProfile?.country);
@@ -333,7 +432,6 @@ export default function ThreadDetail({
       <Header />
       <main className="flex-1">
         <div className="mx-auto max-w-[1120px] px-4 pb-16 pt-8 md:px-8 md:pt-10">
-          <PageBreadcrumb items={[{ label: "Community", href: "/community" }, { label: thread?.title || "..." }]} />
 
           {threadLoading ? (
             <div className="space-y-4">
@@ -344,8 +442,26 @@ export default function ThreadDetail({
           ) : thread ? (
             <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_300px] lg:items-start">
               <article className="min-w-0">
+                <Link href="/community" className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground">
+                  <ArrowLeft className="h-3.5 w-3.5" />
+                  Discussions
+                </Link>
+
+                <div className="mt-6 flex items-center gap-3">
+                  <AuthorAvatar src={thread.author_avatar} author={thread.author} className="h-10 w-10 text-sm" />
+                  <Byline author={thread.author} username={thread.author_username} headline={thread.author_headline || role} created={thread.created_at} />
+                </div>
+
+                <h1 className="mt-4 text-balance font-sans text-[1.75rem] font-bold leading-tight tracking-tight text-foreground md:text-[2rem]">
+                  {thread.title}
+                </h1>
+
+                <div className="mt-5 max-w-[72ch] text-[15px] [&_.prose]:text-[15px] [&_.prose]:leading-7 [&_blockquote]:border-l-primary/60 [&_blockquote]:not-italic [&_blockquote_p]:before:content-none [&_blockquote_p]:after:content-none [&_h3]:mt-8 [&_h3]:text-lg [&_li]:my-1">
+                  <UserMarkdown>{formatPlainPost(thread.body)}</UserMarkdown>
+                </div>
+
                 {thread.tags && thread.tags.length > 0 && (
-                  <div className="mb-4 flex flex-wrap gap-1.5">
+                  <div className="mt-6 flex flex-wrap gap-1.5">
                     {thread.tags.map((tag) => (
                       <span key={tag} className="rounded-full border border-border bg-card px-2.5 py-0.5 text-xs text-muted-foreground">
                         {tag}
@@ -354,56 +470,41 @@ export default function ThreadDetail({
                   </div>
                 )}
 
-                <h1 className="text-balance text-3xl font-semibold leading-tight text-foreground md:text-[2.5rem]">{thread.title}</h1>
-
-                <div className="mt-5 flex flex-wrap items-center gap-3 border-b border-border pb-6">
-                  <AuthorAvatar src={thread.author_avatar} author={thread.author} className="h-10 w-10 text-sm" />
-                  <div className="min-w-0">
-                    <AuthorName author={thread.author} username={thread.author_username} className="text-sm font-semibold text-foreground" />
-                    <p className="text-xs text-muted-foreground">
-                      {[role, timeAgo(thread.created_at)].filter(Boolean).join(" · ")}
-                    </p>
-                  </div>
-                  <div className="ml-auto flex items-center gap-4 text-xs text-muted-foreground">
-                    <span className="inline-flex items-center gap-1.5" title="Views">
-                      <Eye className="h-3.5 w-3.5" />
-                      {thread.views ?? 0}
-                    </span>
-                    <a href="#replies" className="inline-flex items-center gap-1.5 hover:text-foreground" title="Replies">
-                      <MessageSquare className="h-3.5 w-3.5" />
-                      {replyCount}
-                    </a>
-                  </div>
+                <div className="mt-6 flex flex-wrap items-center gap-2 border-y border-border py-4">
+                  <VoteButton type="thread" id={thread.id} count={thread.upvotes ?? 0} ctx={votes} size="lg" />
+                  <a href="#comments" className="inline-flex h-10 items-center gap-2 rounded-full border border-border bg-card px-4 text-sm font-medium text-foreground hover:border-[var(--cad-line-hover)]">
+                    <MessageSquare className="h-4 w-4" />
+                    Comment
+                    <span className="tabular-nums text-muted-foreground">{replyCount}</span>
+                  </a>
+                  <span className="ml-auto inline-flex items-center gap-1.5 text-xs text-muted-foreground" title="Views">
+                    <Eye className="h-3.5 w-3.5" />
+                    {thread.views ?? 0} views
+                  </span>
                 </div>
 
-                <div className="mt-6 max-w-[72ch] text-[15px] [&_.prose]:text-[15px] [&_.prose]:leading-7 [&_blockquote]:border-l-primary/60 [&_blockquote]:not-italic [&_blockquote_p]:before:content-none [&_blockquote_p]:after:content-none [&_h3]:mt-8 [&_h3]:text-lg [&_li]:my-1">
-                  <UserMarkdown>{formatPlainPost(thread.body)}</UserMarkdown>
-                </div>
+                <section id="comments" className="mt-8 scroll-mt-24">
+                  <ReplyForm threadId={id} />
 
-                <section id="replies" className="mt-12 scroll-mt-24 border-t border-border pt-8">
-                  <h2 className="font-sans text-lg font-semibold text-foreground">
-                    {replyCount === 0 ? "Replies" : `${replyCount} ${replyCount === 1 ? "reply" : "replies"}`}
+                  <h2 className="mt-8 font-sans text-sm font-semibold text-foreground">
+                    {replyCount === 0 ? "Comments" : `${replyCount} ${replyCount === 1 ? "comment" : "comments"}`}
                   </h2>
 
-                  <div className="mt-4">
-                    <ReplyForm threadId={id} />
-                  </div>
-
                   {repliesLoading ? (
-                    <div className="mt-6 space-y-4">
+                    <div className="mt-4 space-y-4">
                       {Array.from({ length: 3 }).map((_, i) => (
                         <Skeleton key={i} className="h-16 w-full" />
                       ))}
                     </div>
                   ) : (replies ?? []).length > 0 ? (
-                    <div className="mt-4 divide-y divide-border">
+                    <div className="divide-y divide-border">
                       {(() => {
                         const { nodes, byId } = buildReplyTree(replies ?? []);
                         return nodes.map(({ reply, children }) => (
-                          <div key={reply.id}>
-                            <ReplyCard reply={reply} threadId={id} />
+                          <div key={reply.id} className="py-1">
+                            <ReplyCard reply={reply} threadId={id} votes={votes} />
                             {children.length > 0 && (
-                              <div className="ml-4 border-l border-border/80 pl-3.5 transition-colors hover:border-border sm:ml-8">
+                              <div className="mb-4 ml-[18px] border-l-2 border-border pl-6">
                                 {children.map((child) => {
                                   const directParent =
                                     child.parent_id && child.parent_id !== reply.id ? byId.get(child.parent_id) : undefined;
@@ -414,6 +515,7 @@ export default function ThreadDetail({
                                       threadId={id}
                                       nested
                                       replyingToAuthor={directParent?.author}
+                                      votes={votes}
                                     />
                                   );
                                 })}
@@ -424,65 +526,90 @@ export default function ThreadDetail({
                       })()}
                     </div>
                   ) : (
-                    <div className="mt-6 flex flex-col items-center rounded-2xl border border-dashed border-border px-6 py-10 text-center">
-                      <span className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-primary">
-                        <MessageSquare className="h-4 w-4" />
-                      </span>
-                      <p className="mt-3 text-sm font-medium text-foreground">No replies yet</p>
-                      <p className="mt-1 text-sm text-muted-foreground">
-                        Be the first to reply to {thread.author.split(" ")[0]}. Questions and experiences both help.
-                      </p>
-                    </div>
+                    <p className="mt-3 text-sm text-muted-foreground">
+                      No comments yet. Be the first to share what you think with {thread.author.split(" ")[0]}.
+                    </p>
                   )}
                 </section>
               </article>
 
-              <aside className="space-y-4 lg:sticky lg:top-24">
-                <SidebarCard title="Posted by">
-                  <div className="flex items-center gap-3">
-                    <AuthorAvatar src={thread.author_avatar} author={thread.author} className="h-11 w-11 text-sm" />
-                    <div className="min-w-0">
-                      <AuthorName author={thread.author} username={thread.author_username} className="block truncate text-sm font-semibold text-foreground" />
-                      {(role || country) && (
-                        <p className="truncate text-xs text-muted-foreground">{[role, country].filter(Boolean).join(" · ")}</p>
+              <aside className="space-y-3 lg:sticky lg:top-24">
+                <div className="overflow-hidden rounded-2xl border border-border bg-card">
+                  <SidebarSection title="Posted by">
+                    <div className="flex items-center gap-3">
+                      <AuthorAvatar src={thread.author_avatar} author={thread.author} className="h-10 w-10 text-sm" />
+                      <div className="min-w-0 flex-1">
+                        <AuthorName author={thread.author} username={thread.author_username} className="block truncate text-sm font-semibold text-foreground" />
+                        <p className="truncate text-xs text-muted-foreground">
+                          {[role, country].filter(Boolean).join(" · ") ||
+                            (authorProfile?.created_at
+                              ? `Member since ${new Date(authorProfile.created_at).toLocaleDateString("en-US", { month: "short", year: "numeric" })}`
+                              : "Community member")}
+                        </p>
+                      </div>
+                    </div>
+                    {authorProfile?.bio && <p className="mt-3 text-sm leading-6 text-foreground/80">{authorProfile.bio}</p>}
+                    <div className="mt-3 flex items-center justify-between">
+                      <div className="-ml-1.5 flex items-center gap-1">
+                        {authorProfile?.twitter && (
+                          <a href={`https://x.com/${authorProfile.twitter}`} target="_blank" rel="nofollow ugc noopener noreferrer" className={iconButton} aria-label="X profile">
+                            <XIcon className="h-3.5 w-3.5" />
+                          </a>
+                        )}
+                        {authorProfile?.github && (
+                          <a href={`https://github.com/${authorProfile.github}`} target="_blank" rel="nofollow ugc noopener noreferrer" className={iconButton} aria-label="GitHub profile">
+                            <Github className="h-4 w-4" />
+                          </a>
+                        )}
+                        {authorProfile?.linkedin && (
+                          <a href={authorProfile.linkedin} target="_blank" rel="nofollow ugc noopener noreferrer" className={iconButton} aria-label="LinkedIn profile">
+                            <Linkedin className="h-4 w-4" />
+                          </a>
+                        )}
+                        {authorProfile?.website && (
+                          <a href={authorProfile.website} target="_blank" rel="nofollow ugc noopener noreferrer" className={iconButton} aria-label="Website">
+                            <Globe className="h-4 w-4" />
+                          </a>
+                        )}
+                      </div>
+                      {thread.author_username && (
+                        <Link href={`/u/${thread.author_username}`} className="inline-flex items-center gap-1 text-xs font-medium text-foreground hover:text-primary">
+                          View profile
+                          <ArrowRight className="h-3 w-3" />
+                        </Link>
                       )}
                     </div>
-                  </div>
-                  {authorProfile?.bio && <p className="mt-3 text-sm leading-6 text-muted-foreground">{authorProfile.bio}</p>}
-                  {thread.author_username && (
-                    <Link
-                      href={`/u/${thread.author_username}`}
-                      className="mt-4 inline-flex h-9 w-full items-center justify-center rounded-full border border-border text-sm font-medium text-foreground hover:border-[var(--cad-line-hover)]"
-                    >
-                      View profile
-                    </Link>
+                  </SidebarSection>
+
+                  <SidebarSection title="Share">
+                    <ShareButtons title={thread.title} url={`${SITE_URL}/community/${id}`} />
+                  </SidebarSection>
+
+                  {related.length > 0 && (
+                    <SidebarSection title="More discussions">
+                      <ul className="-mx-2">
+                        {related.map((item) => (
+                          <li key={item.id}>
+                            <Link href={`/community/${item.id}`} className="group block rounded-lg px-2 py-2 transition-colors hover:bg-background">
+                              <span className="line-clamp-2 text-sm leading-5 text-foreground group-hover:text-primary">{item.title}</span>
+                              <span className="mt-0.5 block text-xs text-muted-foreground">
+                                {item.replies} {item.replies === 1 ? "reply" : "replies"} · {timeAgo(item.created_at)}
+                              </span>
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                      <Link href="/community" className="mt-2 inline-flex items-center gap-1 text-xs font-medium text-muted-foreground hover:text-foreground">
+                        All discussions
+                        <ArrowRight className="h-3 w-3" />
+                      </Link>
+                    </SidebarSection>
                   )}
-                </SidebarCard>
-
-                <SidebarCard title="Share this discussion">
-                  <ShareButtons title={thread.title} url={`${SITE_URL}/community/${id}`} />
-                </SidebarCard>
-
-                {related.length > 0 && (
-                  <SidebarCard title="More discussions">
-                    <ul className="-my-1 divide-y divide-border">
-                      {related.map((item) => (
-                        <li key={item.id}>
-                          <Link href={`/community/${item.id}`} className="group block py-2.5">
-                            <span className="line-clamp-2 text-sm text-foreground group-hover:text-primary">{item.title}</span>
-                            <span className="mt-0.5 block text-xs text-muted-foreground">
-                              {item.replies} {item.replies === 1 ? "reply" : "replies"} · {timeAgo(item.created_at)}
-                            </span>
-                          </Link>
-                        </li>
-                      ))}
-                    </ul>
-                  </SidebarCard>
-                )}
+                </div>
 
                 <Link
                   href="/community"
-                  className="flex items-center gap-3 rounded-2xl border border-primary/25 bg-primary/[0.06] p-4 transition-colors hover:border-primary/40"
+                  className="flex items-center gap-3 rounded-2xl border border-primary/25 bg-primary/[0.06] px-4 py-3.5 transition-colors hover:border-primary/40"
                 >
                   <PenSquare className="h-4 w-4 shrink-0 text-primary" />
                   <span className="text-sm">
