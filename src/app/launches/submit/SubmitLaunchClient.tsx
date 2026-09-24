@@ -31,7 +31,7 @@ import type { ShowcaseProject } from "@/types";
 
 const SITE_URL = "https://www.claudeai.directory";
 
-const CATEGORIES = ["Claude app", "MCP server", "Skill", "Agent", "Claude Code plugin", "Workflow"];
+const CATEGORIES = ["Web app", "MCP server", "Skill", "Agent", "Claude Code plugin", "Workflow"];
 const PLATFORMS = ["Web", "macOS", "Windows", "Linux", "iOS", "Android", "CLI", "Chrome extension", "API"];
 
 const STEPS = ["Details", "Badge", "Share"] as const;
@@ -42,7 +42,7 @@ const EMPTY_FORM = {
   app_url: "",
   title: "",
   tagline: "",
-  category: "Claude app",
+  category: "Web app",
   description: "",
   audience: "",
   problem: "",
