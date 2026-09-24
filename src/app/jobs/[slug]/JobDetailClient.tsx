@@ -65,7 +65,7 @@ export default function JobDetail({ job: initialJob, slug }: { job: Job | null; 
                     />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <h1 className="text-base font-semibold text-foreground">{job.title}</h1>
+                    <h1 className="text-2xl font-normal leading-tight text-foreground sm:text-3xl">{job.title}</h1>
                     <p className="text-sm text-muted-foreground mt-0.5">{job.company}</p>
                   </div>
                 </div>
@@ -109,7 +109,7 @@ export default function JobDetail({ job: initialJob, slug }: { job: Job | null; 
               {job.skills_required.length > 0 && (
                 <>
                   <div>
-                    <h2 className="text-sm font-medium text-foreground mb-3 uppercase tracking-wider">Skills Required</h2>
+                    <h2 className="mb-3 font-mono text-[11px] font-normal uppercase tracking-[0.14em] text-muted-foreground">Skills Required</h2>
                     <div className="flex flex-wrap gap-1.5">
                       {job.skills_required.map((skill) => (
                         <Badge key={skill} variant="outline" className="text-xs">{skill}</Badge>
@@ -122,7 +122,7 @@ export default function JobDetail({ job: initialJob, slug }: { job: Job | null; 
 
               {/* Description */}
               <div>
-                <h2 className="text-sm font-medium text-foreground mb-3 uppercase tracking-wider">Description</h2>
+                <h2 className="mb-3 font-mono text-[11px] font-normal uppercase tracking-[0.14em] text-muted-foreground">Description</h2>
                 <div
                   className="prose prose-sm dark:prose-invert max-w-none text-muted-foreground [&_h2]:text-foreground [&_h3]:text-foreground [&_strong]:text-foreground [&_a]:text-primary"
                   dangerouslySetInnerHTML={{ __html: job.description }}

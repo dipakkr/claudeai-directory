@@ -34,7 +34,7 @@ const Compare = () => {
         <div className="container py-10">
           <div className="mb-8 flex items-start justify-between">
             <div>
-              <h1 className="text-2xl font-semibold text-foreground mb-2">API Pricing & Features</h1>
+              <h1 className="text-[32px] font-normal leading-tight text-foreground mb-2 md:text-[42px]">API Pricing & Features</h1>
               <p className="text-sm text-muted-foreground">
                 Compare {apiPricing.length} AI models from various providers dynamically
               </p>
@@ -65,7 +65,7 @@ const Compare = () => {
             ) : (
               Object.entries(grouped).map(([provider, models]) => (
                 <div key={provider}>
-                  <h2 className="text-base font-medium text-foreground mb-3">{provider}</h2>
+                  <h2 className="text-base font-normal text-foreground mb-3">{provider}</h2>
                   <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
                     {models?.map((model) => (
                       <div

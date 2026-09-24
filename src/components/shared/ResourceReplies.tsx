@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -13,6 +14,7 @@ import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useResourceReplies, useCreateResourceReply } from "@/hooks/use-replies";
 import { useAuth } from "@/lib/auth";
+import { SectionLabel } from "@/components/directory/detail";
 import type { ResourceReply, ResourceType } from "@/types";
 
 const schema = z.object({
@@ -49,12 +51,23 @@ function timeAgo(dateStr: string): string {
 }
 
 function ReplyCard({ reply }: { reply: ResourceReply }) {
+  const [avatarFailed, setAvatarFailed] = useState(false);
   return (
     <div className="py-4">
       <div className="flex items-start gap-3">
         <div className="h-7 w-7 rounded-full bg-muted flex items-center justify-center text-[11px] font-medium text-muted-foreground shrink-0 mt-0.5">
-          {reply.author_avatar ? (
-            <img src={reply.author_avatar} alt="" className="h-7 w-7 rounded-full object-cover" />
+          {reply.author_avatar && !avatarFailed ? (
+            // eslint-disable-next-line @next/next/no-img-element -- remote, user-provided avatar
+            <img
+              src={reply.author_avatar}
+              alt=""
+              className="h-7 w-7 rounded-full object-cover"
+              onError={() => setAvatarFailed(true)}
+              // Catches images that already failed before this ref attached.
+              ref={(el) => {
+                if (el && el.complete && el.naturalWidth === 0) setAvatarFailed(true);
+              }}
+            />
           ) : (
             reply.author[0]?.toUpperCase()
           )}
@@ -168,12 +181,10 @@ export default function ResourceReplies({
   const { data: replies, isLoading } = useResourceReplies(resourceType, resourceId);
 
   return (
-    <div className="mt-10">
-      <h3 className="text-xs font-bold text-foreground/80 mb-4 uppercase tracking-wider">
-        {copy.heading}
-      </h3>
+    <div>
+      <SectionLabel>{copy.heading}</SectionLabel>
 
-      <div className="rounded-2xl border border-border bg-card p-6">
+      <div className="rounded-xl border border-border bg-card p-6">
         {isLoading ? (
           <div className="divide-y divide-border mb-6">
             {Array.from({ length: 2 }).map((_, i) => (

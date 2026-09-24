@@ -28,6 +28,35 @@ function timeAgo(dateStr: string): string {
   return `${Math.floor(diff / 2592000)}mo ago`;
 }
 
+function AuthorAvatar({
+  src,
+  author,
+  className,
+}: {
+  src?: string | null;
+  author: string;
+  className: string;
+}) {
+  const [failed, setFailed] = useState(false);
+  if (src && !failed) {
+    return (
+      // eslint-disable-next-line @next/next/no-img-element -- remote, user-provided avatar
+      <img
+        src={src}
+        alt=""
+        className={`${className} rounded-full object-cover`}
+        onError={() => setFailed(true)}
+        // Catches the case where the image already failed before this ref attached
+        // (e.g. cached 404), so onError alone would never fire.
+        ref={(el) => {
+          if (el && el.complete && el.naturalWidth === 0) setFailed(true);
+        }}
+      />
+    );
+  }
+  return <span className={`${className} flex items-center justify-center rounded-full bg-muted font-medium text-muted-foreground`}>{author[0]?.toUpperCase()}</span>;
+}
+
 function AuthorName({
   author,
   username,
@@ -97,12 +126,8 @@ function ReplyCard({
   return (
     <div className={nested ? "py-2.5" : "py-4"}>
       <div className="flex items-start gap-3">
-        <div className={`${nested ? "h-6 w-6 text-[10px]" : "h-7 w-7 text-[11px]"} rounded-full bg-muted flex items-center justify-center font-medium text-muted-foreground shrink-0 mt-0.5`}>
-          {reply.author_avatar ? (
-            <img src={reply.author_avatar} alt="" className="h-full w-full rounded-full object-cover" />
-          ) : (
-            reply.author[0]?.toUpperCase()
-          )}
+        <div className={`${nested ? "h-6 w-6 text-[10px]" : "h-7 w-7 text-[11px]"} shrink-0 mt-0.5`}>
+          <AuthorAvatar src={reply.author_avatar} author={reply.author} className={nested ? "h-6 w-6 text-[10px]" : "h-7 w-7 text-[11px]"} />
         </div>
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 text-[11px] text-muted-foreground mb-1.5">
@@ -252,18 +277,12 @@ export default function ThreadDetail({
               {/* Main content */}
               <div className="flex-1 min-w-0">
                 {/* Thread header */}
-                <h1 className="text-xl font-semibold text-foreground mb-3">
+                <h1 className="text-2xl font-normal leading-tight text-foreground mb-3 sm:text-3xl">
                   {thread.title}
                 </h1>
 
                 <div className="flex items-center gap-2 mb-4">
-                  <div className="h-6 w-6 rounded-full bg-muted flex items-center justify-center text-[10px] font-medium text-muted-foreground">
-                    {thread.author_avatar ? (
-                      <img src={thread.author_avatar} alt="" className="h-6 w-6 rounded-full object-cover" />
-                    ) : (
-                      thread.author[0]?.toUpperCase()
-                    )}
-                  </div>
+                  <AuthorAvatar src={thread.author_avatar} author={thread.author} className="h-6 w-6 text-[10px]" />
                   <AuthorName
                     author={thread.author}
                     username={thread.author_username}
@@ -289,7 +308,7 @@ export default function ThreadDetail({
 
                 {/* Replies */}
                 <div className="mb-6">
-                  <h2 className="text-sm font-semibold text-foreground mb-1">
+                  <h2 className="font-sans text-sm font-semibold text-foreground mb-1">
                     {thread.replies} {thread.replies === 1 ? "Reply" : "Replies"}
                   </h2>
                 </div>

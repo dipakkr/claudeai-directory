@@ -12,7 +12,7 @@ export function DetailPage({ backHref, backLabel, children }: { backHref: string
   return (
     <div className="relative">
       {/* Background gradient decoration */}
-      <div className="absolute inset-x-0 top-0 h-80 bg-[radial-gradient(circle_at_15%_25%,rgba(168,85,247,0.08),transparent_40%),radial-gradient(circle_at_85%_10%,rgba(59,130,246,0.06),transparent_35%)] pointer-events-none" />
+      <div className="absolute inset-x-0 top-0 h-80 bg-[radial-gradient(circle_at_15%_25%,hsl(var(--primary)/0.09),transparent_40%),radial-gradient(circle_at_85%_10%,hsl(var(--primary)/0.05),transparent_35%)] pointer-events-none" />
 
       <div className="mx-auto max-w-[860px] px-4 pb-8 pt-10 md:px-8 md:pt-14 relative z-10">
         <Link

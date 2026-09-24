@@ -52,7 +52,7 @@ const Resources = () => {
             <main className="flex-1">
                 <section className="py-8 border-b border-border">
                     <div className="container">
-                        <h1 className="mb-2 text-lg font-medium text-foreground">Resources</h1>
+                        <h1 className="mb-2 text-[32px] font-normal leading-tight text-foreground md:text-[42px]">Resources</h1>
                         <p className="mb-6 text-sm text-muted-foreground">
                             Official Claude docs and hand-picked community resources for agents, subagents, skills,
                             MCP servers and Claude Code workflows.
@@ -71,7 +71,7 @@ const Resources = () => {
                             </div>
                             <Link
                                 href="/submit"
-                                className="inline-flex h-10 items-center rounded-md bg-foreground px-4 text-xs font-medium text-background transition-opacity hover:opacity-90"
+                                className="inline-flex h-10 items-center rounded-full bg-foreground px-4 text-xs font-medium text-background transition-opacity hover:opacity-90"
                             >
                                 Submit a resource
                             </Link>
@@ -87,7 +87,7 @@ const Resources = () => {
                                     <p className="mb-1 text-xs font-medium uppercase tracking-[0.12em] text-primary">
                                         Official Claude capability map
                                     </p>
-                                    <h2 className="text-xl font-medium text-foreground">Start with Anthropic source docs</h2>
+                                    <h2 className="text-2xl font-normal leading-tight text-foreground">Start with Anthropic source docs</h2>
                                 </div>
                                 <a
                                     href="https://code.claude.com/docs/llms.txt"
@@ -142,7 +142,7 @@ const Resources = () => {
                                         setActiveCategory(category.id);
                                         setSelectedTag(null);
                                     }}
-                                    className={`px-3 py-1.5 text-xs rounded-md border transition-colors ${activeCategory === category.id
+                                    className={`px-3 py-1.5 text-xs rounded-full border transition-colors ${activeCategory === category.id
                                         ? "bg-foreground text-background border-foreground"
                                         : "bg-card border-border text-muted-foreground hover:text-foreground hover:border-muted-foreground"
                                         }`}
@@ -276,7 +276,7 @@ const Resources = () => {
                                         <button
                                             key={tag}
                                             onClick={() => setSelectedTag(selectedTag === tag ? null : tag)}
-                                            className={`px-2 py-1 text-xs rounded-md border transition-colors ${selectedTag === tag
+                                            className={`px-2 py-1 text-xs rounded-full border transition-colors ${selectedTag === tag
                                                 ? "bg-foreground text-background border-primary"
                                                 : "bg-card border-border text-muted-foreground hover:text-foreground hover:border-muted-foreground"
                                                 }`}

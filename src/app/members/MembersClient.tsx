@@ -34,6 +34,11 @@ function Avatar({ member }: { member: PublicProfile }) {
         loading="lazy"
         referrerPolicy="no-referrer"
         onError={() => setFailed(true)}
+        // Catches images that already failed before this ref attached (e.g. a
+        // cached 404), so onError alone would never fire.
+        ref={(el) => {
+          if (el && el.complete && el.naturalWidth === 0) setFailed(true);
+        }}
         className="h-10 w-10 shrink-0 rounded-lg border border-border object-cover"
       />
     );

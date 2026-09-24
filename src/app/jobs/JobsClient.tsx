@@ -44,7 +44,7 @@ export default function JobsClient({
     <div className="min-h-screen bg-background flex flex-col">
       <Header />
       <main className="flex-1">
-        <section className="mx-auto flex max-w-[1120px] flex-col gap-3 px-4 pb-6 pt-9 md:px-8 md:pt-12">
+        <section className="mx-auto flex max-w-[1180px] flex-col gap-3 px-4 pb-6 pt-9 md:px-8 md:pt-12">
           <h1 className="text-[32px] font-normal leading-tight text-foreground md:text-[42px]">Jobs</h1>
           <p className="max-w-[680px] text-sm leading-6 text-muted-foreground md:text-base">
             AI, ML, agent and Claude ecosystem roles sourced from public job boards and company careers pages.
@@ -63,7 +63,7 @@ export default function JobsClient({
           </div>
         </section>
 
-        <section className="mx-auto max-w-[1120px] px-4 pb-20 md:px-8">
+        <section className="mx-auto max-w-[1180px] px-4 pb-20 md:px-8">
           {(jobs ?? []).length > 0 ? (
             <div className="border-y border-border">
               {(jobs ?? []).map((job) => (
