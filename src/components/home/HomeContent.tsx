@@ -120,11 +120,11 @@ export default function HomeContent({ items, orders, launches, community, feed, 
         <DirectoryList items={items} orders={orders} showTypeFilter hideSearch feedId="trending" pageSize={8} />
       </section>
 
+      {community}
+
       {launches}
 
       {feed}
-
-      {community}
 
       <section className="mx-auto mt-10 max-w-[840px] px-4 md:px-8">
         <RecentlyViewed />

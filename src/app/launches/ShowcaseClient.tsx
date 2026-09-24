@@ -7,7 +7,6 @@ import { toast } from "sonner";
 import {
   ArrowUp,
   BadgeCheck,
-  MessageCircle,
   Plus,
   Rocket,
   Search,
@@ -169,10 +168,6 @@ function LaunchRow({
               {shortPitch(project)}
             </p>
             <div className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs font-medium text-muted-foreground">
-              <span className="inline-flex items-center gap-1.5">
-                <MessageCircle className="h-3.5 w-3.5" aria-hidden="true" />
-                Feedback
-              </span>
               <span className="inline-flex min-w-0 items-center gap-1.5">
                 <Tag className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
                 <span className="truncate">{tags.join(", ")}</span>

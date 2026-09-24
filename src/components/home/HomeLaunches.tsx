@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, ArrowUp, BadgeCheck, MessageCircle, Rocket, Tag } from "lucide-react";
+import { ArrowRight, ArrowUp, BadgeCheck, Rocket, Tag } from "lucide-react";
 import { faviconFor } from "@/lib/directory";
 import type { ShowcaseProject } from "@/types";
 
@@ -60,10 +60,6 @@ export default function HomeLaunches({ projects, unavailable }: { projects: Show
                     </div>
                     <p className="mt-1.5 line-clamp-1 text-sm leading-5 text-muted-foreground">{shortPitch(project)}</p>
                     <div className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs font-medium text-muted-foreground">
-                      <span className="inline-flex items-center gap-1.5">
-                        <MessageCircle className="h-3.5 w-3.5" aria-hidden="true" />
-                        Feedback
-                      </span>
                       <span className="inline-flex min-w-0 items-center gap-1.5">
                         <Tag className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
                         <span className="truncate">{tags.join(", ")}</span>
