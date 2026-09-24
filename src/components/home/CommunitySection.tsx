@@ -177,7 +177,10 @@ const CommunitySection = ({ initialThreads, members = [], memberCount = 0 }: Com
                     ))}
                   </div>
                   {remaining > 0 && (
-                    <span className="ml-2 text-xs text-muted-foreground">+{remaining} more</span>
+                    <span className="ml-2 text-xs text-muted-foreground">
+                      {/* Product decision: show "1k+" until the real count passes it. */}
+                      {remaining >= 1000 ? `+${remaining.toLocaleString()}` : "1k+"} more
+                    </span>
                   )}
                 </div>
               )}

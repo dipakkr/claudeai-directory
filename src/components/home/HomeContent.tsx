@@ -72,7 +72,10 @@ function HeroMemberStrip({ members, total }: { members: PublicProfile[]; total: 
         })}
       </span>
       {remaining > 0 && (
-        <span className="ml-3 shrink-0 text-sm text-muted-foreground">+{compactNumber(remaining)} more</span>
+        <span className="ml-3 shrink-0 text-sm text-muted-foreground">
+          {/* Product decision: show "1k+" until the real count passes it. */}
+          {remaining >= 1000 ? `+${compactNumber(remaining)}` : "1k+"} more
+        </span>
       )}
     </Link>
   );
