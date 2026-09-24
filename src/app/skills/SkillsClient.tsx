@@ -18,6 +18,7 @@ export default function SkillsClient({
     <ListingPage
       title="Claude Skills"
       description="Community-built Skills for coding, research, testing, productivity and more. Explore what is trending and install what you need."
+      showCount={false}
       items={items}
       orders={buildOrders(items, ranked, false)}
       searchPlaceholder="Search skills…"

@@ -6,7 +6,9 @@ import rehypeSlug from "rehype-slug";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import ResourceReplies from "@/components/shared/ResourceReplies";
-import { DetailHeader, DetailPage, IconTile, SectionLabel, TagList } from "@/components/directory/detail";
+import { Block, Chips, OverviewGrid, ResourceDetail, SideFacts, type DetailTab } from "@/components/directory/ResourceDetail";
+import { compactNumber } from "@/lib/directory";
+import { CategoryGlyph } from "@/components/directory/DiscoverListing";
 import { InstallActions, InstallPanel } from "@/components/directory/InstallPanel";
 import { useSkill } from "@/hooks/use-skills";
 import { ResourceGuide } from "@/components/directory/ResourceGuide";
@@ -30,9 +32,11 @@ export default function SkillDetail({
     <div className="min-h-screen bg-background">
       <Header />
       <main>
-        <DetailPage backHref="/skills" backLabel="Skills">
-          {skill ? <SkillBody skill={skill} resolution={resolution} /> : <p className="text-sm text-muted-foreground">Skill not found.</p>}
-        </DetailPage>
+        {skill ? (
+          <SkillBody skill={skill} resolution={resolution} />
+        ) : (
+          <p className="mx-auto max-w-[1000px] px-4 pt-14 text-sm text-muted-foreground md:px-8">Skill not found.</p>
+        )}
       </main>
       <Footer />
     </div>
@@ -41,63 +45,91 @@ export default function SkillDetail({
 
 function SkillBody({ skill, resolution }: { skill: Skill; resolution: InstallResolution }) {
   const guide = resourceGuides[`skill/${skill.id}`];
-  const chips = [skill.source === "official" ? "official" : skill.source, skill.category, ...skill.tags].filter(
-    (chip, i, all): chip is string => Boolean(chip) && all.indexOf(chip) === i,
+  const name = guide?.name || skill.title || skill.name;
+  const author = skill.github_url?.match(/github\.com\/([^/?#]+)/i)?.[1];
+  const byline = author ? (author.toLowerCase() === "anthropics" ? "Anthropic" : author) : null;
+  const chips = [skill.category, ...skill.tags]
+    .filter((c): c is string => Boolean(c))
+    .map((c) => c.replace(/[-_]+/g, " ").trim())
+    .map((c) => c.charAt(0).toUpperCase() + c.slice(1))
+    .filter((c, i, all) => all.findIndex((x) => x.toLowerCase() === c.toLowerCase()) === i)
+    .slice(0, 8);
+
+  const overview = (
+    <OverviewGrid
+      aside={
+        <SideFacts
+          facts={[
+            { label: "Author", value: byline },
+            { label: "Source", value: skill.source === "official" ? "Official" : skill.source },
+            { label: "Downloads", value: skill.downloads > 0 ? compactNumber(skill.downloads) : null },
+          ]}
+          links={[{ label: "Repository", href: resolution.sourceUrl || skill.github_url }]}
+        />
+      }
+    >
+      <Block label="Description">
+        <p className="text-[15.5px] leading-relaxed text-foreground">{guide?.summary || skill.description}</p>
+      </Block>
+      {guide ? <ResourceGuide guide={guide} /> : null}
+      {chips.length > 0 && (
+        <Block label="Categories">
+          <Chips items={chips} />
+        </Block>
+      )}
+      {skill.triggers.length > 0 && (
+        <Block label="Activates on">
+          <Chips items={skill.triggers.slice(0, 10)} />
+        </Block>
+      )}
+    </OverviewGrid>
   );
 
-  return (
-    <>
-      <DetailHeader
-        icon={<IconTile name={skill.title || skill.name} />}
-        title={guide?.name || skill.title || skill.name}
-      />
-      <p className="mt-2 font-mono text-[12px] uppercase tracking-wide text-muted-foreground">
-        Skill{skill.source === "official" ? " · by Anthropic" : ""}
-      </p>
-
-      <p className="mt-5 text-[17px] leading-relaxed text-foreground/90">{guide?.summary || skill.description}</p>
-
-      <InstallActions
-        resolution={resolution}
-        kind="skill"
-        resourceId={skill.id}
-        name={skill.title || skill.name}
-        href={`/skills/${skill.id}`}
-      />
-
-      {chips.length > 0 && (
-        <div className="mt-8">
-          <TagList tags={chips} />
+  const tabs: DetailTab[] = [
+    { id: "overview", label: "Overview", content: overview },
+    {
+      id: "install",
+      label: "Install",
+      content: (
+        <div className="max-w-[720px]">
+          <InstallPanel resolution={resolution} kind="skill" resourceId={skill.id} bare />
         </div>
+      ),
+    },
+  ];
+  if (skill.content && !guide) {
+    tabs.push({
+      id: "contents",
+      label: "SKILL.md",
+      content: (
+        <article className="guide-prose max-w-[760px]">
+          <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeSlug]}>
+            {skill.content}
+          </ReactMarkdown>
+        </article>
+      ),
+    });
+  }
+  tabs.push({ id: "discussion", label: "Discussion", content: <ResourceReplies resourceType="skill" resourceId={skill.id} /> });
+
+  return (
+    <ResourceDetail
+      backHref="/skills"
+      backLabel="Skills"
+      icon={<CategoryGlyph category={skill.category || ""} type="skill" className="h-6 w-6" />}
+      name={name}
+      meta={[byline && `by ${byline}`, skill.downloads > 0 && `${compactNumber(skill.downloads)} downloads`]}
+      action={(openTab) => (
+        <InstallActions
+          resolution={resolution}
+          kind="skill"
+          resourceId={skill.id}
+          name={skill.title || skill.name}
+          href={`/skills/${skill.id}`}
+          onInstall={() => openTab("install")}
+        />
       )}
-
-      {guide ? <ResourceGuide guide={guide} /> : null}
-
-      <InstallPanel resolution={resolution} kind="skill" resourceId={skill.id} />
-
-      {skill.triggers.length > 0 && (
-        <>
-          <SectionLabel>Triggers</SectionLabel>
-          <TagList tags={skill.triggers} />
-        </>
-      )}
-
-      {skill.content && !guide && (
-        <>
-          <SectionLabel>SKILL.md</SectionLabel>
-          <div className="rounded-xl border border-border bg-card/40 p-6 sm:p-8">
-            <article className="guide-prose">
-              <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeSlug]}>
-                {skill.content}
-              </ReactMarkdown>
-            </article>
-          </div>
-        </>
-      )}
-
-      <div className="mt-14">
-        <ResourceReplies resourceType="skill" resourceId={skill.id} />
-      </div>
-    </>
+      tabs={tabs}
+    />
   );
 }

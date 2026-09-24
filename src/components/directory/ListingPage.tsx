@@ -1,8 +1,8 @@
-import type { ReactNode } from "react";
+import { Suspense, type ReactNode } from "react";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
-import DirectoryList from "@/components/directory/DirectoryList";
-import type { DirectoryItem, SortKey } from "@/lib/directory";
+import DiscoverListing from "@/components/directory/DiscoverListing";
+import type { DirectoryItem, DirectoryType, SortKey } from "@/lib/directory";
 
 /** Most common categories first, so the chips reflect what's actually listed. */
 export function topCategories(items: DirectoryItem[], limit = 10): string[] {
@@ -19,8 +19,12 @@ export function topCategories(items: DirectoryItem[], limit = 10): string[] {
 }
 
 interface ListingPageProps {
+  /** Which tab is active; defaults to the items' type. */
+  type?: DirectoryType;
   title: string;
   description: string;
+  /** Show "N listed." after the description. Off where the count is still small. */
+  showCount?: boolean;
   items: DirectoryItem[];
   /** Trending / Top / New orderings. Omit for lists without ranking tabs. */
   orders?: Record<SortKey, string[]>;
@@ -34,8 +38,10 @@ interface ListingPageProps {
 }
 
 export default function ListingPage({
+  type,
   title,
   description,
+  showCount = true,
   items,
   orders,
   searchPlaceholder,
@@ -50,29 +56,23 @@ export default function ListingPage({
       {schema}
       <Header />
       <main>
-        <section className="mx-auto max-w-[1180px] px-4 pb-10 pt-16 text-center md:px-8 md:pt-20">
-          <h1 className="text-[clamp(40px,5.5vw,60px)] font-normal leading-[1.05] text-foreground">{title}</h1>
-          <p className="mx-auto mt-5 max-w-[56ch] text-pretty text-[16px] leading-relaxed text-muted-foreground md:text-[17px]">
-            {description}
-            {items.length > 0 && <span className="text-foreground"> {items.length} listed.</span>}
-          </p>
-        </section>
-
-        <section className="mx-auto max-w-[840px] px-4 md:px-8">
-          <DirectoryList
+        {/* useSearchParams in the listing needs a Suspense boundary. */}
+        <Suspense>
+          <DiscoverListing
+            type={type ?? items[0]?.type ?? "skill"}
+            title={title}
+            description={showCount && items.length > 0 ? `${description} ${items.length} listed.` : description}
             items={items}
             orders={orders}
             searchPlaceholder={searchPlaceholder}
-            categories={topCategories(items)}
             initialCategory={initialCategory}
             initialQuery={initialQuery}
-            syncUrl
             emptyMessage={emptyMessage}
           />
-        </section>
+        </Suspense>
 
         {children && (
-          <section className="mx-auto mt-24 max-w-[840px] px-4 md:px-8">
+          <section className="mx-auto mt-4 max-w-[1000px] px-4 md:px-8">
             <div className="border-t border-border pt-12 text-sm leading-relaxed text-muted-foreground [&_h2]:mb-4 [&_h2]:font-sans [&_h2]:text-base [&_h2]:font-medium [&_h2]:text-foreground [&_h3]:pt-2 [&_h3]:text-sm [&_h3]:font-medium [&_h3]:text-foreground [&_p]:mb-3 [&_strong]:font-medium [&_strong]:text-foreground">
               {children}
             </div>

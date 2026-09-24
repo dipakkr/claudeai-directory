@@ -83,17 +83,48 @@ export function InstallActions({
   resourceId,
   name,
   href,
+  onInstall,
 }: {
   resolution: InstallResolution;
   kind: ResourceKind;
   resourceId: string;
   name: string;
   href: string;
+  /** Header variant: one quiet primary button that opens the Install tab, plus favorite. */
+  onInstall?: () => void;
 }) {
   useEffect(() => {
     track("resource_viewed", { resource_type: kind, resource_id: resourceId });
     recordRecent({ kind, id: resourceId, name, href });
   }, [kind, resourceId, name, href]);
+
+  if (onInstall) {
+    return (
+      <>
+        <FavoriteButton targetType={favoriteTargetType(kind)} targetId={resourceId} compact className="h-9 w-9 rounded-lg" />
+        {resolution.verified ? (
+          <button
+            type="button"
+            onClick={() => {
+              track("install_clicked", { resource_type: kind, resource_id: resourceId });
+              onInstall();
+            }}
+            className="inline-flex h-9 cursor-pointer items-center rounded-lg bg-foreground px-4 text-[14px] font-medium text-background transition-colors hover:bg-foreground/90"
+          >
+            {CTA_LABEL[kind]}
+          </button>
+        ) : (
+          <button
+            type="button"
+            onClick={onInstall}
+            className="inline-flex h-9 cursor-pointer items-center rounded-lg bg-foreground px-4 text-[14px] font-medium text-background transition-colors hover:bg-foreground/90"
+          >
+            How to install
+          </button>
+        )}
+      </>
+    );
+  }
 
   return (
     <div className="mt-7 flex flex-wrap gap-2.5">
@@ -124,14 +155,17 @@ export function InstallPanel({
   resolution,
   kind,
   resourceId,
+  bare = false,
 }: {
   resolution: InstallResolution;
   kind: ResourceKind;
   resourceId: string;
+  /** Inside the Install tab: no section label or anchor (the tab is the anchor). */
+  bare?: boolean;
 }) {
   return (
-    <section id="install" className="scroll-mt-24">
-      <SectionLabel>Install</SectionLabel>
+    <section id={bare ? undefined : "install"} className="scroll-mt-24">
+      {!bare && <SectionLabel>Install</SectionLabel>}
 
       {resolution.method === "plugin_marketplace" && (
         <div className="space-y-3">

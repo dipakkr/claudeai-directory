@@ -215,63 +215,72 @@
     --cad-code-rule: #e6e3d9;
     --cad-nav-bg: rgba(250, 249, 245, 0.85);
     --cad-shadow: rgba(60, 50, 30, 0.08);
+    --cad-tile: #f0eee6;
+    --cad-control: #ebe9e1;
+    --cad-control-active: #e0ddd2;
   }
 
   .dark {
-    --background: 48 11% 9%; /* #1A1915 */
-    --foreground: 48 25% 92%; /* #F0EEE6 */
+    /* Neutral near-black, matching Claude's own Skills/Connectors screens.
+       Coral stays as the brand accent only; primary actions are white. */
+    --background: 0 0% 8.2%; /* #151515 */
+    --foreground: 0 0% 93%; /* #EDEDED */
 
-    --card: 48 8% 11.6%;
-    --card-foreground: 48 25% 92%;
+    --card: 0 0% 8.2%; /* cards sit on the page, defined by their border */
+    --card-foreground: 0 0% 93%;
 
-    --popover: 48 8% 11.6%;
-    --popover-foreground: 48 25% 92%;
+    --popover: 0 0% 11.8%; /* #1E1E1E */
+    --popover-foreground: 0 0% 93%;
 
     --primary: 15 63% 60%; /* #D97757 */
-    --primary-foreground: 48 11% 9%;
+    --primary-foreground: 0 0% 8.2%;
 
-    --secondary: 48 8% 12.7%;
-    --secondary-foreground: 48 25% 92%;
+    --secondary: 0 0% 12.9%; /* #212121 */
+    --secondary-foreground: 0 0% 93%;
 
-    --muted: 48 7% 13.9%;
-    --muted-foreground: 46 7% 63%;
+    --muted: 0 0% 12.9%;
+    --muted-foreground: 0 0% 62%; /* #9E9E9E */
 
-    --accent: 19 28% 15.7%;
-    --accent-foreground: 19 78% 73.5%;
+    --accent: 0 0% 17.3%; /* #2C2C2C */
+    --accent-foreground: 0 0% 93%;
 
     --destructive: 0 62% 55%;
     --destructive-foreground: 0 0% 98%;
 
     --success: 101 31% 55%;
 
-    --border: 43 8% 17.5%;
-    --input: 43 8% 17.5%;
-    --ring: 15 63% 60%;
+    --border: 0 0% 14%; /* #242424 */
+    --input: 0 0% 18%; /* #2E2E2E */
+    --ring: 0 0% 45%;
 
-    --sidebar-background: 48 11% 8%;
-    --sidebar-foreground: 48 25% 92%;
+    --sidebar-background: 0 0% 6.5%;
+    --sidebar-foreground: 0 0% 93%;
     --sidebar-primary: 15 63% 60%;
-    --sidebar-primary-foreground: 48 11% 9%;
-    --sidebar-accent: 48 8% 12.7%;
-    --sidebar-accent-foreground: 48 25% 92%;
-    --sidebar-border: 43 8% 17.5%;
-    --sidebar-ring: 15 63% 60%;
+    --sidebar-primary-foreground: 0 0% 8.2%;
+    --sidebar-accent: 0 0% 12.9%;
+    --sidebar-accent-foreground: 0 0% 93%;
+    --sidebar-border: 0 0% 14%;
+    --sidebar-ring: 0 0% 45%;
 
-    --cad-surface: #201f1b;
-    --cad-raised: #23221e;
-    --cad-ink: #f0eee6;
-    --cad-muted: #a8a59b;
-    --cad-faint: #787569;
-    --cad-line: #302e29;
-    --cad-line-soft: #26251f;
-    --cad-line-hover: #3f3d36;
+    --cad-surface: #1a1a1a;
+    --cad-raised: #212121;
+    --cad-ink: #ededed;
+    --cad-muted: #a3a3a3;
+    --cad-faint: #737373;
+    --cad-line: #262626;
+    --cad-line-soft: #1e1e1e;
+    --cad-line-hover: #3a3a3a;
     --cad-accent-hover: #f0a887;
-    --cad-accent-soft: #33241d;
-    --cad-chip: #262521;
-    --cad-code: #1e1d19;
-    --cad-code-rule: #34322c;
-    --cad-nav-bg: rgba(26, 25, 21, 0.85);
-    --cad-shadow: rgba(0, 0, 0, 0.45);
+    --cad-accent-soft: #2a211d;
+    --cad-chip: #212121;
+    --cad-code: #0f0f0f;
+    --cad-code-rule: #2c2c2c;
+    --cad-nav-bg: rgba(21, 21, 21, 0.85);
+    --cad-shadow: rgba(0, 0, 0, 0.5);
+    /* Claude-style tiles and small controls. */
+    --cad-tile: #0b0b0b;
+    --cad-control: #2c2c2c;
+    --cad-control-active: #373737;
   }
 
   * {

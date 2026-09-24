@@ -13,6 +13,8 @@ export interface DirectoryItem {
   iconUrl: string | null;
   category: string;
   tags: string[];
+  /** Who made it, from real data only (never guessed). */
+  author?: string;
   /** Right-hand column. `value` is compact and mono-set; `label` explains it. */
   metric: { value: string; label: string; icon?: "download" | "tools" | "upvote" | "star" } | null;
   /** Popularity within its own type; higher is better. Only compared within a type. */
@@ -54,9 +56,20 @@ function hasRemoteInstall(s: MCPServer): boolean {
   return /^https:\/\//.test(s.connection?.url?.trim() || "") && ["streamable-http", "http", "sse"].includes(transport);
 }
 
+/** GitHub owner of a repo URL; the official Anthropic org reads as "Anthropic". */
+function githubAuthor(url?: string | null): string | undefined {
+  const owner = url?.match(/github\.com\/([^/?#]+)/i)?.[1];
+  if (!owner) return undefined;
+  return owner.toLowerCase() === "anthropics" ? "Anthropic" : owner;
+}
+
 export function mcpToItem(s: MCPServer): DirectoryItem {
   const tools = s.capabilities?.tools?.length ?? 0;
+  // A few records store the author as a bare string.
+  const rawAuthor = s.author as unknown;
+  const author = typeof rawAuthor === "string" ? rawAuthor : s.author?.name;
   return {
+    author: author || undefined,
     key: itemKey("mcp", s.slug || s.id),
     type: "mcp",
     name: s.name,
@@ -81,6 +94,7 @@ export function mcpToItem(s: MCPServer): DirectoryItem {
 export function skillToItem(s: Skill): DirectoryItem {
   return {
     key: itemKey("skill", s.id),
+    author: githubAuthor(s.github_url),
     type: "skill",
     name: s.title || s.name,
     description: s.description || "",
@@ -88,7 +102,7 @@ export function skillToItem(s: Skill): DirectoryItem {
     iconUrl: null,
     category: s.category || "",
     tags: s.tags ?? [],
-    metric: s.downloads > 0 ? { value: compactNumber(s.downloads), label: "installs", icon: "download" } : null,
+    metric: s.downloads > 0 ? { value: compactNumber(s.downloads), label: "downloads", icon: "download" } : null,
     score: s.downloads + (s.featured ? 100000 : 0),
     createdAt: s.created_at,
   };
@@ -114,6 +128,7 @@ export function agentToItem(a: Agent): DirectoryItem {
   const stars = a.stars ?? 0;
   return {
     key: itemKey("agent", a.id),
+    author: a.author?.name || githubAuthor(a.github_url),
     type: "agent",
     name: a.title || a.name,
     description: a.description || "",

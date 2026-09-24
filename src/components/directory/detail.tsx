@@ -53,7 +53,7 @@ export function IconTile({ src, name, size = 44 }: { src?: string | null; name: 
   const [failed, setFailed] = useState(false);
   return (
     <span
-      className="flex shrink-0 items-center justify-center overflow-hidden rounded-xl border border-border bg-card font-mono text-muted-foreground"
+      className="flex shrink-0 items-center justify-center overflow-hidden rounded-xl bg-[var(--cad-tile)] font-sans text-muted-foreground"
       style={{ width: size, height: size, fontSize: size * 0.36 }}
     >
       {src && !failed ? (
