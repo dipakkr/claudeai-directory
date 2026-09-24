@@ -3,6 +3,7 @@ import { ArrowRight, CheckCircle2, Download, FileText, Lock } from "lucide-react
 
 import CourseInterestForm from "@/components/courses/CourseInterestForm";
 import LockedLessonView from "@/components/courses/LockedLessonView";
+import QuizQuestion from "@/components/courses/QuizQuestion";
 import type { Course } from "@/data/courses";
 import type { CourseContent, CourseModule, LessonBlock, PlayerLesson } from "@/data/course-content";
 
@@ -258,34 +259,7 @@ function LessonCard({
       ) : (
         <div className="mt-5 space-y-6">
           {lesson.questions.map((question, index) => (
-            <div key={question.question}>
-              <p className="text-sm font-medium leading-6 text-foreground">
-                {index + 1}. {question.question}
-              </p>
-              <div className="mt-3 grid gap-2">
-                {question.options.map((option, optionIndex) => {
-                  const isCorrect = optionIndex === question.correctIndex;
-                  return (
-                    <div
-                      key={option}
-                      className={`flex gap-2 rounded-lg px-3 py-2 text-sm leading-5 ${
-                        isCorrect ? "bg-primary/10 text-foreground" : "text-muted-foreground"
-                      }`}
-                    >
-                      {isCorrect ? (
-                        <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" aria-hidden="true" />
-                      ) : (
-                        <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-muted-foreground/45" />
-                      )}
-                      <span>{option}</span>
-                    </div>
-                  );
-                })}
-              </div>
-              <p className="mt-3 text-xs leading-5 text-muted-foreground">
-                {question.explanation}
-              </p>
-            </div>
+            <QuizQuestion key={question.question} question={question} index={index} />
           ))}
         </div>
       )}
