@@ -86,7 +86,7 @@ export default function HomeContent({ items, orders, launches, community, member
 
   return (
     <>
-      <section className="mx-auto max-w-[1180px] px-4 pb-12 pt-16 text-center md:px-8 md:pt-24">
+      <section className="mx-auto max-w-[1180px] px-4 pb-12 pt-10 text-center md:px-8 md:pt-14">
         <h1 className="mx-auto max-w-[19ch] text-balance text-[40px] font-normal leading-[1.04] text-foreground md:text-[60px]">
           Discover the best resources for <em className="text-primary">Claude</em>
         </h1>

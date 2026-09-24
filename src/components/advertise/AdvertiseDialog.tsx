@@ -21,7 +21,7 @@ const INCLUDED = [
 ];
 
 const inputClass =
-  "h-10 w-full rounded-lg border border-border bg-background px-3 text-sm text-foreground placeholder:text-muted-foreground/70 focus:border-primary/60 focus:outline-none";
+  "h-9 w-full rounded-lg border border-border bg-background px-3 text-sm text-foreground placeholder:text-muted-foreground/70 focus:border-primary/60 focus:outline-none";
 
 function normalizeUrl(value: string) {
   const trimmed = value.trim();
@@ -103,28 +103,28 @@ export default function AdvertiseDialog() {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="max-h-[92vh] overflow-y-auto sm:max-w-[560px]">
+      <DialogContent className="max-h-[92vh] gap-3 overflow-y-auto p-5 sm:max-w-[500px]">
         <DialogHeader>
-          <DialogTitle className="text-xl">Sponsor a category</DialogTitle>
-          <DialogDescription>
+          <DialogTitle className="text-lg">Sponsor a category</DialogTitle>
+          <DialogDescription className="text-[13px]">
             Put your product in the sidebar next to people browsing Claude tools in that category.
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={submit} className="mt-1 space-y-5">
+        <form onSubmit={submit} className="space-y-4">
           {/* Plan */}
-          <div className="rounded-xl border border-primary/40 bg-primary/[0.06] p-4">
+          <div className="rounded-xl border border-primary/40 bg-primary/[0.06] px-3.5 py-3">
             <div className="flex items-baseline justify-between gap-3">
-              <p className="text-sm font-semibold text-foreground">Monthly sponsor slot</p>
+              <p className="text-[13px] font-semibold text-foreground">Monthly sponsor slot</p>
               <p>
-                <span className="text-2xl font-semibold text-foreground">${SPONSOR_MONTHLY_PRICE}</span>
-                <span className="ml-1 text-sm text-muted-foreground">/ month</span>
+                <span className="text-lg font-semibold text-foreground">${SPONSOR_MONTHLY_PRICE}</span>
+                <span className="ml-1 text-xs text-muted-foreground">/ month</span>
               </p>
             </div>
-            <ul className="mt-3 space-y-1.5">
+            <ul className="mt-2 space-y-1">
               {INCLUDED.map((item) => (
-                <li key={item} className="flex gap-2 text-sm text-muted-foreground">
-                  <Check className="mt-0.5 h-4 w-4 shrink-0 text-primary" aria-hidden="true" />
+                <li key={item} className="flex gap-2 text-xs text-muted-foreground">
+                  <Check className="mt-px h-3.5 w-3.5 shrink-0 text-primary" aria-hidden="true" />
                   {item}
                 </li>
               ))}
@@ -133,8 +133,8 @@ export default function AdvertiseDialog() {
 
           {/* Category */}
           <div>
-            <p className="text-sm font-medium text-foreground">Choose your category</p>
-            <div role="radiogroup" aria-label="Category" className="mt-2 grid grid-cols-2 gap-2">
+            <p className="text-[13px] font-medium text-foreground">Choose your category</p>
+            <div role="radiogroup" aria-label="Category" className="mt-2 grid grid-cols-2 gap-1.5">
               {SPONSOR_CATEGORIES.map((c) => {
                 const active = c.title === category;
                 const soldOut = c.openSlots === 0;
@@ -146,12 +146,12 @@ export default function AdvertiseDialog() {
                     aria-checked={active}
                     disabled={soldOut}
                     onClick={() => setCategory(c.title)}
-                    className={`flex items-center justify-between gap-2 rounded-lg border px-3 py-2.5 text-left text-sm transition-colors disabled:opacity-40 ${
+                    className={`flex items-center justify-between gap-2 rounded-lg border px-2.5 py-1.5 text-left text-[13px] transition-colors disabled:opacity-40 ${
                       active ? "border-foreground bg-foreground text-background" : "border-border bg-background text-foreground hover:border-[var(--cad-line-hover)]"
                     }`}
                   >
                     <span className="truncate font-medium">{c.label}</span>
-                    <span className={`shrink-0 text-[11px] ${active ? "text-background/70" : "text-muted-foreground"}`}>
+                    <span className={`shrink-0 text-[10px] ${active ? "text-background/70" : "text-muted-foreground"}`}>
                       {soldOut ? "Full" : `${c.openSlots} open`}
                     </span>
                   </button>
@@ -161,7 +161,7 @@ export default function AdvertiseDialog() {
           </div>
 
           {/* Details */}
-          <div className="grid gap-3 sm:grid-cols-2">
+          <div className="grid gap-2 sm:grid-cols-2">
             <input aria-label="Product name" value={product} onChange={(e) => setProduct(e.target.value)} placeholder="Product name" className={inputClass} />
             <input aria-label="Website" value={website} onChange={(e) => setWebsite(e.target.value)} placeholder="yourproduct.com" className={inputClass} />
             <input
@@ -178,7 +178,7 @@ export default function AdvertiseDialog() {
             <button
               type="submit"
               disabled={!ready}
-              className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-full bg-foreground text-sm font-medium text-background transition-colors hover:bg-foreground/85 disabled:opacity-40"
+              className="inline-flex h-10 w-full items-center justify-center gap-2 rounded-full bg-foreground text-sm font-medium text-background transition-colors hover:bg-foreground/85 disabled:opacity-40"
             >
               {SPONSOR_CHECKOUT_URL ? (
                 <>
@@ -189,7 +189,7 @@ export default function AdvertiseDialog() {
                 "Request this slot"
               )}
             </button>
-            <p className="text-center text-xs text-muted-foreground">
+            <p className="text-center text-[11px] text-muted-foreground">
               {SPONSOR_CHECKOUT_URL
                 ? `Secure checkout. Billed monthly for the ${selected?.label ?? "selected"} category.`
                 : `We reply by email to confirm your slot and start date. Questions: ${SPONSOR_EMAIL}`}
