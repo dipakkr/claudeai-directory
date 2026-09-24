@@ -1,10 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { ArrowLeft, ArrowRight, Check, Lock } from "lucide-react";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 import { toast } from "sonner";
 
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
 import {
   OPEN_ADVERTISE_EVENT,
   SPONSOR_CATEGORIES,
@@ -14,28 +14,15 @@ import {
 } from "@/lib/advertise";
 import { useAuth } from "@/lib/auth";
 
-// Facts about the placement only: no traffic numbers we can't back up.
-const INCLUDED = ["Sidebar card", "Tracked link", "Monthly click report"];
-
 const TAGLINE_MAX = 60;
 
 const inputClass =
-  "h-9 w-full rounded-lg border border-border bg-background px-3 text-sm text-foreground placeholder:text-muted-foreground/70 focus:border-primary/60 focus:outline-none";
+  "h-9 w-full rounded-md border border-border bg-background px-3 text-sm text-foreground placeholder:text-muted-foreground/60 focus:border-foreground/40 focus:outline-none";
 
 function normalizeUrl(value: string) {
   const trimmed = value.trim();
   if (!trimmed) return "";
   return /^https?:\/\//i.test(trimmed) ? trimmed : `https://${trimmed}`;
-}
-
-function Steps({ step }: { step: 0 | 1 }) {
-  return (
-    <div className="flex items-center gap-1.5 pr-8" aria-label={`Step ${step + 1} of 2`}>
-      {[0, 1].map((i) => (
-        <span key={i} className={`h-1 flex-1 rounded-full ${i <= step ? "bg-primary" : "bg-border"}`} />
-      ))}
-    </div>
-  );
 }
 
 function faviconFor(site: string) {
@@ -47,48 +34,81 @@ function faviconFor(site: string) {
   }
 }
 
-/** Mirrors the sidebar sponsor card, so buyers see exactly what they get. */
-function CardPreview({ product, website, tagline, category }: { product: string; website: string; tagline: string; category: string }) {
+function ProductIcon({ website, product, className }: { website: string; product: string; className: string }) {
   const icon = faviconFor(website);
-  const initial = (product.trim()[0] || "?").toUpperCase();
   return (
-    <div className="rounded-xl bg-[#050505] p-3">
-      <div className="flex min-h-[132px] flex-col items-center justify-center rounded-md border border-[#4a4238] bg-[#221f1b] px-3 py-3 text-center text-white">
-        <span className="relative flex h-9 w-9 items-center justify-center overflow-hidden rounded-md bg-[#f3e6d8] text-sm font-bold text-[#2a2118]">
-          {initial}
-          {icon && (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-              src={icon}
-              alt=""
-              className="absolute inset-1 h-[calc(100%-8px)] w-[calc(100%-8px)] object-contain"
-              referrerPolicy="no-referrer"
-              onError={(e) => {
-                e.currentTarget.style.display = "none";
-              }}
-            />
-          )}
-        </span>
-        <p className="mt-2 max-w-full truncate text-[13px] font-semibold leading-tight">{product.trim() || "Your product"}</p>
-        <span className="mt-1 rounded-full bg-white/10 px-1.5 py-0.5 text-[8px] font-semibold uppercase tracking-[0.08em] text-white/80">
-          Sponsor
-        </span>
-        <p className="mt-1 line-clamp-2 text-[11px] leading-snug text-white/70">{tagline.trim() || "Your one line shows here."}</p>
-      </div>
-      <p className="mt-2 text-center text-[10px] text-white/50">In the {category} sidebar</p>
-    </div>
+    <span className={`relative flex shrink-0 items-center justify-center overflow-hidden rounded bg-[#f3e6d8] font-bold text-[#2a2118] ${className}`}>
+      {(product.trim()[0] || "?").toUpperCase()}
+      {icon && (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={icon}
+          alt=""
+          className="absolute inset-0.5 h-[calc(100%-4px)] w-[calc(100%-4px)] object-contain"
+          referrerPolicy="no-referrer"
+          onError={(e) => {
+            e.currentTarget.style.display = "none";
+          }}
+        />
+      )}
+    </span>
   );
 }
 
-function Field({ label, hint, children }: { label: string; hint?: string; children: React.ReactNode }) {
+/**
+ * A small, literal map of the site: page in the middle, sponsor rails on the
+ * sides, and the buyer's slot lit up. In step 2 their card sits in the slot.
+ */
+function SiteMap({ category, card }: { category: string; card?: { product: string; website: string; tagline: string } }) {
+  const railBlock = "h-9 rounded-[3px] border border-white/10 bg-white/[0.04]";
   return (
-    <label className="block">
-      <span className="mb-1 flex items-baseline justify-between text-xs font-medium text-foreground">
-        {label}
-        {hint && <span className="font-normal text-muted-foreground">{hint}</span>}
-      </span>
-      {children}
-    </label>
+    <div className="flex h-full flex-col justify-center">
+      <div className="overflow-hidden rounded-md border border-white/10 bg-[#0b0a09] pb-1">
+        <div className="flex h-5 items-center gap-1 border-b border-white/10 px-2">
+          {[0, 1, 2].map((i) => (
+            <span key={i} className="h-1.5 w-1.5 rounded-full bg-white/15" />
+          ))}
+        </div>
+        <div className="grid grid-cols-[52px_minmax(0,1fr)_76px] gap-2 p-2">
+          <div className="space-y-1.5">
+            {[0, 1, 2, 3].map((i) => (
+              <div key={i} className={railBlock} />
+            ))}
+          </div>
+          <div className="space-y-2 pt-1">
+            <div className="mx-auto h-2 w-3/4 rounded-sm bg-white/20" />
+            <div className="mx-auto h-1.5 w-1/2 rounded-sm bg-white/10" />
+            <div className="space-y-1.5 pt-2">
+              {[0, 1, 2, 3, 4, 5].map((i) => (
+                <div key={i} className="flex items-center gap-1.5">
+                  <span className="h-3 w-3 rounded-sm bg-white/10" />
+                  <span className="h-1.5 flex-1 rounded-sm bg-white/[0.07]" />
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="space-y-1.5">
+            <div className={railBlock} />
+            {card ? (
+              <div className="flex flex-col items-center rounded-[3px] border border-primary/70 bg-[#221f1b] px-1 py-1.5 text-center shadow-[0_0_0_3px_rgba(217,119,87,0.18)]">
+                <ProductIcon website={card.website} product={card.product} className="h-4 w-4 text-[8px]" />
+                <span className="mt-1 w-full truncate text-[7px] font-semibold text-white">{card.product.trim() || "Your product"}</span>
+                <span className="line-clamp-2 w-full text-[6px] leading-tight text-white/60">{card.tagline.trim() || "Your one line"}</span>
+              </div>
+            ) : (
+              <div className="flex h-[58px] items-center justify-center rounded-[3px] border border-primary/70 bg-primary/15 text-[8px] font-medium text-primary shadow-[0_0_0_3px_rgba(217,119,87,0.18)]">
+                You
+              </div>
+            )}
+            <div className={railBlock} />
+          </div>
+        </div>
+      </div>
+      <p className="mt-2 text-[11px] leading-4 text-white/55">
+        Your card sits in the <span className="text-white/85">{category.toLowerCase()}</span> sidebar, shown across the site on
+        large screens.
+      </p>
+    </div>
   );
 }
 
@@ -130,6 +150,7 @@ export default function AdvertiseDialog() {
   const emailValue = email || user?.email || "";
 
   const selected = SPONSOR_CATEGORIES.find((c) => c.title === category);
+  const label = selected?.label ?? "";
   const ready = product.trim().length > 1 && /\S+@\S+\.\S+/.test(emailValue) && !!website.trim();
 
   const submit = (event: React.FormEvent) => {
@@ -164,155 +185,143 @@ export default function AdvertiseDialog() {
       `One line: ${tagline.trim() || "(not set)"}`,
       `Email: ${emailValue.trim()}`,
     ].join("\n");
-    window.location.href = `mailto:${SPONSOR_EMAIL}?subject=${encodeURIComponent(
-      `Sponsor slot: ${selected?.label ?? category}`,
-    )}&body=${encodeURIComponent(body)}`;
+    window.location.href = `mailto:${SPONSOR_EMAIL}?subject=${encodeURIComponent(`Sponsor slot: ${label || category}`)}&body=${encodeURIComponent(body)}`;
   };
+
+  const primaryButton =
+    "inline-flex h-10 items-center justify-center gap-2 rounded-md bg-foreground px-5 text-sm font-medium text-background transition-colors hover:bg-foreground/85 disabled:opacity-40";
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="max-h-[92vh] gap-3 overflow-y-auto p-5 sm:max-w-[560px]">
-        <Steps step={step} />
+      <DialogContent className="max-h-[92vh] gap-0 overflow-y-auto p-0 sm:max-w-[720px]">
+        <div className="grid sm:grid-cols-[240px_minmax(0,1fr)]">
+          {/* Left: where you appear */}
+          <div className="hidden border-r border-border bg-[#141311] p-4 sm:block">
+            <SiteMap category={label} card={step === 1 ? { product, website, tagline } : undefined} />
+          </div>
 
-        {step === 0 ? (
-          <>
-            <DialogHeader className="mt-1 text-left">
-              <DialogTitle className="text-lg">Sponsor a category</DialogTitle>
-              <DialogDescription className="text-[13px]">
-                Your product in the sidebar, next to tools like it.
-              </DialogDescription>
-            </DialogHeader>
-
-            <div className="flex items-center justify-between gap-3 rounded-xl border border-primary/40 bg-primary/[0.06] px-3.5 py-2.5">
-              <p>
-                <span className="text-lg font-semibold text-foreground">${SPONSOR_MONTHLY_PRICE}</span>
-                <span className="ml-1 text-xs text-muted-foreground">/ month</span>
-              </p>
-              <ul className="flex flex-wrap justify-end gap-x-3 gap-y-1">
-                {INCLUDED.map((item) => (
-                  <li key={item} className="flex items-center gap-1 text-xs text-muted-foreground">
-                    <Check className="h-3 w-3 text-primary" aria-hidden="true" />
-                    {item}
-                  </li>
-                ))}
-              </ul>
+          {/* Right: the decision */}
+          <div className="p-5 sm:p-6">
+            <div className="flex items-center justify-between pr-6">
+              <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground">Sponsorship</p>
+              <p className="font-mono text-[10px] text-muted-foreground">{step + 1} / 2</p>
             </div>
 
-            <div>
-              <p className="text-[13px] font-medium text-foreground">Pick a category</p>
-              <div role="radiogroup" aria-label="Category" className="mt-2 grid grid-cols-2 gap-1.5">
-                {SPONSOR_CATEGORIES.map((c) => {
-                  const active = c.title === category;
-                  const soldOut = c.openSlots === 0;
-                  return (
-                    <button
-                      key={c.title}
-                      type="button"
-                      role="radio"
-                      aria-checked={active}
-                      disabled={soldOut}
-                      onClick={() => setCategory(c.title)}
-                      title={c.neighbors.length ? `Next to ${c.neighbors.join(" and ")}` : undefined}
-                      className={`flex items-center justify-between gap-2 rounded-lg border px-3 py-2 text-left text-[13px] transition-colors disabled:opacity-40 ${
-                        active ? "border-foreground bg-foreground text-background" : "border-border bg-background text-foreground hover:border-[var(--cad-line-hover)]"
-                      }`}
-                    >
-                      <span className="truncate font-medium">{c.label}</span>
-                      {/* Real availability only: no invented scarcity. */}
-                      {(soldOut || c.openSlots === 1) && (
-                        <span className={`shrink-0 text-[10px] ${active ? "text-background/70" : "text-muted-foreground"}`}>
-                          {soldOut ? "Full" : "1 left"}
-                        </span>
-                      )}
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
+            {step === 0 ? (
+              <>
+                <DialogTitle className="mt-3 text-2xl font-normal leading-tight">Sponsor a category</DialogTitle>
+                <DialogDescription className="mt-1.5 text-sm leading-6 text-muted-foreground">
+                  <span className="text-foreground">${SPONSOR_MONTHLY_PRICE} a month</span> for one category. Your card, a
+                  tracked link and a monthly click report.
+                </DialogDescription>
 
-            <button
-              type="button"
-              onClick={() => setStep(1)}
-              className="inline-flex h-10 w-full items-center justify-center gap-2 rounded-full bg-foreground text-sm font-medium text-background transition-colors hover:bg-foreground/85"
-            >
-              Continue with {selected?.label ?? "this category"}
-              <ArrowRight className="h-4 w-4" aria-hidden="true" />
-            </button>
-          </>
-        ) : (
-          <form onSubmit={submit} className="space-y-4">
-            <DialogHeader className="mt-1 text-left">
-              <DialogTitle className="text-lg">Your sponsor card</DialogTitle>
-              <DialogDescription className="text-[13px]">What builders see in the sidebar.</DialogDescription>
-            </DialogHeader>
+                <fieldset className="mt-5">
+                  <legend className="text-xs text-muted-foreground">Category</legend>
+                  <div role="radiogroup" className="mt-2 grid grid-cols-2 gap-x-4">
+                    {SPONSOR_CATEGORIES.map((c) => {
+                      const active = c.title === category;
+                      const soldOut = c.openSlots === 0;
+                      return (
+                        <button
+                          key={c.title}
+                          type="button"
+                          role="radio"
+                          aria-checked={active}
+                          disabled={soldOut}
+                          onClick={() => setCategory(c.title)}
+                          title={c.neighbors.length ? `Next to ${c.neighbors.join(" and ")}` : undefined}
+                          className="group flex items-center gap-2.5 border-b border-border py-2.5 text-left text-sm disabled:opacity-40"
+                        >
+                          <span
+                            className={`flex h-3.5 w-3.5 shrink-0 items-center justify-center rounded-full border ${
+                              active ? "border-foreground" : "border-muted-foreground/50 group-hover:border-foreground/70"
+                            }`}
+                          >
+                            {active && <span className="h-1.5 w-1.5 rounded-full bg-foreground" />}
+                          </span>
+                          <span className={active ? "font-medium text-foreground" : "text-foreground/80"}>{c.label}</span>
+                          {/* Real availability only: no invented scarcity. */}
+                          {(soldOut || c.openSlots === 1) && (
+                            <span className="ml-auto text-[10px] text-muted-foreground">{soldOut ? "Full" : "1 left"}</span>
+                          )}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </fieldset>
 
-            <div className="flex items-center justify-between gap-3 rounded-lg border border-border bg-background px-3 py-2 text-[13px]">
-              <span className="min-w-0 truncate text-foreground">
-                <span className="font-medium">{selected?.label}</span>
-                <span className="text-muted-foreground"> · ${SPONSOR_MONTHLY_PRICE}/month</span>
-              </span>
-              <button type="button" onClick={() => setStep(0)} className="shrink-0 text-xs font-medium text-primary hover:underline">
-                Change
-              </button>
-            </div>
+                <div className="mt-6 flex items-center justify-between gap-3">
+                  <p className="text-xs text-muted-foreground">Questions? {SPONSOR_EMAIL}</p>
+                  <button type="button" onClick={() => setStep(1)} className={primaryButton}>
+                    Continue
+                    <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                  </button>
+                </div>
+              </>
+            ) : (
+              <form onSubmit={submit}>
+                <DialogTitle className="mt-3 text-2xl font-normal leading-tight">Your card</DialogTitle>
+                <DialogDescription className="mt-1.5 text-sm text-muted-foreground">
+                  {label} · ${SPONSOR_MONTHLY_PRICE}/month ·{" "}
+                  <button type="button" onClick={() => setStep(0)} className="text-foreground underline underline-offset-4 hover:text-primary">
+                    change
+                  </button>
+                </DialogDescription>
 
-            <div className="grid gap-4 sm:grid-cols-[minmax(0,1fr)_190px]">
-              <div className="space-y-3">
-                <Field label="Product name">
-                  <input value={product} onChange={(e) => setProduct(e.target.value)} placeholder="Acme MCP" className={inputClass} autoFocus />
-                </Field>
-                <Field label="Website">
-                  <input value={website} onChange={(e) => setWebsite(e.target.value)} placeholder="acme.dev" className={inputClass} />
-                </Field>
-                <Field label="One line for your card" hint={`${tagline.length}/${TAGLINE_MAX}`}>
-                  <input
-                    value={tagline}
-                    onChange={(e) => setTagline(e.target.value.slice(0, TAGLINE_MAX))}
-                    placeholder="Turn any website into Claude-ready data"
-                    className={inputClass}
-                  />
-                </Field>
-                <Field label="Email">
-                  <input type="email" value={emailValue} onChange={(e) => setEmail(e.target.value)} placeholder="you@company.com" className={inputClass} />
-                </Field>
-              </div>
-              <div>
-                <p className="mb-1 text-xs font-medium text-foreground">Preview</p>
-                <CardPreview product={product} website={website} tagline={tagline} category={selected?.label.toLowerCase() ?? ""} />
-              </div>
-            </div>
+                <div className="mt-5 space-y-3">
+                  <div className="grid gap-3 sm:grid-cols-2">
+                    <label className="block">
+                      <span className="mb-1 block text-xs text-muted-foreground">Product</span>
+                      <input value={product} onChange={(e) => setProduct(e.target.value)} placeholder="Acme MCP" className={inputClass} autoFocus />
+                    </label>
+                    <label className="block">
+                      <span className="mb-1 block text-xs text-muted-foreground">Website</span>
+                      <input value={website} onChange={(e) => setWebsite(e.target.value)} placeholder="acme.dev" className={inputClass} />
+                    </label>
+                  </div>
+                  <label className="block">
+                    <span className="mb-1 flex justify-between text-xs text-muted-foreground">
+                      One line <span>{tagline.length}/{TAGLINE_MAX}</span>
+                    </span>
+                    <input
+                      value={tagline}
+                      onChange={(e) => setTagline(e.target.value.slice(0, TAGLINE_MAX))}
+                      placeholder="Turn any website into Claude-ready data"
+                      className={inputClass}
+                    />
+                  </label>
+                  <label className="block">
+                    <span className="mb-1 block text-xs text-muted-foreground">Email</span>
+                    <input type="email" value={emailValue} onChange={(e) => setEmail(e.target.value)} placeholder="you@company.com" className={inputClass} />
+                  </label>
+                </div>
 
-            <div className="flex items-center gap-2">
-              <button
-                type="button"
-                onClick={() => setStep(0)}
-                aria-label="Back"
-                className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-border text-muted-foreground hover:text-foreground"
-              >
-                <ArrowLeft className="h-4 w-4" />
-              </button>
-              <button
-                type="submit"
-                disabled={!ready}
-                className="inline-flex h-10 flex-1 items-center justify-center gap-2 rounded-full bg-foreground text-sm font-medium text-background transition-colors hover:bg-foreground/85 disabled:opacity-40"
-              >
-                {SPONSOR_CHECKOUT_URL ? (
-                  <>
-                    <Lock className="h-4 w-4" aria-hidden="true" />
-                    Pay ${SPONSOR_MONTHLY_PRICE} now
-                  </>
-                ) : (
-                  "Request this slot"
-                )}
-              </button>
-            </div>
-            <p className="text-center text-[11px] text-muted-foreground">
-              {SPONSOR_CHECKOUT_URL
-                ? "Secure checkout. Billed monthly."
-                : `We confirm your slot and start date by email.`}
-            </p>
-          </form>
-        )}
+                {/* Mobile has no site map, so show the card here. */}
+                <div className="mt-4 flex items-center gap-3 rounded-md border border-border bg-[#141311] p-3 sm:hidden">
+                  <ProductIcon website={website} product={product} className="h-8 w-8 text-xs" />
+                  <span className="min-w-0">
+                    <span className="block truncate text-sm font-semibold text-white">{product.trim() || "Your product"}</span>
+                    <span className="block truncate text-xs text-white/60">{tagline.trim() || "Your one line"}</span>
+                  </span>
+                </div>
+
+                <div className="mt-6 flex items-center justify-between gap-3">
+                  <button type="button" onClick={() => setStep(0)} className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground">
+                    <ArrowLeft className="h-3.5 w-3.5" aria-hidden="true" />
+                    Back
+                  </button>
+                  <button type="submit" disabled={!ready} className={primaryButton}>
+                    {SPONSOR_CHECKOUT_URL ? `Pay $${SPONSOR_MONTHLY_PRICE}` : "Request this slot"}
+                    <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                  </button>
+                </div>
+                <p className="mt-3 text-right text-[11px] text-muted-foreground">
+                  {SPONSOR_CHECKOUT_URL ? "Secure checkout. Billed monthly." : "We confirm your slot and start date by email."}
+                </p>
+              </form>
+            )}
+          </div>
+        </div>
       </DialogContent>
     </Dialog>
   );
