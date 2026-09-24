@@ -22,7 +22,7 @@ function SideMcpCard({ placement, index }: { placement: SideAdPlacement; index: 
     <Link
       href={placement.href}
       className={cn(
-        "side-ad-flip-card pointer-events-auto group flex min-h-[104px] flex-1 basis-0 flex-col items-center justify-center rounded-md border px-2.5 py-2 text-center shadow-sm transition duration-300 hover:-translate-y-0.5 min-[1760px]:px-3 min-[1760px]:py-2.5 min-[1900px]:px-4",
+        "side-ad-flip-card pointer-events-auto group flex min-h-0 flex-none flex-col items-center justify-center rounded-md border px-2.5 py-3 text-center shadow-sm transition duration-300 hover:-translate-y-0.5",
         placement.tone.panel,
       )}
       style={{ animationDelay: `${index * 70}ms` }}
@@ -30,7 +30,7 @@ function SideMcpCard({ placement, index }: { placement: SideAdPlacement; index: 
       <div
         aria-label={isAvailable ? `${placement.name} icon` : `${placement.name} logo`}
         className={cn(
-          "relative flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-md text-xs font-bold min-[1760px]:h-10 min-[1760px]:w-10 min-[1760px]:text-sm min-[1900px]:h-12 min-[1900px]:w-12 min-[1900px]:text-base",
+          "relative flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-md text-xs font-bold min-[2000px]:h-9 min-[2000px]:w-9",
           isAvailable ? "shadow-none" : "shadow-[inset_0_1px_0_rgba(255,255,255,0.35)]",
           placement.tone.icon,
         )}
@@ -52,22 +52,22 @@ function SideMcpCard({ placement, index }: { placement: SideAdPlacement; index: 
       </div>
       <div className="mt-2 min-w-0 max-w-full">
         <div className="flex min-w-0 flex-col items-center gap-1">
-          <p className="max-w-full truncate text-xs font-semibold leading-tight min-[1760px]:text-sm min-[1900px]:text-base">
+          <p className="max-w-full truncate text-xs font-semibold leading-tight min-[1760px]:text-[13px]">
             {placement.name}
           </p>
           <span
             className={cn(
-              "hidden shrink-0 rounded-full px-1.5 py-0.5 text-[8px] font-semibold uppercase tracking-[0.08em] opacity-80 min-[1900px]:inline-flex min-[1900px]:px-2 min-[1900px]:text-[9px]",
+              "hidden shrink-0 rounded-full px-1.5 py-0.5 text-[8px] font-semibold uppercase tracking-[0.08em] opacity-80 min-[1760px]:inline-flex",
               placement.tone.badge,
             )}
           >
             {badgeText}
           </span>
         </div>
-        <p className="mt-1 line-clamp-2 text-[10px] leading-snug opacity-72 min-[1760px]:text-xs">
+        <p className="mt-1 line-clamp-2 text-[10px] leading-snug opacity-72 min-[1760px]:text-[11px]">
           {placement.headline}
         </p>
-        <p className="mt-1.5 hidden truncate text-[9px] font-medium uppercase tracking-[0.08em] opacity-55 min-[1900px]:block">
+        <p className="mt-1.5 hidden truncate text-[9px] font-medium uppercase tracking-[0.08em] opacity-55 min-[2000px]:block">
           {placement.eyebrow}
         </p>
       </div>
@@ -96,16 +96,18 @@ function SideStack({
         if (!event.currentTarget.contains(event.relatedTarget)) onFocusChange(false);
       }}
       className={cn(
-        "side-ad-rail-surface pointer-events-none fixed inset-y-0 z-[60] hidden w-[187px] border-white/10 shadow-[0_0_70px_rgba(0,0,0,0.32)] min-[1500px]:block min-[1600px]:w-[242px] min-[1760px]:w-[352px] min-[1900px]:w-[429px] min-[2000px]:w-[484px] min-[2200px]:w-[572px]",
+        // Width comes from --side-rail-w in globals.css, which also pads the page
+        // so content never sits underneath a rail.
+        "side-ad-rail-surface pointer-events-none fixed inset-y-0 z-[60] hidden w-[var(--side-rail-w)] border-white/10 shadow-[0_0_70px_rgba(0,0,0,0.32)] min-[1500px]:block",
         side === "left" ? "left-0 border-r" : "right-0 border-l",
       )}
     >
-      <div className="flex h-full flex-col gap-2 p-2 min-[1760px]:gap-2.5 min-[1760px]:p-3 min-[1900px]:gap-3 min-[1900px]:p-4">
+      <div className="flex h-full flex-col justify-center gap-2 overflow-y-auto p-2.5 [scrollbar-width:none] min-[1760px]:p-3">
         <div
           key={`header-${rail.title}`}
-          className="pointer-events-auto side-ad-flip-card shrink-0 px-2 py-2 text-center min-[1760px]:px-3 min-[1760px]:py-3 min-[1900px]:px-4 min-[1900px]:py-4"
+          className="pointer-events-auto side-ad-flip-card shrink-0 px-2 py-2 text-center"
         >
-          <p className="text-balance text-sm font-semibold leading-tight text-white/82 min-[1760px]:text-base min-[1900px]:text-xl">
+          <p className="text-balance text-sm font-semibold leading-tight text-white/82 min-[2000px]:text-base">
             {rail.title}
           </p>
         </div>
@@ -127,7 +129,7 @@ function SideStack({
           ) : null}
           <a
             href={sideAdSponsorHref}
-            className="pointer-events-auto mx-auto flex w-fit shrink-0 items-center gap-1.5 rounded-full border border-white/12 bg-white/8 px-2.5 py-1.5 text-[10px] font-medium text-white/64 shadow-sm backdrop-blur transition hover:border-white/20 hover:bg-white/12 hover:text-white min-[1760px]:text-xs"
+            className="pointer-events-auto mx-auto flex w-fit shrink-0 items-center gap-1.5 rounded-full border border-white/12 bg-white/8 px-2.5 py-1.5 text-[10px] font-medium text-white/64 shadow-sm backdrop-blur transition hover:border-white/20 hover:bg-white/12 hover:text-white"
           >
             <Megaphone className="h-3 w-3" aria-hidden="true" />
             Advertise

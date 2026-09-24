@@ -576,6 +576,34 @@
   transform-style: preserve-3d;
 }
 
+/* Sponsor side rails: one width token drives both the rail and the page
+   padding that keeps content out from under it. Rails show from 1500px. */
+:root {
+  --side-rail-w: 0px;
+}
+
+@media (min-width: 1500px) {
+  :root {
+    --side-rail-w: 180px;
+  }
+}
+
+@media (min-width: 1760px) {
+  :root {
+    --side-rail-w: 220px;
+  }
+}
+
+@media (min-width: 2000px) {
+  :root {
+    --side-rail-w: 260px;
+  }
+}
+
+body.side-ads-active {
+  padding-inline: var(--side-rail-w);
+}
+
 .side-ad-rail-surface {
   background-color: #050505;
   background-image:
