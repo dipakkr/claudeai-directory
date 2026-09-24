@@ -12,6 +12,7 @@ interface HomeContentProps {
   orders: Record<SortKey, string[]>;
   launches: ReactNode;
   community: ReactNode;
+  feed?: ReactNode;
   members: PublicProfile[];
   memberCount: number;
 }
@@ -81,7 +82,7 @@ function HeroMemberStrip({ members, total }: { members: PublicProfile[]; total: 
   );
 }
 
-export default function HomeContent({ items, orders, launches, community, members, memberCount }: HomeContentProps) {
+export default function HomeContent({ items, orders, launches, community, feed, members, memberCount }: HomeContentProps) {
   const count = (type: DirectoryItem["type"]) => items.filter((i) => i.type === type).length;
 
   return (
@@ -123,6 +124,8 @@ export default function HomeContent({ items, orders, launches, community, member
       <CoursesSection />
 
       {launches}
+
+      {feed}
 
       {community}
 

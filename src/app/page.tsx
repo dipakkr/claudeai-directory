@@ -5,6 +5,7 @@ import Footer from "@/components/layout/Footer";
 import HomeContent from "@/components/home/HomeContent";
 import HomeLaunches from "@/components/home/HomeLaunches";
 import HomeCommunity from "@/components/home/HomeCommunity";
+import HomeFeed from "@/components/home/HomeFeed";
 import { publicLaunches, selectedDiscussions } from "@/lib/home-community";
 import { reviewedAgents } from "@/data/resource-guides";
 import { OrganizationSchema, WebSiteSchema } from "@/components/seo/JsonLd";
@@ -74,6 +75,7 @@ export default async function Home() {
         <HomeContent items={items} orders={buildOrders(items, ranked)}
           members={membersData?.members ?? []}
           memberCount={membersData?.total ?? 0}
+          feed={<Suspense fallback={null}><HomeFeed /></Suspense>}
           launches={<HomeLaunches projects={publicLaunches(launchesData ?? [])} unavailable={launchesData === null} />}
           community={<Suspense fallback={<HomeCommunity threads={threads} replies={{}} unavailable={threadsData === null} />}>
             <CommunityPreview threads={threads} unavailable={threadsData === null} />
