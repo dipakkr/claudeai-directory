@@ -152,7 +152,8 @@ export default function AdvertiseDialog() {
                   >
                     <span className="truncate font-medium">{c.label}</span>
                     <span className={`shrink-0 text-[10px] ${active ? "text-background/70" : "text-muted-foreground"}`}>
-                      {soldOut ? "Full" : `${c.openSlots} open`}
+                      {/* Real availability only: no invented scarcity. */}
+                      {soldOut ? "Full" : c.openSlots === 1 ? "1 left" : "Available"}
                     </span>
                   </button>
                 );
