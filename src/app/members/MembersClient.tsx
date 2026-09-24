@@ -9,6 +9,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useMembers, type MembersResponse } from "@/hooks/use-members";
 import { useAuth } from "@/lib/auth";
 import type { PublicProfile } from "@/types";
+import { SignInButton } from "@/components/auth/SignInDialog";
 
 const PAGE_SIZE = 60;
 const PUBLIC_PREVIEW_SIZE = 12;
@@ -128,12 +129,12 @@ export default function MembersClient({ initialData }: { initialData: MembersRes
             </p>
           </div>
           {isPreview && !isAuthLoading && (
-            <Link
-              href="/login"
-              className="inline-flex h-10 shrink-0 items-center self-start rounded-full border border-border px-4 text-sm text-foreground transition-colors hover:border-[var(--cad-line-hover)]"
+            <SignInButton
+              reason="see all members"
+              className="inline-flex h-10 shrink-0 cursor-pointer items-center self-start rounded-full border border-border px-4 text-sm text-foreground transition-colors hover:border-[var(--cad-line-hover)]"
             >
               Sign in to see all members
-            </Link>
+            </SignInButton>
           )}
         </div>
 
@@ -187,12 +188,12 @@ export default function MembersClient({ initialData }: { initialData: MembersRes
                   <p className="max-w-[48ch] text-sm leading-6 text-muted-foreground">
                     Showing {shown.length} of {total.toLocaleString()} members. Sign in to browse every profile and find collaborators.
                   </p>
-                  <Link
-                    href="/login"
-                    className="inline-flex h-10 items-center rounded-full bg-primary px-5 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90"
+                  <SignInButton
+                    reason="see all members"
+                    className="inline-flex h-10 cursor-pointer items-center rounded-full bg-primary px-5 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90"
                   >
                     See all members
-                  </Link>
+                  </SignInButton>
                 </div>
               )}
               {!isPreview && filtered.length > visible && (

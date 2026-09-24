@@ -1,0 +1,2284 @@
+{
+  "checkedAt": "2026-09-24",
+  "sources": {
+    "commands": "https://code.claude.com/docs/en/commands",
+    "cli": "https://code.claude.com/docs/en/cli-reference",
+    "interactive": "https://code.claude.com/docs/en/interactive-mode"
+  },
+  "commands": [
+    {
+      "name": "/add-dir",
+      "usage": "/add-dir <path>",
+      "kind": "builtin",
+      "aliases": [],
+      "aliasOf": null,
+      "removed": false,
+      "hidden": false,
+      "minVersion": null,
+      "requirements": [],
+      "docsUrl": "https://code.claude.com/docs/en/commands#:~:text=%2Fadd-dir"
+    },
+    {
+      "name": "/advisor",
+      "usage": "/advisor [model|off]",
+      "kind": "builtin",
+      "aliases": [],
+      "aliasOf": null,
+      "removed": false,
+      "hidden": false,
+      "minVersion": null,
+      "requirements": [],
+      "docsUrl": "https://code.claude.com/docs/en/commands#:~:text=%2Fadvisor"
+    },
+    {
+      "name": "/agents",
+      "usage": "/agents",
+      "kind": "builtin",
+      "aliases": [],
+      "aliasOf": null,
+      "removed": false,
+      "hidden": false,
+      "minVersion": null,
+      "requirements": [],
+      "docsUrl": "https://code.claude.com/docs/en/commands#:~:text=%2Fagents"
+    },
+    {
+      "name": "/artifacts",
+      "usage": "/artifacts",
+      "kind": "builtin",
+      "aliases": [],
+      "aliasOf": null,
+      "removed": false,
+      "hidden": false,
+      "minVersion": "2.1.208",
+      "requirements": [],
+      "docsUrl": "https://code.claude.com/docs/en/commands#:~:text=%2Fartifacts"
+    },
+    {
+      "name": "/auto-mode-setup",
+      "usage": "/auto-mode-setup",
+      "kind": "builtin",
+      "aliases": [],
+      "aliasOf": null,
+      "removed": false,
+      "hidden": false,
+      "minVersion": "2.1.228",
+      "requirements": [
+        "Pro, Max, or Team plan"
+      ],
+      "docsUrl": "https://code.claude.com/docs/en/commands#:~:text=%2Fauto-mode-setup"
+    },
+    {
+      "name": "/autocompact",
+      "usage": "/autocompact [auto|<tokens>]",
+      "kind": "builtin",
+      "aliases": [],
+      "aliasOf": null,
+      "removed": false,
+      "hidden": false,
+      "minVersion": "2.1.221",
+      "requirements": [],
+      "docsUrl": "https://code.claude.com/docs/en/commands#:~:text=%2Fautocompact"
+    },
+    {
+      "name": "/autofix-pr",
+      "usage": "/autofix-pr [prompt]",
+      "kind": "builtin",
+      "aliases": [],
+      "aliasOf": null,
+      "removed": false,
+      "hidden": false,
+      "minVersion": null,
+      "requirements": [
+        "gh CLI"
+      ],
+      "docsUrl": "https://code.claude.com/docs/en/commands#:~:text=%2Fautofix-pr"
+    },
+    {
+      "name": "/background",
+      "usage": "/background [prompt]",
+      "kind": "builtin",
+      "aliases": [
+        "/bg"
+      ],
+      "aliasOf": null,
+      "removed": false,
+      "hidden": false,
+      "minVersion": null,
+      "requirements": [],
+      "docsUrl": "https://code.claude.com/docs/en/commands#:~:text=%2Fbackground"
+    },
+    {
+      "name": "/batch",
+      "usage": "/batch <instruction>",
+      "kind": "skill",
+      "aliases": [],
+      "aliasOf": null,
+      "removed": false,
+      "hidden": false,
+      "minVersion": null,
+      "requirements": [
+        "git repository"
+      ],
+      "docsUrl": "https://code.claude.com/docs/en/commands#:~:text=%2Fbatch"
+    },
+    {
+      "name": "/branch",
+      "usage": "/branch [name]",
+      "kind": "builtin",
+      "aliases": [],
+      "aliasOf": null,
+      "removed": false,
+      "hidden": false,
+      "minVersion": null,
+      "requirements": [],
+      "docsUrl": "https://code.claude.com/docs/en/commands#:~:text=%2Fbranch"
+    },
+    {
+      "name": "/btw",
+      "usage": "/btw [question]",
+      "kind": "builtin",
+      "aliases": [],
+      "aliasOf": null,
+      "removed": false,
+      "hidden": false,
+      "minVersion": null,
+      "requirements": [],
+      "docsUrl": "https://code.claude.com/docs/en/commands#:~:text=%2Fbtw"
+    },
+    {
+      "name": "/bug",
+      "usage": "/bug [report]",
+      "kind": "builtin",
+      "aliases": [
+        "/share"
+      ],
+      "aliasOf": null,
+      "removed": false,
+      "hidden": false,
+      "minVersion": null,
+      "requirements": [],
+      "docsUrl": "https://code.claude.com/docs/en/commands#:~:text=%2Fbug"
+    },
+    {
+      "name": "/cd",
+      "usage": "/cd <path>",
+      "kind": "builtin",
+      "aliases": [],
+      "aliasOf": null,
+      "removed": false,
+      "hidden": false,
+      "minVersion": null,
+      "requirements": [],
+      "docsUrl": "https://code.claude.com/docs/en/commands#:~:text=%2Fcd"
+    },
+    {
+      "name": "/chrome",
+      "usage": "/chrome",
+      "kind": "builtin",
+      "aliases": [],
+      "aliasOf": null,
+      "removed": false,
+      "hidden": false,
+      "minVersion": null,
+      "requirements": [],
+      "docsUrl": "https://code.claude.com/docs/en/commands#:~:text=%2Fchrome"
+    },
+    {
+      "name": "/claude-api",
+      "usage": "/claude-api [migrate|upgrade|managed-agents-onboard|prompt-audit|cost-optimize|build-eval|hillclimb]",
+      "kind": "skill",
+      "aliases": [],
+      "aliasOf": null,
+      "removed": false,
+      "hidden": false,
+      "minVersion": null,
+      "requirements": [],
+      "docsUrl": "https://code.claude.com/docs/en/commands#:~:text=%2Fclaude-api"
+    },
+    {
+      "name": "/clear",
+      "usage": "/clear [name]",
+      "kind": "builtin",
+      "aliases": [
+        "/reset",
+        "/new"
+      ],
+      "aliasOf": null,
+      "removed": false,
+      "hidden": false,
+      "minVersion": null,
+      "requirements": [],
+      "docsUrl": "https://code.claude.com/docs/en/commands#:~:text=%2Fclear"
+    },
+    {
+      "name": "/code-review",
+      "usage": "/code-review [low|medium|high|xhigh|max|ultra] [--fix] [--comment] [pr#|branch|path]",
+      "kind": "skill",
+      "aliases": [
+        "/review"
+      ],
+      "aliasOf": null,
+      "removed": false,
+      "hidden": false,
+      "minVersion": null,
+      "requirements": [],
+      "docsUrl": "https://code.claude.com/docs/en/commands#:~:text=%2Fcode-review"
+    },
+    {
+      "name": "/color",
+      "usage": "/color [color|default]",
+      "kind": "builtin",
+      "aliases": [],
+      "aliasOf": null,
+      "removed": false,
+      "hidden": false,
+      "minVersion": null,
+      "requirements": [],
+      "docsUrl": "https://code.claude.com/docs/en/commands#:~:text=%2Fcolor"
+    },
+    {
+      "name": "/compact",
+      "usage": "/compact [instructions]",
+      "kind": "builtin",
+      "aliases": [],
+      "aliasOf": null,
+      "removed": false,
+      "hidden": false,
+      "minVersion": null,
+      "requirements": [],
+      "docsUrl": "https://code.claude.com/docs/en/commands#:~:text=%2Fcompact"
+    },
+    {
+      "name": "/config",
+      "usage": "/config [key=value ...]",
+      "kind": "builtin",
+      "aliases": [
+        "/settings"
+      ],
+      "aliasOf": null,
+      "removed": false,
+      "hidden": false,
+      "minVersion": null,
+      "requirements": [],
+      "docsUrl": "https://code.claude.com/docs/en/commands#:~:text=%2Fconfig"
+    },
+    {
+      "name": "/context",
+      "usage": "/context [all]",
+      "kind": "builtin",
+      "aliases": [],
+      "aliasOf": null,
+      "removed": false,
+      "hidden": false,
+      "minVersion": null,
+      "requirements": [],
+      "docsUrl": "https://code.claude.com/docs/en/commands#:~:text=%2Fcontext"
+    },
+    {
+      "name": "/copy",
+      "usage": "/copy [N]",
+      "kind": "builtin",
+      "aliases": [],
+      "aliasOf": null,
+      "removed": false,
+      "hidden": false,
+      "minVersion": null,
+      "requirements": [],
+      "docsUrl": "https://code.claude.com/docs/en/commands#:~:text=%2Fcopy"
+    },
+    {
+      "name": "/cost",
+      "usage": "/cost",
+      "kind": "builtin",
+      "aliases": [],
+      "aliasOf": "/usage",
+      "removed": false,
+      "hidden": false,
+      "minVersion": null,
+      "requirements": [],
+      "docsUrl": "https://code.claude.com/docs/en/commands#:~:text=%2Fcost"
+    },
+    {
+      "name": "/dataviz",
+      "usage": "/dataviz [request]",
+      "kind": "skill",
+      "aliases": [],
+      "aliasOf": null,
+      "removed": false,
+      "hidden": false,
+      "minVersion": "2.1.198",
+      "requirements": [],
+      "docsUrl": "https://code.claude.com/docs/en/commands#:~:text=%2Fdataviz"
+    },
+    {
+      "name": "/debug",
+      "usage": "/debug [description]",
+      "kind": "skill",
+      "aliases": [],
+      "aliasOf": null,
+      "removed": false,
+      "hidden": false,
+      "minVersion": null,
+      "requirements": [],
+      "docsUrl": "https://code.claude.com/docs/en/commands#:~:text=%2Fdebug"
+    },
+    {
+      "name": "/deep-research",
+      "usage": "/deep-research <question>",
+      "kind": "workflow",
+      "aliases": [],
+      "aliasOf": null,
+      "removed": false,
+      "hidden": false,
+      "minVersion": null,
+      "requirements": [],
+      "docsUrl": "https://code.claude.com/docs/en/commands#:~:text=%2Fdeep-research"
+    },
+    {
+      "name": "/design",
+      "usage": "/design [brief]",
+      "kind": "skill",
+      "aliases": [],
+      "aliasOf": null,
+      "removed": false,
+      "hidden": false,
+      "minVersion": "2.1.265",
+      "requirements": [],
+      "docsUrl": "https://code.claude.com/docs/en/commands#:~:text=%2Fdesign"
+    },
+    {
+      "name": "/design-login",
+      "usage": "/design-login",
+      "kind": "builtin",
+      "aliases": [],
+      "aliasOf": null,
+      "removed": false,
+      "hidden": false,
+      "minVersion": null,
+      "requirements": [],
+      "docsUrl": "https://code.claude.com/docs/en/commands#:~:text=%2Fdesign-login"
+    },
+    {
+      "name": "/design-sync",
+      "usage": "/design-sync [hint]",
+      "kind": "skill",
+      "aliases": [],
+      "aliasOf": null,
+      "removed": false,
+      "hidden": false,
+      "minVersion": null,
+      "requirements": [],
+      "docsUrl": "https://code.claude.com/docs/en/commands#:~:text=%2Fdesign-sync"
+    },
+    {
+      "name": "/desktop",
+      "usage": "/desktop",
+      "kind": "builtin",
+      "aliases": [
+        "/app"
+      ],
+      "aliasOf": null,
+      "removed": false,
+      "hidden": false,
+      "minVersion": null,
+      "requirements": [
+        "Claude subscription"
+      ],
+      "docsUrl": "https://code.claude.com/docs/en/commands#:~:text=%2Fdesktop"
+    },
+    {
+      "name": "/diff",
+      "usage": "/diff",
+      "kind": "builtin",
+      "aliases": [],
+      "aliasOf": null,
+      "removed": false,
+      "hidden": false,
+      "minVersion": null,
+      "requirements": [],
+      "docsUrl": "https://code.claude.com/docs/en/commands#:~:text=%2Fdiff"
+    },
+    {
+      "name": "/doctor",
+      "usage": "/doctor",
+      "kind": "skill",
+      "aliases": [
+        "/checkup"
+      ],
+      "aliasOf": null,
+      "removed": false,
+      "hidden": false,
+      "minVersion": null,
+      "requirements": [],
+      "docsUrl": "https://code.claude.com/docs/en/commands#:~:text=%2Fdoctor"
+    },
+    {
+      "name": "/effort",
+      "usage": "/effort [level|auto|status]",
+      "kind": "builtin",
+      "aliases": [],
+      "aliasOf": null,
+      "removed": false,
+      "hidden": false,
+      "minVersion": null,
+      "requirements": [],
+      "docsUrl": "https://code.claude.com/docs/en/commands#:~:text=%2Feffort"
+    },
+    {
+      "name": "/exit",
+      "usage": "/exit",
+      "kind": "builtin",
+      "aliases": [
+        "/quit"
+      ],
+      "aliasOf": null,
+      "removed": false,
+      "hidden": false,
+      "minVersion": null,
+      "requirements": [],
+      "docsUrl": "https://code.claude.com/docs/en/commands#:~:text=%2Fexit"
+    },
+    {
+      "name": "/export",
+      "usage": "/export [filename]",
+      "kind": "builtin",
+      "aliases": [],
+      "aliasOf": null,
+      "removed": false,
+      "hidden": false,
+      "minVersion": null,
+      "requirements": [],
+      "docsUrl": "https://code.claude.com/docs/en/commands#:~:text=%2Fexport"
+    },
+    {
+      "name": "/fast",
+      "usage": "/fast [on|off]",
+      "kind": "builtin",
+      "aliases": [],
+      "aliasOf": null,
+      "removed": false,
+      "hidden": false,
+      "minVersion": "2.1.205",
+      "requirements": [],
+      "docsUrl": "https://code.claude.com/docs/en/commands#:~:text=%2Ffast"
+    },
+    {
+      "name": "/feedback",
+      "usage": "/feedback [report]",
+      "kind": "builtin",
+      "aliases": [],
+      "aliasOf": null,
+      "removed": false,
+      "hidden": false,
+      "minVersion": null,
+      "requirements": [],
+      "docsUrl": "https://code.claude.com/docs/en/commands#:~:text=%2Ffeedback"
+    },
+    {
+      "name": "/fewer-permission-prompts",
+      "usage": "/fewer-permission-prompts",
+      "kind": "skill",
+      "aliases": [],
+      "aliasOf": null,
+      "removed": false,
+      "hidden": false,
+      "minVersion": null,
+      "requirements": [],
+      "docsUrl": "https://code.claude.com/docs/en/commands#:~:text=%2Ffewer-permission-prompts"
+    },
+    {
+      "name": "/focus",
+      "usage": "/focus",
+      "kind": "builtin",
+      "aliases": [],
+      "aliasOf": null,
+      "removed": false,
+      "hidden": false,
+      "minVersion": null,
+      "requirements": [],
+      "docsUrl": "https://code.claude.com/docs/en/commands#:~:text=%2Ffocus"
+    },
+    {
+      "name": "/fork",
+      "usage": "/fork [prompt]",
+      "kind": "builtin",
+      "aliases": [],
+      "aliasOf": null,
+      "removed": false,
+      "hidden": false,
+      "minVersion": "2.1.212",
+      "requirements": [],
+      "docsUrl": "https://code.claude.com/docs/en/commands#:~:text=%2Ffork"
+    },
+    {
+      "name": "/goal",
+      "usage": "/goal [condition|clear]",
+      "kind": "builtin",
+      "aliases": [],
+      "aliasOf": null,
+      "removed": false,
+      "hidden": false,
+      "minVersion": null,
+      "requirements": [],
+      "docsUrl": "https://code.claude.com/docs/en/commands#:~:text=%2Fgoal"
+    },
+    {
+      "name": "/heapdump",
+      "usage": "/heapdump",
+      "kind": "builtin",
+      "aliases": [],
+      "aliasOf": null,
+      "removed": false,
+      "hidden": true,
+      "minVersion": null,
+      "requirements": [],
+      "docsUrl": "https://code.claude.com/docs/en/commands#:~:text=%2Fheapdump"
+    },
+    {
+      "name": "/help",
+      "usage": "/help",
+      "kind": "builtin",
+      "aliases": [],
+      "aliasOf": null,
+      "removed": false,
+      "hidden": false,
+      "minVersion": null,
+      "requirements": [],
+      "docsUrl": "https://code.claude.com/docs/en/commands#:~:text=%2Fhelp"
+    },
+    {
+      "name": "/hooks",
+      "usage": "/hooks",
+      "kind": "builtin",
+      "aliases": [],
+      "aliasOf": null,
+      "removed": false,
+      "hidden": false,
+      "minVersion": null,
+      "requirements": [],
+      "docsUrl": "https://code.claude.com/docs/en/commands#:~:text=%2Fhooks"
+    },
+    {
+      "name": "/ide",
+      "usage": "/ide",
+      "kind": "builtin",
+      "aliases": [],
+      "aliasOf": null,
+      "removed": false,
+      "hidden": false,
+      "minVersion": null,
+      "requirements": [],
+      "docsUrl": "https://code.claude.com/docs/en/commands#:~:text=%2Fide"
+    },
+    {
+      "name": "/import",
+      "usage": "/import [codex|gemini|cursor] [--dry-run] [--yes]",
+      "kind": "builtin",
+      "aliases": [],
+      "aliasOf": null,
+      "removed": false,
+      "hidden": false,
+      "minVersion": "2.1.213",
+      "requirements": [],
+      "docsUrl": "https://code.claude.com/docs/en/commands#:~:text=%2Fimport"
+    },
+    {
+      "name": "/init",
+      "usage": "/init",
+      "kind": "builtin",
+      "aliases": [],
+      "aliasOf": null,
+      "removed": false,
+      "hidden": false,
+      "minVersion": null,
+      "requirements": [],
+      "docsUrl": "https://code.claude.com/docs/en/commands#:~:text=%2Finit"
+    },
+    {
+      "name": "/insights",
+      "usage": "/insights",
+      "kind": "builtin",
+      "aliases": [],
+      "aliasOf": null,
+      "removed": false,
+      "hidden": false,
+      "minVersion": null,
+      "requirements": [],
+      "docsUrl": "https://code.claude.com/docs/en/commands#:~:text=%2Finsights"
+    },
+    {
+      "name": "/install-github-app",
+      "usage": "/install-github-app",
+      "kind": "builtin",
+      "aliases": [],
+      "aliasOf": null,
+      "removed": false,
+      "hidden": false,
+      "minVersion": null,
+      "requirements": [],
+      "docsUrl": "https://code.claude.com/docs/en/commands#:~:text=%2Finstall-github-app"
+    },
+    {
+      "name": "/install-slack-app",
+      "usage": "/install-slack-app",
+      "kind": "builtin",
+      "aliases": [],
+      "aliasOf": null,
+      "removed": false,
+      "hidden": false,
+      "minVersion": null,
+      "requirements": [],
+      "docsUrl": "https://code.claude.com/docs/en/commands#:~:text=%2Finstall-slack-app"
+    },
+    {
+      "name": "/keybindings",
+      "usage": "/keybindings",
+      "kind": "builtin",
+      "aliases": [],
+      "aliasOf": null,
+      "removed": false,
+      "hidden": false,
+      "minVersion": null,
+      "requirements": [],
+      "docsUrl": "https://code.claude.com/docs/en/commands#:~:text=%2Fkeybindings"
+    },
+    {
+      "name": "/list-agents",
+      "usage": "/list-agents",
+      "kind": "builtin",
+      "aliases": [
+        "/peers"
+      ],
+      "aliasOf": null,
+      "removed": false,
+      "hidden": false,
+      "minVersion": "2.1.224",
+      "requirements": [],
+      "docsUrl": "https://code.claude.com/docs/en/commands#:~:text=%2Flist-agents"
+    },
+    {
+      "name": "/login",
+      "usage": "/login",
+      "kind": "builtin",
+      "aliases": [],
+      "aliasOf": null,
+      "removed": false,
+      "hidden": false,
+      "minVersion": null,
+      "requirements": [],
+      "docsUrl": "https://code.claude.com/docs/en/commands#:~:text=%2Flogin"
+    },
+    {
+      "name": "/logout",
+      "usage": "/logout",
+      "kind": "builtin",
+      "aliases": [],
+      "aliasOf": null,
+      "removed": false,
+      "hidden": false,
+      "minVersion": null,
+      "requirements": [],
+      "docsUrl": "https://code.claude.com/docs/en/commands#:~:text=%2Flogout"
+    },
+    {
+      "name": "/loop",
+      "usage": "/loop [interval] [prompt]",
+      "kind": "skill",
+      "aliases": [
+        "/proactive"
+      ],
+      "aliasOf": null,
+      "removed": false,
+      "hidden": false,
+      "minVersion": null,
+      "requirements": [],
+      "docsUrl": "https://code.claude.com/docs/en/commands#:~:text=%2Floop"
+    },
+    {
+      "name": "/mcp",
+      "usage": "/mcp [reconnect <server>|enable|disable [<server>|all]]",
+      "kind": "builtin",
+      "aliases": [],
+      "aliasOf": null,
+      "removed": false,
+      "hidden": false,
+      "minVersion": null,
+      "requirements": [],
+      "docsUrl": "https://code.claude.com/docs/en/commands#:~:text=%2Fmcp"
+    },
+    {
+      "name": "/memory",
+      "usage": "/memory",
+      "kind": "builtin",
+      "aliases": [],
+      "aliasOf": null,
+      "removed": false,
+      "hidden": false,
+      "minVersion": null,
+      "requirements": [],
+      "docsUrl": "https://code.claude.com/docs/en/commands#:~:text=%2Fmemory"
+    },
+    {
+      "name": "/mobile",
+      "usage": "/mobile",
+      "kind": "builtin",
+      "aliases": [
+        "/ios",
+        "/android"
+      ],
+      "aliasOf": null,
+      "removed": false,
+      "hidden": false,
+      "minVersion": null,
+      "requirements": [],
+      "docsUrl": "https://code.claude.com/docs/en/commands#:~:text=%2Fmobile"
+    },
+    {
+      "name": "/model",
+      "usage": "/model [model]",
+      "kind": "builtin",
+      "aliases": [],
+      "aliasOf": null,
+      "removed": false,
+      "hidden": false,
+      "minVersion": null,
+      "requirements": [],
+      "docsUrl": "https://code.claude.com/docs/en/commands#:~:text=%2Fmodel"
+    },
+    {
+      "name": "/output-style",
+      "usage": "/output-style [style]",
+      "kind": "builtin",
+      "aliases": [],
+      "aliasOf": null,
+      "removed": false,
+      "hidden": false,
+      "minVersion": "2.1.269",
+      "requirements": [],
+      "docsUrl": "https://code.claude.com/docs/en/commands#:~:text=%2Foutput-style"
+    },
+    {
+      "name": "/passes",
+      "usage": "/passes",
+      "kind": "builtin",
+      "aliases": [],
+      "aliasOf": null,
+      "removed": false,
+      "hidden": false,
+      "minVersion": null,
+      "requirements": [],
+      "docsUrl": "https://code.claude.com/docs/en/commands#:~:text=%2Fpasses"
+    },
+    {
+      "name": "/permissions",
+      "usage": "/permissions",
+      "kind": "builtin",
+      "aliases": [
+        "/allowed-tools"
+      ],
+      "aliasOf": null,
+      "removed": false,
+      "hidden": false,
+      "minVersion": null,
+      "requirements": [],
+      "docsUrl": "https://code.claude.com/docs/en/commands#:~:text=%2Fpermissions"
+    },
+    {
+      "name": "/plan",
+      "usage": "/plan [description]",
+      "kind": "builtin",
+      "aliases": [],
+      "aliasOf": null,
+      "removed": false,
+      "hidden": false,
+      "minVersion": null,
+      "requirements": [],
+      "docsUrl": "https://code.claude.com/docs/en/commands#:~:text=%2Fplan"
+    },
+    {
+      "name": "/plugin",
+      "usage": "/plugin [subcommand]",
+      "kind": "builtin",
+      "aliases": [],
+      "aliasOf": null,
+      "removed": false,
+      "hidden": false,
+      "minVersion": null,
+      "requirements": [],
+      "docsUrl": "https://code.claude.com/docs/en/commands#:~:text=%2Fplugin"
+    },
+    {
+      "name": "/powerup",
+      "usage": "/powerup",
+      "kind": "builtin",
+      "aliases": [],
+      "aliasOf": null,
+      "removed": false,
+      "hidden": false,
+      "minVersion": null,
+      "requirements": [],
+      "docsUrl": "https://code.claude.com/docs/en/commands#:~:text=%2Fpowerup"
+    },
+    {
+      "name": "/pr-comments",
+      "usage": "/pr-comments [PR]",
+      "kind": "builtin",
+      "aliases": [],
+      "aliasOf": null,
+      "removed": true,
+      "hidden": false,
+      "minVersion": null,
+      "requirements": [
+        "gh CLI"
+      ],
+      "docsUrl": "https://code.claude.com/docs/en/commands#:~:text=%2Fpr-comments"
+    },
+    {
+      "name": "/privacy-settings",
+      "usage": "/privacy-settings",
+      "kind": "builtin",
+      "aliases": [],
+      "aliasOf": null,
+      "removed": false,
+      "hidden": false,
+      "minVersion": null,
+      "requirements": [
+        "Pro and Max plan subscribers"
+      ],
+      "docsUrl": "https://code.claude.com/docs/en/commands#:~:text=%2Fprivacy-settings"
+    },
+    {
+      "name": "/radio",
+      "usage": "/radio",
+      "kind": "builtin",
+      "aliases": [],
+      "aliasOf": null,
+      "removed": false,
+      "hidden": false,
+      "minVersion": null,
+      "requirements": [],
+      "docsUrl": "https://code.claude.com/docs/en/commands#:~:text=%2Fradio"
+    },
+    {
+      "name": "/rate-limit-options",
+      "usage": "/rate-limit-options",
+      "kind": "builtin",
+      "aliases": [],
+      "aliasOf": null,
+      "removed": false,
+      "hidden": true,
+      "minVersion": null,
+      "requirements": [
+        "claude.ai subscription"
+      ],
+      "docsUrl": "https://code.claude.com/docs/en/commands#:~:text=%2Frate-limit-options"
+    },
+    {
+      "name": "/recap",
+      "usage": "/recap",
+      "kind": "builtin",
+      "aliases": [],
+      "aliasOf": null,
+      "removed": false,
+      "hidden": false,
+      "minVersion": null,
+      "requirements": [],
+      "docsUrl": "https://code.claude.com/docs/en/commands#:~:text=%2Frecap"
+    },
+    {
+      "name": "/release-notes",
+      "usage": "/release-notes",
+      "kind": "builtin",
+      "aliases": [],
+      "aliasOf": null,
+      "removed": false,
+      "hidden": false,
+      "minVersion": null,
+      "requirements": [],
+      "docsUrl": "https://code.claude.com/docs/en/commands#:~:text=%2Frelease-notes"
+    },
+    {
+      "name": "/reload-plugins",
+      "usage": "/reload-plugins [--force]",
+      "kind": "builtin",
+      "aliases": [],
+      "aliasOf": null,
+      "removed": false,
+      "hidden": false,
+      "minVersion": null,
+      "requirements": [],
+      "docsUrl": "https://code.claude.com/docs/en/commands#:~:text=%2Freload-plugins"
+    },
+    {
+      "name": "/reload-skills",
+      "usage": "/reload-skills",
+      "kind": "builtin",
+      "aliases": [],
+      "aliasOf": null,
+      "removed": false,
+      "hidden": false,
+      "minVersion": null,
+      "requirements": [],
+      "docsUrl": "https://code.claude.com/docs/en/commands#:~:text=%2Freload-skills"
+    },
+    {
+      "name": "/remote-control",
+      "usage": "/remote-control",
+      "kind": "builtin",
+      "aliases": [
+        "/rc"
+      ],
+      "aliasOf": null,
+      "removed": false,
+      "hidden": false,
+      "minVersion": null,
+      "requirements": [],
+      "docsUrl": "https://code.claude.com/docs/en/commands#:~:text=%2Fremote-control"
+    },
+    {
+      "name": "/remote-env",
+      "usage": "/remote-env",
+      "kind": "builtin",
+      "aliases": [],
+      "aliasOf": null,
+      "removed": false,
+      "hidden": false,
+      "minVersion": null,
+      "requirements": [],
+      "docsUrl": "https://code.claude.com/docs/en/commands#:~:text=%2Fremote-env"
+    },
+    {
+      "name": "/rename",
+      "usage": "/rename [name]",
+      "kind": "builtin",
+      "aliases": [],
+      "aliasOf": null,
+      "removed": false,
+      "hidden": false,
+      "minVersion": null,
+      "requirements": [],
+      "docsUrl": "https://code.claude.com/docs/en/commands#:~:text=%2Frename"
+    },
+    {
+      "name": "/resume",
+      "usage": "/resume [session]",
+      "kind": "builtin",
+      "aliases": [
+        "/continue"
+      ],
+      "aliasOf": null,
+      "removed": false,
+      "hidden": false,
+      "minVersion": null,
+      "requirements": [],
+      "docsUrl": "https://code.claude.com/docs/en/commands#:~:text=%2Fresume"
+    },
+    {
+      "name": "/review",
+      "usage": "/review [low|medium|high|xhigh|max|ultra] [--fix] [--comment] [pr#|branch|path]",
+      "kind": "builtin",
+      "aliases": [],
+      "aliasOf": "/code-review",
+      "removed": false,
+      "hidden": false,
+      "minVersion": null,
+      "requirements": [],
+      "docsUrl": "https://code.claude.com/docs/en/commands#:~:text=%2Freview"
+    },
+    {
+      "name": "/rewind",
+      "usage": "/rewind",
+      "kind": "builtin",
+      "aliases": [
+        "/checkpoint",
+        "/undo"
+      ],
+      "aliasOf": null,
+      "removed": false,
+      "hidden": false,
+      "minVersion": null,
+      "requirements": [],
+      "docsUrl": "https://code.claude.com/docs/en/commands#:~:text=%2Frewind"
+    },
+    {
+      "name": "/run",
+      "usage": "/run",
+      "kind": "skill",
+      "aliases": [],
+      "aliasOf": null,
+      "removed": false,
+      "hidden": false,
+      "minVersion": null,
+      "requirements": [],
+      "docsUrl": "https://code.claude.com/docs/en/commands#:~:text=%2Frun"
+    },
+    {
+      "name": "/run-skill-generator",
+      "usage": "/run-skill-generator",
+      "kind": "skill",
+      "aliases": [],
+      "aliasOf": null,
+      "removed": false,
+      "hidden": false,
+      "minVersion": null,
+      "requirements": [],
+      "docsUrl": "https://code.claude.com/docs/en/commands#:~:text=%2Frun-skill-generator"
+    },
+    {
+      "name": "/sandbox",
+      "usage": "/sandbox",
+      "kind": "builtin",
+      "aliases": [],
+      "aliasOf": null,
+      "removed": false,
+      "hidden": false,
+      "minVersion": null,
+      "requirements": [],
+      "docsUrl": "https://code.claude.com/docs/en/commands#:~:text=%2Fsandbox"
+    },
+    {
+      "name": "/schedule",
+      "usage": "/schedule [description]",
+      "kind": "builtin",
+      "aliases": [
+        "/routines"
+      ],
+      "aliasOf": null,
+      "removed": false,
+      "hidden": false,
+      "minVersion": null,
+      "requirements": [],
+      "docsUrl": "https://code.claude.com/docs/en/commands#:~:text=%2Fschedule"
+    },
+    {
+      "name": "/scroll-speed",
+      "usage": "/scroll-speed",
+      "kind": "builtin",
+      "aliases": [],
+      "aliasOf": null,
+      "removed": false,
+      "hidden": false,
+      "minVersion": null,
+      "requirements": [],
+      "docsUrl": "https://code.claude.com/docs/en/commands#:~:text=%2Fscroll-speed"
+    },
+    {
+      "name": "/security-review",
+      "usage": "/security-review",
+      "kind": "builtin",
+      "aliases": [],
+      "aliasOf": null,
+      "removed": false,
+      "hidden": false,
+      "minVersion": null,
+      "requirements": [],
+      "docsUrl": "https://code.claude.com/docs/en/commands#:~:text=%2Fsecurity-review"
+    },
+    {
+      "name": "/setup-bedrock",
+      "usage": "/setup-bedrock",
+      "kind": "builtin",
+      "aliases": [],
+      "aliasOf": null,
+      "removed": false,
+      "hidden": true,
+      "minVersion": null,
+      "requirements": [],
+      "docsUrl": "https://code.claude.com/docs/en/commands#:~:text=%2Fsetup-bedrock"
+    },
+    {
+      "name": "/setup-vertex",
+      "usage": "/setup-vertex",
+      "kind": "builtin",
+      "aliases": [],
+      "aliasOf": null,
+      "removed": false,
+      "hidden": true,
+      "minVersion": null,
+      "requirements": [],
+      "docsUrl": "https://code.claude.com/docs/en/commands#:~:text=%2Fsetup-vertex"
+    },
+    {
+      "name": "/simplify",
+      "usage": "/simplify [target]",
+      "kind": "skill",
+      "aliases": [],
+      "aliasOf": null,
+      "removed": false,
+      "hidden": false,
+      "minVersion": null,
+      "requirements": [],
+      "docsUrl": "https://code.claude.com/docs/en/commands#:~:text=%2Fsimplify"
+    },
+    {
+      "name": "/skill-doctor",
+      "usage": "/skill-doctor",
+      "kind": "builtin",
+      "aliases": [],
+      "aliasOf": null,
+      "removed": false,
+      "hidden": false,
+      "minVersion": "2.1.252",
+      "requirements": [],
+      "docsUrl": "https://code.claude.com/docs/en/commands#:~:text=%2Fskill-doctor"
+    },
+    {
+      "name": "/skills",
+      "usage": "/skills",
+      "kind": "builtin",
+      "aliases": [],
+      "aliasOf": null,
+      "removed": false,
+      "hidden": false,
+      "minVersion": null,
+      "requirements": [],
+      "docsUrl": "https://code.claude.com/docs/en/commands#:~:text=%2Fskills"
+    },
+    {
+      "name": "/stats",
+      "usage": "/stats",
+      "kind": "builtin",
+      "aliases": [],
+      "aliasOf": "/usage",
+      "removed": false,
+      "hidden": false,
+      "minVersion": null,
+      "requirements": [],
+      "docsUrl": "https://code.claude.com/docs/en/commands#:~:text=%2Fstats"
+    },
+    {
+      "name": "/status",
+      "usage": "/status",
+      "kind": "builtin",
+      "aliases": [],
+      "aliasOf": null,
+      "removed": false,
+      "hidden": false,
+      "minVersion": null,
+      "requirements": [],
+      "docsUrl": "https://code.claude.com/docs/en/commands#:~:text=%2Fstatus"
+    },
+    {
+      "name": "/statusline",
+      "usage": "/statusline",
+      "kind": "builtin",
+      "aliases": [],
+      "aliasOf": null,
+      "removed": false,
+      "hidden": false,
+      "minVersion": null,
+      "requirements": [],
+      "docsUrl": "https://code.claude.com/docs/en/commands#:~:text=%2Fstatusline"
+    },
+    {
+      "name": "/stickers",
+      "usage": "/stickers",
+      "kind": "builtin",
+      "aliases": [],
+      "aliasOf": null,
+      "removed": false,
+      "hidden": false,
+      "minVersion": null,
+      "requirements": [],
+      "docsUrl": "https://code.claude.com/docs/en/commands#:~:text=%2Fstickers"
+    },
+    {
+      "name": "/stop",
+      "usage": "/stop",
+      "kind": "builtin",
+      "aliases": [],
+      "aliasOf": null,
+      "removed": false,
+      "hidden": false,
+      "minVersion": null,
+      "requirements": [],
+      "docsUrl": "https://code.claude.com/docs/en/commands#:~:text=%2Fstop"
+    },
+    {
+      "name": "/subtask",
+      "usage": "/subtask <task>",
+      "kind": "builtin",
+      "aliases": [],
+      "aliasOf": null,
+      "removed": false,
+      "hidden": false,
+      "minVersion": "2.1.212",
+      "requirements": [],
+      "docsUrl": "https://code.claude.com/docs/en/commands#:~:text=%2Fsubtask"
+    },
+    {
+      "name": "/tasks",
+      "usage": "/tasks",
+      "kind": "builtin",
+      "aliases": [
+        "/bashes"
+      ],
+      "aliasOf": null,
+      "removed": false,
+      "hidden": false,
+      "minVersion": null,
+      "requirements": [],
+      "docsUrl": "https://code.claude.com/docs/en/commands#:~:text=%2Ftasks"
+    },
+    {
+      "name": "/team-onboarding",
+      "usage": "/team-onboarding",
+      "kind": "builtin",
+      "aliases": [],
+      "aliasOf": null,
+      "removed": false,
+      "hidden": false,
+      "minVersion": null,
+      "requirements": [],
+      "docsUrl": "https://code.claude.com/docs/en/commands#:~:text=%2Fteam-onboarding"
+    },
+    {
+      "name": "/teleport",
+      "usage": "/teleport",
+      "kind": "builtin",
+      "aliases": [
+        "/tp"
+      ],
+      "aliasOf": null,
+      "removed": false,
+      "hidden": false,
+      "minVersion": null,
+      "requirements": [
+        "claude.ai subscription"
+      ],
+      "docsUrl": "https://code.claude.com/docs/en/commands#:~:text=%2Fteleport"
+    },
+    {
+      "name": "/terminal-setup",
+      "usage": "/terminal-setup",
+      "kind": "builtin",
+      "aliases": [],
+      "aliasOf": null,
+      "removed": false,
+      "hidden": false,
+      "minVersion": null,
+      "requirements": [],
+      "docsUrl": "https://code.claude.com/docs/en/commands#:~:text=%2Fterminal-setup"
+    },
+    {
+      "name": "/theme",
+      "usage": "/theme",
+      "kind": "builtin",
+      "aliases": [],
+      "aliasOf": null,
+      "removed": false,
+      "hidden": false,
+      "minVersion": null,
+      "requirements": [],
+      "docsUrl": "https://code.claude.com/docs/en/commands#:~:text=%2Ftheme"
+    },
+    {
+      "name": "/tui",
+      "usage": "/tui [default|fullscreen]",
+      "kind": "builtin",
+      "aliases": [],
+      "aliasOf": null,
+      "removed": false,
+      "hidden": false,
+      "minVersion": null,
+      "requirements": [],
+      "docsUrl": "https://code.claude.com/docs/en/commands#:~:text=%2Ftui"
+    },
+    {
+      "name": "/ultraplan",
+      "usage": "/ultraplan <prompt>",
+      "kind": "builtin",
+      "aliases": [],
+      "aliasOf": null,
+      "removed": true,
+      "hidden": false,
+      "minVersion": null,
+      "requirements": [],
+      "docsUrl": "https://code.claude.com/docs/en/commands#:~:text=%2Fultraplan"
+    },
+    {
+      "name": "/ultrareview",
+      "usage": "/ultrareview [PR or branch]",
+      "kind": "builtin",
+      "aliases": [],
+      "aliasOf": null,
+      "removed": false,
+      "hidden": false,
+      "minVersion": null,
+      "requirements": [],
+      "docsUrl": "https://code.claude.com/docs/en/commands#:~:text=%2Fultrareview"
+    },
+    {
+      "name": "/update-config",
+      "usage": "/update-config [request]",
+      "kind": "skill",
+      "aliases": [],
+      "aliasOf": null,
+      "removed": false,
+      "hidden": false,
+      "minVersion": null,
+      "requirements": [],
+      "docsUrl": "https://code.claude.com/docs/en/commands#:~:text=%2Fupdate-config"
+    },
+    {
+      "name": "/upgrade",
+      "usage": "/upgrade",
+      "kind": "builtin",
+      "aliases": [],
+      "aliasOf": null,
+      "removed": false,
+      "hidden": false,
+      "minVersion": null,
+      "requirements": [],
+      "docsUrl": "https://code.claude.com/docs/en/commands#:~:text=%2Fupgrade"
+    },
+    {
+      "name": "/usage",
+      "usage": "/usage",
+      "kind": "builtin",
+      "aliases": [],
+      "aliasOf": null,
+      "removed": false,
+      "hidden": false,
+      "minVersion": null,
+      "requirements": [],
+      "docsUrl": "https://code.claude.com/docs/en/commands#:~:text=%2Fusage"
+    },
+    {
+      "name": "/usage-credits",
+      "usage": "/usage-credits",
+      "kind": "builtin",
+      "aliases": [],
+      "aliasOf": null,
+      "removed": false,
+      "hidden": false,
+      "minVersion": null,
+      "requirements": [],
+      "docsUrl": "https://code.claude.com/docs/en/commands#:~:text=%2Fusage-credits"
+    },
+    {
+      "name": "/verify",
+      "usage": "/verify",
+      "kind": "skill",
+      "aliases": [],
+      "aliasOf": null,
+      "removed": false,
+      "hidden": false,
+      "minVersion": null,
+      "requirements": [],
+      "docsUrl": "https://code.claude.com/docs/en/commands#:~:text=%2Fverify"
+    },
+    {
+      "name": "/vim",
+      "usage": "/vim",
+      "kind": "builtin",
+      "aliases": [],
+      "aliasOf": null,
+      "removed": true,
+      "hidden": false,
+      "minVersion": null,
+      "requirements": [],
+      "docsUrl": "https://code.claude.com/docs/en/commands#:~:text=%2Fvim"
+    },
+    {
+      "name": "/voice",
+      "usage": "/voice [hold|tap|off]",
+      "kind": "builtin",
+      "aliases": [],
+      "aliasOf": null,
+      "removed": false,
+      "hidden": false,
+      "minVersion": null,
+      "requirements": [
+        "Claude.ai account"
+      ],
+      "docsUrl": "https://code.claude.com/docs/en/commands#:~:text=%2Fvoice"
+    },
+    {
+      "name": "/web-setup",
+      "usage": "/web-setup",
+      "kind": "builtin",
+      "aliases": [],
+      "aliasOf": null,
+      "removed": false,
+      "hidden": false,
+      "minVersion": null,
+      "requirements": [],
+      "docsUrl": "https://code.claude.com/docs/en/commands#:~:text=%2Fweb-setup"
+    },
+    {
+      "name": "/workflow-authoring",
+      "usage": "/workflow-authoring",
+      "kind": "skill",
+      "aliases": [],
+      "aliasOf": null,
+      "removed": false,
+      "hidden": false,
+      "minVersion": null,
+      "requirements": [],
+      "docsUrl": "https://code.claude.com/docs/en/commands#:~:text=%2Fworkflow-authoring"
+    },
+    {
+      "name": "/workflows",
+      "usage": "/workflows",
+      "kind": "builtin",
+      "aliases": [],
+      "aliasOf": null,
+      "removed": false,
+      "hidden": false,
+      "minVersion": null,
+      "requirements": [],
+      "docsUrl": "https://code.claude.com/docs/en/commands#:~:text=%2Fworkflows"
+    }
+  ],
+  "cli": [
+    {
+      "usage": "claude",
+      "example": "claude"
+    },
+    {
+      "usage": "claude \"query\"",
+      "example": "claude \"explain this project\""
+    },
+    {
+      "usage": "claude -p \"query\"",
+      "example": "claude -p \"explain this function\""
+    },
+    {
+      "usage": "cat file | claude -p \"query\"",
+      "example": "cat logs.txt | claude -p \"explain\""
+    },
+    {
+      "usage": "claude -c",
+      "example": "claude -c"
+    },
+    {
+      "usage": "claude -c -p \"query\"",
+      "example": "claude -c -p \"Check for type errors\""
+    },
+    {
+      "usage": "claude -r \"<session>\" \"query\"",
+      "example": "claude -r \"auth-refactor\" \"Finish this PR\""
+    },
+    {
+      "usage": "claude update",
+      "example": "claude update"
+    },
+    {
+      "usage": "claude gateway",
+      "example": "claude gateway --config gateway.yaml"
+    },
+    {
+      "usage": "claude install [version]",
+      "example": "claude install stable"
+    },
+    {
+      "usage": "claude auth login",
+      "example": "claude auth login --console"
+    },
+    {
+      "usage": "claude auth logout",
+      "example": "claude auth logout"
+    },
+    {
+      "usage": "claude auth status",
+      "example": "claude auth status"
+    },
+    {
+      "usage": "claude agents",
+      "example": "claude agents --json"
+    },
+    {
+      "usage": "claude attach <id>",
+      "example": "claude attach 7c5dcf5d"
+    },
+    {
+      "usage": "claude auto-mode defaults",
+      "example": "claude auto-mode defaults --label 'Git Destructive'"
+    },
+    {
+      "usage": "claude auto-mode reset",
+      "example": "claude auto-mode reset --yes"
+    },
+    {
+      "usage": "claude daemon status",
+      "example": "claude daemon status"
+    },
+    {
+      "usage": "claude daemon stop --any",
+      "example": "claude daemon stop --any --keep-workers"
+    },
+    {
+      "usage": "claude doctor",
+      "example": "claude doctor"
+    },
+    {
+      "usage": "claude import [source]",
+      "example": "claude import codex --dry-run"
+    },
+    {
+      "usage": "claude logs <id>",
+      "example": "claude logs 7c5dcf5d"
+    },
+    {
+      "usage": "claude mcp",
+      "example": null
+    },
+    {
+      "usage": "claude mcp login <name>",
+      "example": "claude mcp login sentry"
+    },
+    {
+      "usage": "claude mcp logout <name>",
+      "example": "claude mcp logout sentry"
+    },
+    {
+      "usage": "claude plugin",
+      "example": "claude plugin install code-review@claude-plugins-official"
+    },
+    {
+      "usage": "claude project purge [path]",
+      "example": "claude project purge ~/work/repo --dry-run"
+    },
+    {
+      "usage": "claude remote-control",
+      "example": "claude remote-control --name \"My Project\""
+    },
+    {
+      "usage": "claude respawn <id>",
+      "example": "claude respawn 7c5dcf5d"
+    },
+    {
+      "usage": "claude rm <id>",
+      "example": "claude rm 7c5dcf5d"
+    },
+    {
+      "usage": "claude self-hosted-runner",
+      "example": "claude self-hosted-runner setup"
+    },
+    {
+      "usage": "claude setup-token",
+      "example": "claude setup-token"
+    },
+    {
+      "usage": "claude stop <id>",
+      "example": "claude stop 7c5dcf5d"
+    },
+    {
+      "usage": "claude ultrareview [target]",
+      "example": "claude ultrareview 1234 --json"
+    }
+  ],
+  "flags": [
+    {
+      "flags": [
+        "--add-dir"
+      ],
+      "example": "claude --add-dir ../apps ../lib"
+    },
+    {
+      "flags": [
+        "--advisor <model>"
+      ],
+      "example": "claude --advisor opus"
+    },
+    {
+      "flags": [
+        "--agent"
+      ],
+      "example": "claude --agent my-custom-agent"
+    },
+    {
+      "flags": [
+        "--agents"
+      ],
+      "example": "claude --agents '{\"reviewer\":{\"description\":\"Reviews code\",\"prompt\":\"You are a code reviewer\"}}'"
+    },
+    {
+      "flags": [
+        "--allow-dangerously-skip-permissions"
+      ],
+      "example": "claude --permission-mode plan --allow-dangerously-skip-permissions"
+    },
+    {
+      "flags": [
+        "--allowedTools",
+        "--allowed-tools"
+      ],
+      "example": "\"Bash(git log *)\" \"Bash(git diff *)\" \"Read\""
+    },
+    {
+      "flags": [
+        "--append-subagent-system-prompt"
+      ],
+      "example": "claude -p --append-subagent-system-prompt \"Cite file paths in every answer\" \"query\""
+    },
+    {
+      "flags": [
+        "--append-subagent-system-prompt-file"
+      ],
+      "example": "claude -p --append-subagent-system-prompt-file ./subagent-rules.txt \"query\""
+    },
+    {
+      "flags": [
+        "--append-system-prompt"
+      ],
+      "example": "claude --append-system-prompt \"Always use TypeScript\""
+    },
+    {
+      "flags": [
+        "--append-system-prompt-file"
+      ],
+      "example": "claude --append-system-prompt-file ./extra-rules.txt"
+    },
+    {
+      "flags": [
+        "--autocompact <auto|tokens>"
+      ],
+      "example": "claude --autocompact 500k"
+    },
+    {
+      "flags": [
+        "--ax-screen-reader"
+      ],
+      "example": "claude --ax-screen-reader"
+    },
+    {
+      "flags": [
+        "--bare"
+      ],
+      "example": "claude --bare -p \"query\""
+    },
+    {
+      "flags": [
+        "--betas"
+      ],
+      "example": "claude --betas interleaved-thinking"
+    },
+    {
+      "flags": [
+        "--bg",
+        "--background"
+      ],
+      "example": "claude --bg \"investigate the flaky test\""
+    },
+    {
+      "flags": [
+        "--channels"
+      ],
+      "example": "claude --channels plugin:my-notifier@my-marketplace"
+    },
+    {
+      "flags": [
+        "--chrome"
+      ],
+      "example": "claude --chrome"
+    },
+    {
+      "flags": [
+        "--cloud"
+      ],
+      "example": "claude --cloud \"Fix the login bug\""
+    },
+    {
+      "flags": [
+        "--continue",
+        "-c"
+      ],
+      "example": "claude --continue"
+    },
+    {
+      "flags": [
+        "--dangerously-load-development-channels"
+      ],
+      "example": "claude --dangerously-load-development-channels server:webhook"
+    },
+    {
+      "flags": [
+        "--dangerously-skip-permissions"
+      ],
+      "example": "claude --dangerously-skip-permissions"
+    },
+    {
+      "flags": [
+        "--debug"
+      ],
+      "example": "claude --debug='mcp,startup'"
+    },
+    {
+      "flags": [
+        "--debug-file <path>"
+      ],
+      "example": "claude --debug-file /tmp/claude-debug.log"
+    },
+    {
+      "flags": [
+        "--disable-slash-commands"
+      ],
+      "example": "claude --disable-slash-commands"
+    },
+    {
+      "flags": [
+        "--disallowedTools",
+        "--disallowed-tools"
+      ],
+      "example": "\"Bash(git log *)\" \"Bash(git diff *)\" \"Edit\""
+    },
+    {
+      "flags": [
+        "--effort"
+      ],
+      "example": "claude --effort high"
+    },
+    {
+      "flags": [
+        "--enable-auto-mode"
+      ],
+      "example": "claude --permission-mode auto"
+    },
+    {
+      "flags": [
+        "--environment <environment-id>"
+      ],
+      "example": "claude -p \"Fix the login bug\" --environment ccpool_abc123"
+    },
+    {
+      "flags": [
+        "--exclude-dynamic-system-prompt-sections"
+      ],
+      "example": "claude -p --exclude-dynamic-system-prompt-sections \"query\""
+    },
+    {
+      "flags": [
+        "--exec"
+      ],
+      "example": "claude --bg --exec 'pytest -x'"
+    },
+    {
+      "flags": [
+        "--fallback-model"
+      ],
+      "example": "claude --fallback-model sonnet,haiku"
+    },
+    {
+      "flags": [
+        "--fork-session"
+      ],
+      "example": "claude --resume abc123 --fork-session"
+    },
+    {
+      "flags": [
+        "--forward-subagent-text"
+      ],
+      "example": "claude -p --output-format stream-json --verbose --forward-subagent-text \"query\""
+    },
+    {
+      "flags": [
+        "--from-pr"
+      ],
+      "example": "claude --from-pr 123"
+    },
+    {
+      "flags": [
+        "--ide"
+      ],
+      "example": "claude --ide"
+    },
+    {
+      "flags": [
+        "--init"
+      ],
+      "example": "claude -p --init \"query\""
+    },
+    {
+      "flags": [
+        "--init-only"
+      ],
+      "example": "claude --init-only"
+    },
+    {
+      "flags": [
+        "--include-hook-events"
+      ],
+      "example": "claude -p --output-format stream-json --verbose --include-hook-events \"query\""
+    },
+    {
+      "flags": [
+        "--include-partial-messages"
+      ],
+      "example": "claude -p --output-format stream-json --verbose --include-partial-messages \"query\""
+    },
+    {
+      "flags": [
+        "--input-format"
+      ],
+      "example": "claude -p --output-format json --input-format stream-json"
+    },
+    {
+      "flags": [
+        "--json-schema"
+      ],
+      "example": "claude -p --json-schema '{\"type\":\"object\",\"properties\":{...}}' \"query\""
+    },
+    {
+      "flags": [
+        "--maintenance"
+      ],
+      "example": "claude -p --maintenance \"query\""
+    },
+    {
+      "flags": [
+        "--max-budget-usd"
+      ],
+      "example": "claude -p --max-budget-usd 5.00 \"query\""
+    },
+    {
+      "flags": [
+        "--max-turns"
+      ],
+      "example": "claude -p --max-turns 3 \"query\""
+    },
+    {
+      "flags": [
+        "--mcp-config"
+      ],
+      "example": "claude --mcp-config ./mcp.json"
+    },
+    {
+      "flags": [
+        "--model"
+      ],
+      "example": "claude --model claude-sonnet-5"
+    },
+    {
+      "flags": [
+        "--name",
+        "-n"
+      ],
+      "example": "claude -n \"my-feature-work\""
+    },
+    {
+      "flags": [
+        "--no-chrome"
+      ],
+      "example": "claude --no-chrome"
+    },
+    {
+      "flags": [
+        "--no-session-persistence"
+      ],
+      "example": "claude -p --no-session-persistence \"query\""
+    },
+    {
+      "flags": [
+        "--output-format"
+      ],
+      "example": "claude -p \"query\" --output-format json"
+    },
+    {
+      "flags": [
+        "--permission-mode"
+      ],
+      "example": "claude --permission-mode plan"
+    },
+    {
+      "flags": [
+        "--permission-prompt-tool"
+      ],
+      "example": "claude -p --permission-prompt-tool mcp_auth_tool \"query\""
+    },
+    {
+      "flags": [
+        "--permission-prompts"
+      ],
+      "example": "claude -p --permission-prompts none \"query\""
+    },
+    {
+      "flags": [
+        "--plugin-dir"
+      ],
+      "example": "claude --plugin-dir ./my-plugin"
+    },
+    {
+      "flags": [
+        "--plugin-url"
+      ],
+      "example": "claude --plugin-url https://example.com/plugin.zip"
+    },
+    {
+      "flags": [
+        "--print",
+        "-p"
+      ],
+      "example": "claude -p \"query\""
+    },
+    {
+      "flags": [
+        "--prompt-suggestions"
+      ],
+      "example": "claude -p --prompt-suggestions --output-format stream-json --verbose \"query\""
+    },
+    {
+      "flags": [
+        "--ref <branch>"
+      ],
+      "example": "claude -p \"Run the smoke test\" --environment ccpool_abc123 --ref main"
+    },
+    {
+      "flags": [
+        "--remote"
+      ],
+      "example": "claude --remote \"Fix the login bug\""
+    },
+    {
+      "flags": [
+        "--remote-control",
+        "--rc"
+      ],
+      "example": "claude --remote-control \"My Project\""
+    },
+    {
+      "flags": [
+        "--remote-control-session-name-prefix <prefix>"
+      ],
+      "example": "claude remote-control --remote-control-session-name-prefix dev-box"
+    },
+    {
+      "flags": [
+        "--replay-user-messages"
+      ],
+      "example": "claude -p --input-format stream-json --output-format stream-json --verbose --replay-user-messages"
+    },
+    {
+      "flags": [
+        "--restricted"
+      ],
+      "example": "claude --restricted -p \"query\""
+    },
+    {
+      "flags": [
+        "--resume",
+        "-r"
+      ],
+      "example": "claude --resume auth-refactor"
+    },
+    {
+      "flags": [
+        "--safe-mode"
+      ],
+      "example": "claude --safe-mode"
+    },
+    {
+      "flags": [
+        "--session-id"
+      ],
+      "example": "claude --session-id \"550e8400-e29b-41d4-a716-446655440000\""
+    },
+    {
+      "flags": [
+        "--setting-sources"
+      ],
+      "example": "claude --setting-sources user,project"
+    },
+    {
+      "flags": [
+        "--settings"
+      ],
+      "example": "claude --settings ./settings.json"
+    },
+    {
+      "flags": [
+        "--strict-mcp-config"
+      ],
+      "example": "claude --strict-mcp-config --mcp-config ./mcp.json"
+    },
+    {
+      "flags": [
+        "--system-prompt"
+      ],
+      "example": "claude --system-prompt \"You are a Python expert\""
+    },
+    {
+      "flags": [
+        "--system-prompt-file"
+      ],
+      "example": "claude --system-prompt-file ./custom-prompt.txt"
+    },
+    {
+      "flags": [
+        "--system-prompt-snapshot"
+      ],
+      "example": "claude --system-prompt-snapshot off"
+    },
+    {
+      "flags": [
+        "--teleport"
+      ],
+      "example": "claude --teleport"
+    },
+    {
+      "flags": [
+        "--teammate-mode"
+      ],
+      "example": "claude --teammate-mode auto"
+    },
+    {
+      "flags": [
+        "--tmux"
+      ],
+      "example": "claude -w feature-auth --tmux"
+    },
+    {
+      "flags": [
+        "--tools"
+      ],
+      "example": "claude --tools \"Bash,Edit,Read\""
+    },
+    {
+      "flags": [
+        "--verbose"
+      ],
+      "example": "claude --verbose"
+    },
+    {
+      "flags": [
+        "--version",
+        "-v"
+      ],
+      "example": "claude -v"
+    },
+    {
+      "flags": [
+        "--worktree",
+        "-w"
+      ],
+      "example": "claude -w feature-auth"
+    }
+  ],
+  "shortcuts": {
+    "general": [
+      {
+        "keys": "Ctrl+C",
+        "description": "Interrupt, or clear input",
+        "notes": "Interrupts a running operation. If nothing is running, the first press clears the prompt input and a second press exits Claude Code"
+      },
+      {
+        "keys": "Ctrl+X Ctrl+K",
+        "description": "Stop all running background subagents in this session, and turn off artifact auto-replies for the rest of it. Press twice within 3 seconds to confirm",
+        "notes": "Subagent control"
+      },
+      {
+        "keys": "Ctrl+D",
+        "description": "Exit Claude Code session",
+        "notes": "The first press shows a confirmation hint and a second press within 800ms exits. When the prompt has text, `Ctrl+D` deletes the character after the cursor instead"
+      },
+      {
+        "keys": "Ctrl+G or Ctrl+X Ctrl+E",
+        "description": "Open in default text editor",
+        "notes": "Edit your prompt or custom response in your default text editor. `Ctrl+X Ctrl+E` is the readline-native binding. Turn on Show last response in external editor in `/config` to prepend Claude's previous reply as `#`-commented context above your prompt; Claude Code strips the comment block when you save"
+      },
+      {
+        "keys": "Ctrl+L",
+        "description": "Redraw the screen",
+        "notes": "Forces a full terminal redraw, keeping input and conversation history. Use this to recover if the display becomes garbled or partially blank. See Clear the conversation for fullscreen rendering"
+      },
+      {
+        "keys": "Ctrl+O",
+        "description": "Toggle transcript viewer",
+        "notes": "Shows detailed tool usage and execution, with a timestamp and the model used on each assistant message. Also expands lines that collapse by default, such as MCP calls, shown as a single `Called slack 3 times` line, and messages from your other sessions, shown as a one-line `Message from @<sender>` preview"
+      },
+      {
+        "keys": "Ctrl+R",
+        "description": "Reverse search command history",
+        "notes": "Search through previous commands interactively"
+      },
+      {
+        "keys": "Ctrl+V or Cmd+V (iTerm2) or Alt+V (Windows and WSL)",
+        "description": "Paste image from clipboard",
+        "notes": "Inserts an `[Image #N]` chip at the cursor so you can reference it positionally in your prompt. On WSL, both `Ctrl+V` and `Alt+V` are bound; use `Alt+V` if your terminal intercepts `Ctrl+V`"
+      },
+      {
+        "keys": "Ctrl+B",
+        "description": "Background running tasks",
+        "notes": "Backgrounds Bash commands and agents. Tmux users press twice"
+      },
+      {
+        "keys": "Ctrl+T",
+        "description": "Toggle Claude's task checklist",
+        "notes": "Show or hide Claude's to-do checklist in the status area. This is not the background-task view; use `/tasks` to see running shells and subagents"
+      },
+      {
+        "keys": "Ctrl+S",
+        "description": "Stash or restore prompt",
+        "notes": "With text in the input, stashes it and clears the prompt. Pressed again on an empty prompt, restores the stashed text, cursor position, and pasted content"
+      },
+      {
+        "keys": "Ctrl+Z",
+        "description": "Suspend Claude Code",
+        "notes": "Unix only. Suspends the process to your shell; run `fg` to resume"
+      },
+      {
+        "keys": "Left/Right arrows",
+        "description": "Cycle through dialog tabs",
+        "notes": "Navigate between tabs in permission dialogs and menus"
+      },
+      {
+        "keys": "Tab",
+        "description": "Accept an autocomplete suggestion, or add a comment to a permission answer",
+        "notes": "While autocomplete suggestions are showing in the prompt input, accepts the selected suggestion. On most permission prompts, with Yes or No focused, opens a comment field on that option, and pressing it again closes the field. See add a comment when you answer a permission prompt"
+      },
+      {
+        "keys": "Up/Down arrows or Ctrl+P/Ctrl+N",
+        "description": "Move cursor or navigate command history",
+        "notes": "When the input spans more than one visual row, whether wrapped or multiline, first moves the cursor within the prompt. Once the cursor is on the first or last visual row, pressing again navigates command history. While you have messages queued, `Up` from the first row instead takes them back"
+      },
+      {
+        "keys": "Esc",
+        "description": "Interrupt Claude, or close a dialog",
+        "notes": "Stop the current response or tool call mid-turn so you can redirect. Claude keeps the work done so far. If you have messages queued, Claude Code sends them next. When a dialog is open, `Esc` closes the dialog. On a permission prompt, `Esc` declines the action, the same as No without a comment"
+      },
+      {
+        "keys": "Esc + Esc",
+        "description": "Clear input draft, or rewind",
+        "notes": "When the prompt input contains text, double `Esc` clears it and saves the draft to history so `Up` recalls it. When the input is empty, double `Esc` opens the rewind menu to restore or summarize code and conversation from a previous point"
+      },
+      {
+        "keys": "Ctrl+Enter or Ctrl+X Ctrl+S",
+        "description": "Send queued messages now",
+        "notes": "Interrupts the current turn so your queued messages, and your draft with them, go out right away instead of when the turn ends. In shell mode, the key queues your command without interrupting. In terminals that don't report extended keys, `Ctrl+Enter` arrives as plain `Enter`; `Ctrl+X Ctrl+S` works in any terminal. Requires Claude Code v2.1.275 or later"
+      },
+      {
+        "keys": "Shift+Tab, or Alt+M on Windows when the Node or Bun runtime doesn't enable VT input mode",
+        "description": "Cycle permission modes",
+        "notes": "Cycle through `default` (labeled Manual in the mode indicator), `acceptEdits`, `plan`, and, when available, `bypassPermissions` and then `auto`. From `auto`, the first press switches to `default`. See permission modes. On a file permission prompt, the same key closes an open comment field. With no field open, it selects the option that allows the action for the rest of the session, when the prompt offers that option"
+      },
+      {
+        "keys": "Option+P (macOS) or Alt+P (Windows/Linux)",
+        "description": "Switch model",
+        "notes": "Switch models without clearing your prompt"
+      },
+      {
+        "keys": "Option+T (macOS) or Alt+T (Windows/Linux)",
+        "description": "Toggle extended thinking",
+        "notes": "Enable or disable extended thinking mode. Has no effect on Opus 5.5 or the Fable models, which always use extended thinking. Works on macOS without configuring Option as Meta"
+      },
+      {
+        "keys": "Option+O (macOS) or Alt+O (Windows/Linux)",
+        "description": "Toggle fast mode",
+        "notes": "Enable or disable fast mode"
+      }
+    ],
+    "editing": [
+      {
+        "keys": "Ctrl+A",
+        "description": "Move cursor to start of current line",
+        "notes": "In multiline input, moves to the start of the current logical line"
+      },
+      {
+        "keys": "Ctrl+E",
+        "description": "Move cursor to end of current line",
+        "notes": "In multiline input, moves to the end of the current logical line"
+      },
+      {
+        "keys": "Ctrl+K",
+        "description": "Delete to end of line",
+        "notes": "Stores deleted text for pasting"
+      },
+      {
+        "keys": "Ctrl+U",
+        "description": "Delete from cursor to line start",
+        "notes": "Stores deleted text for pasting. Repeat to clear across lines in multiline input. On macOS, terminal emulators including iTerm2 and Terminal.app map `Cmd+Backspace` to this shortcut"
+      },
+      {
+        "keys": "Ctrl+W",
+        "description": "Delete back to previous whitespace",
+        "notes": "Stores deleted text for pasting. One press removes a whole path or `--flag=value`. To delete only the previous word, press `Option+Delete` on macOS or `Ctrl+Backspace` on Windows"
+      },
+      {
+        "keys": "Ctrl+Y",
+        "description": "Paste deleted text",
+        "notes": "Pastes the text you last deleted with one of the word or line deletion shortcuts, such as `Ctrl+K`, `Ctrl+U`, or `Ctrl+W`"
+      },
+      {
+        "keys": "Alt+Y (after Ctrl+Y)",
+        "description": "Cycle paste history",
+        "notes": "After pasting, cycle through previously deleted text. Requires Option as Meta on macOS"
+      },
+      {
+        "keys": "Alt+B",
+        "description": "Move cursor back one word",
+        "notes": "Word navigation. Requires Option as Meta on macOS"
+      },
+      {
+        "keys": "Alt+F",
+        "description": "Move cursor forward one word",
+        "notes": "Moves to the end of the current word, or to the end of the next word when the cursor is between words. Requires Option as Meta on macOS"
+      },
+      {
+        "keys": "Alt+D",
+        "description": "Delete to end of word",
+        "notes": "Deletes to the end of the current word, or to the end of the next word when the cursor is between words. Stores deleted text for pasting. Requires Option as Meta on macOS"
+      },
+      {
+        "keys": "Ctrl+_ or Ctrl+Shift+-",
+        "description": "Undo last input edit",
+        "notes": "Restores the previous input text and cursor position"
+      }
+    ],
+    "multiline": [
+      {
+        "keys": "\\ + Enter",
+        "description": "Quick escape",
+        "notes": "Works in all terminals"
+      },
+      {
+        "keys": "Option+Enter",
+        "description": "Option key",
+        "notes": "After enabling Option as Meta on macOS"
+      },
+      {
+        "keys": "Shift+Enter",
+        "description": "Shift+Enter",
+        "notes": "Native in iTerm2, WezTerm, Ghostty, Kitty, Warp, Apple Terminal, Windows Terminal. For other terminals, see Enter multiline prompts"
+      },
+      {
+        "keys": "Ctrl+J",
+        "description": "Control sequence",
+        "notes": "Works in any terminal without configuration"
+      },
+      {
+        "keys": "Paste directly",
+        "description": "Paste mode",
+        "notes": "For code blocks, logs"
+      }
+    ],
+    "prefixes": [
+      {
+        "keys": "/ at start",
+        "description": "Command or skill",
+        "notes": "See commands and skills"
+      },
+      {
+        "keys": "! at start",
+        "description": "Shell mode",
+        "notes": "Run a command directly, add its output to the session, and have Claude respond to it"
+      },
+      {
+        "keys": "@",
+        "description": "File path mention",
+        "notes": "Trigger file path autocomplete. In sessions with cross-session messaging, when you type at least one letter after the `@`, Claude Code also suggests your other live sessions on this machine, so you can tell Claude to message the one you pick. Requires Claude Code v2.1.232 or later"
+      },
+      {
+        "keys": ":",
+        "description": "Emoji shortcode",
+        "notes": "Type a full `:name:` to insert the emoji, or two or more characters for suggestions. See Emoji shortcodes. Requires Claude Code v2.1.217 or later"
+      },
+      {
+        "keys": "? on empty input",
+        "description": "Toggle the shortcut help panel",
+        "notes": "Typing `?` when the input already contains text inserts the character"
+      }
+    ]
+  }
+}

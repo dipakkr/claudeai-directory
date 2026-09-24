@@ -3,7 +3,8 @@ import type { ReactNode } from "react";
 import { ArrowRight, Bot, Server, Sparkles } from "lucide-react";
 import DirectoryList from "@/components/directory/DirectoryList";
 import RecentlyViewed from "@/components/directory/RecentlyViewed";
-import { compactNumber, type DirectoryItem, type SortKey } from "@/lib/directory";
+import type { DirectoryItem, SortKey } from "@/lib/directory";
+import { HeroJoin, HeroSearch, type HeroChip } from "@/components/home/HeroActions";
 import type { PublicProfile } from "@/types";
 
 interface HomeContentProps {
@@ -40,45 +41,27 @@ const BROWSE = [
   },
 ];
 
-function HeroMemberStrip({ members, total }: { members: PublicProfile[]; total: number }) {
-  const preview = members.slice(0, 8);
-  if (preview.length === 0) return null;
+const CHIP_ROUTES: Partial<Record<DirectoryItem["type"], string>> = { skill: "/skills", mcp: "/mcp", agent: "/agents" };
 
-  const remaining = Math.max(0, total - preview.length);
-
-  return (
-    <Link
-      href="/members"
-      aria-label="Meet Claude community members"
-      className="mx-auto mt-7 flex w-fit max-w-full items-center justify-center transition-opacity hover:opacity-85"
-    >
-      <span className="flex -space-x-2">
-        {preview.map((member) => {
-          const label = member.name || member.username;
-          return (
-            <span
-              key={member.id}
-              title={label}
-              className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-full border border-background bg-muted text-[12px] font-medium text-muted-foreground ring-1 ring-border"
-            >
-              {member.avatar ? (
-                // eslint-disable-next-line @next/next/no-img-element -- member avatars are remote user-provided URLs
-                <img src={member.avatar} alt="" className="h-full w-full object-cover" loading="lazy" referrerPolicy="no-referrer" />
-              ) : (
-                label[0]?.toUpperCase()
-              )}
-            </span>
-          );
-        })}
-      </span>
-      {remaining > 0 && (
-        <span className="ml-3 shrink-0 text-sm text-muted-foreground">
-          {/* Product decision: show "1k+" until the real count passes it. */}
-          {remaining >= 1000 ? `+${compactNumber(remaining)}` : "1k+"} more
-        </span>
-      )}
-    </Link>
-  );
+/** The most-listed categories, each linking to its filtered list. Real data only. */
+function popularChips(items: DirectoryItem[], limit = 5): HeroChip[] {
+  const counts = new Map<string, { label: string; href: string; count: number }>();
+  for (const item of items) {
+    const route = CHIP_ROUTES[item.type];
+    if (!route || !item.category) continue;
+    const href = `${route}?category=${encodeURIComponent(item.category)}`;
+    const label = item.category.charAt(0).toUpperCase() + item.category.slice(1);
+    const entry = counts.get(href) ?? { label, href, count: 0 };
+    entry.count += 1;
+    counts.set(href, entry);
+  }
+  const seen = new Set<string>();
+  return [...counts.values()]
+    .filter((chip) => chip.count > 1)
+    .sort((x, y) => y.count - x.count)
+    .filter((chip) => !seen.has(chip.label) && seen.add(chip.label))
+    .slice(0, limit)
+    .map(({ label, href }) => ({ label, href }));
 }
 
 export default function HomeContent({ items, orders, launches, community, feed, members, memberCount }: HomeContentProps) {
@@ -94,26 +77,14 @@ export default function HomeContent({ items, orders, launches, community, feed, 
           Discover community-built Claude Skills, MCP servers and Agents. Find what is trending or publish something you
           built.
         </p>
-        <HeroMemberStrip members={members} total={memberCount} />
-        <div className="mt-7 flex flex-wrap justify-center gap-2.5">
-          <a
-            href="#trending"
-            className="inline-flex h-10 items-center rounded-full bg-foreground px-5 text-sm font-medium text-background transition-colors hover:bg-foreground/85"
-          >
-            Explore Trending
-          </a>
-          <Link
-            href="/submit"
-            className="inline-flex h-10 items-center rounded-full border border-border px-5 text-sm text-foreground transition-colors hover:border-[var(--cad-line-hover)]"
-          >
-            Submit a Resource
+        <HeroSearch chips={popularChips(items)} />
+        <HeroJoin members={members} total={memberCount} />
+        <p className="mt-5 text-sm text-muted-foreground">
+          Built something for Claude?{" "}
+          <Link href="/submit" className="inline-flex items-center gap-1 text-foreground hover:underline hover:underline-offset-4">
+            List it free <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
           </Link>
-        </div>
-        <nav aria-label="Explore the community" className="mt-6 flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm text-muted-foreground">
-          <a href="#launches" className="py-2 hover:text-foreground">App launches</a>
-          <a href="#community" className="py-2 hover:text-foreground">Community Q&amp;A</a>
-          <Link href="/members" className="py-2 hover:text-foreground">Meet the builders</Link>
-        </nav>
+        </p>
       </section>
 
       <section className="mx-auto max-w-[840px] px-4 md:px-8">

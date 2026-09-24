@@ -180,7 +180,7 @@ export default function CheatsheetClient() {
               <section id="getting-started">
                 <h2 className="text-lg font-semibold mb-5 pb-2 border-b border-border">Getting Started</h2>
                 <h3 className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-2">Install</h3>
-                <CodeBlock code={`# curl (recommended)\ncurl -fsSL https://claude.ai/install.sh | sh\n\n# Homebrew\nbrew install claude\n\n# npm (global)\nnpm install -g @anthropic-ai/claude-code\n\n# PowerShell (Windows)\niwr https://claude.ai/install.ps1 | iex`} />
+                <CodeBlock code={`# macOS, Linux, WSL (recommended)\ncurl -fsSL https://claude.ai/install.sh | bash\n\n# Homebrew\nbrew install --cask claude-code\n\n# npm (global)\nnpm install -g @anthropic-ai/claude-code\n\n# PowerShell (Windows)\nirm https://claude.ai/install.ps1 | iex`} />
                 <h3 className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-2 mt-5">Update</h3>
                 <CodeBlock code={`claude update\nclaude --version`} />
                 <h3 className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-2 mt-5">Launch</h3>
@@ -194,16 +194,16 @@ export default function CheatsheetClient() {
                   {[
                     { key: "!",          desc: "Run a bash command directly" },
                     { key: "@",          desc: "Mention a file by path" },
-                    { key: "\\",         desc: "Multi-line input mode" },
-                    { key: "Esc",        desc: "Cancel current generation" },
-                    { key: "Esc Esc",    desc: "Undo last message (rewind)" },
-                    { key: "Ctrl+R",     desc: "Fuzzy-search conversation history" },
-                    { key: "Shift+Tab",  desc: "Cycle through auto-accept modes" },
-                    { key: "Ctrl+C",     desc: "Interrupt / hard stop" },
-                    { key: "Ctrl+L",     desc: "Clear screen" },
+                    { key: "\\ Enter",   desc: "New line without sending" },
+                    { key: "Esc",        desc: "Interrupt Claude, or close a dialog" },
+                    { key: "Esc Esc",    desc: "Clear the draft, or open the rewind menu" },
+                    { key: "Ctrl+R",     desc: "Search your prompt history" },
+                    { key: "Shift+Tab",  desc: "Cycle permission modes" },
+                    { key: "Ctrl+C",     desc: "Interrupt, or clear the input" },
+                    { key: "Ctrl+L",     desc: "Redraw the screen" },
                     { key: "Ctrl+D",     desc: "Exit Claude Code" },
                     { key: "↑ / ↓",      desc: "Navigate input history" },
-                    { key: "Tab",        desc: "Autocomplete path / command" },
+                    { key: "Tab",        desc: "Accept an autocomplete suggestion" },
                   ].map(({ key, desc }) => (
                     <div key={key} className="flex items-center gap-3 py-2.5 border-b border-border/40">
                       <Kbd>{key}</Kbd>
@@ -211,11 +211,12 @@ export default function CheatsheetClient() {
                     </div>
                   ))}
                 </div>
-                <h3 className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-2 mt-6">Auto-accept modes (Shift+Tab)</h3>
+                <h3 className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-2 mt-6">Permission modes (Shift+Tab)</h3>
                 <table className="w-full"><tbody>
-                  <CmdRow cmd="Default" desc="Prompts for each tool call" />
-                  <CmdRow cmd="Auto-accept edits" desc="Accepts file edits without prompting, asks for shell commands" />
-                  <CmdRow cmd="Auto-accept all" desc="Accepts every tool call. Use carefully." />
+                  <CmdRow cmd="default" desc="Shown as Manual. Asks before tool calls that need permission" />
+                  <CmdRow cmd="acceptEdits" desc="Accepts file edits without asking" />
+                  <CmdRow cmd="plan" desc="Explores and proposes a plan without editing files" />
+                  <CmdRow cmd="auto" desc="A classifier approves or blocks actions, when available on your plan" />
                 </tbody></table>
               </section>
 
@@ -228,10 +229,10 @@ export default function CheatsheetClient() {
                   <CmdRow cmd=".claude/settings.json" desc="Project-level (committed to repo)" />
                   <CmdRow cmd="~/.claude/settings.json" desc="User-level global defaults" />
                 </tbody></table>
-                <h3 className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-2 mt-5">CLI commands</h3>
-                <CodeBlock code={`claude config list\nclaude config get model\nclaude config set model claude-opus-4-6\nclaude config set --project model claude-sonnet-4-6\nclaude config set env.ANTHROPIC_API_KEY sk-ant-...`} />
-                <h3 className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-2 mt-5">Common settings</h3>
-                <CodeBlock code={`{\n  "model": "claude-opus-4-6",\n  "maxTokens": 8192,\n  "temperature": 0,\n  "autoApprove": false,\n  "theme": "dark",\n  "verbosity": "normal"\n}`} language="json" />
+                <h3 className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-2 mt-5">Change settings from a session</h3>
+                <CodeBlock code={`/config                 # open the settings screen\n/config model=sonnet    # set a value directly\n/config theme=dark\n/config --help          # list the keys you can set`} />
+                <h3 className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-2 mt-5">Example settings.json</h3>
+                <CodeBlock code={`{\n  "model": "sonnet",\n  "permissions": {\n    "allow": ["Bash(npm test *)", "Bash(git diff *)"]\n  }\n}`} language="json" />
               </section>
 
               {/* 4 — Checkpointing */}
@@ -240,8 +241,8 @@ export default function CheatsheetClient() {
                 <p className="text-sm text-muted-foreground mb-4">Rewind the conversation and all file changes to a previous state, like a session-level undo.</p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 mb-5">
                   {[
-                    { key: "Esc Esc", desc: "Undo last assistant turn" },
-                    { key: "/undo",   desc: "Slash command alias for Esc Esc" },
+                    { key: "Esc Esc", desc: "Open the rewind menu (on an empty prompt)" },
+                    { key: "/rewind", desc: "Same menu. Also available as /undo and /checkpoint" },
                   ].map(({ key, desc }) => (
                     <div key={key} className="flex items-center gap-3 py-2.5 border-b border-border/40">
                       <Kbd>{key}</Kbd>
@@ -249,7 +250,6 @@ export default function CheatsheetClient() {
                     </div>
                   ))}
                 </div>
-                <CodeBlock code={`claude config set checkpointing true\nclaude config set checkpointing false\nclaude config set maxCheckpoints 20`} />
                 <h3 className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-2 mt-5">Limitations</h3>
                 <ul className="list-disc list-inside space-y-1 text-sm text-muted-foreground">
                   <li>Only affects files modified in the current session</li>
@@ -265,19 +265,27 @@ export default function CheatsheetClient() {
                 <h3 className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-2">Built-in</h3>
                 <table className="w-full mb-6"><tbody>
                   <CmdRow cmd="/help"        desc="Show all available slash commands" />
-                  <CmdRow cmd="/clear"       desc="Clear screen and start fresh context" />
-                  <CmdRow cmd="/undo"        desc="Rewind to the previous checkpoint" />
+                  <CmdRow cmd="/clear"       desc="Start a new conversation with empty context" />
+                  <CmdRow cmd="/rewind"      desc="Roll code and conversation back to a checkpoint (alias: /undo)" />
                   <CmdRow cmd="/compact"     desc="Compress conversation history to save tokens" />
-                  <CmdRow cmd="/memory"      desc="Open CLAUDE.md editor" />
+                  <CmdRow cmd="/memory"      desc="Edit CLAUDE.md files and auto memory" />
                   <CmdRow cmd="/permissions" desc="Show and edit current tool permissions" />
-                  <CmdRow cmd="/model"       desc="Switch model for this session" />
-                  <CmdRow cmd="/cost"        desc="Show token usage and estimated cost" />
+                  <CmdRow cmd="/model"       desc="Switch model and save it as your default" />
+                  <CmdRow cmd="/usage"       desc="Show session cost and plan limits (alias: /cost)" />
                   <CmdRow cmd="/export"      desc="Export conversation to a file" />
-                  <CmdRow cmd="/doctor"      desc="Run environment diagnostics" />
+                  <CmdRow cmd="/doctor"      desc="Check your setup and fix common problems" />
                   <CmdRow cmd="/bug"         desc="Report a bug to Anthropic" />
-                  <CmdRow cmd="/review"      desc="Invoke code-review skill (if installed)" />
-                  <CmdRow cmd="/commit"      desc="Invoke commit skill (if installed)" />
+                  <CmdRow cmd="/code-review" desc="Review your changes or a PR for bugs (alias: /review)" />
+                  <CmdRow cmd="/context"     desc="See what is filling the context window" />
+                  <CmdRow cmd="/init"        desc="Create a starter CLAUDE.md for the project" />
                 </tbody></table>
+                <p className="mb-6 text-sm text-muted-foreground">
+                  These are the basics. See{" "}
+                  <Link href="/claude-code-commands" className="text-foreground underline underline-offset-4 hover:text-primary">
+                    all Claude Code commands explained
+                  </Link>{" "}
+                  for every slash command, CLI flag and shortcut.
+                </p>
                 <h3 className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-2">Custom: <code className="font-mono normal-case text-xs bg-muted px-1 py-0.5 rounded">.claude/commands/&lt;name&gt;.md</code></h3>
                 <CodeBlock code={`---\ndescription: "Run all linters and fix auto-fixable issues"\nallowed-tools: Bash\n---\n\n1. \`npm run lint -- --fix\`\n2. \`npm run type-check\`\n3. Summarise what was fixed.`} language="markdown" />
               </section>

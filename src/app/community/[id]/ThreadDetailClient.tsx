@@ -2,14 +2,15 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useQueryClient } from "@tanstack/react-query";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
-import { Textarea } from "@/components/ui/textarea";
 import { Skeleton } from "@/components/ui/skeleton";
-import { ArrowLeft, ArrowRight, ChevronUp, Eye, Github, Globe, Link2, Linkedin, MessageSquare, PenSquare, Share2, UserRound } from "lucide-react";
+import { ArrowLeft, ArrowRight, ChevronUp, Eye, Github, Globe, Link2, Linkedin, MessageSquare, PenSquare } from "lucide-react";
 import UserMarkdown from "@/components/shared/UserMarkdown";
-import { useThread, useReplies, useCreateReply, useCommunityVotes, useCommunityUpvote } from "@/hooks/use-community";
+import Discussion from "@/components/discussion/Discussion";
+import { communityVotesQuery, useThread, useReplies, useCreateReply, useCommunityVotes, useCommunityUpvote } from "@/hooks/use-community";
+import { useSignIn } from "@/components/auth/SignInDialog";
 import { useAuth } from "@/lib/auth";
 import { toast } from "sonner";
 import { formatPlainPost } from "@/lib/format-post";
@@ -75,41 +76,6 @@ function AuthorName({
   return <span className={className}>{author}</span>;
 }
 
-// ─── Reddit-style threading (2 visible levels) ────────────────────
-// Replies deeper than one level are flattened under their top-level
-// ancestor, with an "@author" chip pointing at the direct parent.
-
-interface ReplyNode {
-  reply: Reply;
-  children: Reply[];
-}
-
-function buildReplyTree(replies: Reply[]): { nodes: ReplyNode[]; byId: Map<string, Reply> } {
-  const byId = new Map(replies.map((r) => [r.id, r]));
-  const childrenOf = new Map<string, Reply[]>();
-  const topLevel: Reply[] = [];
-
-  for (const r of replies) {
-    if (!r.parent_id || !byId.has(r.parent_id)) {
-      topLevel.push(r);
-      continue;
-    }
-    // Walk up to the top-level ancestor (flattens depth > 2).
-    let ancestor = byId.get(r.parent_id)!;
-    while (ancestor.parent_id && byId.has(ancestor.parent_id)) {
-      ancestor = byId.get(ancestor.parent_id)!;
-    }
-    const bucket = childrenOf.get(ancestor.id) ?? [];
-    bucket.push(r);
-    childrenOf.set(ancestor.id, bucket);
-  }
-
-  return {
-    nodes: topLevel.map((reply) => ({ reply, children: childrenOf.get(reply.id) ?? [] })),
-    byId,
-  };
-}
-
 /* ---------- votes ---------- */
 
 interface VoteContext {
@@ -149,7 +115,7 @@ function VoteButton({
         type="button"
         onClick={click}
         aria-pressed={voted}
-        className={`inline-flex h-10 items-center gap-2 rounded-full border px-4 text-sm font-medium transition-colors ${
+        className={`cursor-pointer inline-flex h-10 items-center gap-2 rounded-full border px-4 text-sm font-medium transition-colors ${
           voted ? "border-primary bg-primary text-primary-foreground" : "border-border bg-card text-foreground hover:border-primary/60"
         }`}
       >
@@ -164,7 +130,7 @@ function VoteButton({
       type="button"
       onClick={click}
       aria-pressed={voted}
-      className={`inline-flex items-center gap-1 font-medium transition-colors ${voted ? "text-primary" : "hover:text-foreground"}`}
+      className={`cursor-pointer inline-flex items-center gap-1 font-medium transition-colors ${voted ? "text-primary" : "hover:text-foreground"}`}
     >
       <ChevronUp className="h-3.5 w-3.5" strokeWidth={2.5} />
       {voted ? "Upvoted" : "Upvote"}
@@ -194,137 +160,6 @@ function Byline({
       {headline && <span className="text-muted-foreground">{headline}</span>}
       <span className="text-xs text-muted-foreground/80">· {timeAgo(created)}</span>
     </div>
-  );
-}
-
-function ReplyCard({
-  reply,
-  threadId,
-  nested,
-  replyingToAuthor,
-  votes,
-}: {
-  reply: Reply;
-  threadId: string;
-  nested?: boolean;
-  replyingToAuthor?: string;
-  votes: VoteContext;
-}) {
-  const [composerOpen, setComposerOpen] = useState(false);
-  const shareReply = async () => {
-    await navigator.clipboard.writeText(`${SITE_URL}/community/${threadId}#${reply.id}`);
-    toast.success("Link to comment copied");
-  };
-  const avatar = nested ? "h-7 w-7 text-[11px]" : "h-9 w-9 text-xs";
-  return (
-    <div id={reply.id} className={`scroll-mt-24 ${nested ? "pt-4" : "py-5"}`}>
-      <div className="flex items-start gap-3">
-        <AuthorAvatar src={reply.author_avatar} author={reply.author} className={`${avatar} shrink-0`} />
-        <div className="min-w-0 flex-1">
-          <Byline author={reply.author} username={reply.author_username} headline={reply.author_headline} created={reply.created_at} small={nested} />
-          <div className="mt-1.5">
-            {replyingToAuthor && <span className="mr-1 text-sm font-medium text-primary">@{replyingToAuthor}</span>}
-            <UserMarkdown compact>{reply.body}</UserMarkdown>
-          </div>
-          <div className="mt-2 flex items-center gap-4 text-xs text-muted-foreground">
-            <VoteButton type="reply" id={reply.id} count={reply.upvotes ?? 0} ctx={votes} />
-            <button type="button" onClick={() => setComposerOpen((v) => !v)} className="inline-flex items-center gap-1 font-medium hover:text-foreground">
-              <MessageSquare className="h-3.5 w-3.5" />
-              {composerOpen ? "Cancel" : "Reply"}
-            </button>
-            <button type="button" onClick={shareReply} className="inline-flex items-center gap-1 font-medium hover:text-foreground">
-              <Share2 className="h-3.5 w-3.5" />
-              Share
-            </button>
-          </div>
-          {composerOpen && (
-            <div className="mt-3">
-              <ReplyForm threadId={threadId} parentId={reply.id} compact autoFocus onPosted={() => setComposerOpen(false)} />
-            </div>
-          )}
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function ReplyForm({
-  threadId,
-  parentId,
-  compact,
-  autoFocus,
-  onPosted,
-}: {
-  threadId: string;
-  parentId?: string;
-  compact?: boolean;
-  autoFocus?: boolean;
-  onPosted?: () => void;
-}) {
-  const [body, setBody] = useState("");
-  const [focused, setFocused] = useState(false);
-  const { isAuthenticated, user } = useAuth();
-  const router = useRouter();
-  const createReply = useCreateReply(threadId);
-
-  const promptSignIn = () =>
-    toast.error("Sign in to comment", { action: { label: "Sign in", onClick: () => router.push("/login") } });
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!isAuthenticated) return promptSignIn();
-    if (!body.trim()) return;
-    createReply.mutate(
-      { body: body.trim(), ...(parentId ? { parent_id: parentId } : {}) },
-      {
-        onSuccess: () => {
-          setBody("");
-          setFocused(false);
-          toast.success(parentId ? "Reply posted" : "Comment posted");
-          onPosted?.();
-        },
-        onError: () => toast.error("Could not post. Try again."),
-      },
-    );
-  };
-
-  const expanded = compact || focused || body.length > 0;
-
-  return (
-    <form onSubmit={handleSubmit} className="flex items-start gap-3">
-      {!compact &&
-        (user?.avatar ? (
-          <AuthorAvatar src={user.avatar} author={user.name || user.username} className="h-9 w-9 shrink-0 text-xs" />
-        ) : (
-          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-border bg-card text-muted-foreground">
-            <UserRound className="h-4 w-4" />
-          </span>
-        ))}
-      <div className="min-w-0 flex-1 rounded-2xl border border-border bg-card transition-colors focus-within:border-primary/50">
-        <Textarea
-          placeholder={parentId ? "Write a reply..." : "What do you think?"}
-          value={body}
-          onChange={(e) => setBody(e.target.value)}
-          onFocus={() => (isAuthenticated ? setFocused(true) : promptSignIn())}
-          readOnly={!isAuthenticated}
-          autoFocus={autoFocus}
-          rows={expanded ? 3 : 1}
-          className="min-h-0 resize-none border-0 bg-transparent px-4 py-3 text-sm shadow-none focus-visible:ring-0"
-        />
-        {expanded && (
-          <div className="flex items-center justify-between border-t border-border px-3 py-2">
-            <span className="text-xs text-muted-foreground">Markdown supported</span>
-            <button
-              type="submit"
-              disabled={createReply.isPending || !body.trim()}
-              className="inline-flex h-8 items-center rounded-full bg-foreground px-4 text-xs font-medium text-background transition-colors hover:bg-foreground/85 disabled:opacity-40"
-            >
-              {createReply.isPending ? "Posting..." : parentId ? "Reply" : "Comment"}
-            </button>
-          </div>
-        )}
-      </div>
-    </form>
   );
 }
 
@@ -405,23 +240,27 @@ export default function ThreadDetail({
   const { data: thread, isLoading: threadLoading } = useThread(id, initialThread);
   const { data: replies, isLoading: repliesLoading } = useReplies(id, initialReplies);
   const { isAuthenticated } = useAuth();
-  const router = useRouter();
+  const queryClient = useQueryClient();
+  const { requireAuth } = useSignIn();
   const { data: myVotes } = useCommunityVotes(id, isAuthenticated);
   const upvote = useCommunityUpvote(id);
+  const createReply = useCreateReply(id);
   const votes: VoteContext = {
     voted: new Set(myVotes ?? []),
-    onVote: async (type, targetId) => {
-      if (!isAuthenticated) {
-        toast.error("Sign in to upvote", { action: { label: "Sign in", onClick: () => router.push("/login") } });
-        return null;
-      }
-      try {
-        return await upvote.mutateAsync({ type, id: targetId });
-      } catch {
-        toast.error("Could not save your upvote");
-        return null;
-      }
-    },
+    onVote: async (type, targetId) =>
+      (await requireAuth("upvote", async ({ resumed }) => {
+        // Just signed in: the upvote is a toggle, so don't undo an earlier one.
+        if (resumed && (await queryClient.fetchQuery(communityVotesQuery(id))).includes(targetId)) {
+          toast.success("You already upvoted this");
+          return null;
+        }
+        try {
+          return await upvote.mutateAsync({ type, id: targetId });
+        } catch {
+          toast.error("Could not save your upvote");
+          return null;
+        }
+      })) ?? null,
   };
   const replyCount = replies?.length ?? thread?.replies ?? 0;
   const role = roleOf(authorProfile);
@@ -487,54 +326,36 @@ export default function ThreadDetail({
                   </a>
                 </div>
 
-                <section id="comments" className="mt-8 scroll-mt-24">
-                  <ReplyForm threadId={id} />
-
-                  <h2 className="mt-8 font-sans text-sm font-semibold text-foreground">
-                    {replyCount === 0 ? "Comments" : `${replyCount} ${replyCount === 1 ? "comment" : "comments"}`}
-                  </h2>
-
-                  {repliesLoading ? (
-                    <div className="mt-4 space-y-4">
-                      {Array.from({ length: 3 }).map((_, i) => (
-                        <Skeleton key={i} className="h-16 w-full" />
-                      ))}
-                    </div>
-                  ) : (replies ?? []).length > 0 ? (
-                    <div className="divide-y divide-border">
-                      {(() => {
-                        const { nodes, byId } = buildReplyTree(replies ?? []);
-                        return nodes.map(({ reply, children }) => (
-                          <div key={reply.id} className="py-1">
-                            <ReplyCard reply={reply} threadId={id} votes={votes} />
-                            {children.length > 0 && (
-                              <div className="mb-4 ml-[18px] border-l-2 border-border pl-6">
-                                {children.map((child) => {
-                                  const directParent =
-                                    child.parent_id && child.parent_id !== reply.id ? byId.get(child.parent_id) : undefined;
-                                  return (
-                                    <ReplyCard
-                                      key={child.id}
-                                      reply={child}
-                                      threadId={id}
-                                      nested
-                                      replyingToAuthor={directParent?.author}
-                                      votes={votes}
-                                    />
-                                  );
-                                })}
-                              </div>
-                            )}
-                          </div>
-                        ));
-                      })()}
-                    </div>
-                  ) : (
-                    <p className="mt-3 text-sm text-muted-foreground">
-                      No comments yet. Be the first to share what you think with {thread.author.split(" ")[0]}.
-                    </p>
-                  )}
-                </section>
+                <div className="mt-10">
+                  <Discussion
+                    id="comments"
+                    count={replyCount}
+                    comments={(replies ?? []).map((r) => ({
+                      id: r.id,
+                      parentId: r.parent_id,
+                      author: r.author,
+                      authorUsername: r.author_username,
+                      authorAvatar: r.author_avatar,
+                      headline: r.author_headline,
+                      body: r.body,
+                      createdAt: r.created_at,
+                    }))}
+                    isLoading={repliesLoading}
+                    allowReplies
+                    onPost={({ body, parentId }) => createReply.mutateAsync({ body, ...(parentId ? { parent_id: parentId } : {}) })}
+                    permalink={(commentId) => `${SITE_URL}/community/${id}#${commentId}`}
+                    placeholder="What do you think?"
+                    emptyText={`No comments yet. Be the first to share what you think with ${thread.author.split(" ")[0]}.`}
+                    renderActions={(comment) => (
+                      <VoteButton
+                        type="reply"
+                        id={comment.id}
+                        count={replies?.find((r) => r.id === comment.id)?.upvotes ?? 0}
+                        ctx={votes}
+                      />
+                    )}
+                  />
+                </div>
               </article>
 
               <aside className="space-y-3 lg:sticky lg:top-24">

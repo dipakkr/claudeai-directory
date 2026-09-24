@@ -10,6 +10,7 @@ import {
 } from "@/data/sideAdPlacements";
 import { cn } from "@/lib/utils";
 import { openAdvertiseDialog } from "@/lib/advertise";
+import { track } from "@/lib/analytics";
 
 const ROTATION_MS = 10000;
 
@@ -17,12 +18,14 @@ const ROTATION_MS = 10000;
 function CardShell({
   href,
   onOpen,
+  onClick,
   className,
   style,
   children,
 }: {
   href: string;
   onOpen?: () => void;
+  onClick?: () => void;
   className: string;
   style?: React.CSSProperties;
   children: React.ReactNode;
@@ -35,7 +38,7 @@ function CardShell({
     );
   }
   return (
-    <Link href={href} className={className} style={style}>
+    <Link href={href} onClick={onClick} className={className} style={style}>
       {children}
     </Link>
   );
@@ -48,7 +51,15 @@ function SideMcpCard({ placement, index }: { placement: SideAdPlacement; index: 
   return (
     <CardShell
       href={placement.href}
-      onOpen={isAvailable ? () => openAdvertiseDialog(placement.category) : undefined}
+      onOpen={
+        isAvailable
+          ? () => {
+              track("ad_slot_clicked", { slot: "sidebar", category: placement.category });
+              openAdvertiseDialog(placement.category);
+            }
+          : undefined
+      }
+      onClick={() => track("ad_clicked", { adId: placement.id, sponsor: placement.name, category: placement.category, position: index + 1 })}
       className={cn(
         "side-ad-flip-card pointer-events-auto group flex min-h-[104px] max-h-[240px] flex-1 basis-0 flex-col items-center justify-center rounded-md border px-2.5 py-3 text-center shadow-sm transition duration-300 hover:-translate-y-0.5",
         placement.tone.panel,
@@ -157,7 +168,10 @@ function SideStack({
           ) : null}
           <button
             type="button"
-            onClick={() => openAdvertiseDialog()}
+            onClick={() => {
+              track("ad_slot_clicked", { slot: "sidebar", category: "any" });
+              openAdvertiseDialog();
+            }}
             className="pointer-events-auto mx-auto flex w-fit shrink-0 items-center gap-1.5 rounded-full border border-white/12 bg-white/8 px-2.5 py-1.5 text-[10px] font-medium text-white/64 shadow-sm backdrop-blur transition hover:border-white/20 hover:bg-white/12 hover:text-white"
           >
             <Megaphone className="h-3 w-3" aria-hidden="true" />

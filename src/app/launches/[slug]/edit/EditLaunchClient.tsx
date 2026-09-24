@@ -14,6 +14,7 @@ import { useAuth } from "@/lib/auth";
 import { CATEGORIES, PLATFORMS } from "@/lib/launch-options";
 import { useMyShowcaseProjects, useUpdateLaunch, useUploadConfig } from "@/hooks/use-showcase";
 import type { ShowcaseProject } from "@/types";
+import { SignInButton } from "@/components/auth/SignInDialog";
 
 const inputClass =
   "h-10 w-full rounded-lg border border-border bg-card px-3.5 text-sm text-foreground placeholder:text-muted-foreground/70 focus:border-primary/60 focus:outline-none";
@@ -369,7 +370,7 @@ export default function EditLaunchClient({ slug }: { slug: string }) {
             <p className="text-sm text-muted-foreground">Loading...</p>
           ) : !isAuthenticated ? (
             <p className="text-sm text-muted-foreground">
-              <Link href="/login" className="underline underline-offset-4">Sign in</Link> to edit your launch.
+              <SignInButton reason="edit your launch" className="cursor-pointer underline underline-offset-4">Sign in</SignInButton> to edit your launch.
             </p>
           ) : !app ? (
             <p className="text-sm text-muted-foreground">This launch was not found in your account. You can only edit launches you submitted.</p>

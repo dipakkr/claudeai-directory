@@ -65,11 +65,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${SITE_URL}/guides`, changeFrequency: "weekly", priority: 0.7 },
     { url: `${SITE_URL}/blog`, changeFrequency: "daily", priority: 0.8 },
     { url: `${SITE_URL}/learn`, changeFrequency: "weekly", priority: 0.7 },
-    { url: `${SITE_URL}/partners`, changeFrequency: "monthly", priority: 0.6 },
     { url: `${SITE_URL}/community`, changeFrequency: "daily", priority: 0.6 },
     { url: `${SITE_URL}/feed`, changeFrequency: "daily", priority: 0.6 },
+    { url: `${SITE_URL}/claude-code-commands`, changeFrequency: "weekly", priority: 0.8 },
     { url: `${SITE_URL}/llm-api-pricing`, changeFrequency: "weekly", priority: 0.7 },
     { url: `${SITE_URL}/llm-api-pricing/cost-calculator`, changeFrequency: "weekly", priority: 0.6 },
+    { url: `${SITE_URL}/claude-md-generator`, changeFrequency: "monthly", priority: 0.6 },
   ];
 
   // Dynamic pages
@@ -155,20 +156,20 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "weekly" as const,
       priority: 0.7,
     },
-    {
-      url: `${SITE_URL}/courses/${course.slug}/learn`,
-      changeFrequency: "weekly" as const,
-      priority: 0.6,
-    },
   ]);
 
-  const courseModulePages: MetadataRoute.Sitemap = COURSES.flatMap((course) => {
+  // One page per lesson. Locked lessons are noindex, so only open ones are listed.
+  const courseLessonPages: MetadataRoute.Sitemap = COURSES.flatMap((course) => {
     const content = getCourseContent(course.slug);
-    return (content?.modules ?? []).map((module) => ({
-      url: `${SITE_URL}/courses/${course.slug}/learn/${module.id}`,
-      changeFrequency: "weekly" as const,
-      priority: course.isFree ? 0.7 : 0.55,
-    }));
+    return (content?.modules ?? [])
+      .filter((module) => module.free)
+      .flatMap((module) =>
+        module.lessons.map((lesson) => ({
+          url: `${SITE_URL}/courses/${course.slug}/learn/${module.id}/${lesson.id}`,
+          changeFrequency: "weekly" as const,
+          priority: course.isFree ? 0.7 : 0.55,
+        }))
+      );
   });
 
   return [
@@ -184,6 +185,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...blogPages,
     ...threadPages,
     ...coursePages,
-    ...courseModulePages,
+    ...courseLessonPages,
   ];
 }

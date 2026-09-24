@@ -35,7 +35,8 @@ const footerLinks = [
       { label: "Guides", href: "/guides" },
       { label: "Blog", href: "/blog" },
       { label: "Claude Code Cheatsheet", href: "/cheatsheet" },
-      { label: "CLAUDE.md Generator", href: "/setup" },
+      { label: "Claude Code Commands", href: "/claude-code-commands" },
+      { label: "CLAUDE.md Generator", href: "/claude-md-generator" },
       { label: "LLM API Pricing", href: "/llm-api-pricing" },
       { label: "Anthropic Timeline", href: "/anthropic-claude-release-timelines" },
     ],
@@ -45,7 +46,6 @@ const footerLinks = [
     links: [
       { label: "Submit a resource", href: "/submit" },
       { label: "Submit your app", href: "/launches/submit" },
-      { label: "Partner with us", href: "/partners" },
       { label: "Advertise", href: "/?advertise=1" },
       { label: "Sign up", href: "/signup" },
       { label: "About", href: "/about" },

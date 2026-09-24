@@ -3,6 +3,7 @@ import { notFound, redirect } from "next/navigation";
 
 import { COURSES, getCourse } from "@/data/courses";
 import { getCourseContent } from "@/data/course-content";
+import { courseLessonHref } from "@/lib/course-links";
 
 export function generateStaticParams() {
   return COURSES.map((course) => ({ slug: course.slug }));
@@ -33,8 +34,9 @@ export default async function CourseLearnIndexPage({
   const course = getCourse(slug);
   const content = getCourseContent(slug);
   const firstModule = content?.modules[0];
+  const firstLesson = firstModule?.lessons[0];
 
-  if (!course || !content || !firstModule) notFound();
+  if (!course || !firstModule || !firstLesson) notFound();
 
-  redirect(`/courses/${course.slug}/learn/${firstModule.id}`);
+  redirect(courseLessonHref(course.slug, firstModule.id, firstLesson.id));
 }

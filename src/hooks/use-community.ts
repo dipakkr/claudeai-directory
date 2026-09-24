@@ -61,12 +61,13 @@ export function useCreateReply(threadId: string) {
 }
 
 /** Thread and reply ids the signed-in user has upvoted in this thread. */
+export const communityVotesQuery = (threadId: string) => ({
+  queryKey: ["community", "votes", threadId],
+  queryFn: () => api.get<string[]>(`/community/threads/${threadId}/my-votes`),
+});
+
 export function useCommunityVotes(threadId: string, enabled: boolean) {
-  return useQuery({
-    queryKey: ["community", "votes", threadId],
-    queryFn: () => api.get<string[]>(`/community/threads/${threadId}/my-votes`),
-    enabled,
-  });
+  return useQuery({ ...communityVotesQuery(threadId), enabled });
 }
 
 export function useCommunityUpvote(threadId: string) {

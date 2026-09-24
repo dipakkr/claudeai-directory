@@ -1,11 +1,13 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useQueryClient } from "@tanstack/react-query";
 import { ArrowUp } from "lucide-react";
 import { toast } from "sonner";
 
+import { useSignIn } from "@/components/auth/SignInDialog";
 import { useAuth } from "@/lib/auth";
-import { useMyLaunchUpvotes, useShowcaseProject, useUpvoteShowcase } from "@/hooks/use-showcase";
+import { myLaunchUpvotesQuery, useMyLaunchUpvotes, useShowcaseProject, useUpvoteShowcase } from "@/hooks/use-showcase";
+import { track } from "@/lib/analytics";
 
 interface UpvoteBoxProps {
   slug: string;
@@ -16,7 +18,8 @@ interface UpvoteBoxProps {
 }
 
 export function UpvoteBox({ slug, title, initialCount, compact = false }: UpvoteBoxProps) {
-  const router = useRouter();
+  const queryClient = useQueryClient();
+  const { requireAuth } = useSignIn();
   const { isAuthenticated } = useAuth();
   const upvote = useUpvoteShowcase();
   // Live count and the user's own vote, so the box is right after a reload
@@ -27,18 +30,21 @@ export function UpvoteBox({ slug, title, initialCount, compact = false }: Upvote
   const count = live?.upvotes ?? initialCount;
   const voted = (myUpvotes ?? []).includes(slug);
 
-  const handleClick = () => {
-    if (!isAuthenticated) {
-      toast.error("Sign in to upvote launches", {
-        action: { label: "Sign in", onClick: () => router.push("/login") },
+  const handleClick = () =>
+    void requireAuth(`upvote ${title}`, async ({ resumed }) => {
+      // Just signed in: the upvote is a toggle, so don't undo an earlier one.
+      if (resumed && (await queryClient.fetchQuery(myLaunchUpvotesQuery)).includes(slug)) {
+        toast.success(`You already upvoted ${title}`);
+        return;
+      }
+      upvote.mutate(slug, {
+        onSuccess: (project) => {
+          if (project.voted !== false) track("launch_upvoted", { slug, placement: "launch_page" });
+          toast.success(project.voted === false ? "Upvote removed" : `Upvoted ${title}`);
+        },
+        onError: () => toast.error("Could not save your upvote"),
       });
-      return;
-    }
-    upvote.mutate(slug, {
-      onSuccess: (project) => toast.success(project.voted === false ? "Upvote removed" : `Upvoted ${title}`),
-      onError: () => toast.error("Could not save your upvote"),
     });
-  };
 
   return (
     <button
@@ -48,7 +54,7 @@ export function UpvoteBox({ slug, title, initialCount, compact = false }: Upvote
       aria-pressed={voted}
       aria-label={voted ? `Remove upvote from ${title}` : `Upvote ${title}`}
       title={!isAuthenticated ? "Sign in to upvote" : voted ? "You upvoted this. Click to undo." : "Upvote this launch"}
-      className={`flex shrink-0 items-center justify-center border shadow-sm transition hover:shadow-md disabled:opacity-70 ${
+      className={`cursor-pointer disabled:cursor-default flex shrink-0 items-center justify-center border shadow-sm transition hover:shadow-md disabled:opacity-70 ${
         compact ? "h-10 gap-1.5 rounded-full px-4" : "h-24 w-24 flex-col gap-1.5 rounded-2xl hover:-translate-y-0.5"
       } ${voted ? "border-primary bg-primary text-primary-foreground" : "border-border bg-card text-foreground hover:border-primary/50"}`}
     >

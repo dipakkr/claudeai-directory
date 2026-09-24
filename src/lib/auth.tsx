@@ -10,6 +10,7 @@ import {
 
 import type { User } from "@/types";
 import { api } from "./api";
+import { clearUser, identifyUser, track } from "./analytics";
 
 interface AuthContextType {
   user: User | null;
@@ -62,6 +63,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
+  // Tie analytics to the member once we know who they are.
+  const userId = user?.id;
+  useEffect(() => {
+    if (user) identifyUser(user);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userId]);
+
   const loginWithGoogle = useCallback(async (credential: string) => {
     const res = await api.post<{ access_token: string; user: User }>(
       "/auth/google",
@@ -70,6 +78,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     localStorage.setItem(TOKEN_KEY, res.access_token);
     api.setToken(res.access_token);
     setUser(res.user);
+    track("signed_in", { isNew: Boolean(res.user.needs_onboarding) });
     // Flag as new user if no bio set (hasn't completed profile setup)
     if (!res.user.bio) {
       setIsNewUser(true);
@@ -81,6 +90,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     api.setToken(null);
     setUser(null);
     setIsNewUser(false);
+    clearUser();
   }, []);
 
   const updateProfile = useCallback(

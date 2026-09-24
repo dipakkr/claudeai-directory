@@ -20,9 +20,10 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { MessageSquare, Plus, Users, Search, Tag, ArrowRight } from "lucide-react";
 import { useThreads, useCreateThread } from "@/hooks/use-community";
-import { useAuth } from "@/lib/auth";
+import { useSignIn } from "@/components/auth/SignInDialog";
 import { toast } from "sonner";
 import type { Thread } from "@/types";
+import { track } from "@/lib/analytics";
 
 const popularTags = ["API", "Agents", "Prompting", "MCP", "Code Generation", "RAG", "Production", "Benchmarks"];
 
@@ -63,6 +64,7 @@ function NewThreadDialog({ open, onOpenChange }: { open: boolean; onOpenChange: 
       { title: title.trim(), body: body.trim(), tags },
       {
         onSuccess: (thread) => {
+          track("community_posted", { kind: "discussion", tag: tags[0] });
           toast.success("Thread created!");
           setTitle("");
           setBody("");
@@ -159,19 +161,11 @@ export default function CommunityClient({
     { search: search || undefined, tag: activeTag },
     isInitialView ? initialThreads : undefined
   );
-  const { isAuthenticated } = useAuth();
-  const router = useRouter();
+  const { requireAuth } = useSignIn();
   const [dialogOpen, setDialogOpen] = useState(false);
 
-  const handleNewThread = () => {
-    if (!isAuthenticated) {
-      toast.error("Sign in to start a discussion", {
-        action: { label: "Sign in", onClick: () => router.push("/login") },
-      });
-      return;
-    }
-    setDialogOpen(true);
-  };
+  const handleNewThread = () =>
+    void requireAuth("start a discussion", () => setDialogOpen(true), { afterOnboarding: true });
 
   return (
     <div className="cad-shell flex flex-col">

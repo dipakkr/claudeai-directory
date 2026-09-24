@@ -12,8 +12,11 @@ function linkContent(link: HTMLAnchorElement): string {
   );
 }
 
+// Links already tagged. Kept off the DOM so OpenPanel doesn't pick up a data-* flag.
+const tagged = new WeakSet<HTMLAnchorElement>();
+
 function shouldTrack(link: HTMLAnchorElement): boolean {
-  if (link.dataset.utmTracked === "true" || !isExternalHttpHref(link.href)) {
+  if (tagged.has(link) || !isExternalHttpHref(link.href)) {
     return false;
   }
 
@@ -31,7 +34,7 @@ function tagLink(link: HTMLAnchorElement) {
     campaign: link.dataset.utmCampaign || "sitewide_referral",
     content: linkContent(link),
   });
-  link.dataset.utmTracked = "true";
+  tagged.add(link);
 }
 
 /**

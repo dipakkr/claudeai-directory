@@ -2,10 +2,11 @@
 
 import { Fragment, useMemo, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import {
   ArrowUp,
+  Megaphone,
   BadgeCheck,
   Plus,
   Rocket,
@@ -18,10 +19,12 @@ import Footer from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
 import { faviconFor } from "@/lib/directory";
 import { publicLaunches } from "@/lib/home-community";
+import { useSignIn } from "@/components/auth/SignInDialog";
 import { useAuth } from "@/lib/auth";
 import { openAdvertiseDialog } from "@/lib/advertise";
-import { useMyLaunchUpvotes, useShowcaseProjects, useUpvoteShowcase } from "@/hooks/use-showcase";
+import { myLaunchUpvotesQuery, useMyLaunchUpvotes, useShowcaseProjects, useUpvoteShowcase } from "@/hooks/use-showcase";
 import type { ShowcaseProject } from "@/types";
+import { track } from "@/lib/analytics";
 
 function authorLabel(project: ShowcaseProject) {
   return project.author_name || project.author_username || "Claude AI community";
@@ -29,6 +32,30 @@ function authorLabel(project: ShowcaseProject) {
 
 function normalizeCategory(project: ShowcaseProject) {
   return project.category?.trim() || project.tech_stack?.[0]?.trim() || "Claude app";
+}
+
+// Fixed launch filters, derived from real fields (category, website, GitHub repo).
+type LaunchFilter = "all" | "web" | "mcp" | "claude" | "open";
+const LAUNCH_FILTERS: { id: LaunchFilter; label: string }[] = [
+  { id: "all", label: "All" },
+  { id: "web", label: "Web apps" },
+  { id: "mcp", label: "MCP servers" },
+  { id: "claude", label: "Skills & plugins" },
+  { id: "open", label: "Open source" },
+];
+
+function launchKind(project: ShowcaseProject): Exclude<LaunchFilter, "all" | "open"> | null {
+  const category = (project.category || "").toLowerCase();
+  if (category.includes("mcp")) return "mcp";
+  if (/skill|agent|plugin|workflow/.test(category)) return "claude";
+  if (category.includes("web app") || project.app_url || project.demo_url) return "web";
+  return null;
+}
+
+function matchesFilter(project: ShowcaseProject, filter: LaunchFilter) {
+  if (filter === "all") return true;
+  if (filter === "open") return Boolean(project.github_url);
+  return launchKind(project) === filter;
 }
 
 function projectKey(project: ShowcaseProject) {
@@ -191,7 +218,10 @@ function SponsoredLaunchSlot() {
   return (
     <button
       type="button"
-      onClick={() => openAdvertiseDialog(undefined, "launch")}
+      onClick={() => {
+        track("ad_slot_clicked", { slot: "launch_row" });
+        openAdvertiseDialog(undefined, "launch");
+      }}
       className="block w-full text-left border-b border-border bg-[linear-gradient(100deg,rgba(251,191,36,0.08),rgba(255,255,255,0.02),rgba(168,85,247,0.08))] transition-colors hover:bg-card/55"
     >
       <div className="grid gap-5 px-4 py-8 md:grid-cols-[72px_minmax(0,1fr)_104px] md:items-center md:px-6">
@@ -209,13 +239,9 @@ function SponsoredLaunchSlot() {
             Sponsor a launch slot · $99/month
           </p>
         </div>
-        <div className="flex h-20 w-20 items-center justify-center rounded-2xl border border-border bg-background shadow-sm md:justify-self-end">
-          <div className="grid grid-cols-2 gap-1.5">
-            <span className="h-6 w-6 rounded-md bg-foreground" />
-            <span className="h-6 w-6 rotate-45 rounded-md bg-primary" />
-            <span className="h-6 w-6 rounded-md bg-foreground" />
-            <span className="h-6 w-6 rounded-md bg-foreground" />
-          </div>
+        <div className="flex h-20 w-20 items-center justify-center md:justify-self-end">
+          {/* Our own mark for the paid slot: get seen by builders. */}
+          <Megaphone aria-hidden="true" className="h-10 w-10 -rotate-12 text-primary" strokeWidth={1.5} />
         </div>
       </div>
     </button>
@@ -227,12 +253,13 @@ export default function ShowcaseClient({
 }: {
   initialData: ShowcaseProject[];
 }) {
-  const router = useRouter();
+  const queryClient = useQueryClient();
+  const { requireAuth } = useSignIn();
   const { isAuthenticated } = useAuth();
   const upvote = useUpvoteShowcase();
   const { data: myUpvotes } = useMyLaunchUpvotes(isAuthenticated);
   const votedSlugs = useMemo(() => new Set(myUpvotes ?? []), [myUpvotes]);
-  const [activeCategory, setActiveCategory] = useState("All");
+  const [activeFilter, setActiveFilter] = useState<LaunchFilter>("all");
   const [query, setQuery] = useState("");
 
   const { data: projects } = useShowcaseProjects(undefined, { initialData });
@@ -249,10 +276,13 @@ export default function ShowcaseClient({
       .sort((a, b) => (b.upvotes ?? 0) - (a.upvotes ?? 0));
   }, [projects]);
 
-  const categories = useMemo(() => {
-    const values = new Set(listedProjects.map(normalizeCategory));
-    return ["All", ...Array.from(values).sort((a, b) => a.localeCompare(b))];
-  }, [listedProjects]);
+  const filters = useMemo(
+    () =>
+      LAUNCH_FILTERS.map((f) => ({ ...f, count: listedProjects.filter((p) => matchesFilter(p, f.id)).length })).filter(
+        (f) => f.id === "all" || f.count > 0,
+      ),
+    [listedProjects],
+  );
 
   const visibleProjects = useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase();
@@ -268,25 +298,27 @@ export default function ShowcaseClient({
         .join(" ")
         .toLowerCase();
 
-      if (activeCategory !== "All" && normalizeCategory(project) !== activeCategory) return false;
+      if (!matchesFilter(project, activeFilter)) return false;
       if (normalizedQuery && !haystack.includes(normalizedQuery)) return false;
       return true;
     });
-  }, [activeCategory, listedProjects, query]);
+  }, [activeFilter, listedProjects, query]);
 
-  const handleVote = (project: ShowcaseProject) => {
-    if (!isAuthenticated) {
-      toast.error("Sign in to upvote launches", {
-        action: { label: "Sign in", onClick: () => router.push("/login") },
+  const handleVote = (project: ShowcaseProject) =>
+    void requireAuth(`upvote ${project.title}`, async ({ resumed }) => {
+      // Just signed in: the upvote is a toggle, so don't undo an earlier one.
+      if (resumed && (await queryClient.fetchQuery(myLaunchUpvotesQuery)).includes(project.id)) {
+        toast.success(`You already upvoted ${project.title}`);
+        return;
+      }
+      upvote.mutate(project.id, {
+        onSuccess: (updated) => {
+          if (updated.voted !== false) track("launch_upvoted", { slug: project.id, placement: "launches_list" });
+          toast.success(updated.voted === false ? "Upvote removed" : `Upvoted ${project.title}`);
+        },
+        onError: () => toast.error("Could not save your upvote"),
       });
-      return;
-    }
-
-    upvote.mutate(project.id, {
-      onSuccess: (updated) => toast.success(updated.voted === false ? "Upvote removed" : `Upvoted ${project.title}`),
-      onError: () => toast.error("Could not save your upvote"),
     });
-  };
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
@@ -321,20 +353,22 @@ export default function ShowcaseClient({
                 className="h-10 w-full rounded-lg border border-border bg-card pl-10 pr-4 text-sm text-foreground outline-none transition-colors placeholder:text-muted-foreground focus:border-[var(--cad-line-hover)]"
               />
             </div>
-            {categories.length > 1 && (
-              <div className="flex flex-wrap gap-2">
-                {categories.slice(0, 6).map((category) => (
+            {filters.length > 1 && (
+              <div className="flex flex-wrap gap-2" role="group" aria-label="Filter launches">
+                {filters.map((f) => (
                   <button
-                    key={category}
+                    key={f.id}
                     type="button"
-                    onClick={() => setActiveCategory(category)}
-                    className={`rounded-lg border px-3 py-1.5 text-xs transition ${
-                      activeCategory === category
+                    aria-pressed={activeFilter === f.id}
+                    onClick={() => setActiveFilter(f.id)}
+                    className={`cursor-pointer rounded-lg border px-3 py-1.5 text-xs transition ${
+                      activeFilter === f.id
                         ? "border-foreground bg-foreground text-background"
                         : "border-border bg-card text-muted-foreground hover:border-[var(--cad-line-hover)] hover:text-foreground"
                     }`}
                   >
-                    {category}
+                    {f.label}
+                    {f.id !== "all" && <span className="ml-1.5 opacity-60">{f.count}</span>}
                   </button>
                 ))}
               </div>

@@ -9,7 +9,6 @@ import {
   ExternalLink,
   Github,
   Linkedin,
-  MessageCircle,
   Tag,
   UserRound,
 } from "lucide-react";
@@ -17,6 +16,7 @@ import {
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import FavoriteButton from "@/components/shared/FavoriteButton";
+import LaunchDiscussion from "@/components/launches/LaunchDiscussion";
 import { faviconFor } from "@/lib/directory";
 import { fetchApi } from "@/lib/api-server";
 import type { ShowcaseProject } from "@/types";
@@ -32,6 +32,7 @@ import {
   UpvoteSummary,
   OwnerEditButton,
 } from "@/components/launches";
+import { trackAttrs } from "@/lib/track-attrs";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.claudeai.directory";
 
@@ -156,7 +157,6 @@ export default async function LaunchDetailPage({
 
   const appUrl = project.app_url || project.demo_url;
   const listedDate = formatDate(project.listed_at || project.created_at);
-  const feedbackHref = `/community?search=${encodeURIComponent(project.title)}`;
   const useCases = splitUseCases(project.use_cases);
   const publisherHost = hostFromUrl(appUrl);
   const builderName = project.author_name || project.author_username || "Claude AI community member";
@@ -250,6 +250,7 @@ export default async function LaunchDetailPage({
                   href={appUrl}
                   target="_blank"
                   rel="nofollow sponsored noopener noreferrer"
+                  {...trackAttrs("website_clicked", { slug: project.id })}
                   className="inline-flex h-10 items-center gap-2 rounded-full bg-foreground px-5 text-sm font-medium text-background transition-colors hover:bg-foreground/85"
                 >
                   Visit website
@@ -262,8 +263,8 @@ export default async function LaunchDetailPage({
                   Source
                 </a>
               )}
-              <OwnerEditButton slug={project.id} authorId={project.author_id} />
               <FavoriteButton targetType="showcase" targetId={project.id} />
+              <OwnerEditButton slug={project.id} authorId={project.author_id} />
             </div>
           </header>
 
@@ -408,27 +409,26 @@ export default async function LaunchDetailPage({
             </a>
           </div>
 
-          <LaunchSection id="discussion" title="Discussion">
-            {project.feedback_prompt && (
-              <div className="flex gap-3">
-                <MakerAvatar name={project.author_name} size="sm" />
-                <div className="min-w-0">
-                  <p className="text-sm">
-                    <span className="font-semibold text-foreground">{builderName}</span>
-                    <span className="ml-2 rounded-full bg-primary/10 px-2 py-0.5 text-[11px] font-medium text-primary">Maker</span>
-                  </p>
-                  <p className="mt-1.5 text-sm leading-7 text-foreground/85">{project.feedback_prompt}</p>
-                </div>
-              </div>
-            )}
-            <Link
-              href={feedbackHref}
-              className={`${project.feedback_prompt ? "mt-6" : ""} flex items-center gap-3 rounded-xl border border-border bg-card px-4 py-3 text-sm text-muted-foreground transition-colors hover:border-[var(--cad-line-hover)] hover:text-foreground`}
-            >
-              <MessageCircle className="h-4 w-4 shrink-0" />
-              Share your feedback on {project.title} in the community
-            </Link>
-          </LaunchSection>
+          <div className="border-b border-border px-5 py-8 md:px-8">
+            <LaunchDiscussion
+              slug={project.id}
+              title={project.title}
+              intro={
+                project.feedback_prompt ? (
+                  <div className="flex gap-3">
+                    <MakerAvatar name={project.author_name} size="sm" />
+                    <div className="min-w-0">
+                      <p className="text-sm">
+                        <span className="font-semibold text-foreground">{builderName}</span>
+                        <span className="ml-2 rounded-full bg-primary/10 px-2 py-0.5 text-[11px] font-medium text-primary">Maker</span>
+                      </p>
+                      <p className="mt-1.5 text-sm leading-7 text-foreground/85">{project.feedback_prompt}</p>
+                    </div>
+                  </div>
+                ) : undefined
+              }
+            />
+          </div>
 
           <SimilarProductsCarousel currentProject={project} projects={allProjects ?? []} />
         </article>

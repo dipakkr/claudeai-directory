@@ -1,10 +1,11 @@
 "use client";
 
 import { Star } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useMemo } from "react";
-import { useAddBookmark, useOptionalBookmarks, useRemoveBookmark } from "@/hooks/use-bookmarks";
+import { useSignIn } from "@/components/auth/SignInDialog";
+import { bookmarksQuery, useAddBookmark, useOptionalBookmarks, useRemoveBookmark } from "@/hooks/use-bookmarks";
 import { useAuth } from "@/lib/auth";
 import { cn } from "@/lib/utils";
 
@@ -29,7 +30,8 @@ export default function FavoriteButton({
   compact?: boolean;
   className?: string;
 }) {
-  const router = useRouter();
+  const queryClient = useQueryClient();
+  const { requireAuth } = useSignIn();
   const { isAuthenticated } = useAuth();
   const { data: bookmarks } = useOptionalBookmarks(isAuthenticated);
   const addBookmark = useAddBookmark();
@@ -54,31 +56,36 @@ export default function FavoriteButton({
         event.preventDefault();
         event.stopPropagation();
 
-        if (!isAuthenticated) {
-          toast.error("Sign in to favorite resources", {
-            action: {
-              label: "Sign in",
-              onClick: () => router.push("/login"),
-            },
-          });
-          return;
-        }
+        void requireAuth("save this to your favorites", async ({ resumed }) => {
+          const add = () =>
+            addBookmark.mutate(
+              { target_type: targetType, target_id: targetId },
+              {
+                onSuccess: () => toast.success("Added to favorites"),
+                onError: () => toast.error("Could not update favorite"),
+              },
+            );
 
-        if (bookmark) {
-          removeBookmark.mutate(bookmark.id, {
-            onSuccess: () => toast.success("Removed from favorites"),
-            onError: () => toast.error("Could not update favorite"),
-          });
-          return;
-        }
+          // Just signed in: only add, never remove a favorite saved earlier.
+          if (resumed) {
+            const saved = await queryClient.fetchQuery(bookmarksQuery);
+            if (saved.some((item) => item.target_type === targetType && item.target_id === targetId)) {
+              toast.success("Already in your favorites");
+              return;
+            }
+            add();
+            return;
+          }
 
-        addBookmark.mutate(
-          { target_type: targetType, target_id: targetId },
-          {
-            onSuccess: () => toast.success("Added to favorites"),
-            onError: () => toast.error("Could not update favorite"),
-          },
-        );
+          if (bookmark) {
+            removeBookmark.mutate(bookmark.id, {
+              onSuccess: () => toast.success("Removed from favorites"),
+              onError: () => toast.error("Could not update favorite"),
+            });
+            return;
+          }
+          add();
+        });
       }}
       className={cn(
         "inline-flex items-center justify-center gap-1.5 rounded-full border border-border text-sm text-muted-foreground transition-colors hover:border-[var(--cad-line-hover)] hover:text-foreground disabled:cursor-not-allowed disabled:opacity-60",

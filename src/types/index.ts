@@ -251,7 +251,7 @@ export interface BlogPost {
   id: string;
   title: string;
   category: string;
-  difficulty: string;
+  difficulty?: string;
   tags: string[];
   content: string;
   author: string;
@@ -263,6 +263,29 @@ export interface BlogPost {
   related_skills: string[];
   related_mcps: string[];
   published_at?: string;
+  updated_at?: string;
+  created_at: string;
+  // Community posts (approved submissions) carry the real author's details.
+  summary?: string;
+  author_id?: string;
+  author_username?: string;
+  author_bio?: string;
+  canonical_url?: string;
+  sources?: string[];
+  source?: "community";
+}
+
+export type BlogSubmissionStatus = "pending" | "approved" | "rejected";
+
+export interface BlogSubmission {
+  id: string;
+  status: BlogSubmissionStatus;
+  title: string;
+  summary: string;
+  category: string;
+  read_time: number;
+  post_slug?: string;
+  reject_reason?: string;
   created_at: string;
 }
 

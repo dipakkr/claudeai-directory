@@ -1,11 +1,8 @@
-import type { Metadata } from "next";
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 
-import Header from "@/components/layout/Header";
-import Footer from "@/components/layout/Footer";
-import CourseLearnView from "@/components/courses/CourseLearnView";
 import { COURSES, getCourse } from "@/data/courses";
 import { getCourseContent } from "@/data/course-content";
+import { courseLessonHref } from "@/lib/course-links";
 
 export function generateStaticParams() {
   return COURSES.flatMap((course) => {
@@ -17,25 +14,8 @@ export function generateStaticParams() {
   });
 }
 
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ slug: string; moduleId: string }>;
-}): Promise<Metadata> {
-  const { slug, moduleId } = await params;
-  const course = getCourse(slug);
-  const content = getCourseContent(slug);
-  const courseModule = content?.modules.find((item) => item.id === moduleId);
-
-  if (!course || !courseModule) return { title: "Course Module Not Found" };
-
-  return {
-    title: { absolute: `${courseModule.title} | ${course.title} | Claude AI Directory` },
-    description: `${courseModule.title} module from ${course.title}.`,
-    alternates: { canonical: `/courses/${course.slug}/learn/${courseModule.id}` },
-  };
-}
-
+// Modules used to render as one long page. Each lesson now has its own page,
+// so a module URL opens the module's first lesson.
 export default async function CourseModulePage({
   params,
 }: {
@@ -43,16 +23,10 @@ export default async function CourseModulePage({
 }) {
   const { slug, moduleId } = await params;
   const course = getCourse(slug);
-  const content = getCourseContent(slug);
-  const activeModule = content?.modules.find((module) => module.id === moduleId);
+  const courseModule = getCourseContent(slug)?.modules.find((module) => module.id === moduleId);
+  const firstLesson = courseModule?.lessons[0];
 
-  if (!course || !content || !activeModule) notFound();
+  if (!course || !courseModule || !firstLesson) notFound();
 
-  return (
-    <div className="min-h-screen bg-background">
-      <Header />
-      <CourseLearnView course={course} content={content} activeModule={activeModule} />
-      <Footer />
-    </div>
-  );
+  permanentRedirect(courseLessonHref(course.slug, courseModule.id, firstLesson.id));
 }

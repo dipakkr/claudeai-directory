@@ -1,15 +1,17 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useQueryClient } from "@tanstack/react-query";
 import { ArrowUp } from "lucide-react";
 import { toast } from "sonner";
 
-import { useMyTweetVotes, useUpvoteFeedItem } from "@/hooks/use-feed";
+import { useSignIn } from "@/components/auth/SignInDialog";
+import { myTweetVotesQuery, useMyTweetVotes, useUpvoteFeedItem } from "@/hooks/use-feed";
 import { useAuth } from "@/lib/auth";
 
 export function TweetUpvote({ id, initialCount }: { id: string; initialCount: number }) {
-  const router = useRouter();
+  const queryClient = useQueryClient();
+  const { requireAuth } = useSignIn();
   const { isAuthenticated } = useAuth();
   const upvote = useUpvoteFeedItem();
   const { data: myVotes } = useMyTweetVotes(isAuthenticated);
@@ -19,24 +21,25 @@ export function TweetUpvote({ id, initialCount }: { id: string; initialCount: nu
   const voted = confirmed?.voted ?? Boolean(myVotes?.includes(id));
   const count = confirmed?.count ?? initialCount;
 
-  const handleClick = () => {
-    if (!isAuthenticated) {
-      toast.error("Sign in to upvote", {
-        action: { label: "Sign in", onClick: () => router.push("/login") },
-      });
-      return;
-    }
-    upvote.mutate(
-      { type: "tweet", id },
-      {
-        onSuccess: (res) => {
-          const nextVoted = res.voted ?? !voted;
-          setConfirmed({ voted: nextVoted, count: res.upvotes ?? count + (nextVoted ? 1 : -1) });
+  const handleClick = () =>
+    void requireAuth("upvote this post", async ({ resumed }) => {
+      // Just signed in: the upvote is a toggle, so don't undo an earlier one.
+      const wasVoted = resumed ? (await queryClient.fetchQuery(myTweetVotesQuery)).includes(id) : voted;
+      if (resumed && wasVoted) {
+        toast.success("You already upvoted this");
+        return;
+      }
+      upvote.mutate(
+        { type: "tweet", id },
+        {
+          onSuccess: (res) => {
+            const nextVoted = res.voted ?? !wasVoted;
+            setConfirmed({ voted: nextVoted, count: res.upvotes ?? count + (nextVoted ? 1 : -1) });
+          },
+          onError: () => toast.error("Could not save your upvote"),
         },
-        onError: () => toast.error("Could not save your upvote"),
-      },
-    );
-  };
+      );
+    });
 
   return (
     <button
@@ -45,7 +48,7 @@ export function TweetUpvote({ id, initialCount }: { id: string; initialCount: nu
       disabled={upvote.isPending}
       aria-pressed={voted}
       aria-label="Upvote this tweet"
-      className={`inline-flex h-8 items-center gap-1.5 rounded-full border px-3 text-xs font-medium transition-colors disabled:opacity-70 ${
+      className={`cursor-pointer disabled:cursor-default inline-flex h-8 items-center gap-1.5 rounded-full border px-3 text-xs font-medium transition-colors disabled:opacity-70 ${
         voted
           ? "border-primary bg-primary/10 text-primary"
           : "border-border bg-card text-muted-foreground hover:border-primary/50 hover:text-foreground"

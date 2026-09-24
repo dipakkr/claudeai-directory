@@ -33,6 +33,11 @@ const nextConfig: NextConfig = {
         destination: "/launches",
         permanent: true,
       },
+      {
+        source: "/setup",
+        destination: "/claude-md-generator",
+        permanent: true,
+      },
     ];
   },
   async headers() {

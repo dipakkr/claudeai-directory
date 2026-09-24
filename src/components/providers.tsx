@@ -4,6 +4,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider } from "@/lib/auth";
+import { SignInProvider } from "@/components/auth/SignInDialog";
 import OnboardingModal from "@/components/onboarding/OnboardingModal";
 import AdvertiseDialog from "@/components/advertise/AdvertiseDialog";
 import { CommandMenuProvider } from "@/components/layout/CommandMenu";
@@ -18,15 +19,17 @@ export default function Providers({ children }: { children: React.ReactNode }) {
         <QueryClientProvider client={queryClient}>
             <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
                 <AuthProvider>
-                    <TooltipProvider>
-                        <CommandMenuProvider>
-                            {children}
-                        </CommandMenuProvider>
-                        <OnboardingModal />
-                        <AdvertiseDialog />
-                        <Toaster />
-                        <Sonner />
-                    </TooltipProvider>
+                    <SignInProvider>
+                        <TooltipProvider>
+                            <CommandMenuProvider>
+                                {children}
+                            </CommandMenuProvider>
+                            <OnboardingModal />
+                            <AdvertiseDialog />
+                            <Toaster />
+                            <Sonner />
+                        </TooltipProvider>
+                    </SignInProvider>
                 </AuthProvider>
             </ThemeProvider>
         </QueryClientProvider>

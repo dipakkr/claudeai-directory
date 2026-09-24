@@ -27,12 +27,13 @@ export function useShowcaseProject(slug: string) {
 }
 
 /** Slugs of launches the signed-in user has upvoted. */
+export const myLaunchUpvotesQuery = {
+  queryKey: ["showcase", "my-upvotes"],
+  queryFn: () => api.get<string[]>("/showcase/account/upvotes"),
+};
+
 export function useMyLaunchUpvotes(enabled: boolean) {
-  return useQuery({
-    queryKey: ["showcase", "my-upvotes"],
-    queryFn: () => api.get<string[]>("/showcase/account/upvotes"),
-    enabled,
-  });
+  return useQuery({ ...myLaunchUpvotesQuery, enabled });
 }
 
 /** Toggles the user's upvote. The response carries the new count and `voted`. */

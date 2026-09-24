@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { Menu, X, LogOut, User as UserIcon, Moon, Search, Sun } from "lucide-react";
+import { Menu, X, LogOut, User as UserIcon, Moon, Sun } from "lucide-react";
 import { useState } from "react";
 import { useAuth } from "@/lib/auth";
 import { useTheme } from "next-themes";
@@ -17,17 +17,17 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import NotificationBell from "@/components/layout/NotificationBell";
 import { Logo } from "@/components/layout/Logo";
-import { useCommandMenu } from "@/components/layout/CommandMenu";
+import { SignInButton, useSignIn } from "@/components/auth/SignInDialog";
 
-// CLAUDE.md "Navigation": Skills, MCP, Agents, Jobs, Search, Submit. Everything
-// else stays reachable from the footer.
+// CLAUDE.md "Navigation": Skills, MCP, Agents, Submit. Search and Jobs are
+// hidden from the header for now (⌘K still opens search). Everything else
+// stays reachable from the footer.
 const navLinks = [
   { href: "/skills", label: "Skills" },
   { href: "/mcp", label: "MCP" },
   { href: "/agents", label: "Agents" },
   { href: "/launches", label: "Launches" },
   { href: "/feed", label: "Feed" },
-  { href: "/jobs", label: "Jobs" },
 ];
 
 const pill =
@@ -42,41 +42,31 @@ const Header = () => {
   const toggleTheme = () => setTheme(resolvedTheme === "dark" ? "light" : "dark");
   const isActive = (href: string) => pathname === href || pathname.startsWith(`${href}/`);
   const closeMenu = () => setIsMenuOpen(false);
-  const { open: openSearch } = useCommandMenu();
+  const { openSignIn } = useSignIn();
 
   return (
     <header className="sticky top-0 z-50 w-full bg-[var(--cad-nav-bg)] backdrop-blur-md">
-      <div className="mx-auto flex h-16 max-w-[1180px] items-center justify-between gap-4 px-4 md:px-8">
+      <div className="mx-auto flex h-16 max-w-[1180px] items-center gap-4 px-4 md:px-8">
         <Logo />
 
-        {/* Desktop nav + actions */}
-        <div className="hidden items-center gap-1 lg:flex">
-          <nav className="flex items-center">
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={`rounded-full px-3 py-1.5 text-sm transition-colors ${
-                  isActive(link.href) ? "text-foreground" : "text-muted-foreground hover:text-foreground"
-                }`}
-              >
-                {link.label}
-              </Link>
-            ))}
-
-            <button
-              type="button"
-              onClick={openSearch}
-              className="flex items-center gap-2 rounded-full px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground"
+        {/* Desktop: nav left, actions right */}
+        <nav className="hidden items-center lg:flex">
+          {navLinks.map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              className={`rounded-full px-3 py-1.5 text-sm transition-colors ${
+                isActive(link.href) ? "text-foreground" : "text-muted-foreground hover:text-foreground"
+              }`}
             >
-              <Search className="h-3.5 w-3.5" />
-              Search
-              <kbd className="rounded border border-border px-1 font-mono text-[10.5px]">⌘K</kbd>
-            </button>
-          </nav>
+              {link.label}
+            </Link>
+          ))}
+        </nav>
 
-          <Link href="/submit" className={`${pill} ml-3 bg-foreground text-background hover:bg-foreground/85`}>
-            Submit
+        <div className="ml-auto hidden items-center lg:flex">
+          <Link href="/launches/submit" className={`${pill} bg-foreground text-background hover:bg-foreground/85`}>
+            Submit app
           </Link>
 
           {showUserMenu ? (
@@ -85,28 +75,16 @@ const Header = () => {
               <UserMenu user={user} logout={logout} />
             </div>
           ) : (
-            <Link
-              href="/login"
-              className={`${pill} ml-2 border border-border bg-secondary text-foreground hover:bg-muted`}
-            >
+            <SignInButton className={`${pill} ml-2 cursor-pointer border border-border bg-secondary text-foreground hover:bg-muted`}>
               Sign in
-            </Link>
+            </SignInButton>
           )}
         </div>
 
         {/* Mobile / tablet */}
-        <div className="flex items-center gap-2 lg:hidden">
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-9 w-9 rounded-full border border-border"
-            onClick={openSearch}
-            aria-label="Search"
-          >
-            <Search className="h-4 w-4" />
-          </Button>
-          <Link href="/submit" className={`${pill} hidden bg-foreground text-background sm:inline-flex`}>
-            Submit
+        <div className="ml-auto flex items-center gap-2 lg:hidden">
+          <Link href="/launches/submit" className={`${pill} hidden bg-foreground text-background sm:inline-flex`}>
+            Submit app
           </Link>
           <Button
             variant="ghost"
@@ -146,8 +124,8 @@ const Header = () => {
               Switch theme
             </button>
             <div className="mt-5 flex flex-col gap-2">
-              <Link href="/submit" onClick={closeMenu} className={`${pill} h-10 bg-foreground text-background`}>
-                Submit a Resource
+              <Link href="/launches/submit" onClick={closeMenu} className={`${pill} h-10 bg-foreground text-background`}>
+                Submit app
               </Link>
               {showUserMenu ? (
                 <>
@@ -165,9 +143,16 @@ const Header = () => {
                   </button>
                 </>
               ) : (
-                <Link href="/login" onClick={closeMenu} className={`${pill} h-10 border border-border`}>
+                <button
+                  type="button"
+                  onClick={() => {
+                    closeMenu();
+                    openSignIn();
+                  }}
+                  className={`${pill} h-10 border border-border`}
+                >
                   Sign in
-                </Link>
+                </button>
               )}
             </div>
           </nav>

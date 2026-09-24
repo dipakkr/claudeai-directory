@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/dialog";
 import { useSubmitTweet } from "@/hooks/use-feed";
 import { ApiError } from "@/lib/api";
+import { useSignIn } from "@/components/auth/SignInDialog";
 import { useAuth } from "@/lib/auth";
 
 const TWEET_URL = /^https?:\/\/(www\.|mobile\.)?(x|twitter)\.com\/\w{1,15}\/(status(es)?|article)\/\d+/i;
@@ -22,19 +23,15 @@ const TWEET_URL = /^https?:\/\/(www\.|mobile\.)?(x|twitter)\.com\/\w{1,15}\/(sta
 export function ContributeTweetDialog() {
   const router = useRouter();
   const { isAuthenticated, isLoading } = useAuth();
+  const { requireAuth } = useSignIn();
   const submit = useSubmitTweet();
   const [open, setOpen] = useState(false);
   const [url, setUrl] = useState("");
 
-  const promptSignIn = () =>
-    toast.error("Sign in to contribute a tweet", {
-      action: { label: "Sign in", onClick: () => router.push("/login") },
-    });
-
   const handleOpenChange = (next: boolean) => {
     // While the session is still loading, open anyway and check again on submit.
     if (next && !isLoading && !isAuthenticated) {
-      promptSignIn();
+      void requireAuth("add a post to the feed", () => setOpen(true), { afterOnboarding: true });
       return;
     }
     setOpen(next);
@@ -43,7 +40,7 @@ export function ContributeTweetDialog() {
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
     if (!isAuthenticated) {
-      promptSignIn();
+      void requireAuth("add a post to the feed");
       return;
     }
     const value = url.trim();

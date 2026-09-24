@@ -36,6 +36,8 @@ type Media = { logo: string[]; screenshot: string[]; video: string[] };
 const SITE_URL = "https://www.claudeai.directory";
 
 import { CATEGORIES, PLATFORMS } from "@/lib/launch-options";
+import { SignInButton } from "@/components/auth/SignInDialog";
+import { track } from "@/lib/analytics";
 
 const STEPS = ["Details", "Badge", "Share"] as const;
 
@@ -253,7 +255,7 @@ function LivePreview({ form, media }: { form: Form; media: Media }) {
   const cover = media.screenshot[0] || splitList(form.images)[0];
   const tags = splitList(form.tags).slice(0, 3);
   return (
-    <section aria-label="Listing preview" className="overflow-hidden rounded-2xl border border-border bg-card">
+    <section aria-label="Listing preview" className="overflow-hidden rounded-lg border border-border bg-card">
       <div className="border-b border-border px-4 py-2.5 font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground">
         Preview
       </div>
@@ -272,7 +274,7 @@ function LivePreview({ form, media }: { form: Form; media: Media }) {
       )}
       <div className="bg-gradient-to-br from-primary/10 via-primary/[0.03] to-transparent p-4">
         <div className="flex items-start gap-3">
-          <Logo url={form.app_url} logoUrl={media.logo[0]} name={form.title || "?"} className="h-12 w-12 rounded-xl text-base" />
+          <Logo url={form.app_url} logoUrl={media.logo[0]} name={form.title || "?"} className="h-12 w-12 rounded-lg text-base" />
           <div className="min-w-0">
             <p className="truncate text-base font-semibold text-foreground">{form.title || "Your app name"}</p>
             <p className="mt-0.5 line-clamp-2 text-sm leading-5 text-muted-foreground">
@@ -304,7 +306,7 @@ function MyLaunches({
 }) {
   if (!apps.length) return null;
   return (
-    <section className="rounded-2xl border border-border bg-card">
+    <section className="rounded-lg border border-border bg-card">
       <h2 className="border-b border-border px-4 py-2.5 font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground">
         Your launches
       </h2>
@@ -387,7 +389,7 @@ function BadgeStep({
   };
 
   return (
-    <div className="rounded-2xl border border-border bg-card p-5 sm:p-7">
+    <div className="rounded-lg border border-border bg-card p-5 sm:p-7">
       <h2 className="text-xl font-semibold text-foreground">Add the badge to go live</h2>
       <p className="mt-2 text-sm leading-6 text-muted-foreground">
         <span className="font-medium text-foreground">{app.title}</span> is saved. Paste this badge anywhere on your site,
@@ -407,7 +409,7 @@ function BadgeStep({
                   role="radio"
                   aria-checked={active}
                   onClick={() => setOption(item)}
-                  className={`flex flex-col items-start gap-2.5 rounded-xl border p-3 text-left transition-colors ${
+                  className={`flex flex-col items-start gap-2.5 rounded-md border p-3 text-left transition-colors ${
                     active ? "border-primary ring-1 ring-primary/40" : "border-border hover:border-[var(--cad-line-hover)]"
                   } ${item.theme === "dark" ? "bg-[#2a2622]" : "bg-[#f6f3ee]"}`}
                 >
@@ -506,7 +508,7 @@ function ShareStep({ app, onAnother }: { app: ShowcaseProject; onAnother: () => 
     "inline-flex h-10 items-center justify-center gap-2 rounded-full border border-border bg-card px-4 text-sm font-medium text-foreground transition-colors hover:border-[var(--cad-line-hover)]";
 
   return (
-    <div className="rounded-2xl border border-border bg-card p-5 sm:p-7">
+    <div className="rounded-lg border border-border bg-card p-5 sm:p-7">
       <span className="flex h-11 w-11 items-center justify-center rounded-full bg-success/15 text-success">
         <Check className="h-5 w-5" />
       </span>
@@ -643,6 +645,7 @@ export default function SubmitLaunchClient() {
       },
       {
         onSuccess: (project) => {
+          track("launch_submitted", { slug: project.id, category: form.category });
           setActiveApp(project);
           setStep(1);
           window.scrollTo({ top: 0, behavior: "smooth" });
@@ -692,19 +695,19 @@ export default function SubmitLaunchClient() {
           </p>
 
           {!isAuthenticated ? (
-            <div className="mt-8 max-w-[560px] rounded-2xl border border-border bg-card p-6">
+            <div className="mt-8 max-w-[560px] rounded-lg border border-border bg-card p-6">
               <ol className="space-y-3 text-sm text-muted-foreground">
                 <li><span className="font-medium text-foreground">1. Details.</span> Paste your URL, we fill in the rest.</li>
                 <li><span className="font-medium text-foreground">2. Badge.</span> Add a small badge to your site and verify.</li>
                 <li><span className="font-medium text-foreground">3. Share.</span> Your page goes live and ranks by upvotes.</li>
               </ol>
-              <Link
-                href="/login"
-                className="mt-6 inline-flex h-11 items-center gap-2 rounded-full bg-foreground px-5 text-sm font-medium text-background hover:bg-foreground/85"
+              <SignInButton
+                reason="launch your app"
+                className="mt-6 inline-flex h-11 cursor-pointer items-center gap-2 rounded-full bg-foreground px-5 text-sm font-medium text-background hover:bg-foreground/85"
               >
                 Sign in to launch
                 <ArrowRight className="h-4 w-4" />
-              </Link>
+              </SignInButton>
             </div>
           ) : (
             <>
@@ -726,7 +729,7 @@ export default function SubmitLaunchClient() {
                   ) : step === 2 && activeApp ? (
                     <ShareStep app={activeApp} onAnother={startOver} />
                   ) : (
-                    <form onSubmit={handleSubmit} className="rounded-2xl border border-border bg-card p-5 sm:p-7" noValidate>
+                    <form onSubmit={handleSubmit} className="rounded-lg border border-border bg-card p-5 sm:p-7" noValidate>
                       <div className="space-y-5">
                         <Field label="Your app's URL" htmlFor="app_url" required>
                           <div className="flex gap-2">

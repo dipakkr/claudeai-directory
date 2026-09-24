@@ -51,3 +51,6 @@ nginx/
 
 # planning
 todo.md
+
+# local browser QA screenshots
+.playwright-mcp/

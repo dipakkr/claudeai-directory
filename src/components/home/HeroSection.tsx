@@ -97,7 +97,7 @@ const categories: CategoryItem[] = [
   {
     name: "CLAUDE.md Generator",
     description: "Create project context for Claude Code",
-    href: "/setup",
+    href: "/claude-md-generator",
     icon: Wand2,
     iconColor: "text-primary",
     iconBg: "bg-primary/10",

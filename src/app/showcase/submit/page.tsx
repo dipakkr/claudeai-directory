@@ -19,6 +19,7 @@ import {
   useVerifyShowcaseBadge,
 } from "@/hooks/use-showcase";
 import type { ShowcaseProject } from "@/types";
+import { SignInButton } from "@/components/auth/SignInDialog";
 
 const SITE_URL = "https://www.claudeai.directory";
 
@@ -159,10 +160,10 @@ export default function SubmitAppPage() {
               </p>
               <div className="mt-7 flex flex-wrap gap-3">
                 <Button asChild>
-                  <Link href="/login">
+                  <SignInButton reason="launch your app">
                     Sign in to launch
                     <ArrowRight className="h-4 w-4" />
-                  </Link>
+                  </SignInButton>
                 </Button>
                 <Button variant="outline" asChild>
                   <Link href="/showcase">View launches</Link>

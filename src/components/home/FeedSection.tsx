@@ -1,10 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { ArrowUpRight, ChevronUp, Wrench, Server, FileText, Briefcase, Rocket, BookOpen, LinkIcon, Newspaper } from "lucide-react";
 import { useFeed, useUpvoteFeedItem } from "@/hooks/use-feed";
-import { useAuth } from "@/lib/auth";
+import { useSignIn } from "@/components/auth/SignInDialog";
 import { toast } from "sonner";
 import type { FeedItem } from "@/types";
 
@@ -33,22 +32,16 @@ function timeAgo(dateStr: string): string {
 function FeedRow({ item, rank }: { item: FeedItem; rank: number }) {
   const config = typeConfig[item.type] || typeConfig.post;
   const Icon = config.icon;
-  const { isAuthenticated } = useAuth();
+  const { requireAuth } = useSignIn();
   const upvote = useUpvoteFeedItem();
-  const router = useRouter();
 
-  const handleUpvote = () => {
-    if (!isAuthenticated) {
-      toast.error("Sign in to upvote", {
-        action: { label: "Sign in", onClick: () => router.push("/login") },
-      });
-      return;
-    }
-    upvote.mutate(
-      { type: item.type, id: item.id },
-      { onError: () => toast.error("Already upvoted") }
+  const handleUpvote = () =>
+    void requireAuth("upvote", () =>
+      upvote.mutate(
+        { type: item.type, id: item.id },
+        { onError: () => toast.error("Already upvoted") }
+      )
     );
-  };
 
   const titleHref = (item.type === "post" || item.type === "news") && item.url
     ? item.url
@@ -95,7 +88,7 @@ function FeedRow({ item, rank }: { item: FeedItem; rank: number }) {
       </div>
       <button
         onClick={handleUpvote}
-        className="flex flex-col items-center gap-0.5 shrink-0 pt-0.5 hover:text-primary transition-colors group"
+        className="cursor-pointer flex flex-col items-center gap-0.5 shrink-0 pt-0.5 hover:text-primary transition-colors group"
       >
         <ChevronUp className="h-3.5 w-3.5 text-muted-foreground/40 group-hover:text-primary transition-colors" />
         <span className="text-xs font-medium text-muted-foreground group-hover:text-primary transition-colors">{item.points}</span>

@@ -1,4 +1,14 @@
+import { LANGUAGE_OPTIONS } from "./config";
 import type { GeneratorConfig, BehaviorKey, Strictness, TeamSize, Stack } from "./config";
+
+// Optional template lines leave blank gaps behind. Drop the ones that would
+// split a bullet list in two and collapse runs of blank lines.
+function tidy(md: string): string {
+  return md
+    .replace(/(^- .*)\n(?:[ \t]*\n)+(?=- )/gm, "$1\n")
+    .replace(/\n{3,}/g, "\n\n")
+    .trim();
+}
 
 function stackLabel(stack: Stack): string {
   const labels: Record<Stack, string> = {
@@ -319,7 +329,7 @@ export function generateClaudeMd(config: GeneratorConfig): string {
 
 - Framework: ${stackName}
 - Language: ${
-      config.language.charAt(0).toUpperCase() + config.language.slice(1)
+      LANGUAGE_OPTIONS.find((l) => l.value === config.language)?.label ?? config.language
     }
 ${stylingLine}- Package Manager: ${pmLabel}
 ${testingLine}`,
@@ -337,5 +347,5 @@ ${testingLine}`,
     behaviorRules(config.behaviors),
   ];
 
-  return sections.filter(Boolean).join("\n\n") + "\n";
+  return tidy(sections.filter(Boolean).join("\n\n")) + "\n";
 }

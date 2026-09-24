@@ -49,11 +49,11 @@ export function useSubmitTweet() {
 }
 
 /** Tweet ids the signed-in user has upvoted. One shared request per page. */
+export const myTweetVotesQuery = {
+  queryKey: ["feed", "tweet-votes"],
+  queryFn: () => api.get<string[]>("/feed/tweets/my-votes"),
+};
+
 export function useMyTweetVotes(enabled: boolean) {
-  return useQuery({
-    queryKey: ["feed", "tweet-votes"],
-    queryFn: () => api.get<string[]>("/feed/tweets/my-votes"),
-    enabled,
-    staleTime: 60_000,
-  });
+  return useQuery({ ...myTweetVotesQuery, enabled, staleTime: 60_000 });
 }

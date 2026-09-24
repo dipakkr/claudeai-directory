@@ -7,6 +7,7 @@ import { OpenPanelComponent } from '@openpanel/nextjs';
 import { AnnouncementBanner } from "@/components/layout/AnnouncementBanner";
 import SideAdBillboards from "@/components/layout/SideAdBillboards";
 import { ExternalLinkTracker } from "@/components/tracking/ExternalLinkTracker";
+import { KeyClickTracker } from "@/components/tracking/KeyClickTracker";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -114,7 +115,9 @@ export default function RootLayout({
           clientId="3c0fbc66-1ebf-4993-ae25-7598616931c5"
           apiUrl="https://analytics.tooljunction.io/api"
           trackScreenViews={true}
+          trackAttributes={true}
         />
+        <KeyClickTracker />
       </body>
     </html>
   );

@@ -1,14 +1,15 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
-import { AlertTriangle, ArrowRight, CheckCircle2, ExternalLink, Loader2, Star } from "lucide-react";
+import { AlertTriangle, ArrowRight, Bot, CheckCircle2, ExternalLink, Loader2, Plug, Rocket, Sparkles, Star } from "lucide-react";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { ApiError, api } from "@/lib/api";
 import { track } from "@/lib/analytics";
 import { useAuth } from "@/lib/auth";
 import type { ResourceInstall, ResourceKind } from "@/lib/install";
+import { SignInButton } from "@/components/auth/SignInDialog";
 
 // CLAUDE.md "Submit" + INSTALL_REGISTRY.md "Skill Submission Flow":
 // GitHub URL + type, we detect what we can, the creator reviews, a human approves.
@@ -40,11 +41,32 @@ interface DetectResult {
   warnings: string[];
 }
 
-const TYPES: { value: ResourceKind; label: string }[] = [
-  { value: "skill", label: "Skill" },
-  { value: "mcp", label: "MCP" },
-  { value: "agent", label: "Agent" },
+// What people can submit. Apps have their own launch flow (/launches/submit).
+const TYPES: { value: ResourceKind; label: string; body: string; source: string; Icon: typeof Sparkles }[] = [
+  {
+    value: "skill",
+    label: "Skill",
+    body: "Instructions and scripts that teach Claude a task.",
+    source: "GitHub repo with a SKILL.md",
+    Icon: Sparkles,
+  },
+  {
+    value: "mcp",
+    label: "MCP server",
+    body: "A connector that lets Claude use a tool, app or data source.",
+    source: "GitHub repo of the server",
+    Icon: Plug,
+  },
+  {
+    value: "agent",
+    label: "Agent",
+    body: "A Claude Code subagent for a specific job, like reviews or tests.",
+    source: "GitHub repo with an agent .md file",
+    Icon: Bot,
+  },
 ];
+
+const isKind = (v: string | null): v is ResourceKind => v === "skill" || v === "mcp" || v === "agent";
 
 const CATEGORIES: Record<ResourceKind, string[]> = {
   skill: ["Coding", "Frontend", "Testing", "Research", "Productivity", "Data", "Marketing", "DevOps"],
@@ -68,7 +90,22 @@ function errorMessage(error: unknown, fallback: string) {
 export default function SubmitPage() {
   const { isAuthenticated, isLoading: authLoading } = useAuth();
   const [url, setUrl] = useState("");
-  const [type, setType] = useState<ResourceKind>("skill");
+  const [type, setType] = useState<ResourceKind | null>(null);
+
+  // /submit?type=mcp (from the Submit menus) pre-selects the type.
+  useEffect(() => {
+    const param = new URLSearchParams(window.location.search).get("type");
+    if (isKind(param)) setType(param);
+  }, []);
+
+  const choose = (next: ResourceKind) => {
+    setType(next);
+    setResult(null);
+    setError("");
+    const qs = new URLSearchParams(window.location.search);
+    qs.set("type", next);
+    window.history.replaceState(null, "", `${window.location.pathname}?${qs}`);
+  };
   const [detecting, setDetecting] = useState(false);
   const [error, setError] = useState("");
   const [result, setResult] = useState<DetectResult | null>(null);
@@ -91,6 +128,7 @@ export default function SubmitPage() {
 
   const detect = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!type) return;
     setError("");
     setResult(null);
     const trimmed = url.trim();
@@ -112,7 +150,7 @@ export default function SubmitPage() {
   };
 
   const submit = async () => {
-    if (!result) return;
+    if (!result || !type) return;
     setSubmitting(true);
     setError("");
     try {
@@ -151,10 +189,10 @@ export default function SubmitPage() {
     <div className="min-h-screen bg-background">
       <Header />
       <main className="mx-auto max-w-[680px] px-4 pb-10 pt-16 md:px-8 md:pt-20">
-        <h1 className="text-[clamp(36px,5vw,52px)] font-normal leading-[1.05] text-foreground">Publish to Claude Directory</h1>
-        <p className="mt-4 text-[16px] leading-relaxed text-muted-foreground">
-          Submit your Skill, MCP or Agent. We turn verified setup metadata into a simple install experience for Claude
-          users.
+        <h1 className="text-[clamp(34px,5vw,44px)] font-light leading-[1.05] text-foreground">Submit to Claude Directory</h1>
+        <p className="mt-3 text-[15.5px] leading-relaxed text-[var(--cad-desc)]">
+          Share something you built for Claude. We read your GitHub repo, you check the details, and we review it before it
+          goes live.
         </p>
 
         {done ? (
@@ -184,41 +222,68 @@ export default function SubmitPage() {
           </div>
         ) : (
           <>
-            <form onSubmit={detect} className="mt-10 space-y-5">
+            <fieldset className="mt-10">
+              <legend className="mb-3 text-[15px] text-foreground">What are you submitting?</legend>
+              <div className="grid gap-3 sm:grid-cols-2">
+                {TYPES.map(({ value, label, body, source, Icon }) => {
+                  const active = type === value;
+                  return (
+                    <button
+                      key={value}
+                      type="button"
+                      aria-pressed={active}
+                      onClick={() => choose(value)}
+                      className={`flex cursor-pointer gap-3.5 rounded-[11px] border p-4 text-left transition-colors ${
+                        active ? "border-foreground bg-[var(--cad-surface)]" : "border-border hover:bg-[var(--cad-surface)]"
+                      }`}
+                    >
+                      <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg border border-border bg-[var(--cad-tile)] text-foreground/85">
+                        <Icon className="h-5 w-5" strokeWidth={1.6} />
+                      </span>
+                      <span className="min-w-0">
+                        <span className="block text-[15px] font-medium text-foreground">{label}</span>
+                        <span className="mt-0.5 block text-[13px] leading-snug text-[var(--cad-desc)]">{body}</span>
+                        <span className="mt-1 block text-[12.5px] text-muted-foreground">{source}</span>
+                      </span>
+                    </button>
+                  );
+                })}
+                <Link
+                  href="/launches/submit"
+                  className="flex gap-3.5 rounded-[11px] border border-border p-4 transition-colors hover:bg-[var(--cad-surface)]"
+                >
+                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg border border-border bg-[var(--cad-tile)] text-foreground/85">
+                    <Rocket className="h-5 w-5" strokeWidth={1.6} />
+                  </span>
+                  <span className="min-w-0">
+                    <span className="flex items-center gap-1.5 text-[15px] font-medium text-foreground">
+                      App <ArrowRight className="h-3.5 w-3.5 text-muted-foreground" />
+                    </span>
+                    <span className="mt-0.5 block text-[13px] leading-snug text-[var(--cad-desc)]">
+                      A product you built with Claude. Get a launch page, upvotes and a badge.
+                    </span>
+                    <span className="mt-1 block text-[12.5px] text-muted-foreground">Your app&apos;s website</span>
+                  </span>
+                </Link>
+              </div>
+            </fieldset>
+
+            {type && (
+            <form onSubmit={detect} className="mt-8 space-y-5">
               <label className="block">
-                <span className="mb-2 block text-sm text-foreground">GitHub repository URL</span>
+                <span className="mb-2 block text-sm text-foreground">
+                  GitHub repository of your {TYPES.find((t) => t.value === type)?.label ?? type}
+                </span>
                 <input
                   type="url"
                   required
+                  autoFocus
                   value={url}
                   onChange={(e) => setUrl(e.target.value)}
                   placeholder="https://github.com/owner/repo"
                   className={inputClass}
                 />
               </label>
-              <fieldset>
-                <legend className="mb-2 text-sm text-foreground">Resource type</legend>
-                <div className="flex gap-2">
-                  {TYPES.map((t) => (
-                    <button
-                      key={t.value}
-                      type="button"
-                      aria-pressed={type === t.value}
-                      onClick={() => {
-                        setType(t.value);
-                        setResult(null);
-                      }}
-                      className={`h-9 rounded-full border px-4 text-sm transition-colors ${
-                        type === t.value
-                          ? "border-foreground bg-foreground text-background"
-                          : "border-border text-muted-foreground hover:text-foreground"
-                      }`}
-                    >
-                      {t.label}
-                    </button>
-                  ))}
-                </div>
-              </fieldset>
               {!result && (
                 <button
                   type="submit"
@@ -231,6 +296,7 @@ export default function SubmitPage() {
                 </button>
               )}
             </form>
+            )}
 
             {error && (
               <p className="mt-5 flex gap-2 text-sm text-destructive">
@@ -312,7 +378,7 @@ export default function SubmitPage() {
                       <span className="mb-2 block text-sm text-foreground">Category</span>
                       <select value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} className={inputClass}>
                         <option value="">Choose a category</option>
-                        {CATEGORIES[type].map((c) => (
+                        {(type ? CATEGORIES[type] : []).map((c) => (
                           <option key={c} value={c.toLowerCase().replace(/\s+/g, "-")}>
                             {c}
                           </option>
@@ -344,12 +410,12 @@ export default function SubmitPage() {
                         Submit for review
                       </button>
                     ) : (
-                      <Link
-                        href="/login"
-                        className="inline-flex h-10 items-center rounded-full bg-foreground px-5 text-sm font-medium text-background"
+                      <SignInButton
+                        reason="submit this resource"
+                        className="inline-flex h-10 cursor-pointer items-center rounded-full bg-foreground px-5 text-sm font-medium text-background"
                       >
                         Sign in to submit
-                      </Link>
+                      </SignInButton>
                     )}
                   </>
                 )}
@@ -358,12 +424,6 @@ export default function SubmitPage() {
           </>
         )}
 
-        <p className="mt-14 text-sm text-muted-foreground">
-          Listing a Claude-powered app instead?{" "}
-          <Link href="/showcase/submit" className="text-foreground underline underline-offset-4 hover:text-primary">
-            Submit it to the showcase
-          </Link>
-        </p>
       </main>
       <Footer />
     </div>

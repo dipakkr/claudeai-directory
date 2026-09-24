@@ -2,7 +2,7 @@
 
 import { Fragment, useMemo, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import {
   ArrowUp,
@@ -19,8 +19,9 @@ import Footer from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
 import { faviconFor } from "@/lib/directory";
 import { publicLaunches } from "@/lib/home-community";
+import { useSignIn } from "@/components/auth/SignInDialog";
 import { useAuth } from "@/lib/auth";
-import { useShowcaseProjects, useUpvoteShowcase } from "@/hooks/use-showcase";
+import { myLaunchUpvotesQuery, useShowcaseProjects, useUpvoteShowcase } from "@/hooks/use-showcase";
 import type { ShowcaseProject } from "@/types";
 
 function authorLabel(project: ShowcaseProject) {
@@ -224,7 +225,8 @@ export default function ShowcaseClient({
 }: {
   initialData: ShowcaseProject[];
 }) {
-  const router = useRouter();
+  const queryClient = useQueryClient();
+  const { requireAuth } = useSignIn();
   const { isAuthenticated } = useAuth();
   const upvote = useUpvoteShowcase();
   const [activeCategory, setActiveCategory] = useState("All");
@@ -269,19 +271,18 @@ export default function ShowcaseClient({
     });
   }, [activeCategory, listedProjects, query]);
 
-  const handleVote = (project: ShowcaseProject) => {
-    if (!isAuthenticated) {
-      toast.error("Sign in to upvote launches", {
-        action: { label: "Sign in", onClick: () => router.push("/login") },
+  const handleVote = (project: ShowcaseProject) =>
+    void requireAuth(`upvote ${project.title}`, async ({ resumed }) => {
+      // Just signed in: the upvote is a toggle, so don't undo an earlier one.
+      if (resumed && (await queryClient.fetchQuery(myLaunchUpvotesQuery)).includes(project.id)) {
+        toast.success(`You already upvoted ${project.title}`);
+        return;
+      }
+      upvote.mutate(project.id, {
+        onSuccess: (updated) => toast.success(updated.voted === false ? "Upvote removed" : "Upvoted"),
+        onError: () => toast.error("Could not upvote this launch"),
       });
-      return;
-    }
-
-    upvote.mutate(project.id, {
-      onSuccess: () => toast.success("Upvoted"),
-      onError: () => toast.error("Could not upvote this launch"),
     });
-  };
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
