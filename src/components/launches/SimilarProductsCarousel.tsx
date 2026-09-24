@@ -3,6 +3,7 @@ import { ArrowRight } from "lucide-react";
 import { faviconFor } from "@/lib/directory";
 import { FaviconBox } from "./FaviconBox";
 import type { ShowcaseProject } from "@/types";
+import { LaunchSection } from "./LaunchSection";
 
 interface SimilarProductsCarouselProps {
   currentProject: ShowcaseProject;
@@ -37,10 +38,7 @@ export function SimilarProductsCarousel({
   }
 
   return (
-    <section className="space-y-4">
-      <h2 className="font-mono text-[11px] font-normal uppercase tracking-[0.18em] text-muted-foreground">
-        Related Launches
-      </h2>
+    <LaunchSection title="Related launches">
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {similar.map((project) => {
           const logo = faviconFor(project.app_url || project.demo_url);
@@ -85,6 +83,6 @@ export function SimilarProductsCarousel({
           );
         })}
       </div>
-    </section>
+    </LaunchSection>
   );
 }

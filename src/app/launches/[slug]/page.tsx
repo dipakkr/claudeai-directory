@@ -3,16 +3,15 @@ import type { ReactNode } from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
-  ArrowRight,
   ArrowLeft,
-  ArrowUp,
   BadgeCheck,
-  CheckCircle2,
+  CalendarDays,
   ExternalLink,
   Github,
-  Globe2,
+  Linkedin,
   MessageCircle,
-  
+  Tag,
+  UserRound,
 } from "lucide-react";
 
 import Header from "@/components/layout/Header";
@@ -24,12 +23,12 @@ import type { ShowcaseProject } from "@/types";
 import {
   OverviewSection,
   GalleryCarousel,
-  TechStackCard,
   DemoVideoSection,
   SimilarProductsCarousel,
-  CollectionsSection,
-  EnhancedCreatorCard,
   FaviconBox,
+  LaunchSection,
+  Chip,
+  UpvoteBox,
 } from "@/components/launches";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.claudeai.directory";
@@ -60,59 +59,40 @@ function splitUseCases(useCases?: string[]) {
     .filter(Boolean);
 }
 
-function splitDescription(description: string) {
-  return description
-    .split(/\n{2,}|(?<=[.!?])\s+/)
-    .map((item) => item.trim())
-    .filter(Boolean);
+function initials(name: string) {
+  return name
+    .split(/\s+/)
+    .map((part) => part[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
 }
 
-function featureItems(project: ShowcaseProject) {
-  // Tech stack already has its own sidebar card, so features are built from
-  // skills/description only - listing the same tech pills twice reads as
-  // filler rather than real feature copy.
-  const fromSkills = (project.skills_used ?? []).map((skill) => `Works with ${skill}`);
-  const fromDescription = splitDescription(project.description)
-    .filter((sentence) => sentence.length > 28)
-    .slice(0, 3);
-
-  const items = (fromSkills.length ? fromSkills : fromDescription)
-    .map((item) => item.replace(/\.$/, ""))
-    .filter(Boolean);
-
-  return Array.from(new Set(items)).slice(0, 5);
-}
-
-function fallbackUseCases(project: ShowcaseProject) {
-  const cases = splitUseCases(project.use_cases);
-  if (cases.length) return cases;
-
-  const category = project.category?.trim();
-  const stack = project.tech_stack?.filter(Boolean) ?? [];
-  return [
-    category ? `${category} teams evaluating Claude-ready tools` : "Claude builders evaluating new tools",
-    ...stack.map((item) => `${item} workflows`),
-    "Collecting feedback from the Claude AI community",
-  ].slice(0, 4);
-}
-
-function SectionTitle({ children }: { children: ReactNode }) {
+function XIcon({ className }: { className?: string }) {
   return (
-    <h2 className="font-mono text-[11px] font-normal uppercase tracking-[0.18em] text-muted-foreground">
-      {children}
-    </h2>
+    <svg viewBox="0 0 24 24" aria-hidden="true" className={className} fill="currentColor">
+      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+    </svg>
   );
 }
 
-function ProductLogo({ src, name, size = "base" }: { src?: string | null; name: string; size?: "base" | "large" }) {
-  const dimension = size === "large" ? "h-20 w-20 rounded-2xl text-2xl" : "h-14 w-14 rounded-xl text-lg";
-
+function MakerAvatar({ name, size = "base" }: { name?: string; size?: "sm" | "base" }) {
+  const dimension = size === "sm" ? "h-9 w-9 text-xs" : "h-12 w-12 text-sm";
   return (
-    <FaviconBox
-      src={src}
-      name={name}
-      className={`flex shrink-0 items-center justify-center overflow-hidden border border-border bg-card font-semibold text-muted-foreground shadow-sm ${dimension}`}
-    />
+    <span
+      className={`flex shrink-0 items-center justify-center rounded-full border border-border bg-card font-semibold text-muted-foreground ${dimension}`}
+    >
+      {name ? initials(name) : <UserRound className="h-5 w-5" />}
+    </span>
+  );
+}
+
+function DetailRow({ label, children }: { label: string; children: ReactNode }) {
+  return (
+    <div className="border-b border-border px-5 py-5 last:border-b-0 md:px-8">
+      <h3 className="text-sm font-semibold text-foreground">{label}</h3>
+      <div className="mt-2.5 flex flex-wrap gap-2">{children}</div>
+    </div>
   );
 }
 
@@ -175,20 +155,35 @@ export default async function LaunchDetailPage({
   const appUrl = project.app_url || project.demo_url;
   const listedDate = formatDate(project.listed_at || project.created_at);
   const feedbackHref = `/community?search=${encodeURIComponent(project.title)}`;
-  const useCases = fallbackUseCases(project);
-  const features = featureItems(project);
-  const resourceType = project.category || "Claude app";
+  const useCases = splitUseCases(project.use_cases);
   const publisherHost = hostFromUrl(appUrl);
   const builderName = project.author_name || project.author_username || "Claude AI community member";
-  const descriptionBlocks = splitDescription(project.description);
-  const gallery = (project.images ?? []).filter(Boolean);
-  const galleryImages = (project.gallery_images ?? gallery).filter(Boolean);
+  const authorHref = project.author_username ? `/u/${project.author_username}` : null;
+  const socials = project.creator_socials ?? {};
+  const upvotes = project.upvotes ?? 0;
+  const aboutBlocks = (project.description || "")
+    .split(/\n{2,}/)
+    .map((block) => block.trim())
+    .filter(Boolean);
+  const galleryImages = (project.gallery_images?.length ? project.gallery_images : project.images ?? []).filter(Boolean);
+  const platforms = project.platforms ?? [];
+  const techStack = (project.tech_stack ?? []).filter((tech) => !platforms.includes(tech));
+  const collections = project.collections ?? [];
+  const comparisons = project.comparisons ?? [];
   const logo = faviconFor(appUrl);
+
+  const pageUrl = `${SITE_URL}/launches/${slug}`;
+  const shareText = `${project.title}: ${project.tagline || "launched on Claude Directory"}`;
+  const shareOnX = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(pageUrl)}`;
+  const shareOnLinkedIn = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(pageUrl)}`;
+
+  const secondaryButton =
+    "inline-flex h-10 items-center gap-2 rounded-full border border-border bg-card px-4 text-sm text-foreground transition-colors hover:border-[var(--cad-line-hover)]";
 
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      <main className="mx-auto max-w-[1120px] px-4 pb-16 pt-8 md:px-8 md:pt-12">
+      <main className="mx-auto max-w-[960px] px-4 pb-16 pt-8 md:px-8 md:pt-10">
         <Link
           href="/launches"
           aria-label="Back to app launches"
@@ -198,189 +193,245 @@ export default async function LaunchDetailPage({
           App launches
         </Link>
 
-        <section className="mt-8 grid gap-8 lg:grid-cols-[minmax(0,1fr)_300px] lg:items-start">
-          <div className="min-w-0">
-            <div className="flex flex-col gap-5 sm:flex-row sm:items-start">
-              <ProductLogo src={logo} name={project.title} size="large" />
+        <article className="mt-6 overflow-hidden rounded-2xl border border-border bg-background [&>section:last-child]:border-b-0">
+          {/* Hero */}
+          <header className="border-b border-border bg-gradient-to-br from-primary/12 via-primary/[0.04] to-transparent px-5 py-8 md:px-8 md:py-10">
+            <div className="flex items-start gap-5 md:gap-6">
+              <FaviconBox
+                src={logo}
+                name={project.title}
+                className="flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-border bg-card text-xl font-semibold text-muted-foreground shadow-sm md:h-24 md:w-24 md:text-2xl"
+              />
               <div className="min-w-0 flex-1">
-                <div className="flex flex-wrap items-center gap-2">
-                  <span className="rounded-full border border-border bg-card px-3 py-1 font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
-                    {resourceType}
-                  </span>
+                <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
+                  <h1 className="text-balance text-3xl font-semibold leading-tight text-foreground md:text-4xl">
+                    {project.title}
+                  </h1>
                   {project.badge_verified && (
-                    <span className="inline-flex items-center gap-1.5 rounded-full border border-amber-400/25 bg-amber-400/10 px-3 py-1 text-xs text-amber-200">
-                      <BadgeCheck className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
+                    <span className="inline-flex items-center gap-1.5 rounded-full border border-success/30 bg-success/10 px-2.5 py-1 text-xs font-medium text-success">
+                      <BadgeCheck className="h-3.5 w-3.5" />
                       Listed
                     </span>
                   )}
                 </div>
-                <h1 className="mt-4 text-balance text-4xl font-normal leading-tight text-foreground sm:text-5xl">
-                  {project.title}
-                </h1>
-                <p className="mt-4 max-w-[720px] text-lg leading-8 text-muted-foreground">
-                  {project.tagline || project.description}
-                </p>
-                <div className="mt-6 flex flex-wrap gap-2.5">
-                  {appUrl && (
-                    <a
-                      href={appUrl}
-                      target="_blank"
-                      rel="nofollow sponsored noopener noreferrer"
-                      className="inline-flex h-11 items-center gap-2 rounded-full bg-foreground px-5 text-sm font-medium text-background transition-colors hover:bg-foreground/85"
-                    >
-                      Visit website
-                      <ExternalLink className="h-3.5 w-3.5" />
-                    </a>
+                {project.tagline && (
+                  <p className="mt-2 max-w-[640px] text-base leading-7 text-muted-foreground md:text-lg">
+                    {project.tagline}
+                  </p>
+                )}
+                <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-muted-foreground">
+                  {listedDate && (
+                    <span className="inline-flex items-center gap-1.5">
+                      <CalendarDays className="h-4 w-4" />
+                      {listedDate}
+                    </span>
                   )}
-                  <Link
-                    href={feedbackHref}
-                    className="inline-flex h-11 items-center gap-2 rounded-full border border-border px-4 text-sm text-foreground transition-colors hover:border-[var(--cad-line-hover)]"
-                  >
-                    <MessageCircle className="h-4 w-4" />
-                    Give feedback
-                  </Link>
-                  {project.github_url && (
-                    <a
-                      href={project.github_url}
-                      target="_blank"
-                      rel="nofollow noopener noreferrer"
-                      className="inline-flex h-11 items-center gap-2 rounded-full border border-border px-4 text-sm text-foreground transition-colors hover:border-[var(--cad-line-hover)]"
-                    >
-                      <Github className="h-4 w-4" />
-                      Source
-                    </a>
+                  {project.category && (
+                    <span className="inline-flex items-center gap-1.5">
+                      <Tag className="h-4 w-4" />
+                      {project.category}
+                    </span>
                   )}
-                  <FavoriteButton targetType="showcase" targetId={project.id} />
                 </div>
               </div>
+              <div className="hidden sm:block">
+                <UpvoteBox slug={project.id} title={project.title} initialCount={upvotes} />
+              </div>
             </div>
+
+            <div className="mt-6 flex flex-wrap items-center gap-2.5 md:pl-30">
+              <div className="sm:hidden">
+                <UpvoteBox slug={project.id} title={project.title} initialCount={upvotes} compact />
+              </div>
+              {appUrl && (
+                <a
+                  href={appUrl}
+                  target="_blank"
+                  rel="nofollow sponsored noopener noreferrer"
+                  className="inline-flex h-10 items-center gap-2 rounded-full bg-foreground px-5 text-sm font-medium text-background transition-colors hover:bg-foreground/85"
+                >
+                  Visit website
+                  <ExternalLink className="h-3.5 w-3.5" />
+                </a>
+              )}
+              {project.github_url && (
+                <a href={project.github_url} target="_blank" rel="nofollow noopener noreferrer" className={secondaryButton}>
+                  <Github className="h-4 w-4" />
+                  Source
+                </a>
+              )}
+              <FavoriteButton targetType="showcase" targetId={project.id} />
+            </div>
+          </header>
+
+          {/* Activity strip */}
+          <div className="grid border-b border-border sm:grid-cols-2">
+            <div className="flex items-center gap-3 border-b border-border px-5 py-5 sm:border-b-0 sm:border-r md:px-8">
+              <span className="text-2xl font-semibold tabular-nums text-foreground">{upvotes}</span>
+              <span className="text-sm text-muted-foreground">
+                {upvotes === 0 ? "No upvotes yet. Be the first." : upvotes === 1 ? "upvote" : "upvotes"}
+              </span>
+            </div>
+            <a href="#discussion" className="group flex min-w-0 items-center gap-3 px-5 py-5 transition-colors hover:bg-card/60 md:px-8">
+              <MakerAvatar name={project.author_name} size="sm" />
+              <div className="min-w-0">
+                <p className="text-sm text-foreground">
+                  {builderName}
+                  <span className="text-muted-foreground"> · Maker</span>
+                </p>
+                <p className="truncate text-sm text-muted-foreground group-hover:text-foreground">
+                  {project.feedback_prompt || "Share feedback with the maker"}
+                </p>
+              </div>
+            </a>
           </div>
 
-          <aside className="rounded-2xl border border-border bg-card/45 p-4">
-            <div className="flex items-center justify-between gap-4">
-              <div>
-                <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-muted-foreground">Launch score</p>
-                <p className="mt-2 text-3xl font-semibold text-foreground">{project.upvotes ?? 0}</p>
-              </div>
-              <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-border bg-background">
-                <ArrowUp className="h-5 w-5 text-foreground" />
-              </div>
-            </div>
-            <div className="mt-4 border-t border-border pt-4">
-              <p className="text-sm text-muted-foreground">
-                {listedDate ? `Launched on ${listedDate}` : "Recently launched"} by {builderName}.
-              </p>
-            </div>
-          </aside>
-        </section>
-
-        <div className="mt-9">
-          {galleryImages.length > 0 && (
-            <GalleryCarousel images={galleryImages} title={project.title} />
-          )}
-        </div>
-
-        <div className="mt-12 grid gap-10 lg:grid-cols-[minmax(0,1fr)_300px] lg:items-start">
-          <div className="space-y-10">
-            <OverviewSection project={project} />
-
-            <section className="space-y-4">
-              <SectionTitle>What is {project.title}?</SectionTitle>
-              <div className="rounded-2xl border border-border bg-card/35 p-6">
-                <div className="space-y-4">
-                  {(descriptionBlocks.length ? descriptionBlocks : [project.description]).slice(0, 4).map((block) => (
-                    <p key={block} className="text-base leading-8 text-muted-foreground">
-                      {block}
-                    </p>
-                  ))}
-                </div>
-              </div>
-            </section>
-
-            {features.length > 0 && (
-              <section className="space-y-4">
-                <SectionTitle>Features</SectionTitle>
-                <div className="rounded-2xl border border-border bg-card/30">
-                  {features.map((feature) => (
-                    <div key={feature} className="flex items-center gap-3 border-b border-border px-5 py-3.5 last:border-b-0">
-                      <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />
-                      <p className="text-sm leading-6 text-muted-foreground">{feature}</p>
-                    </div>
-                  ))}
-                </div>
-              </section>
-            )}
-
-            <section className="space-y-4">
-              <SectionTitle>Use cases</SectionTitle>
-              <div className="rounded-2xl border border-border bg-card/30">
-                {useCases.map((useCase) => (
-                  <div key={useCase} className="flex gap-3 border-b border-border px-5 py-3.5 text-sm leading-6 text-muted-foreground last:border-b-0">
-                    <CheckCircle2 className="mt-1 h-4 w-4 shrink-0 text-muted-foreground" />
-                    <span>{useCase}</span>
-                  </div>
+          {aboutBlocks.length > 0 && (
+            <LaunchSection title={`About ${project.title}`}>
+              <div className="space-y-5">
+                {aboutBlocks.map((block) => (
+                  <p key={block} className="whitespace-pre-line text-base leading-8 text-foreground/85">
+                    {block}
+                  </p>
                 ))}
               </div>
-            </section>
+            </LaunchSection>
+          )}
 
-            <CollectionsSection project={project} />
+          <GalleryCarousel images={galleryImages} title={project.title} />
 
-            <DemoVideoSection project={project} />
+          <DemoVideoSection project={project} />
 
-            {project.feedback_prompt && (
-              <section className="space-y-4">
-                <SectionTitle>Community feedback</SectionTitle>
-                <div className="rounded-2xl border border-primary/25 bg-primary/10 p-6">
-                  <div className="flex gap-3">
-                    <MessageCircle className="mt-1 h-5 w-5 shrink-0 text-primary" />
-                    <div>
-                      <p className="text-base leading-7 text-foreground">{project.feedback_prompt}</p>
-                      <Link href={feedbackHref} className="mt-4 inline-flex items-center gap-2 text-sm font-medium text-foreground underline underline-offset-4 hover:text-primary">
-                        Give feedback
-                        <ArrowRight className="h-4 w-4" />
-                      </Link>
-                    </div>
-                  </div>
+          <OverviewSection project={project} useCases={useCases} />
+
+          <LaunchSection title="Built by">
+            <div className="flex flex-wrap items-center justify-between gap-4">
+              <div className="flex items-center gap-4">
+                <MakerAvatar name={project.author_name} />
+                <div className="min-w-0">
+                  {authorHref ? (
+                    <Link href={authorHref} className="font-semibold text-foreground hover:text-primary">
+                      {builderName}
+                    </Link>
+                  ) : (
+                    <p className="font-semibold text-foreground">{builderName}</p>
+                  )}
+                  <p className="text-sm text-muted-foreground">
+                    Maker{project.author_username ? ` · @${project.author_username}` : ""}
+                  </p>
                 </div>
-              </section>
-            )}
+              </div>
+              {(socials.twitter || socials.github || socials.linkedin) && (
+                <div className="flex gap-2">
+                  {socials.twitter && (
+                    <a href={socials.twitter} target="_blank" rel="noopener noreferrer" aria-label="X" className={`${secondaryButton} w-10 justify-center px-0`}>
+                      <XIcon className="h-3.5 w-3.5" />
+                    </a>
+                  )}
+                  {socials.github && (
+                    <a href={socials.github} target="_blank" rel="noopener noreferrer" aria-label="GitHub" className={`${secondaryButton} w-10 justify-center px-0`}>
+                      <Github className="h-4 w-4" />
+                    </a>
+                  )}
+                  {socials.linkedin && (
+                    <a href={socials.linkedin} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" className={`${secondaryButton} w-10 justify-center px-0`}>
+                      <Linkedin className="h-4 w-4" />
+                    </a>
+                  )}
+                </div>
+              )}
+            </div>
+          </LaunchSection>
 
-            <SimilarProductsCarousel currentProject={project} projects={allProjects ?? []} />
+          <LaunchSection title="Details" padded={false}>
+            {project.category && (
+              <DetailRow label="Category">
+                <Chip>{project.category}</Chip>
+              </DetailRow>
+            )}
+            {appUrl && (
+              <DetailRow label="Website">
+                <a
+                  href={appUrl}
+                  target="_blank"
+                  rel="nofollow sponsored noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 text-sm text-foreground hover:text-primary"
+                >
+                  {publisherHost || "Open website"}
+                  <ExternalLink className="h-3.5 w-3.5" />
+                </a>
+              </DetailRow>
+            )}
+            {platforms.length > 0 && (
+              <DetailRow label="Platforms">
+                {platforms.map((item) => (
+                  <Chip key={item}>{item}</Chip>
+                ))}
+              </DetailRow>
+            )}
+            {techStack.length > 0 && (
+              <DetailRow label="Tech stack">
+                {techStack.map((item) => (
+                  <Chip key={item}>{item}</Chip>
+                ))}
+              </DetailRow>
+            )}
+            {collections.length > 0 && (
+              <DetailRow label="Collections">
+                {collections.map((item) => (
+                  <Chip key={item}>{item}</Chip>
+                ))}
+              </DetailRow>
+            )}
+            <DetailRow label="Launched">
+              <span className="text-sm text-muted-foreground">{listedDate || "Recently"}</span>
+            </DetailRow>
+          </LaunchSection>
+
+          {comparisons.length > 0 && (
+            <LaunchSection title="Compare">
+              <div className="flex flex-wrap gap-2">
+                {comparisons.map((item) => (
+                  <Chip key={item}>{item}</Chip>
+                ))}
+              </div>
+            </LaunchSection>
+          )}
+
+          <div className="flex items-center justify-center gap-3 border-b border-border px-5 py-6">
+            <span className="text-sm text-muted-foreground">Share this launch</span>
+            <a href={shareOnX} target="_blank" rel="noopener noreferrer" aria-label="Share on X" className="text-muted-foreground transition-colors hover:text-foreground">
+              <XIcon className="h-4 w-4" />
+            </a>
+            <a href={shareOnLinkedIn} target="_blank" rel="noopener noreferrer" aria-label="Share on LinkedIn" className="text-muted-foreground transition-colors hover:text-foreground">
+              <Linkedin className="h-4 w-4" />
+            </a>
           </div>
 
-          <aside className="space-y-4 lg:sticky lg:top-24">
-            <EnhancedCreatorCard project={project} />
+          <LaunchSection id="discussion" title="Discussion">
+            {project.feedback_prompt && (
+              <div className="flex gap-3">
+                <MakerAvatar name={project.author_name} size="sm" />
+                <div className="min-w-0">
+                  <p className="text-sm">
+                    <span className="font-semibold text-foreground">{builderName}</span>
+                    <span className="ml-2 rounded-full bg-primary/10 px-2 py-0.5 text-[11px] font-medium text-primary">Maker</span>
+                  </p>
+                  <p className="mt-1.5 text-sm leading-7 text-foreground/85">{project.feedback_prompt}</p>
+                </div>
+              </div>
+            )}
+            <Link
+              href={feedbackHref}
+              className={`${project.feedback_prompt ? "mt-6" : ""} flex items-center gap-3 rounded-xl border border-border bg-card px-4 py-3 text-sm text-muted-foreground transition-colors hover:border-[var(--cad-line-hover)] hover:text-foreground`}
+            >
+              <MessageCircle className="h-4 w-4 shrink-0" />
+              Share your feedback on {project.title} in the community
+            </Link>
+          </LaunchSection>
 
-            <TechStackCard project={project} />
-
-            <section className="rounded-2xl border border-border bg-card/40 p-5">
-              <SectionTitle>Details</SectionTitle>
-              <dl className="mt-4 space-y-4 text-sm">
-                <div>
-                  <dt className="text-muted-foreground">Website</dt>
-                  <dd className="mt-1 truncate text-foreground">
-                    {appUrl ? (
-                      <a href={appUrl} target="_blank" rel="nofollow sponsored noopener noreferrer" className="inline-flex max-w-full items-center gap-1.5 hover:text-primary">
-                        <Globe2 className="h-3.5 w-3.5 shrink-0" />
-                        <span className="truncate">{publisherHost || "Open website"}</span>
-                      </a>
-                    ) : (
-                      "Not recorded"
-                    )}
-                  </dd>
-                </div>
-                <div>
-                  <dt className="text-muted-foreground">Category</dt>
-                  <dd className="mt-1 text-foreground">{resourceType}</dd>
-                </div>
-                <div>
-                  <dt className="text-muted-foreground">Listed</dt>
-                  <dd className="mt-1 text-foreground">{listedDate || "Recently"}</dd>
-                </div>
-              </dl>
-            </section>
-          </aside>
-        </div>
+          <SimilarProductsCarousel currentProject={project} projects={allProjects ?? []} />
+        </article>
       </main>
       <Footer />
     </div>

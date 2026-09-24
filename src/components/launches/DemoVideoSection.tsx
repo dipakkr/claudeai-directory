@@ -1,5 +1,6 @@
 
 import type { ShowcaseProject } from "@/types";
+import { LaunchSection } from "./LaunchSection";
 
 interface DemoVideoSectionProps {
   project: ShowcaseProject;
@@ -30,10 +31,7 @@ export function DemoVideoSection({ project }: DemoVideoSectionProps) {
   }
 
   return (
-    <section className="space-y-4">
-      <h2 className="font-mono text-[11px] font-normal uppercase tracking-[0.18em] text-muted-foreground">
-        Demo
-      </h2>
+    <LaunchSection title="Demo">
       <div className="relative overflow-hidden rounded-2xl border border-border bg-background">
         <div className="aspect-video w-full bg-background/50">
           <iframe
@@ -45,6 +43,6 @@ export function DemoVideoSection({ project }: DemoVideoSectionProps) {
           />
         </div>
       </div>
-    </section>
+    </LaunchSection>
   );
 }
