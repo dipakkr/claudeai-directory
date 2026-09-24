@@ -18,7 +18,21 @@ interface AuthContextType {
   isNewUser: boolean;
   loginWithGoogle: (credential: string) => Promise<void>;
   logout: () => void;
-  updateProfile: (data: { username?: string; name?: string; avatar?: string; bio?: string; website?: string; twitter?: string; github?: string; email_notifications?: boolean }) => Promise<void>;
+  updateProfile: (data: ProfileUpdate) => Promise<void>;
+}
+
+export interface ProfileUpdate {
+  username?: string;
+  name?: string;
+  avatar?: string;
+  bio?: string;
+  website?: string;
+  twitter?: string;
+  github?: string;
+  linkedin?: string;
+  profession?: string;
+  country?: string;
+  email_notifications?: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -69,7 +83,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const updateProfile = useCallback(
-    async (data: { username?: string; name?: string; avatar?: string; bio?: string; website?: string; twitter?: string; github?: string }) => {
+    async (data: ProfileUpdate) => {
       const updated = await api.put<User>("/auth/me", data);
       setUser(updated);
       setIsNewUser(false);

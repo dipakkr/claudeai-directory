@@ -10,6 +10,11 @@ export interface User {
   website?: string;
   twitter?: string;
   github?: string;
+  linkedin?: string;
+  profession?: string;
+  country?: string;
+  /** Set by the API for new accounts that have not finished the first-run step. */
+  needs_onboarding?: boolean;
   role: string;
   plan: string;
   email_notifications?: boolean;

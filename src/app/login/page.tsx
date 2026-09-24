@@ -22,16 +22,18 @@ declare global {
 const GOOGLE_CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || "";
 
 const Login = () => {
-  const { loginWithGoogle, isAuthenticated, isNewUser } = useAuth();
+  const { loginWithGoogle, isAuthenticated } = useAuth();
   const router = useRouter();
   const googleBtnRef = useRef<HTMLDivElement>(null);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (isAuthenticated) {
-      router.push(isNewUser ? "/setup-profile" : "/");
+      // New accounts finish the short "Meet the community" step in a modal on
+      // whatever page they land on, so everyone goes home here.
+      router.push("/");
     }
-  }, [isAuthenticated, isNewUser, router]);
+  }, [isAuthenticated, router]);
 
   useEffect(() => {
     const script = document.createElement("script");
