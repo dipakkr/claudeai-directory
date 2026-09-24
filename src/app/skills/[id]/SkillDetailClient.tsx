@@ -54,7 +54,7 @@ function SkillBody({ skill, resolution }: { skill: Skill; resolution: InstallRes
     <ResourceDetail
       backHref="/skills"
       backLabel="Skills"
-      icon={<CategoryGlyph category={skill.category || ""} type="skill" name={skill.title || skill.name} tags={skill.tags} className="h-8 w-8" />}
+      icon={<CategoryGlyph category={skill.category || ""} type="skill" name={skill.title || skill.name} tags={skill.tags} className="h-6 w-6" />}
       name={name}
       verified={skill.verified || skill.source === "official"}
       tagline={guide?.summary || skill.description}
@@ -84,8 +84,8 @@ function SkillBody({ skill, resolution }: { skill: Skill; resolution: InstallRes
 
       {skill.content && !guide && (
         <DetailSection title="SKILL.md">
-          <div className="rounded-[11px] border border-border p-6 sm:p-8">
-            <article className="guide-prose">
+          <div className="rounded-[11px] border border-border p-5 sm:p-6">
+            <article className="guide-prose guide-prose-compact">
               <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeSlug]}>
                 {skill.content}
               </ReactMarkdown>

@@ -129,7 +129,7 @@ export default function MCPServerDetail({
         >
           <div>
             {!guide && server.description && server.description !== server.one_liner ? (
-              <div className="prose max-w-none text-[15.5px] leading-[1.7] text-foreground dark:prose-invert prose-p:text-foreground prose-a:text-[var(--cad-link)] prose-strong:text-foreground prose-li:text-foreground">
+              <div className="prose prose-sm max-w-none text-[14px] leading-[1.65] text-foreground dark:prose-invert prose-p:text-foreground prose-a:text-[var(--cad-link)] prose-strong:text-foreground prose-li:text-foreground">
                 <ReactMarkdown>
                   {server.description.replace(/\s*•\s*/g, "\n- ").replace(/\*\*Note:\*\*/g, "\n\n**Note:**")}
                 </ReactMarkdown>

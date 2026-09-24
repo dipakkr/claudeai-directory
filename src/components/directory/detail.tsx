@@ -163,7 +163,7 @@ export function ConfigCard({
             {badge}
           </span>
         )}
-        <span className="min-w-0 flex-1 truncate text-[15px] text-foreground">{title}</span>
+        <span className="min-w-0 flex-1 truncate text-[13.5px] text-foreground">{title}</span>
         {actions && <span className="flex shrink-0 items-center gap-2">{actions}</span>}
       </summary>
       <div className="px-4 pb-4">
@@ -177,7 +177,7 @@ export function ConfigCard({
 export function CodeBlock({ children, wrap = false }: { children: string; wrap?: boolean }) {
   return (
     <pre
-      className={`rounded-lg border border-border bg-[var(--cad-code)] p-4 font-mono text-[13px] leading-6 text-foreground/90 ${
+      className={`rounded-lg border border-border bg-[var(--cad-code)] p-3.5 font-mono text-[12.5px] leading-[1.7] text-foreground/90 ${
         wrap ? "whitespace-pre-wrap break-words" : "overflow-x-auto"
       }`}
     >

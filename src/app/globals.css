@@ -368,6 +368,13 @@
 }
 
 /* Guide markdown prose styling */
+/* Denser markdown for directory detail pages (SKILL.md, agent definitions). */
+.guide-prose.guide-prose-compact h1 { font-size: 20px; margin-top: 0; }
+.guide-prose.guide-prose-compact h2 { font-size: 17px; margin-top: 1.5rem; }
+.guide-prose.guide-prose-compact h3 { font-size: 15px; }
+.guide-prose.guide-prose-compact p,
+.guide-prose.guide-prose-compact li { font-size: 14px; line-height: 1.65; }
+
 .guide-prose {
   @apply prose max-w-none dark:prose-invert;
 

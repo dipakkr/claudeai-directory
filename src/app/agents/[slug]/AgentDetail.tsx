@@ -26,7 +26,7 @@ export default function AgentDetail({ agent, resolution }: { agent: Agent; resol
     <ResourceDetail
       backHref="/agents"
       backLabel="Agents"
-      icon={<CategoryGlyph category={agent.category || ""} type="agent" name={name} tags={agent.tags} className="h-8 w-8" />}
+      icon={<CategoryGlyph category={agent.category || ""} type="agent" name={name} tags={agent.tags} className="h-6 w-6" />}
       name={name}
       tagline={guide?.summary || agent.description}
       action={
@@ -50,8 +50,8 @@ export default function AgentDetail({ agent, resolution }: { agent: Agent; resol
 
       {agent.content && !guide && (
         <DetailSection title="Definition">
-          <div className="rounded-[11px] border border-border p-6 sm:p-8">
-            <article className="guide-prose">
+          <div className="rounded-[11px] border border-border p-5 sm:p-6">
+            <article className="guide-prose guide-prose-compact">
               <ReactMarkdown remarkPlugins={[remarkGfm]}>{agent.content}</ReactMarkdown>
             </article>
           </div>
