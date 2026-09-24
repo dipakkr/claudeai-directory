@@ -5,6 +5,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider } from "@/lib/auth";
 import OnboardingModal from "@/components/onboarding/OnboardingModal";
+import AdvertiseDialog from "@/components/advertise/AdvertiseDialog";
 import { CommandMenuProvider } from "@/components/layout/CommandMenu";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ThemeProvider } from "next-themes";
@@ -22,6 +23,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
                             {children}
                         </CommandMenuProvider>
                         <OnboardingModal />
+                        <AdvertiseDialog />
                         <Toaster />
                         <Sonner />
                     </TooltipProvider>

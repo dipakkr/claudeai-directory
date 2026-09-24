@@ -1,26 +1,54 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { Megaphone, Pause, Play } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import {
   sideAdCollections,
-  sideAdSponsorHref,
   type SideAdPlacement,
   type SideAdRail,
 } from "@/data/sideAdPlacements";
 import { cn } from "@/lib/utils";
+import { openAdvertiseDialog } from "@/lib/advertise";
 
 const ROTATION_MS = 10000;
+
+/** Sponsor cards link out; open slots open the sponsor dialog instead. */
+function CardShell({
+  href,
+  onOpen,
+  className,
+  style,
+  children,
+}: {
+  href: string;
+  onOpen?: () => void;
+  className: string;
+  style?: React.CSSProperties;
+  children: React.ReactNode;
+}) {
+  if (onOpen) {
+    return (
+      <button type="button" onClick={onOpen} className={className} style={style}>
+        {children}
+      </button>
+    );
+  }
+  return (
+    <Link href={href} className={className} style={style}>
+      {children}
+    </Link>
+  );
+}
 
 function SideMcpCard({ placement, index }: { placement: SideAdPlacement; index: number }) {
   const isAvailable = placement.slotType === "available";
   const badgeText = isAvailable ? "Open slot" : placement.label === "Reference" ? "Reference" : "Anchor";
 
   return (
-    <Link
+    <CardShell
       href={placement.href}
+      onOpen={isAvailable ? () => openAdvertiseDialog(placement.category) : undefined}
       className={cn(
         "side-ad-flip-card pointer-events-auto group flex min-h-0 flex-none flex-col items-center justify-center rounded-md border px-2.5 py-3 text-center shadow-sm transition duration-300 hover:-translate-y-0.5",
         placement.tone.panel,
@@ -71,7 +99,7 @@ function SideMcpCard({ placement, index }: { placement: SideAdPlacement; index: 
           {placement.eyebrow}
         </p>
       </div>
-    </Link>
+    </CardShell>
   );
 }
 
@@ -127,13 +155,14 @@ function SideStack({
               {paused ? <Play className="h-3.5 w-3.5" /> : <Pause className="h-3.5 w-3.5" />}
             </button>
           ) : null}
-          <a
-            href={sideAdSponsorHref}
+          <button
+            type="button"
+            onClick={() => openAdvertiseDialog()}
             className="pointer-events-auto mx-auto flex w-fit shrink-0 items-center gap-1.5 rounded-full border border-white/12 bg-white/8 px-2.5 py-1.5 text-[10px] font-medium text-white/64 shadow-sm backdrop-blur transition hover:border-white/20 hover:bg-white/12 hover:text-white"
           >
             <Megaphone className="h-3 w-3" aria-hidden="true" />
             Advertise
-          </a>
+          </button>
         </div>
       </div>
     </aside>
@@ -141,26 +170,19 @@ function SideStack({
 }
 
 export default function SideAdBillboards() {
-  const pathname = usePathname();
   const [activePage, setActivePage] = useState(0);
   const [paused, setPaused] = useState(false);
   const [railFocused, setRailFocused] = useState(false);
-  const shouldHide = pathname === "/advertise" || pathname.startsWith("/advertise/");
 
   useEffect(() => {
-    if (shouldHide) {
-      return;
-    }
-
     document.body.classList.add("side-ads-active");
-
     return () => {
       document.body.classList.remove("side-ads-active");
     };
-  }, [shouldHide]);
+  }, []);
 
   useEffect(() => {
-    if (sideAdCollections.length < 2 || shouldHide || paused || railFocused) {
+    if (sideAdCollections.length < 2 || paused || railFocused) {
       return;
     }
 
@@ -171,16 +193,12 @@ export default function SideAdBillboards() {
     }, ROTATION_MS);
 
     return () => window.clearInterval(interval);
-  }, [shouldHide, paused, railFocused]);
+  }, [paused, railFocused]);
 
   const activeCollection = useMemo(
     () => sideAdCollections[activePage % sideAdCollections.length] ?? sideAdCollections[0],
     [activePage],
   );
-
-  if (shouldHide) {
-    return null;
-  }
 
   return (
     <>

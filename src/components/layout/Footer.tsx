@@ -46,7 +46,7 @@ const footerLinks = [
       { label: "Submit a resource", href: "/submit" },
       { label: "Submit your app", href: "/launches/submit" },
       { label: "Partner with us", href: "/partners" },
-      { label: "Advertise", href: "/advertise" },
+      { label: "Advertise", href: "/?advertise=1" },
       { label: "Sign up", href: "/signup" },
       { label: "About", href: "/about" },
       { label: "Privacy", href: "/privacy" },

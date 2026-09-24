@@ -20,6 +20,7 @@ import { Button } from "@/components/ui/button";
 import { faviconFor } from "@/lib/directory";
 import { publicLaunches } from "@/lib/home-community";
 import { useAuth } from "@/lib/auth";
+import { openAdvertiseDialog } from "@/lib/advertise";
 import { useMyLaunchUpvotes, useShowcaseProjects, useUpvoteShowcase } from "@/hooks/use-showcase";
 import type { ShowcaseProject } from "@/types";
 
@@ -193,9 +194,10 @@ function LaunchRow({
 
 function SponsoredLaunchSlot() {
   return (
-    <Link
-      href="/advertise"
-      className="block border-b border-border bg-[linear-gradient(100deg,rgba(251,191,36,0.08),rgba(255,255,255,0.02),rgba(168,85,247,0.08))] transition-colors hover:bg-card/55"
+    <button
+      type="button"
+      onClick={() => openAdvertiseDialog()}
+      className="block w-full text-left border-b border-border bg-[linear-gradient(100deg,rgba(251,191,36,0.08),rgba(255,255,255,0.02),rgba(168,85,247,0.08))] transition-colors hover:bg-card/55"
     >
       <div className="grid gap-5 px-4 py-8 md:grid-cols-[72px_minmax(0,1fr)_104px] md:items-center md:px-6">
         <div className="hidden justify-center md:flex">
@@ -221,7 +223,7 @@ function SponsoredLaunchSlot() {
           </div>
         </div>
       </div>
-    </Link>
+    </button>
   );
 }
 

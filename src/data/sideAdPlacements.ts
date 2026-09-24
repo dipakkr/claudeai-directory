@@ -12,6 +12,8 @@ export type SideAdPlacement = {
   initial: string;
   label: "MCP Server" | "Reference" | "Available Slot";
   slotType?: "anchor" | "available";
+  /** Category rail title for open slots, so clicking one preselects it. */
+  category?: string;
   tone: {
     panel: string;
     icon: string;
@@ -609,6 +611,7 @@ function availableSlot(category: string, index: number): SideAdPlacement {
     initial: "+",
     label: "Available Slot",
     slotType: "available",
+    category,
     tone: availableSlotTone,
   };
 }

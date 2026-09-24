@@ -128,7 +128,7 @@ export default function PartnersPage() {
                   <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" />
                 </a>
                 <Link
-                  href="/advertise"
+                  href="/?advertise=1"
                   className="inline-flex h-11 items-center justify-center rounded-lg border border-border bg-background px-5 text-sm font-semibold text-foreground transition hover:bg-muted"
                 >
                   View sponsor packages
