@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { toast } from "sonner";
 
@@ -12,6 +13,7 @@ import {
   SPONSOR_EMAIL,
   SPONSOR_MONTHLY_PRICE,
 } from "@/lib/advertise";
+import { api, ApiError } from "@/lib/api";
 import { useAuth } from "@/lib/auth";
 
 const TAGLINE_MAX = 60;
@@ -152,6 +154,17 @@ export default function AdvertiseDialog() {
   const [tagline, setTagline] = useState("");
   // null = untouched: show the account email. Once edited, the field is fully the user's (it can be cleared).
   const [email, setEmail] = useState<string | null>(null);
+  const [paying, setPaying] = useState(false);
+  // Server checkout (Stripe secret key on the backend) wins when it is set up.
+  const { data: checkout } = useQuery({
+    queryKey: ["sponsors", "config"],
+    queryFn: () => api.get<{ enabled: boolean; amount: number }>("/sponsors/config"),
+    enabled: open,
+    staleTime: 5 * 60_000,
+    retry: false,
+  });
+  const serverCheckout = !!checkout?.enabled;
+  const canPay = serverCheckout || !!SPONSOR_CHECKOUT_URL;
 
   // Open from sidebar buttons (custom event) or from old /advertise links (?advertise=1).
   useEffect(() => {
@@ -164,6 +177,20 @@ export default function AdvertiseDialog() {
     window.addEventListener(OPEN_ADVERTISE_EVENT, onOpen);
 
     const params = new URLSearchParams(window.location.search);
+    const sponsor = params.get("sponsor");
+    // Small delay so the toaster has mounted before we post the message.
+    const notice =
+      sponsor === "success"
+        ? window.setTimeout(() => toast.success("Thanks, your checkout is complete. We'll email you to confirm your slot and start date."), 600)
+        : sponsor === "cancelled"
+          ? window.setTimeout(() => toast("Checkout cancelled. Your slot is still available."), 600)
+          : undefined;
+    if (sponsor) {
+      params.delete("sponsor");
+      params.delete("session_id");
+      const rest = params.toString();
+      window.history.replaceState(null, "", `${window.location.pathname}${rest ? `?${rest}` : ""}${window.location.hash}`);
+    }
     let timer: number | undefined;
     if (params.get("advertise") === "1") {
       timer = window.setTimeout(() => setOpen(true), 0);
@@ -174,6 +201,7 @@ export default function AdvertiseDialog() {
     return () => {
       window.removeEventListener(OPEN_ADVERTISE_EVENT, onOpen);
       if (timer) window.clearTimeout(timer);
+      if (notice) window.clearTimeout(notice);
     };
   }, []);
 
@@ -190,6 +218,26 @@ export default function AdvertiseDialog() {
       return;
     }
     const site = normalizeUrl(website);
+
+    if (serverCheckout) {
+      setPaying(true);
+      api
+        .post<{ url: string }>("/sponsors/checkout", {
+          category,
+          product: product.trim(),
+          website: site,
+          tagline: tagline.trim(),
+          email: emailValue.trim(),
+        })
+        // Same-tab redirect: a window.open after an await is often blocked.
+        .then(({ url }) => window.location.assign(url))
+        .catch((error) => {
+          setPaying(false);
+          const detail = error instanceof ApiError ? (error.data as { detail?: unknown })?.detail : undefined;
+          toast.error(typeof detail === "string" ? detail : "Could not start checkout. Check your details and try again.");
+        });
+      return;
+    }
 
     if (SPONSOR_CHECKOUT_URL) {
       window.open(checkoutUrl({ email: emailValue.trim(), category, product: product.trim(), website: site, tagline: tagline.trim() }), "_blank", "noopener");
@@ -333,13 +381,13 @@ export default function AdvertiseDialog() {
                     <ArrowLeft className="h-3.5 w-3.5" aria-hidden="true" />
                     Back
                   </button>
-                  <button type="submit" disabled={!ready} className={primaryButton}>
-                    {SPONSOR_CHECKOUT_URL ? `Pay $${SPONSOR_MONTHLY_PRICE}` : "Request this slot"}
+                  <button type="submit" disabled={!ready || paying} className={primaryButton}>
+                    {paying ? "Opening checkout..." : canPay ? `Pay $${SPONSOR_MONTHLY_PRICE}` : "Request this slot"}
                     <ArrowRight className="h-4 w-4" aria-hidden="true" />
                   </button>
                 </div>
                 <p className="mt-3 text-right text-[11px] text-muted-foreground">
-                  {SPONSOR_CHECKOUT_URL ? "Secure checkout. Billed monthly." : "We confirm your slot and start date by email."}
+                  {canPay ? "Secure checkout. Billed monthly." : "We confirm your slot and start date by email."}
                 </p>
               </form>
             )}
