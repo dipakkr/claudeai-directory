@@ -50,7 +50,7 @@ function SideMcpCard({ placement, index }: { placement: SideAdPlacement; index: 
       href={placement.href}
       onOpen={isAvailable ? () => openAdvertiseDialog(placement.category) : undefined}
       className={cn(
-        "side-ad-flip-card pointer-events-auto group flex min-h-0 flex-none flex-col items-center justify-center rounded-md border px-2.5 py-3 text-center shadow-sm transition duration-300 hover:-translate-y-0.5",
+        "side-ad-flip-card pointer-events-auto group flex min-h-[104px] max-h-[240px] flex-1 basis-0 flex-col items-center justify-center rounded-md border px-2.5 py-3 text-center shadow-sm transition duration-300 hover:-translate-y-0.5",
         placement.tone.panel,
       )}
       style={{ animationDelay: `${index * 70}ms` }}
@@ -142,7 +142,7 @@ function SideStack({
         {rail.placements.map((placement, index) => (
           <SideMcpCard key={`${rail.title}-${placement.id}`} placement={placement} index={index} />
         ))}
-        <div className="pointer-events-auto flex shrink-0 items-center justify-center gap-2">
+        <div className="pointer-events-auto mt-auto flex shrink-0 items-center justify-center gap-2 pb-1">
           {side === "right" ? (
             <button
               type="button"
