@@ -26,7 +26,7 @@ export default function AgentDetail({ agent, resolution }: { agent: Agent; resol
     <ResourceDetail
       backHref="/agents"
       backLabel="Agents"
-      icon={<CategoryGlyph category={agent.category || ""} type="agent" className="h-8 w-8" />}
+      icon={<CategoryGlyph category={agent.category || ""} type="agent" name={name} tags={agent.tags} className="h-8 w-8" />}
       name={name}
       tagline={guide?.summary || agent.description}
       action={

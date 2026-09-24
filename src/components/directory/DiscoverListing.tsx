@@ -5,6 +5,34 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import {
   ArrowDownUp,
+  Atom,
+  BellOff,
+  Blocks,
+  BookOpen,
+  BookText,
+  Compass,
+  FilePen,
+  FileText,
+  Image as ImageIcon,
+  MessageSquareText,
+  PanelsTopLeft,
+  Presentation,
+  RefreshCcw,
+  Scale,
+  ScanEye,
+  ScanSearch,
+  Scissors,
+  Shapes,
+  Sheet,
+  ShieldAlert,
+  ShieldCheck,
+  Ship,
+  Smile,
+  Stamp,
+  SwatchBook,
+  Type as TypeIcon,
+  Wand2,
+  Wrench,
   ArrowLeft,
   BadgeCheck,
   Bot,
@@ -100,9 +128,75 @@ export const categoryLabel = (value: string) =>
     .map((w, i) => LABEL_WORDS[w.toLowerCase()] ?? (i === 0 ? w.charAt(0).toUpperCase() + w.slice(1) : w))
     .join(" ");
 
-/** The icon a resource gets when it has no logo: by category, else by type. */
-export function CategoryGlyph({ category, type, className }: { category: string; type: DirectoryType; className?: string }) {
-  const Glyph = CATEGORY_ICON[category.toLowerCase()] ?? TYPE_ICON[type];
+// Specific icons for resources without a logo, matched on words in the name
+// (then tags). First match wins; otherwise the category icon, then the type icon.
+const KEYWORD_ICONS: [RegExp, Icon][] = [
+  [/\bpdf\b/, FileText],
+  [/\b(word|docx)\b/, FilePen],
+  [/\b(excel|spreadsheet|xlsx)\b/, Sheet],
+  [/\b(powerpoint|presentation|pptx|slides?)\b/, Presentation],
+  [/discernment|judg/, Scale],
+  [/academy|course|learn|tutor/, GraduationCap],
+  [/api reference|\bapi\b/, BookOpen],
+  [/react|artifact/, Atom],
+  [/\bgif\b|emoji|slack/, Smile],
+  [/communication|announce/, Megaphone],
+  [/documentation|co-author|\bdocs?\b/, BookText],
+  [/skill creator|build custom/, Wand2],
+  [/\bmcp\b/, Plug],
+  [/playwright|web app test/, FlaskConical],
+  [/algorithmic|generative/, Shapes],
+  [/theme/, SwatchBook],
+  [/brand|identity/, Stamp],
+  [/poster|visual art|\bart\b/, ImageIcon],
+  [/frontend|\bui\b|interface/, PanelsTopLeft],
+  [/threat/, ShieldAlert],
+  [/security|audit/, ShieldCheck],
+  [/\btdd\b/, RefreshCcw],
+  [/\btest/, TestTube2],
+  [/debug|\bbug/, Bug],
+  [/error|detective/, ScanSearch],
+  [/silent|failure/, BellOff],
+  [/deploy|release/, Rocket],
+  [/troubleshoot|devops/, Wrench],
+  [/kubernetes|\bk8s\b|container/, Ship],
+  [/search/, Search],
+  [/\btype\b|typing/, TypeIcon],
+  [/architect/, Blocks],
+  [/pull request|\bpr\b/, GitPullRequest],
+  [/comment/, MessageSquareText],
+  [/simplif/, Scissors],
+  [/review/, ScanEye],
+  [/explor/, Compass],
+];
+
+/** Index into KEYWORD_ICONS for a name/tags, or -1. Pure, so render code can look the icon up. */
+function keywordIndex(name: string, tags: string[] = []) {
+  const n = name.toLowerCase();
+  let i = KEYWORD_ICONS.findIndex(([re]) => re.test(n));
+  if (i < 0) {
+    const t = tags.join(" ").toLowerCase();
+    i = KEYWORD_ICONS.findIndex(([re]) => re.test(t));
+  }
+  return i;
+}
+
+/** The icon a resource gets when it has no logo: by name, else category, else type. */
+export function CategoryGlyph({
+  category,
+  type,
+  name = "",
+  tags,
+  className,
+}: {
+  category: string;
+  type: DirectoryType;
+  name?: string;
+  tags?: string[];
+  className?: string;
+}) {
+  const i = keywordIndex(name, tags);
+  const Glyph = i >= 0 ? KEYWORD_ICONS[i][1] : CATEGORY_ICON[category.toLowerCase()] ?? TYPE_ICON[type];
   return <Glyph className={className} strokeWidth={1.6} aria-hidden="true" />;
 }
 
@@ -115,7 +209,8 @@ const TYPE_NOUN: Record<DirectoryType, string> = { skill: "Skill", mcp: "MCP ser
 
 export function Tile({ item, size = 48 }: { item: DirectoryItem; size?: number }) {
   const [failed, setFailed] = useState(false);
-  const Glyph = CATEGORY_ICON[item.category.toLowerCase()] ?? TYPE_ICON[item.type];
+  const i = keywordIndex(item.name, item.tags);
+  const Glyph = i >= 0 ? KEYWORD_ICONS[i][1] : CATEGORY_ICON[item.category.toLowerCase()] ?? TYPE_ICON[item.type];
   return (
     <span
       className="flex shrink-0 items-center justify-center rounded-lg border border-border bg-[var(--cad-tile)] text-foreground/80"
@@ -125,7 +220,7 @@ export function Tile({ item, size = 48 }: { item: DirectoryItem; size?: number }
         // eslint-disable-next-line @next/next/no-img-element
         <img src={item.iconUrl} alt="" className="rounded object-contain" style={{ width: size * 0.56, height: size * 0.56 }} onError={() => setFailed(true)} />
       ) : (
-        <Glyph className="h-5 w-5" strokeWidth={1.5} aria-hidden="true" />
+        <Glyph style={{ width: Math.round(size * 0.42), height: Math.round(size * 0.42) }} strokeWidth={1.5} aria-hidden="true" />
       )}
     </span>
   );
@@ -213,12 +308,11 @@ function CollectionCarousel({ collections, noun, onExplore }: { collections: Col
               href={item.href}
               title={item.name}
               className={cn(
-                "flex items-center justify-center rounded-2xl bg-background/70 shadow-lg ring-1 ring-white/10 transition-transform hover:-translate-y-0.5",
-                i % 3 === 1 ? "h-[72px] w-[72px]" : "h-14 w-14",
+                "rounded-xl shadow-lg shadow-black/30 transition-transform hover:-translate-y-0.5",
                 i % 2 === 1 && "translate-y-3",
               )}
             >
-              <Tile item={item} size={i % 3 === 1 ? 56 : 44} />
+              <Tile item={item} size={i % 3 === 1 ? 72 : 56} />
             </Link>
           ))}
         </div>

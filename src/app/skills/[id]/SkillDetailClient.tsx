@@ -54,7 +54,7 @@ function SkillBody({ skill, resolution }: { skill: Skill; resolution: InstallRes
     <ResourceDetail
       backHref="/skills"
       backLabel="Skills"
-      icon={<CategoryGlyph category={skill.category || ""} type="skill" className="h-8 w-8" />}
+      icon={<CategoryGlyph category={skill.category || ""} type="skill" name={skill.title || skill.name} tags={skill.tags} className="h-8 w-8" />}
       name={name}
       verified={skill.verified || skill.source === "official"}
       tagline={guide?.summary || skill.description}
