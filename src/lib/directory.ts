@@ -15,6 +15,8 @@ export interface DirectoryItem {
   tags: string[];
   /** Who made it, from real data only (never guessed). */
   author?: string;
+  /** Official / verified per the source data; shows a check mark. */
+  verified?: boolean;
   /** Right-hand column. `value` is compact and mono-set; `label` explains it. */
   metric: { value: string; label: string; icon?: "download" | "tools" | "upvote" | "star" } | null;
   /** Popularity within its own type; higher is better. Only compared within a type. */
@@ -70,6 +72,7 @@ export function mcpToItem(s: MCPServer): DirectoryItem {
   const author = typeof rawAuthor === "string" ? rawAuthor : s.author?.name;
   return {
     author: author || undefined,
+    verified: Boolean(s.official),
     key: itemKey("mcp", s.slug || s.id),
     type: "mcp",
     name: s.name,
@@ -95,6 +98,7 @@ export function skillToItem(s: Skill): DirectoryItem {
   return {
     key: itemKey("skill", s.id),
     author: githubAuthor(s.github_url),
+    verified: Boolean(s.verified || s.source === "official"),
     type: "skill",
     name: s.title || s.name,
     description: s.description || "",

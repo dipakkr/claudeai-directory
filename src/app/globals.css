@@ -215,19 +215,21 @@
     --cad-code-rule: #e6e3d9;
     --cad-nav-bg: rgba(250, 249, 245, 0.85);
     --cad-shadow: rgba(60, 50, 30, 0.08);
-    --cad-tile: #f0eee6;
+    --cad-tile: #ffffff;
+    --cad-band: #efede6;
+    --cad-desc: #3d3b36;
+    --cad-link: #2f5fb8;
     --cad-control: #ebe9e1;
     --cad-control-active: #e0ddd2;
   }
 
   .dark {
-    /* Neutral near-black, matching Claude's own Skills/Connectors screens.
-       Coral stays as the brand accent only; primary actions are white. */
-    --background: 0 0% 8.2%; /* #151515 */
-    --foreground: 0 0% 93%; /* #EDEDED */
+    /* Near-black like claude.ai/directory. Coral stays the brand accent. */
+    --background: 0 0% 4.3%; /* #0B0B0B */
+    --foreground: 45 10% 93%; /* #F0EFEC */
 
-    --card: 0 0% 8.2%; /* cards sit on the page, defined by their border */
-    --card-foreground: 0 0% 93%;
+    --card: 0 0% 4.3%; /* cards sit on the page, defined by their border */
+    --card-foreground: 45 10% 93%;
 
     --popover: 0 0% 11.8%; /* #1E1E1E */
     --popover-foreground: 0 0% 93%;
@@ -239,7 +241,7 @@
     --secondary-foreground: 0 0% 93%;
 
     --muted: 0 0% 12.9%;
-    --muted-foreground: 0 0% 62%; /* #9E9E9E */
+    --muted-foreground: 53 6% 64%; /* warm grey, like Claude's secondary text */
 
     --accent: 0 0% 17.3%; /* #2C2C2C */
     --accent-foreground: 0 0% 93%;
@@ -249,8 +251,8 @@
 
     --success: 101 31% 55%;
 
-    --border: 0 0% 14%; /* #242424 */
-    --input: 0 0% 18%; /* #2E2E2E */
+    --border: 0 0% 15%; /* ~10% white on the page */
+    --input: 0 0% 18%;
     --ring: 0 0% 45%;
 
     --sidebar-background: 0 0% 6.5%;
@@ -262,9 +264,9 @@
     --sidebar-border: 0 0% 14%;
     --sidebar-ring: 0 0% 45%;
 
-    --cad-surface: #1a1a1a;
-    --cad-raised: #212121;
-    --cad-ink: #ededed;
+    --cad-surface: #151515;
+    --cad-raised: #1c1c1c;
+    --cad-ink: #f0efec;
     --cad-muted: #a3a3a3;
     --cad-faint: #737373;
     --cad-line: #262626;
@@ -275,12 +277,15 @@
     --cad-chip: #212121;
     --cad-code: #0f0f0f;
     --cad-code-rule: #2c2c2c;
-    --cad-nav-bg: rgba(21, 21, 21, 0.85);
+    --cad-nav-bg: rgba(11, 11, 11, 0.85);
     --cad-shadow: rgba(0, 0, 0, 0.5);
     /* Claude-style tiles and small controls. */
-    --cad-tile: #0b0b0b;
-    --cad-control: #2c2c2c;
-    --cad-control-active: #373737;
+    --cad-tile: #151515;
+    --cad-control: #262626;
+    --cad-control-active: #333333;
+    --cad-band: #151515; /* detail page header band */
+    --cad-desc: #c3c2b7; /* card descriptions */
+    --cad-link: #8fb8f6;
   }
 
   * {

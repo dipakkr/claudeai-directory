@@ -6,7 +6,7 @@ import rehypeSlug from "rehype-slug";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import ResourceReplies from "@/components/shared/ResourceReplies";
-import { Block, Chips, OverviewGrid, ResourceDetail, SideFacts, type DetailTab } from "@/components/directory/ResourceDetail";
+import { DetailSection, ResourceDetail, scrollToInstall } from "@/components/directory/ResourceDetail";
 import { compactNumber } from "@/lib/directory";
 import { CategoryGlyph } from "@/components/directory/DiscoverListing";
 import { InstallActions, InstallPanel } from "@/components/directory/InstallPanel";
@@ -48,88 +48,62 @@ function SkillBody({ skill, resolution }: { skill: Skill; resolution: InstallRes
   const name = guide?.name || skill.title || skill.name;
   const author = skill.github_url?.match(/github\.com\/([^/?#]+)/i)?.[1];
   const byline = author ? (author.toLowerCase() === "anthropics" ? "Anthropic" : author) : null;
-  const chips = [skill.category, ...skill.tags]
-    .filter((c): c is string => Boolean(c))
-    .map((c) => c.replace(/[-_]+/g, " ").trim())
-    .map((c) => c.charAt(0).toUpperCase() + c.slice(1))
-    .filter((c, i, all) => all.findIndex((x) => x.toLowerCase() === c.toLowerCase()) === i)
-    .slice(0, 8);
-
-  const overview = (
-    <OverviewGrid
-      aside={
-        <SideFacts
-          facts={[
-            { label: "Author", value: byline },
-            { label: "Source", value: skill.source === "official" ? "Official" : skill.source },
-            { label: "Downloads", value: skill.downloads > 0 ? compactNumber(skill.downloads) : null },
-          ]}
-          links={[{ label: "Repository", href: resolution.sourceUrl || skill.github_url }]}
-        />
-      }
-    >
-      <Block label="Description">
-        <p className="text-[15.5px] leading-relaxed text-foreground">{guide?.summary || skill.description}</p>
-      </Block>
-      {guide ? <ResourceGuide guide={guide} /> : null}
-      {chips.length > 0 && (
-        <Block label="Categories">
-          <Chips items={chips} />
-        </Block>
-      )}
-      {skill.triggers.length > 0 && (
-        <Block label="Activates on">
-          <Chips items={skill.triggers.slice(0, 10)} />
-        </Block>
-      )}
-    </OverviewGrid>
-  );
-
-  const tabs: DetailTab[] = [
-    { id: "overview", label: "Overview", content: overview },
-    {
-      id: "install",
-      label: "Install",
-      content: (
-        <div className="max-w-[720px]">
-          <InstallPanel resolution={resolution} kind="skill" resourceId={skill.id} bare />
-        </div>
-      ),
-    },
-  ];
-  if (skill.content && !guide) {
-    tabs.push({
-      id: "contents",
-      label: "SKILL.md",
-      content: (
-        <article className="guide-prose max-w-[760px]">
-          <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeSlug]}>
-            {skill.content}
-          </ReactMarkdown>
-        </article>
-      ),
-    });
-  }
-  tabs.push({ id: "discussion", label: "Discussion", content: <ResourceReplies resourceType="skill" resourceId={skill.id} /> });
+  const chips = tidy([skill.category, ...skill.tags]).slice(0, 6);
 
   return (
     <ResourceDetail
       backHref="/skills"
       backLabel="Skills"
-      icon={<CategoryGlyph category={skill.category || ""} type="skill" className="h-6 w-6" />}
+      icon={<CategoryGlyph category={skill.category || ""} type="skill" className="h-8 w-8" />}
       name={name}
-      meta={[byline && `by ${byline}`, skill.downloads > 0 && `${compactNumber(skill.downloads)} downloads`]}
-      action={(openTab) => (
+      verified={skill.verified || skill.source === "official"}
+      tagline={guide?.summary || skill.description}
+      action={
         <InstallActions
           resolution={resolution}
           kind="skill"
           resourceId={skill.id}
           name={skill.title || skill.name}
           href={`/skills/${skill.id}`}
-          onInstall={() => openTab("install")}
+          onInstall={scrollToInstall}
         />
+      }
+      facts={[
+        { label: "Made by", value: byline, href: author ? `https://github.com/${author}` : undefined },
+        { label: "Categories", chips },
+        { label: "Downloads", value: skill.downloads > 0 ? compactNumber(skill.downloads) : null },
+        { label: "Activates on", chips: skill.triggers.slice(0, 8) },
+      ]}
+      links={[{ label: "Repository", href: resolution.sourceUrl || skill.github_url }]}
+    >
+      {guide && <ResourceGuide guide={guide} />}
+
+      <DetailSection id="install" title="Install">
+        <InstallPanel resolution={resolution} kind="skill" resourceId={skill.id} bare />
+      </DetailSection>
+
+      {skill.content && !guide && (
+        <DetailSection title="SKILL.md">
+          <div className="rounded-[11px] border border-border p-6 sm:p-8">
+            <article className="guide-prose">
+              <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeSlug]}>
+                {skill.content}
+              </ReactMarkdown>
+            </article>
+          </div>
+        </DetailSection>
       )}
-      tabs={tabs}
-    />
+
+      <DetailSection title="Discussion">
+        <ResourceReplies resourceType="skill" resourceId={skill.id} />
+      </DetailSection>
+    </ResourceDetail>
   );
 }
+
+const tidy = (values: (string | undefined | null)[]) =>
+  values
+    .filter((c): c is string => Boolean(c))
+    .map((c) => c.replace(/[-_]+/g, " ").trim())
+    .map((c) => c.charAt(0).toUpperCase() + c.slice(1))
+    .filter((c, i, all) => all.findIndex((x) => x.toLowerCase() === c.toLowerCase()) === i);

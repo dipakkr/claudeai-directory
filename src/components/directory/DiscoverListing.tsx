@@ -6,12 +6,13 @@ import { useSearchParams } from "next/navigation";
 import {
   ArrowDownUp,
   ArrowLeft,
-  ArrowRight,
+  BadgeCheck,
   Bot,
   Briefcase,
   Bug,
   Check,
-  ChevronDown,
+  ChevronLeft,
+  ChevronRight,
   Clapperboard,
   Code2,
   Container,
@@ -110,17 +111,21 @@ const PAGE = 30;
 
 // --- Small pieces --------------------------------------------------------------
 
-function Tile({ item, size = "md" }: { item: DirectoryItem; size?: "sm" | "md" }) {
+const TYPE_NOUN: Record<DirectoryType, string> = { skill: "Skill", mcp: "MCP server", agent: "Agent", prompt: "Prompt" };
+
+export function Tile({ item, size = 48 }: { item: DirectoryItem; size?: number }) {
   const [failed, setFailed] = useState(false);
   const Glyph = CATEGORY_ICON[item.category.toLowerCase()] ?? TYPE_ICON[item.type];
-  const box = size === "md" ? "h-12 w-12 rounded-lg" : "h-10 w-10 rounded-lg";
   return (
-    <span className={cn("flex shrink-0 items-center justify-center bg-[var(--cad-tile)] text-foreground/85", box)}>
+    <span
+      className="flex shrink-0 items-center justify-center rounded-lg border border-border bg-[var(--cad-tile)] text-foreground/80"
+      style={{ width: size, height: size }}
+    >
       {item.iconUrl && !failed ? (
         // eslint-disable-next-line @next/next/no-img-element
-        <img src={item.iconUrl} alt="" className="h-6 w-6 rounded object-contain" onError={() => setFailed(true)} />
+        <img src={item.iconUrl} alt="" className="rounded object-contain" style={{ width: size * 0.56, height: size * 0.56 }} onError={() => setFailed(true)} />
       ) : (
-        <Glyph className="h-5 w-5" strokeWidth={1.6} aria-hidden="true" />
+        <Glyph className="h-5 w-5" strokeWidth={1.5} aria-hidden="true" />
       )}
     </span>
   );
@@ -128,79 +133,44 @@ function Tile({ item, size = "md" }: { item: DirectoryItem; size?: "sm" | "md" }
 
 function metricText(item: DirectoryItem) {
   if (!item.metric) return null;
-  return item.metric.label === "reference server" ? "Official" : `${item.metric.value} ${item.metric.label}`;
+  return item.metric.label === "reference server" ? null : `${item.metric.value} ${item.metric.label}`;
 }
 
-function Byline({ item, withMetric = true }: { item: DirectoryItem; withMetric?: boolean }) {
-  const metric = withMetric ? metricText(item) : null;
-  const parts = [item.author ? `by ${item.author}` : null, metric].filter(Boolean);
-  if (parts.length === 0) return null;
-  return <span className="truncate text-[13px] text-muted-foreground">{parts.join("  ·  ")}</span>;
-}
-
-/** Two-column card: whole card opens the page; "+" jumps to its install section. */
-function ResourceCard({ item }: { item: DirectoryItem }) {
+/** Card like claude.ai/directory: logo tile, name + check, two lines, "Type · by X". */
+export function ResourceCard({ item }: { item: DirectoryItem }) {
+  const meta = [TYPE_NOUN[item.type], item.author ? `by ${item.author}` : null, metricText(item)].filter(Boolean);
   return (
-    <article className="group relative flex gap-4 rounded-xl border border-border p-4 transition-colors hover:border-[var(--cad-line-hover)] hover:bg-[var(--cad-surface)]">
-      <Link href={item.href} className="absolute inset-0 rounded-xl" aria-label={item.name} />
+    <article className="group relative flex gap-3.5 rounded-[11px] border border-border p-3.5 transition-colors hover:bg-[var(--cad-surface)]">
       <Tile item={item} />
-      <div className="min-w-0 flex-1 pr-8">
-        <h3 className="truncate text-[15px] font-medium text-foreground">{item.name}</h3>
-        <p className="mt-1 line-clamp-2 text-[13.5px] leading-5 text-muted-foreground">{item.description}</p>
-        <div className="mt-1.5 flex min-w-0">
-          <Byline item={item} />
-        </div>
+      <div className="min-w-0 flex-1">
+        <h3 className="flex min-w-0 items-center gap-1.5 text-[14px] font-medium text-foreground">
+          <Link href={item.href} className="truncate after:absolute after:inset-0 after:rounded-[11px] after:content-['']">
+            {item.name}
+          </Link>
+          {item.verified && <BadgeCheck className="h-3.5 w-3.5 shrink-0 text-muted-foreground" aria-label="Official" />}
+        </h3>
+        <p className="mt-[3px] line-clamp-2 text-[13px] leading-[1.35] text-[var(--cad-desc)]">{item.description}</p>
+        <p className="mt-1 truncate text-[13px] text-muted-foreground">{meta.join("  ·  ")}</p>
       </div>
-      <Link
-        href={`${item.href}#install`}
-        aria-label={`Install ${item.name}`}
-        title="Install"
-        className="absolute right-4 top-4 z-10 flex h-7 w-7 items-center justify-center rounded-md bg-[var(--cad-control)] text-foreground transition-colors hover:bg-[var(--cad-control-active)]"
-      >
-        <Plus className="h-4 w-4" />
-      </Link>
     </article>
   );
 }
 
-function ResourceRow({ item }: { item: DirectoryItem }) {
-  const extra = item.tags.filter((t) => t.toLowerCase() !== item.category.toLowerCase()).length;
-  const metric = metricText(item);
+function CardGrid({ items }: { items: DirectoryItem[] }) {
   return (
-    <li className="group relative flex items-center gap-4 border-b border-border py-3.5">
-      <Link href={item.href} className="absolute inset-0" aria-label={item.name} />
-      <Tile item={item} size="sm" />
-      <div className="min-w-0 flex-1">
-        <div className="flex min-w-0 items-center gap-2">
-          <span className="truncate text-[15px] font-medium text-foreground group-hover:underline group-hover:underline-offset-4">{item.name}</span>
-          {item.category && (
-            <span className="shrink-0 rounded bg-[var(--cad-chip)] px-1.5 py-0.5 text-[11.5px] text-muted-foreground">
-              {categoryLabel(item.category)}
-            </span>
-          )}
-          {extra > 0 && <span className="shrink-0 rounded bg-[var(--cad-chip)] px-1.5 py-0.5 text-[11.5px] text-muted-foreground">+{extra}</span>}
-        </div>
-        <p className="mt-0.5 truncate text-[13.5px] text-muted-foreground">
-          {item.author && <span>by {item.author}  ·  </span>}
-          {item.description}
-        </p>
-      </div>
-      {metric && <span className="hidden shrink-0 text-[13px] text-muted-foreground sm:block">{metric}</span>}
-      <Link
-        href={`${item.href}#install`}
-        className="relative z-10 inline-flex h-8 shrink-0 items-center rounded-lg bg-[var(--cad-control)] px-3.5 text-[13px] font-medium text-foreground transition-colors hover:bg-[var(--cad-control-active)]"
-      >
-        Install
-      </Link>
-    </li>
+    <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+      {items.map((item) => (
+        <ResourceCard key={item.key} item={item} />
+      ))}
+    </div>
   );
 }
 
 function Section({ title, action, children }: { title: string; action?: ReactNode; children: ReactNode }) {
   return (
-    <section className="mt-10">
-      <div className="mb-3.5 flex items-center justify-between gap-4">
-        <h2 className="font-sans text-[15px] font-medium text-foreground">{title}</h2>
+    <section className="mt-14">
+      <div className="mb-4 flex items-end justify-between gap-4">
+        <h2 className="font-sans text-[22px] font-normal leading-tight text-foreground">{title}</h2>
         {action}
       </div>
       {children}
@@ -208,8 +178,84 @@ function Section({ title, action, children }: { title: string; action?: ReactNod
   );
 }
 
-const iconButton =
-  "inline-flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-[var(--cad-control)] hover:text-foreground data-[state=open]:bg-[var(--cad-control)]";
+// Collection band gradients (tinted like the directory's curated carousel).
+const BANDS = [
+  "from-[#1d2b25] to-[#34594a]",
+  "from-[#1c2433] to-[#2f4a6b]",
+  "from-[#2b2119] to-[#5a3d2a]",
+  "from-[#241d2e] to-[#46365e]",
+];
+
+interface Collection {
+  category: string;
+  items: DirectoryItem[];
+  count: number;
+}
+
+/** "Collections" carousel: the biggest categories, with their best-known logos. Real data only. */
+function CollectionCarousel({ collections, noun, onExplore }: { collections: Collection[]; noun: string; onExplore: (category: string) => void }) {
+  const [index, setIndex] = useState(0);
+  if (collections.length === 0) return null;
+  const current = collections[index % collections.length];
+  const go = (d: number) => setIndex((i) => (i + d + collections.length) % collections.length);
+  return (
+    <div className="mt-10">
+      <div className={cn("relative overflow-hidden rounded-[11px] border border-border bg-gradient-to-b px-6 pb-10 pt-10 text-center", BANDS[index % BANDS.length])}>
+        <p className="text-[12px] uppercase tracking-[0.08em] text-foreground/60">Collection · {current.count} {noun}</p>
+        <h2 className="mt-2 font-sans text-[22px] font-normal text-foreground">
+          {noun.charAt(0).toUpperCase() + noun.slice(1)} for {categoryLabel(current.category).toLowerCase()}
+        </h2>
+        <p className="mt-1.5 text-[14px] text-foreground/75">The most-used {noun} in {categoryLabel(current.category).toLowerCase()}.</p>
+        <div className="mx-auto mt-7 flex max-w-[640px] flex-wrap items-end justify-center gap-3.5">
+          {current.items.map((item, i) => (
+            <Link
+              key={item.key}
+              href={item.href}
+              title={item.name}
+              className={cn(
+                "flex items-center justify-center rounded-2xl bg-background/70 shadow-lg ring-1 ring-white/10 transition-transform hover:-translate-y-0.5",
+                i % 3 === 1 ? "h-[72px] w-[72px]" : "h-14 w-14",
+                i % 2 === 1 && "translate-y-3",
+              )}
+            >
+              <Tile item={item} size={i % 3 === 1 ? 56 : 44} />
+            </Link>
+          ))}
+        </div>
+        <button
+          type="button"
+          onClick={() => onExplore(current.category)}
+          className="mt-9 inline-flex h-10 cursor-pointer items-center rounded-lg bg-background/80 px-4 text-[14px] font-medium text-foreground ring-1 ring-white/10 transition-colors hover:bg-background"
+        >
+          Explore
+        </button>
+        {collections.length > 1 && (
+          <>
+            <button type="button" aria-label="Previous collection" onClick={() => go(-1)} className="absolute left-3 top-1/2 flex h-10 w-10 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-background/70 text-foreground hover:bg-background">
+              <ChevronLeft className="h-4 w-4" />
+            </button>
+            <button type="button" aria-label="Next collection" onClick={() => go(1)} className="absolute right-3 top-1/2 flex h-10 w-10 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-background/70 text-foreground hover:bg-background">
+              <ChevronRight className="h-4 w-4" />
+            </button>
+          </>
+        )}
+      </div>
+      {collections.length > 1 && (
+        <div className="mt-4 flex justify-center gap-1.5">
+          {collections.map((c, i) => (
+            <button
+              key={c.category}
+              type="button"
+              aria-label={`Show ${categoryLabel(c.category)}`}
+              onClick={() => setIndex(i)}
+              className={cn("h-1.5 cursor-pointer rounded-full transition-all", i === index % collections.length ? "w-7 bg-foreground" : "w-1.5 bg-foreground/30")}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
 
 // --- Page ----------------------------------------------------------------------
 
@@ -243,7 +289,6 @@ export default function DiscoverListing({
   const initialSort = params.get("sort") as SortKey | null;
   const [sort, setSort] = useState<SortKey>(initialSort && initialSort in SORT_LABEL ? initialSort : "trending");
   const [visible, setVisible] = useState(PAGE);
-  const [allCategories, setAllCategories] = useState(false);
 
   // MCP created_at values are bulk-import dates, so "Newest" means nothing there.
   const sorts: SortKey[] = type === "mcp" ? ["trending", "top"] : ["trending", "top", "new"];
@@ -298,8 +343,9 @@ export default function DiscoverListing({
     });
   }, [ordered, query, category]);
 
-  // Home sections, deduped so a small catalog never shows the same item twice.
-  const sections = useMemo(() => {
+  // Home sections: Top, Trending, New, then the biggest categories. Deduped so a
+  // small catalog never repeats an item.
+  const home = useMemo(() => {
     const byKey = new Map(items.map((i) => [i.key, i]));
     const used = new Set<string>();
     const take = (keys: string[] | undefined, n: number) => {
@@ -315,17 +361,42 @@ export default function DiscoverListing({
       return out;
     };
     const fallback = items.map((i) => i.key);
-    return {
-      trending: take(orders?.trending ?? fallback, 6),
-      top: take(orders?.top ?? fallback, 6),
-      new: type === "mcp" ? [] : take(orders?.new, 6),
-    };
-  }, [items, orders, type]);
+    const topKeys = orders?.top ?? fallback;
+    const sections: { title: string; items: DirectoryItem[]; sort?: SortKey; category?: string }[] = [
+      { title: `Top ${noun}`, items: take(topKeys, 9), sort: "top" },
+      { title: "Trending", items: take(orders?.trending ?? fallback, 6), sort: "trending" },
+    ];
+    if (type !== "mcp") sections.push({ title: "New", items: take(orders?.new, 6), sort: "new" });
+    for (const [cat] of categories.slice(0, 4)) {
+      const inCat = topKeys.filter((k) => byKey.get(k)?.category === cat);
+      sections.push({ title: categoryLabel(cat), items: take(inCat, 6), category: cat });
+    }
+    return sections.filter((s) => s.items.length >= 3 || (s.sort === "top" && s.items.length > 0));
+  }, [items, orders, type, noun, categories]);
+
+  // Carousel: the biggest categories with at least 4 items, logos first.
+  const collections = useMemo<Collection[]>(() => {
+    const topKeys = orders?.top ?? items.map((i) => i.key);
+    const byKey = new Map(items.map((i) => [i.key, i]));
+    return categories
+      .filter(([, count]) => count >= 4)
+      .slice(0, 4)
+      .map(([cat, count]) => {
+        const inCat = topKeys.map((k) => byKey.get(k)).filter((i): i is DirectoryItem => Boolean(i) && i!.category === cat);
+        const withLogos = [...inCat.filter((i) => i.iconUrl), ...inCat.filter((i) => !i.iconUrl)];
+        return { category: cat, count, items: withLogos.slice(0, 7) };
+      });
+  }, [items, orders, categories]);
 
   const listMode = showAll || Boolean(query.trim()) || Boolean(category);
   const openList = (nextSort: SortKey) => {
     setSort(nextSort);
     setShowAll(true);
+    setVisible(PAGE);
+    window.scrollTo({ top: 0 });
+  };
+  const openCategory = (cat: string) => {
+    setCategory(cat);
     setVisible(PAGE);
     window.scrollTo({ top: 0 });
   };
@@ -335,159 +406,132 @@ export default function DiscoverListing({
     setShowAll(false);
     setSort("trending");
   };
-  const showAllLink = (nextSort: SortKey) => (
-    <button
-      type="button"
-      onClick={() => openList(nextSort)}
-      className="inline-flex cursor-pointer items-center gap-1 text-[13px] text-foreground/85 transition-colors hover:text-foreground"
-    >
-      Show all <ArrowRight className="h-3.5 w-3.5" />
+  const showAllButton = (onClick: () => void) => (
+    <button type="button" onClick={onClick} className="cursor-pointer text-[14px] text-foreground transition-opacity hover:opacity-75">
+      Show all
     </button>
   );
 
   const heading = category ? categoryLabel(category) : title;
   const shown = filtered.slice(0, visible);
-  const visibleCategories = allCategories ? categories : categories.slice(0, 9);
+  const filterLabel = category ? categoryLabel(category) : "All";
 
   return (
-    <div className="mx-auto w-full max-w-[1000px] px-4 pb-20 pt-10 md:px-8 md:pt-14">
-      {listMode && (
+    <div className="mx-auto w-full max-w-[1136px] px-4 pb-20 pt-10 md:px-8 md:pt-12">
+      {listMode ? (
         <button
           type="button"
           onClick={backToDiscover}
-          className="mb-4 inline-flex cursor-pointer items-center gap-1.5 text-[14px] text-foreground/85 transition-colors hover:text-foreground"
+          className="mb-3 inline-flex cursor-pointer items-center gap-1.5 text-[14px] text-muted-foreground transition-colors hover:text-foreground"
         >
           <ArrowLeft className="h-4 w-4" />
           {tab?.label ?? title}
         </button>
-      )}
-      <h1 className="text-[34px] font-normal leading-tight text-foreground md:text-[40px]">{heading}</h1>
-      {!listMode && <p className="mt-2 max-w-[70ch] text-[14.5px] leading-relaxed text-muted-foreground">{description}</p>}
+      ) : null}
+      <h1 className="text-[34px] font-light leading-tight text-foreground md:text-[38px]">{heading}</h1>
+      {!listMode && <p className="mt-1.5 max-w-[62ch] text-[15px] leading-relaxed text-[var(--cad-desc)]">{description}</p>}
 
-      {/* Toolbar */}
-      <div className="mt-6 flex flex-wrap items-center gap-2">
-        <nav aria-label="Resource types" className="flex items-center gap-0.5">
-          {TYPE_TABS.map((t) => (
-            <Link
-              key={t.type}
-              href={t.href}
-              aria-current={t.type === type ? "page" : undefined}
-              className={cn(
-                "rounded-lg px-3 py-1.5 text-[14px] transition-colors",
-                t.type === type ? "bg-[var(--cad-control)] text-foreground" : "text-muted-foreground hover:text-foreground",
-              )}
-            >
-              {t.label}
-            </Link>
-          ))}
-        </nav>
+      {/* Search, filter, submit */}
+      <div className="mt-7 flex flex-wrap items-center gap-3">
+        <label className="relative min-w-0 flex-1 basis-[280px]">
+          <span className="sr-only">{searchPlaceholder}</span>
+          <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+          <input
+            value={query}
+            onChange={(e) => {
+              setQuery(e.target.value);
+              setVisible(PAGE);
+            }}
+            placeholder={searchPlaceholder}
+            className="h-[42px] w-full rounded-lg border border-border bg-transparent pl-11 pr-3 text-[15px] text-foreground placeholder:text-muted-foreground focus:border-[#3b82f6] focus:outline-none"
+          />
+        </label>
 
-        <div className="ml-auto flex w-full items-center gap-1.5 sm:w-auto">
-          <label className="relative min-w-0 flex-1 sm:w-[300px] sm:flex-none">
-            <span className="sr-only">{searchPlaceholder}</span>
-            <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-            <input
-              value={query}
-              onChange={(e) => {
-                setQuery(e.target.value);
-                setVisible(PAGE);
-              }}
-              placeholder={searchPlaceholder}
-              className="h-9 w-full rounded-lg border border-input bg-secondary pl-9 pr-3 text-[14px] text-foreground placeholder:text-muted-foreground focus:border-[var(--cad-line-hover)] focus:outline-none"
-            />
-          </label>
-
-          <DropdownMenu>
-            <DropdownMenuTrigger className={cn(iconButton, category && "text-foreground")} aria-label="Filter by category" title="Filter by category">
-              <SlidersHorizontal className="h-4 w-4" />
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="max-h-[60vh] w-56 overflow-y-auto">
-              <DropdownMenuLabel className="text-xs font-normal text-muted-foreground">Category</DropdownMenuLabel>
-              <DropdownMenuItem onClick={() => setCategory("")}>
-                <span className="flex-1">All categories</span>
-                {!category && <Check className="h-4 w-4" />}
-              </DropdownMenuItem>
-              {categories.map(([value, count]) => (
-                <DropdownMenuItem key={value} onClick={() => { setCategory(value); setVisible(PAGE); }}>
-                  <span className="flex-1">{categoryLabel(value)}</span>
-                  <span className="text-xs text-muted-foreground">{count}</span>
-                  {category === value && <Check className="h-4 w-4" />}
-                </DropdownMenuItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
-
-          <DropdownMenu>
-            <DropdownMenuTrigger className={iconButton} aria-label="Sort" title="Sort">
-              <ArrowDownUp className="h-4 w-4" />
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-44">
-              {sorts.map((key) => (
-                <DropdownMenuItem key={key} onClick={() => openList(key)}>
-                  <span className="flex-1">{SORT_LABEL[key]}</span>
-                  {listMode && sort === key && <Check className="h-4 w-4" />}
-                </DropdownMenuItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
-
-          <DropdownMenu>
-            <DropdownMenuTrigger className="inline-flex h-9 shrink-0 cursor-pointer items-center gap-1.5 rounded-lg bg-foreground px-3 text-[14px] font-medium text-background transition-colors hover:bg-foreground/90">
-              <Plus className="h-4 w-4" />
-              Submit
-              <ChevronDown className="h-3.5 w-3.5 opacity-70" />
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-60">
-              <DropdownMenuItem asChild>
-                <Link href="/submit" className="gap-2.5">
-                  <Upload className="h-4 w-4" />
-                  Submit a Skill, MCP or Agent
+        <DropdownMenu>
+          <DropdownMenuTrigger className="inline-flex h-[42px] cursor-pointer items-center gap-1.5 rounded-lg bg-[var(--cad-control)] px-4 text-[15px] text-muted-foreground transition-colors hover:text-foreground data-[state=open]:text-foreground">
+            <SlidersHorizontal className="h-4 w-4 sm:hidden" />
+            <span className="hidden sm:inline">Filter: {filterLabel}</span>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="max-h-[65vh] w-60 overflow-y-auto">
+            <DropdownMenuLabel className="text-xs font-normal text-muted-foreground">Type</DropdownMenuLabel>
+            {TYPE_TABS.map((t) => (
+              <DropdownMenuItem key={t.type} asChild>
+                <Link href={t.href}>
+                  <span className="flex-1">{t.label}</span>
+                  {t.type === type && <Check className="h-4 w-4" />}
                 </Link>
               </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <Link href="/launches/submit" className="gap-2.5">
-                  <Rocket className="h-4 w-4" />
-                  Launch an app
-                </Link>
+            ))}
+            <DropdownMenuSeparator />
+            <DropdownMenuLabel className="text-xs font-normal text-muted-foreground">Sort</DropdownMenuLabel>
+            {sorts.map((key) => (
+              <DropdownMenuItem key={key} onClick={() => openList(key)}>
+                <span className="flex-1">{SORT_LABEL[key]}</span>
+                {listMode && sort === key && <ArrowDownUp className="h-3.5 w-3.5" />}
               </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem asChild>
-                <Link href="/launches" className="gap-2.5 text-muted-foreground">
-                  <ArrowRight className="h-4 w-4" />
-                  See recent launches
-                </Link>
+            ))}
+            <DropdownMenuSeparator />
+            <DropdownMenuLabel className="text-xs font-normal text-muted-foreground">Category</DropdownMenuLabel>
+            <DropdownMenuItem onClick={() => setCategory("")}>
+              <span className="flex-1">All categories</span>
+              {!category && <Check className="h-4 w-4" />}
+            </DropdownMenuItem>
+            {categories.map(([value, count]) => (
+              <DropdownMenuItem key={value} onClick={() => openCategory(value)}>
+                <span className="flex-1">{categoryLabel(value)}</span>
+                <span className="text-xs text-muted-foreground">{count}</span>
+                {category === value && <Check className="h-4 w-4" />}
               </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
+
+        <DropdownMenu>
+          <DropdownMenuTrigger className="inline-flex h-[42px] shrink-0 cursor-pointer items-center gap-2 rounded-lg border border-border bg-[var(--cad-surface)] px-4 text-[15px] text-foreground transition-colors hover:bg-[var(--cad-control)]">
+            <Plus className="h-4 w-4" />
+            Submit
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-60">
+            <DropdownMenuItem asChild>
+              <Link href="/submit" className="gap-2.5">
+                <Upload className="h-4 w-4" />
+                Submit a Skill, MCP or Agent
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link href="/launches/submit" className="gap-2.5">
+                <Rocket className="h-4 w-4" />
+                Launch an app
+              </Link>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
 
       {listMode ? (
         <>
-          <p className="mt-6 text-[13px] text-muted-foreground">
-            {filtered.length === 0 ? "" : `${filtered.length} ${filtered.length === 1 ? noun.replace(/s$/, "") : noun}`}
+          <p className="mt-8 text-[13px] text-muted-foreground">
+            {filtered.length} {filtered.length === 1 ? noun.replace(/s$/, "") : noun}
             {!query && !category && ` · ${SORT_LABEL[sort]}`}
           </p>
           {filtered.length === 0 ? (
-            <div className="mt-8 rounded-xl border border-dashed border-border px-6 py-12 text-center text-[14px] text-muted-foreground">
+            <div className="mt-4 rounded-[11px] border border-dashed border-border px-6 py-12 text-center text-[14px] text-muted-foreground">
               {emptyMessage}{" "}
               <button type="button" onClick={backToDiscover} className="cursor-pointer text-foreground underline underline-offset-4">
                 Clear filters
               </button>
             </div>
           ) : (
-            <ul className="mt-2 border-t border-border">
-              {shown.map((item) => (
-                <ResourceRow key={item.key} item={item} />
-              ))}
-            </ul>
+            <div className="mt-4">
+              <CardGrid items={shown} />
+            </div>
           )}
           {filtered.length > shown.length && (
-            <div className="mt-6 text-center">
+            <div className="mt-8 text-center">
               <button
                 type="button"
                 onClick={() => setVisible((v) => v + PAGE)}
-                className="inline-flex h-9 cursor-pointer items-center rounded-lg bg-[var(--cad-control)] px-4 text-[13px] font-medium text-foreground hover:bg-[var(--cad-control-active)]"
+                className="inline-flex h-10 cursor-pointer items-center rounded-lg bg-[var(--cad-control)] px-5 text-[14px] text-foreground hover:bg-[var(--cad-control-active)]"
               >
                 Show more
               </button>
@@ -496,74 +540,16 @@ export default function DiscoverListing({
         </>
       ) : (
         <>
-          {sections.trending.length > 0 && (
-            <Section title="Trending" action={showAllLink("trending")}>
-              <div className="grid gap-3 md:grid-cols-2">
-                {sections.trending.map((item) => (
-                  <ResourceCard key={item.key} item={item} />
-                ))}
-              </div>
-            </Section>
-          )}
-          {sections.top.length > 0 && (
-            <Section title={`Most popular ${noun}`} action={showAllLink("top")}>
-              <div className="grid gap-3 md:grid-cols-2">
-                {sections.top.map((item) => (
-                  <ResourceCard key={item.key} item={item} />
-                ))}
-              </div>
-            </Section>
-          )}
-          {sections.new.length > 0 && (
-            <Section title={`New ${noun}`} action={showAllLink("new")}>
-              <div className="grid gap-3 md:grid-cols-2">
-                {sections.new.map((item) => (
-                  <ResourceCard key={item.key} item={item} />
-                ))}
-              </div>
-            </Section>
-          )}
-          {categories.length > 1 && (
+          <CollectionCarousel collections={collections} noun={noun} onExplore={openCategory} />
+          {home.map((section) => (
             <Section
-              title="Categories"
-              action={
-                categories.length > 9 ? (
-                  <button
-                    type="button"
-                    onClick={() => setAllCategories((v) => !v)}
-                    className="inline-flex cursor-pointer items-center gap-1 text-[13px] text-foreground/85 hover:text-foreground"
-                  >
-                    {allCategories ? "Show fewer" : `Show all ${categories.length}`}
-                    <ChevronDown className={cn("h-3.5 w-3.5 transition-transform", allCategories && "rotate-180")} />
-                  </button>
-                ) : undefined
-              }
+              key={section.title}
+              title={section.title}
+              action={showAllButton(() => (section.category ? openCategory(section.category) : openList(section.sort ?? "trending")))}
             >
-              <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-                {visibleCategories.map(([value, count]) => {
-                  const Glyph = CATEGORY_ICON[value.toLowerCase()] ?? TYPE_ICON[type];
-                  return (
-                    <button
-                      key={value}
-                      type="button"
-                      onClick={() => {
-                        setCategory(value);
-                        setVisible(PAGE);
-                        window.scrollTo({ top: 0 });
-                      }}
-                      className="flex cursor-pointer items-center gap-3.5 rounded-xl border border-border p-3 text-left transition-colors hover:border-[var(--cad-line-hover)] hover:bg-[var(--cad-surface)]"
-                    >
-                      <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-[var(--cad-raised)] text-foreground/85">
-                        <Glyph className="h-5 w-5" strokeWidth={1.5} aria-hidden="true" />
-                      </span>
-                      <span className="flex-1 truncate text-[15px] text-foreground">{categoryLabel(value)}</span>
-                      <span className="pr-1 text-[13px] text-muted-foreground">{count}</span>
-                    </button>
-                  );
-                })}
-              </div>
+              <CardGrid items={section.items} />
             </Section>
-          )}
+          ))}
         </>
       )}
     </div>

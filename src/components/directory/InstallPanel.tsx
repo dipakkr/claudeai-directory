@@ -101,7 +101,7 @@ export function InstallActions({
   if (onInstall) {
     return (
       <>
-        <FavoriteButton targetType={favoriteTargetType(kind)} targetId={resourceId} compact className="h-9 w-9 rounded-lg" />
+        <FavoriteButton targetType={favoriteTargetType(kind)} targetId={resourceId} compact className="h-10 w-10 rounded-lg" />
         {resolution.verified ? (
           <button
             type="button"
@@ -109,7 +109,7 @@ export function InstallActions({
               track("install_clicked", { resource_type: kind, resource_id: resourceId });
               onInstall();
             }}
-            className="inline-flex h-9 cursor-pointer items-center rounded-lg bg-foreground px-4 text-[14px] font-medium text-background transition-colors hover:bg-foreground/90"
+            className="inline-flex h-10 cursor-pointer items-center rounded-lg bg-primary px-4 text-[15px] font-medium text-white transition-colors hover:bg-[var(--cad-accent-hover)] dark:hover:bg-primary/90"
           >
             {CTA_LABEL[kind]}
           </button>
@@ -117,7 +117,7 @@ export function InstallActions({
           <button
             type="button"
             onClick={onInstall}
-            className="inline-flex h-9 cursor-pointer items-center rounded-lg bg-foreground px-4 text-[14px] font-medium text-background transition-colors hover:bg-foreground/90"
+            className="inline-flex h-10 cursor-pointer items-center rounded-lg bg-primary px-4 text-[15px] font-medium text-white transition-colors hover:bg-[var(--cad-accent-hover)] dark:hover:bg-primary/90"
           >
             How to install
           </button>
