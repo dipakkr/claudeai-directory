@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { api } from "@/lib/api";
-import type { FeedItem } from "@/types";
+import type { FeedItem, FeedTweet } from "@/types";
 
 interface FeedParams {
   type?: string;
@@ -36,6 +36,14 @@ export function useUpvoteFeedItem() {
   return useMutation({
     mutationFn: (data: { type: string; id: string }) =>
       api.post<{ ok: boolean }>("/feed/upvote", data),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["feed"] }),
+  });
+}
+
+export function useSubmitTweet() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (url: string) => api.post<{ tweet: FeedTweet; created: boolean }>("/feed/tweets", { url }),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["feed"] }),
   });
 }

@@ -352,6 +352,34 @@ export interface FeedItem {
   created_at: string;
 }
 
+export interface FeedTweet {
+  id: string;
+  url: string;
+  text: string;
+  author: {
+    name: string;
+    screen_name: string;
+    avatar?: string;
+    verified?: boolean;
+  };
+  media: { type: string; url: string }[];
+  likes: number;
+  replies: number;
+  tweeted_at?: string | null;
+  source: "curated" | "community";
+  status: "published" | "hidden";
+  highly_bookmarked: boolean;
+  pinned: boolean;
+  upvotes: number;
+  added_by_name?: string;
+  created_at: string;
+}
+
+export interface FeedTweetPage {
+  items: FeedTweet[];
+  total: number;
+}
+
 export interface SearchResult {
   _type: string;
   id?: string;

@@ -20,10 +20,10 @@ function normalizeIds(data: unknown): unknown {
   return data;
 }
 
-export async function fetchApi<T>(endpoint: string, options: { throwOnError?: boolean; timeoutMs?: number } = {}): Promise<T | null> {
+export async function fetchApi<T>(endpoint: string, options: { throwOnError?: boolean; timeoutMs?: number; revalidate?: number } = {}): Promise<T | null> {
   try {
     const res = await fetch(`${API_BASE}${endpoint}`, {
-      next: { revalidate: 300 },
+      next: { revalidate: options.revalidate ?? 300 },
       signal: AbortSignal.timeout(options.timeoutMs ?? 15000),
     });
     if (res.status === 404) return null;
