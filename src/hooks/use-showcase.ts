@@ -130,3 +130,17 @@ export function useVerifyShowcaseBadge() {
     },
   });
 }
+
+export interface LaunchVoters {
+  total: number;
+  voters: { username?: string; name?: string; avatar?: string | null }[];
+}
+
+/** Recent upvoters for the avatar stack. Refreshes when the user votes. */
+export function useLaunchVoters(slug: string) {
+  return useQuery({
+    queryKey: ["showcase", slug, "voters"],
+    queryFn: () => api.get<LaunchVoters>(`/showcase/${slug}/voters`),
+    enabled: !!slug,
+  });
+}
