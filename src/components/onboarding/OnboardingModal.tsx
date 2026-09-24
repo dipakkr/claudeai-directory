@@ -224,7 +224,8 @@ export default function OnboardingModal() {
                 <Avatars members={faces} />
                 {community && (
                   <p className="text-xs text-muted-foreground">
-                    {community.total.toLocaleString()} builders are already here
+                    {/* Product decision: show "1k+" until the real count passes it. */}
+                    {community.total >= 1000 ? community.total.toLocaleString() : "1k+"} builders are already here
                   </p>
                 )}
               </div>
