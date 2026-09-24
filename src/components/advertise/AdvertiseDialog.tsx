@@ -112,6 +112,36 @@ function SiteMap({ category, card }: { category: string; card?: { product: strin
   );
 }
 
+function slugPart(value: string, max: number) {
+  return value
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, max);
+}
+
+/**
+ * Build the checkout link for the configured provider.
+ * Stripe Payment Links take only `prefilled_email` and `client_reference_id`
+ * (letters, numbers, dashes, underscores; max 200), so the order is tagged as
+ * "category__product". Lemon Squeezy accepts the full details as custom data.
+ */
+function checkoutUrl(order: { email: string; category: string; product: string; website: string; tagline: string }) {
+  const url = new URL(SPONSOR_CHECKOUT_URL);
+  if (/(^|\.)stripe\.com$/i.test(url.hostname)) {
+    url.searchParams.set("prefilled_email", order.email);
+    const ref = `${slugPart(order.category.replace(/^MCPs for /i, ""), 60)}__${slugPart(order.product, 120)}`;
+    url.searchParams.set("client_reference_id", ref.replace(/[^a-z0-9_-]/g, "").slice(0, 200));
+  } else {
+    url.searchParams.set("checkout[email]", order.email);
+    url.searchParams.set("checkout[custom][category]", order.category);
+    url.searchParams.set("checkout[custom][product]", order.product);
+    url.searchParams.set("checkout[custom][website]", order.website);
+    if (order.tagline) url.searchParams.set("checkout[custom][tagline]", order.tagline);
+  }
+  return url.toString();
+}
+
 export default function AdvertiseDialog() {
   const { user } = useAuth();
   const [open, setOpen] = useState(false);
@@ -162,14 +192,7 @@ export default function AdvertiseDialog() {
     const site = normalizeUrl(website);
 
     if (SPONSOR_CHECKOUT_URL) {
-      // Lemon Squeezy hosted checkout: prefill email and attach the order details.
-      const url = new URL(SPONSOR_CHECKOUT_URL);
-      url.searchParams.set("checkout[email]", emailValue.trim());
-      url.searchParams.set("checkout[custom][category]", category);
-      url.searchParams.set("checkout[custom][product]", product.trim());
-      url.searchParams.set("checkout[custom][website]", site);
-      if (tagline.trim()) url.searchParams.set("checkout[custom][tagline]", tagline.trim());
-      window.open(url.toString(), "_blank", "noopener");
+      window.open(checkoutUrl({ email: emailValue.trim(), category, product: product.trim(), website: site, tagline: tagline.trim() }), "_blank", "noopener");
       return;
     }
 

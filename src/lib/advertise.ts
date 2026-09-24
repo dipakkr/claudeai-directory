@@ -4,7 +4,8 @@ import { sideAdCollections } from "@/data/sideAdPlacements";
 export const SPONSOR_MONTHLY_PRICE = 499;
 
 /**
- * Hosted checkout for the sponsor subscription (Lemon Squeezy). Until it is
+ * Hosted checkout for the sponsor subscription: a Stripe Payment Link
+ * (https://buy.stripe.com/...) or a Lemon Squeezy checkout URL. Until it is
  * set, "Pay now" falls back to a prefilled email request.
  */
 export const SPONSOR_CHECKOUT_URL = process.env.NEXT_PUBLIC_SPONSOR_CHECKOUT_URL || "";
