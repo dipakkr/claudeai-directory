@@ -87,7 +87,7 @@ export function TweetCard({ tweet }: { tweet: FeedTweet }) {
   const article = tweet.article?.title ? tweet.article : null;
 
   return (
-    <article id={`tweet-${tweet.id}`} className="scroll-mt-24 rounded-2xl border border-border bg-card p-5 transition-colors hover:border-[var(--cad-line-hover)]">
+    <article id={`tweet-${tweet.id}`} className="flex h-full scroll-mt-24 flex-col rounded-2xl border border-border bg-card p-5 transition-colors hover:border-[var(--cad-line-hover)]">
       <header className="flex items-start gap-3">
         <a href={`https://x.com/${author.screen_name}`} target="_blank" rel={OUTBOUND_REL} className="shrink-0">
           {author.avatar ? (
@@ -208,7 +208,7 @@ export function TweetCard({ tweet }: { tweet: FeedTweet }) {
                 alt=""
                 loading="lazy"
                 referrerPolicy="no-referrer"
-                className={`w-full object-cover ${media.length > 1 ? "aspect-square" : "max-h-[320px]"}`}
+                className={`w-full object-cover ${media.length > 1 ? "aspect-square" : "aspect-video"}`}
               />
               {item.type !== "photo" && (
                 <span className="absolute inset-0 flex items-center justify-center">
@@ -222,7 +222,7 @@ export function TweetCard({ tweet }: { tweet: FeedTweet }) {
         </a>
       )}
 
-      <footer className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-muted-foreground">
+      <footer className="mt-auto flex flex-wrap items-center gap-x-4 gap-y-2 pt-4 text-xs text-muted-foreground">
         <TweetUpvote id={tweet.id} initialCount={tweet.upvotes ?? 0} />
         <span className="inline-flex items-center gap-1" title="Likes on X">
           <Heart className="h-3.5 w-3.5" />

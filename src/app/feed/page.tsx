@@ -120,13 +120,10 @@ export default async function FeedPage({ searchParams }: { searchParams: Promise
           </div>
 
           {data.items.length > 0 ? (
-            // Masonry via CSS columns: tweets vary a lot in height, so a row grid
-            // would leave big gaps. Order runs down each column.
-            <div className="mt-6 gap-4 sm:columns-2 lg:columns-3">
+            // Row grid: cards in a row share one height, footers line up.
+            <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {data.items.map((tweet) => (
-                <div key={tweet.id} className="mb-4 break-inside-avoid">
-                  <TweetCard tweet={tweet} />
-                </div>
+                <TweetCard key={tweet.id} tweet={tweet} />
               ))}
             </div>
           ) : (
