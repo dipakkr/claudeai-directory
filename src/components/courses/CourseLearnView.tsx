@@ -250,15 +250,15 @@ function LessonCard({
       {locked ? (
         <p className="mt-2 text-sm leading-6 text-muted-foreground">Join the launch list to unlock this lesson.</p>
       ) : lesson.type === "lesson" ? (
-        <div className="mt-5 space-y-4">
+        <div className="mt-5 space-y-5">
           {lesson.blocks.map((block, index) => (
             <LessonBlockView key={`${lesson.id}-${index}`} block={block} />
           ))}
         </div>
       ) : (
-        <div className="mt-5 space-y-4">
+        <div className="mt-5 space-y-6">
           {lesson.questions.map((question, index) => (
-            <div key={question.question} className="rounded-lg border border-border bg-card/35 p-4">
+            <div key={question.question}>
               <p className="text-sm font-medium leading-6 text-foreground">
                 {index + 1}. {question.question}
               </p>
@@ -268,10 +268,8 @@ function LessonCard({
                   return (
                     <div
                       key={option}
-                      className={`flex gap-2 rounded-lg border px-3 py-2 text-sm leading-5 ${
-                        isCorrect
-                          ? "border-primary/35 bg-primary/10 text-foreground"
-                          : "border-border bg-background/35 text-muted-foreground"
+                      className={`flex gap-2 rounded-lg px-3 py-2 text-sm leading-5 ${
+                        isCorrect ? "bg-primary/10 text-foreground" : "text-muted-foreground"
                       }`}
                     >
                       {isCorrect ? (
@@ -284,7 +282,7 @@ function LessonCard({
                   );
                 })}
               </div>
-              <p className="mt-3 border-t border-border pt-3 text-xs leading-5 text-muted-foreground">
+              <p className="mt-3 text-xs leading-5 text-muted-foreground">
                 {question.explanation}
               </p>
             </div>
@@ -301,11 +299,13 @@ function LessonBlockView({ block }: { block: LessonBlock }) {
   }
   if (block.type === "text") return <p className="text-[15px] leading-7 text-muted-foreground">{block.text}</p>;
   if (block.type === "list") {
+    // Plain list, no card - this is normal reading content (key points),
+    // not a separate widget, so it shouldn't interrupt the flow with a box.
     return (
-      <ul className="space-y-2 rounded-lg border border-border bg-card/25 p-4 text-sm leading-6 text-muted-foreground">
+      <ul className="space-y-2.5 text-[15px] leading-7 text-muted-foreground">
         {block.items.map((item) => (
-          <li key={item} className="flex gap-2">
-            <CheckCircle2 className="mt-1 h-4 w-4 shrink-0 text-primary/80" aria-hidden="true" />
+          <li key={item} className="flex gap-2.5">
+            <CheckCircle2 className="mt-1 h-4 w-4 shrink-0 text-primary/70" aria-hidden="true" />
             <span>{item}</span>
           </li>
         ))}
@@ -313,25 +313,22 @@ function LessonBlockView({ block }: { block: LessonBlock }) {
     );
   }
   if (block.type === "prompt") {
+    // Still visually set apart (it's literal copy-paste text) but as a
+    // labeled block with a left accent, not a full card with a header bar.
     return (
-      <div className="overflow-hidden rounded-lg border border-border bg-card/45">
-        <div className="flex items-center justify-between gap-3 border-b border-border px-4 py-3">
-          <span className="inline-flex items-center gap-2 text-sm font-medium text-foreground">
-            <FileText className="h-4 w-4 text-primary" aria-hidden="true" />
-            {block.title}
-          </span>
-          <span className="rounded-full border border-border px-2 py-0.5 font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
-            Prompt
-          </span>
-        </div>
-        <pre className="whitespace-pre-wrap bg-background/35 px-4 py-4 font-mono text-[13px] leading-6 text-muted-foreground">
+      <div className="border-l-2 border-primary/40 pl-4">
+        <p className="flex items-center gap-1.5 font-mono text-[11px] uppercase tracking-[0.14em] text-primary">
+          <FileText className="h-3.5 w-3.5" aria-hidden="true" />
+          {block.title}
+        </p>
+        <pre className="mt-2 whitespace-pre-wrap font-mono text-[13px] leading-6 text-foreground/80">
           {block.text}
         </pre>
       </div>
     );
   }
   return (
-    <p className="rounded-lg border border-primary/20 bg-primary/5 p-4 text-sm leading-6 text-muted-foreground">
+    <p className="border-l-2 border-muted-foreground/30 pl-4 text-[15px] italic leading-7 text-muted-foreground">
       {block.text}
     </p>
   );
