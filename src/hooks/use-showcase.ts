@@ -42,23 +42,46 @@ export function useMyShowcaseProjects(options?: { enabled?: boolean }) {
   });
 }
 
+export interface ShowcaseSubmission {
+  title: string;
+  tagline?: string;
+  description: string;
+  app_url: string;
+  demo_url?: string;
+  github_url?: string;
+  category?: string;
+  tech_stack: string[];
+  skills_used: string[];
+  use_cases: string[];
+  feedback_prompt?: string;
+  badge_page_url: string;
+  gallery_images?: string[];
+  demo_video_url?: string;
+  platforms?: string[];
+  overview?: ShowcaseProject["overview"];
+  creator_socials?: ShowcaseProject["creator_socials"];
+}
+
+export interface LaunchAutofill {
+  url: string;
+  name: string;
+  tagline: string;
+  description: string;
+  image: string | null;
+  twitter: string | null;
+}
+
+/** Suggest name, tagline, description and image from the app's own meta tags. */
+export function useLaunchAutofill() {
+  return useMutation({
+    mutationFn: (url: string) => api.post<LaunchAutofill>("/showcase/autofill", { url }),
+  });
+}
+
 export function useSubmitShowcaseProject() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (data: {
-      title: string;
-      tagline?: string;
-      description: string;
-      app_url: string;
-      demo_url?: string;
-      github_url?: string;
-      category?: string;
-      tech_stack: string[];
-      skills_used: string[];
-      use_cases: string[];
-      feedback_prompt?: string;
-      badge_page_url: string;
-    }) => api.post<ShowcaseProject>("/showcase", data),
+    mutationFn: (data: ShowcaseSubmission) => api.post<ShowcaseProject>("/showcase", data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["showcase"] });
       queryClient.invalidateQueries({ queryKey: ["showcase", "me"] });
