@@ -15,6 +15,8 @@ export interface SponsorCategory {
   title: string;
   label: string;
   openSlots: number;
+  /** Current sponsors in this rail, shown as "Next to ...". */
+  neighbors: string[];
 }
 
 export const SPONSOR_CATEGORIES: SponsorCategory[] = sideAdCollections
@@ -23,6 +25,7 @@ export const SPONSOR_CATEGORIES: SponsorCategory[] = sideAdCollections
     title: rail.title,
     label: rail.title.replace(/^MCPs for /, "").replace(/^\w/, (c) => c.toUpperCase()),
     openSlots: rail.placements.filter((placement) => placement.slotType === "available").length,
+    neighbors: rail.placements.filter((placement) => placement.slotType !== "available").map((placement) => placement.name),
   }));
 
 export const OPEN_ADVERTISE_EVENT = "cad:open-advertise";

@@ -33,12 +33,72 @@ function normalizeUrl(value: string) {
 }
 
 function Steps({ step }: { step: 0 | 1 }) {
+  const labels = ["Category", "Your card"];
   return (
-    <div className="flex items-center gap-1.5 pr-8" aria-label={`Step ${step + 1} of 2`}>
-      {[0, 1].map((i) => (
-        <span key={i} className={`h-1 flex-1 rounded-full ${i <= step ? "bg-primary" : "bg-border"}`} />
+    <ol className="flex items-center gap-3 pr-8 text-xs" aria-label={`Step ${step + 1} of 2`}>
+      {labels.map((label, i) => (
+        <li key={label} className="flex flex-1 flex-col gap-1.5">
+          <span className={`h-1 rounded-full ${i <= step ? "bg-primary" : "bg-border"}`} />
+          <span className={i === step ? "font-medium text-foreground" : "text-muted-foreground"}>
+            {i + 1}. {label}
+          </span>
+        </li>
       ))}
+    </ol>
+  );
+}
+
+function faviconFor(site: string) {
+  try {
+    const host = new URL(normalizeUrl(site)).hostname;
+    return host.includes(".") ? `https://www.google.com/s2/favicons?domain=${host}&sz=64` : null;
+  } catch {
+    return null;
+  }
+}
+
+/** Mirrors the sidebar sponsor card, so buyers see exactly what they get. */
+function CardPreview({ product, website, tagline, category }: { product: string; website: string; tagline: string; category: string }) {
+  const icon = faviconFor(website);
+  const initial = (product.trim()[0] || "?").toUpperCase();
+  return (
+    <div className="rounded-xl bg-[#050505] p-3">
+      <div className="flex min-h-[132px] flex-col items-center justify-center rounded-md border border-[#4a4238] bg-[#221f1b] px-3 py-3 text-center text-white">
+        <span className="relative flex h-9 w-9 items-center justify-center overflow-hidden rounded-md bg-[#f3e6d8] text-sm font-bold text-[#2a2118]">
+          {initial}
+          {icon && (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={icon}
+              alt=""
+              className="absolute inset-1 h-[calc(100%-8px)] w-[calc(100%-8px)] object-contain"
+              referrerPolicy="no-referrer"
+              onError={(e) => {
+                e.currentTarget.style.display = "none";
+              }}
+            />
+          )}
+        </span>
+        <p className="mt-2 max-w-full truncate text-[13px] font-semibold leading-tight">{product.trim() || "Your product"}</p>
+        <span className="mt-1 rounded-full bg-white/10 px-1.5 py-0.5 text-[8px] font-semibold uppercase tracking-[0.08em] text-white/80">
+          Sponsor
+        </span>
+        <p className="mt-1 line-clamp-2 text-[11px] leading-snug text-white/70">{tagline.trim() || "Your one line shows here."}</p>
+      </div>
+      <p className="mt-2 text-center text-[10px] text-white/50">In the {category} sidebar</p>
     </div>
+  );
+}
+
+function Field({ label, hint, children }: { label: string; hint?: string; children: React.ReactNode }) {
+  return (
+    <label className="block">
+      <span className="mb-1 flex items-baseline justify-between text-xs font-medium text-foreground">
+        {label}
+        {hint && <span className="font-normal text-muted-foreground">{hint}</span>}
+      </span>
+      {children}
+    </label>
   );
 }
 
@@ -121,12 +181,12 @@ export default function AdvertiseDialog() {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="max-h-[92vh] gap-3 overflow-y-auto p-5 sm:max-w-[500px]">
+      <DialogContent className="max-h-[92vh] gap-3 overflow-y-auto p-5 sm:max-w-[560px]">
         <Steps step={step} />
 
         {step === 0 ? (
           <>
-            <DialogHeader className="mt-1">
+            <DialogHeader className="mt-1 text-left">
               <DialogTitle className="text-lg">Put your product where Claude builders look</DialogTitle>
               <DialogDescription className="text-[13px] leading-5">
                 People come here to pick the Skills, MCP servers and Agents they will use next. Sponsor a category and
@@ -166,14 +226,21 @@ export default function AdvertiseDialog() {
                       aria-checked={active}
                       disabled={soldOut}
                       onClick={() => setCategory(c.title)}
-                      className={`flex items-center justify-between gap-2 rounded-lg border px-2.5 py-1.5 text-left text-[13px] transition-colors disabled:opacity-40 ${
+                      className={`flex items-center justify-between gap-2 rounded-lg border px-2.5 py-2 text-left text-[13px] transition-colors disabled:opacity-40 ${
                         active ? "border-foreground bg-foreground text-background" : "border-border bg-background text-foreground hover:border-[var(--cad-line-hover)]"
                       }`}
                     >
-                      <span className="truncate font-medium">{c.label}</span>
-                      <span className={`shrink-0 text-[10px] ${active ? "text-background/70" : "text-muted-foreground"}`}>
+                      <span className="min-w-0">
+                        <span className="block truncate font-medium">{c.label}</span>
+                        {c.neighbors.length > 0 && (
+                          <span className={`block truncate text-[10px] ${active ? "text-background/65" : "text-muted-foreground"}`}>
+                            Next to {c.neighbors.join(" and ")}
+                          </span>
+                        )}
+                      </span>
+                      <span className={`shrink-0 self-start text-[10px] ${active ? "text-background/70" : "text-muted-foreground"}`}>
                         {/* Real availability only: no invented scarcity. */}
-                        {soldOut ? "Full" : c.openSlots === 1 ? "1 left" : "Available"}
+                        {soldOut ? "Full" : c.openSlots === 1 ? "1 left" : "Open"}
                       </span>
                     </button>
                   );
@@ -192,10 +259,10 @@ export default function AdvertiseDialog() {
           </>
         ) : (
           <form onSubmit={submit} className="space-y-4">
-            <DialogHeader className="mt-1">
+            <DialogHeader className="mt-1 text-left">
               <DialogTitle className="text-lg">Set up your sponsor card</DialogTitle>
               <DialogDescription className="text-[13px] leading-5">
-                This is what builders see in the sidebar. Keep the line short and specific.
+                This is what builders see in the sidebar. Watch the preview as you type.
               </DialogDescription>
             </DialogHeader>
 
@@ -209,29 +276,30 @@ export default function AdvertiseDialog() {
               </button>
             </div>
 
-            <div className="grid gap-2 sm:grid-cols-2">
-              <input aria-label="Product name" value={product} onChange={(e) => setProduct(e.target.value)} placeholder="Product name" className={inputClass} autoFocus />
-              <input aria-label="Website" value={website} onChange={(e) => setWebsite(e.target.value)} placeholder="yourproduct.com" className={inputClass} />
-              <div className="sm:col-span-2">
-                <input
-                  aria-label="One line for your card"
-                  value={tagline}
-                  onChange={(e) => setTagline(e.target.value.slice(0, TAGLINE_MAX))}
-                  placeholder="One line for your card, like: Turn any website into Claude-ready data"
-                  className={inputClass}
-                />
-                <p className="mt-1 text-right text-[10px] text-muted-foreground">
-                  {tagline.length}/{TAGLINE_MAX}
-                </p>
+            <div className="grid gap-4 sm:grid-cols-[minmax(0,1fr)_190px]">
+              <div className="space-y-3">
+                <Field label="Product name">
+                  <input value={product} onChange={(e) => setProduct(e.target.value)} placeholder="Acme MCP" className={inputClass} autoFocus />
+                </Field>
+                <Field label="Website">
+                  <input value={website} onChange={(e) => setWebsite(e.target.value)} placeholder="acme.dev" className={inputClass} />
+                </Field>
+                <Field label="One line for your card" hint={`${tagline.length}/${TAGLINE_MAX}`}>
+                  <input
+                    value={tagline}
+                    onChange={(e) => setTagline(e.target.value.slice(0, TAGLINE_MAX))}
+                    placeholder="Turn any website into Claude-ready data"
+                    className={inputClass}
+                  />
+                </Field>
+                <Field label="Email for the receipt">
+                  <input type="email" value={emailValue} onChange={(e) => setEmail(e.target.value)} placeholder="you@company.com" className={inputClass} />
+                </Field>
               </div>
-              <input
-                aria-label="Email"
-                type="email"
-                value={emailValue}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="you@company.com"
-                className={`${inputClass} sm:col-span-2`}
-              />
+              <div>
+                <p className="mb-1 text-xs font-medium text-foreground">Preview</p>
+                <CardPreview product={product} website={website} tagline={tagline} category={selected?.label.toLowerCase() ?? ""} />
+              </div>
             </div>
 
             <div className="flex items-center gap-2">
