@@ -493,9 +493,9 @@ export default function DiscoverListing({
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-60">
             <DropdownMenuItem asChild>
-              <Link href="/submit" className="gap-2.5">
+              <Link href={type === "prompt" ? "/submit" : `/submit?type=${type}`} className="gap-2.5">
                 <Upload className="h-4 w-4" />
-                Submit a Skill, MCP or Agent
+                Submit {type === "mcp" ? "an MCP server" : type === "agent" ? "an Agent" : "a Skill"}
               </Link>
             </DropdownMenuItem>
             <DropdownMenuItem asChild>
