@@ -105,8 +105,8 @@ type BadgeOption = { id: string; label: string; style: "launched" | "upvotes" | 
 // Every option is an image wrapped in a link to the listing, which is what
 // badge verification looks for, so any of them verifies.
 const BADGE_OPTIONS: BadgeOption[] = [
-  { id: "launched-light", label: "Launched", style: "launched", theme: "light", width: 220, height: 54 },
-  { id: "launched-dark", label: "Launched, dark", style: "launched", theme: "dark", width: 220, height: 54 },
+  { id: "launched-light", label: "Listed", style: "launched", theme: "light", width: 220, height: 54 },
+  { id: "launched-dark", label: "Listed, dark", style: "launched", theme: "dark", width: 220, height: 54 },
   { id: "upvotes-light", label: "Live upvotes", style: "upvotes", theme: "light", width: 262, height: 54 },
   { id: "upvotes-dark", label: "Live upvotes, dark", style: "upvotes", theme: "dark", width: 262, height: 54 },
   { id: "minimal-light", label: "Compact", style: "minimal", theme: "light", width: 196, height: 28 },
@@ -123,7 +123,7 @@ function badgePath(app: ShowcaseProject, option: BadgeOption) {
 
 function badgeSnippet(app: ShowcaseProject, option: BadgeOption, format: "html" | "markdown") {
   const img = `${SITE_URL}${badgePath(app, option)}`;
-  const alt = `${app.title} - Launched on Claude AI Directory`;
+  const alt = `${app.title} - Listed on Claude AI Directory`;
   if (format === "markdown") return `[![${alt}](${img})](${listingUrl(app)})`;
   return `<a href="${listingUrl(app)}" target="_blank" rel="noopener"><img src="${img}" alt="${alt.replace(/"/g, "&quot;")}" width="${option.width}" height="${option.height}" /></a>`;
 }

@@ -41,11 +41,11 @@ function launchedSvg(theme: Theme, upvotes: number | null) {
        <path d="M236 17 l6 8 h-12 z" fill="${t.text}"/>
        <text x="236" y="41" text-anchor="middle" font-family="${FONT}" font-size="13" font-weight="700" fill="${t.text}">${upvotes}</text>`
     : "";
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" role="img" aria-label="Launched on Claude AI Directory">
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" role="img" aria-label="Listed on Claude AI Directory">
   ${DEFS}
   <rect x="0.5" y="0.5" width="${width - 1}" height="${height - 1}" rx="10" fill="${t.bg}" stroke="${t.border}"/>
   ${mark(12, 11, 32)}
-  <text x="54" y="23" font-family="${FONT}" font-size="9" font-weight="600" letter-spacing="0.9" fill="${t.eyebrow}">LAUNCHED ON</text>
+  <text x="54" y="23" font-family="${FONT}" font-size="9" font-weight="600" letter-spacing="0.9" fill="${t.eyebrow}">LISTED ON</text>
   <text x="54" y="41" font-family="${FONT}" font-size="15" font-weight="700" fill="${t.text}">Claude AI Directory</text>
   ${count}
 </svg>`;
