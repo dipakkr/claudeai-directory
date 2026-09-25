@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { ArrowLeft, ArrowRight } from "lucide-react";
+import { ArrowRight, Check } from "lucide-react";
 import { toast } from "sonner";
 
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
@@ -15,6 +15,7 @@ import {
   SPONSOR_MONTHLY_PRICE,
   type SponsorSlot,
 } from "@/lib/advertise";
+import { sideAdCollections, type SideAdPlacement, type SideAdRail } from "@/data/sideAdPlacements";
 import { api, ApiError } from "@/lib/api";
 import { useAuth } from "@/lib/auth";
 
@@ -59,103 +60,91 @@ function ProductIcon({ website, product, className }: { website: string; product
   );
 }
 
-/** The launches list with the sponsored row lit up; in step 2 it shows their card. */
-function LaunchListMap({ card }: { card?: { product: string; website: string; tagline: string } }) {
-  const row = (i: number) => (
-    <div key={i} className="flex items-center gap-2 rounded-[3px] border border-white/10 bg-white/[0.03] px-2 py-1.5">
-      <span className="h-4 w-4 rounded-sm bg-white/10" />
-      <span className="h-1.5 flex-1 rounded-sm bg-white/10" />
-      <span className="h-3 w-3 rounded-sm bg-white/[0.07]" />
-    </div>
-  );
+type CardDraft = { product: string; website: string; tagline: string };
+
+/** A neighbour card in the preview, styled like the real rail. */
+function RailCard({ placement }: { placement: SideAdPlacement }) {
+  const open = placement.slotType === "available";
   return (
-    <div className="flex h-full flex-col justify-center">
-      <div className="overflow-hidden rounded-md border border-white/10 bg-[#0b0a09] pb-2">
-        <div className="flex h-5 items-center gap-1 border-b border-white/10 px-2">
-          {[0, 1, 2].map((i) => (
-            <span key={i} className="h-1.5 w-1.5 rounded-full bg-white/15" />
-          ))}
-        </div>
-        <div className="space-y-1.5 p-2">
-          <div className="h-2 w-1/2 rounded-sm bg-white/20" />
-          {[0, 1, 2].map(row)}
-          <div className="flex items-center gap-2 rounded-[3px] border border-primary/70 bg-[#221f1b] px-2 py-2 shadow-[0_0_0_3px_rgba(217,119,87,0.18)]">
-            {card ? (
-              <>
-                <ProductIcon website={card.website} product={card.product} className="h-5 w-5 text-[9px]" />
-                <span className="min-w-0 flex-1">
-                  <span className="block truncate text-[8px] font-semibold text-white">{card.product.trim() || "Your product"}</span>
-                  <span className="block truncate text-[7px] text-white/60">{card.tagline.trim() || "Your one line"}</span>
-                </span>
-                <span className="text-[6px] uppercase tracking-wider text-white/40">Sponsored</span>
-              </>
-            ) : (
-              <span className="w-full text-center text-[8px] font-medium text-primary">You</span>
-            )}
-          </div>
-          {[3, 4].map(row)}
-        </div>
-      </div>
-      <p className="mt-2 text-[11px] leading-4 text-white/55">
-        Your row sits inside the <span className="text-white/85">launches list</span>, where builders look for new tools to try.
-      </p>
+    <div
+      className={`flex flex-col items-center rounded-md border px-2 py-2.5 text-center ${
+        open ? "border-dashed border-foreground/20 text-muted-foreground" : "border-border bg-[var(--cad-tile)]"
+      }`}
+    >
+      {open ? (
+        <span className="flex h-6 w-6 items-center justify-center rounded-md border border-dashed border-foreground/30 text-[11px]">+</span>
+      ) : (
+        <ProductIcon website={placement.logoDomain} product={placement.name} className="h-6 w-6 text-[10px]" />
+      )}
+      <span className="mt-1.5 w-full truncate text-[11px] font-medium text-foreground/85">{open ? "Open slot" : placement.name}</span>
+      {!open && <span className="line-clamp-1 w-full text-[10px] text-muted-foreground">{placement.headline}</span>}
     </div>
   );
 }
 
-/**
- * A small, literal map of the site: page in the middle, sponsor rails on the
- * sides, and the buyer's slot lit up. In step 2 their card sits in the slot.
- */
-function SiteMap({ category, card }: { category: string; card?: { product: string; website: string; tagline: string } }) {
-  const railBlock = "h-9 rounded-[3px] border border-white/10 bg-white/[0.04]";
-  return (
-    <div className="flex h-full flex-col justify-center">
-      <div className="overflow-hidden rounded-md border border-white/10 bg-[#0b0a09] pb-1">
-        <div className="flex h-5 items-center gap-1 border-b border-white/10 px-2">
-          {[0, 1, 2].map((i) => (
-            <span key={i} className="h-1.5 w-1.5 rounded-full bg-white/15" />
-          ))}
-        </div>
-        <div className="grid grid-cols-[52px_minmax(0,1fr)_76px] gap-2 p-2">
-          <div className="space-y-1.5">
-            {[0, 1, 2, 3].map((i) => (
-              <div key={i} className={railBlock} />
-            ))}
-          </div>
-          <div className="space-y-2 pt-1">
-            <div className="mx-auto h-2 w-3/4 rounded-sm bg-white/20" />
-            <div className="mx-auto h-1.5 w-1/2 rounded-sm bg-white/10" />
-            <div className="space-y-1.5 pt-2">
-              {[0, 1, 2, 3, 4, 5].map((i) => (
-                <div key={i} className="flex items-center gap-1.5">
-                  <span className="h-3 w-3 rounded-sm bg-white/10" />
-                  <span className="h-1.5 flex-1 rounded-sm bg-white/[0.07]" />
-                </div>
-              ))}
-            </div>
-          </div>
-          <div className="space-y-1.5">
-            <div className={railBlock} />
-            {card ? (
-              <div className="flex flex-col items-center rounded-[3px] border border-primary/70 bg-[#221f1b] px-1 py-1.5 text-center shadow-[0_0_0_3px_rgba(217,119,87,0.18)]">
-                <ProductIcon website={card.website} product={card.product} className="h-4 w-4 text-[8px]" />
-                <span className="mt-1 w-full truncate text-[7px] font-semibold text-white">{card.product.trim() || "Your product"}</span>
-                <span className="line-clamp-2 w-full text-[6px] leading-tight text-white/60">{card.tagline.trim() || "Your one line"}</span>
-              </div>
-            ) : (
-              <div className="flex h-[58px] items-center justify-center rounded-[3px] border border-primary/70 bg-primary/15 text-[8px] font-medium text-primary shadow-[0_0_0_3px_rgba(217,119,87,0.18)]">
-                You
-              </div>
-            )}
-            <div className={railBlock} />
-          </div>
-        </div>
+/** The buyer's own card, lit up and filled in as they type. */
+function YourCard({ card, row = false }: { card: CardDraft; row?: boolean }) {
+  const name = card.product.trim() || "Your product";
+  const line = card.tagline.trim() || "Your one line about it";
+  if (row) {
+    return (
+      <div className="flex items-center gap-2.5 rounded-lg border border-primary/70 bg-primary/[0.08] px-3 py-2.5 shadow-[0_0_0_4px_rgba(217,119,87,0.12)]">
+        <ProductIcon website={card.website} product={name} className="h-7 w-7 text-[11px]" />
+        <span className="min-w-0 flex-1">
+          <span className="block truncate text-[12.5px] font-medium text-foreground">{name}</span>
+          <span className="block truncate text-[11px] text-muted-foreground">{line}</span>
+        </span>
+        <span className="text-[9px] uppercase tracking-[0.08em] text-muted-foreground">Sponsored</span>
       </div>
-      <p className="mt-2 text-[11px] leading-4 text-white/55">
-        Your card sits in the <span className="text-white/85">{category.toLowerCase()}</span> sidebar, shown across the site on
-        large screens.
-      </p>
+    );
+  }
+  return (
+    <div className="flex flex-col items-center rounded-md border border-primary/70 bg-primary/[0.08] px-2 py-3 text-center shadow-[0_0_0_4px_rgba(217,119,87,0.12)]">
+      <ProductIcon website={card.website} product={name} className="h-8 w-8 text-xs" />
+      <span className="mt-1.5 w-full truncate text-[12px] font-semibold text-foreground">{name}</span>
+      <span className="line-clamp-2 w-full text-[10.5px] leading-snug text-muted-foreground">{line}</span>
+    </div>
+  );
+}
+
+/** The category sidebar as it will look, with the buyer's card in the first open spot. */
+function RailPreview({ rail, card }: { rail?: SideAdRail; card: CardDraft }) {
+  const taken = rail?.placements.filter((p) => p.slotType !== "available") ?? [];
+  const open = rail?.placements.find((p) => p.slotType === "available");
+  return (
+    <div className="mx-auto w-[184px] rounded-xl border border-border bg-background p-2.5">
+      <p className="px-1 pb-2 pt-1 text-center text-[12px] font-medium leading-tight text-foreground/85">{rail?.title ?? "Sidebar"}</p>
+      <div className="space-y-2">
+        {taken.slice(0, 1).map((p) => (
+          <RailCard key={p.id} placement={p} />
+        ))}
+        <YourCard card={card} />
+        {taken.slice(1, 2).map((p) => (
+          <RailCard key={p.id} placement={p} />
+        ))}
+        {open && <RailCard placement={open} />}
+      </div>
+    </div>
+  );
+}
+
+/** The launches list with the buyer's sponsored row in it. */
+function LaunchPreview({ card }: { card: CardDraft }) {
+  const row = (i: number) => (
+    <div key={i} className="flex items-center gap-2.5 rounded-lg border border-border bg-[var(--cad-tile)] px-3 py-2.5">
+      <span className="h-7 w-7 rounded-md bg-foreground/10" />
+      <span className="flex-1 space-y-1.5">
+        <span className="block h-2 w-1/2 rounded-sm bg-foreground/15" />
+        <span className="block h-1.5 w-3/4 rounded-sm bg-foreground/[0.08]" />
+      </span>
+    </div>
+  );
+  return (
+    <div className="space-y-2">
+      <p className="px-1 text-[12px] font-medium text-foreground/85">Launches</p>
+      {[0, 1].map(row)}
+      <YourCard card={card} row />
+      {[2].map(row)}
     </div>
   );
 }
@@ -193,7 +182,6 @@ function checkoutUrl(order: { email: string; category: string; product: string; 
 export default function AdvertiseDialog() {
   const { user } = useAuth();
   const [open, setOpen] = useState(false);
-  const [step, setStep] = useState<0 | 1>(0);
   const [slot, setSlot] = useState<SponsorSlot>("sidebar");
   const [category, setCategory] = useState(SPONSOR_CATEGORIES[0]?.title ?? "");
   const [product, setProduct] = useState("");
@@ -224,8 +212,6 @@ export default function AdvertiseDialog() {
       if (picked && SPONSOR_CATEGORIES.some((c) => c.title === picked)) setCategory(picked);
       const nextSlot = detail?.slot === "launch" ? "launch" : "sidebar";
       setSlot(nextSlot);
-      // The launch row has no category, so it starts at the details step.
-      setStep(nextSlot === "launch" ? 1 : 0);
       setOpen(true);
     };
     window.addEventListener(OPEN_ADVERTISE_EVENT, onOpen);
@@ -263,6 +249,8 @@ export default function AdvertiseDialog() {
 
   const selected = SPONSOR_CATEGORIES.find((c) => c.title === category);
   const label = selected?.label ?? "";
+  const rail = sideAdCollections.flatMap((c) => [c.left, c.right]).find((r) => r.title === category);
+  const card = { product, website, tagline };
   const ready = product.trim().length > 1 && /\S+@\S+\.\S+/.test(emailValue) && !!website.trim();
 
   const submit = (event: React.FormEvent) => {
@@ -316,159 +304,121 @@ export default function AdvertiseDialog() {
     window.location.href = `mailto:${SPONSOR_EMAIL}?subject=${encodeURIComponent(isLaunch ? "Sponsored launch row" : `Sponsor slot: ${label || category}`)}&body=${encodeURIComponent(body)}`;
   };
 
-  const primaryButton =
-    "inline-flex h-10 items-center justify-center gap-2 rounded-md bg-foreground px-5 text-sm font-medium text-background transition-colors hover:bg-foreground/85 disabled:opacity-40";
+  const facts = isLaunch
+    ? ["A row inside the launches list", "Tracked link and a monthly click report", "Billed monthly"]
+    : ["Shown site-wide on large screens", "Tracked link and a monthly click report", "Billed monthly"];
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="max-h-[92vh] gap-0 overflow-y-auto p-0 sm:max-w-[720px]">
-        <div className="grid sm:grid-cols-[240px_minmax(0,1fr)]">
-          {/* Left: where you appear */}
-          <div className="hidden border-r border-border bg-[#141311] p-4 sm:block">
-            {isLaunch ? (
-              <LaunchListMap card={step === 1 ? { product, website, tagline } : undefined} />
-            ) : (
-              <SiteMap category={label} card={step === 1 ? { product, website, tagline } : undefined} />
-            )}
+      <DialogContent className="max-h-[92vh] gap-0 overflow-y-auto p-0 sm:max-w-[820px]">
+        <div className="grid sm:grid-cols-[300px_minmax(0,1fr)]">
+          {/* Left: a live preview of where the card goes */}
+          <div className="hidden flex-col border-r border-border bg-[var(--cad-band)] p-6 sm:flex">
+            <p className="text-[11px] uppercase tracking-[0.08em] text-muted-foreground">Preview</p>
+            <div className="flex flex-1 flex-col justify-center py-6">
+              {isLaunch ? <LaunchPreview card={card} /> : <RailPreview rail={rail} card={card} />}
+            </div>
+            <ul className="space-y-2">
+              {facts.map((f) => (
+                <li key={f} className="flex items-center gap-2 text-[12.5px] text-[var(--cad-desc)]">
+                  <Check className="h-3.5 w-3.5 shrink-0 text-primary" aria-hidden="true" />
+                  {f}
+                </li>
+              ))}
+            </ul>
           </div>
 
-          {/* Right: the decision */}
-          <div className="p-5 sm:p-6">
-            <div className="flex items-center justify-between pr-6">
-              <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground">Sponsorship</p>
-              {!isLaunch && <p className="font-mono text-[10px] text-muted-foreground">{step + 1} / 2</p>}
+          {/* Right: pick, fill in, pay */}
+          <form onSubmit={submit} className="p-6 sm:p-7">
+            <p className="text-[11px] uppercase tracking-[0.08em] text-muted-foreground">Sponsor</p>
+            <DialogTitle className="mt-2 pr-6 text-[22px] font-normal leading-tight">
+              {isLaunch ? "Sponsor the launches list" : "Reach people building with Claude"}
+            </DialogTitle>
+            <DialogDescription className="mt-3 flex items-baseline gap-1.5">
+              <span className="text-[28px] font-light leading-none text-foreground">${price}</span>
+              <span className="text-[13px] text-muted-foreground">/ month{isLaunch ? "" : " · one category"}</span>
+            </DialogDescription>
+
+            {!isLaunch && (
+              <fieldset className="mt-6">
+                <legend className="text-[12px] text-muted-foreground">Category</legend>
+                <div role="radiogroup" className="mt-2 flex flex-wrap gap-1.5">
+                  {SPONSOR_CATEGORIES.map((c) => {
+                    const active = c.title === category;
+                    const soldOut = c.openSlots === 0;
+                    return (
+                      <button
+                        key={c.title}
+                        type="button"
+                        role="radio"
+                        aria-checked={active}
+                        disabled={soldOut}
+                        onClick={() => setCategory(c.title)}
+                        className={`inline-flex h-8 items-center gap-1.5 rounded-full border px-3 text-[13px] transition-colors disabled:opacity-40 ${
+                          active
+                            ? "border-foreground bg-foreground text-background"
+                            : "border-border text-foreground/80 hover:border-foreground/40 hover:text-foreground"
+                        }`}
+                      >
+                        {c.label}
+                        {/* Real availability only: no invented scarcity. */}
+                        {(soldOut || c.openSlots === 1) && <span className="text-[10px] opacity-70">{soldOut ? "Full" : "1 left"}</span>}
+                      </button>
+                    );
+                  })}
+                </div>
+                {selected && selected.neighbors.length > 0 && (
+                  <p className="mt-2 text-[12px] text-muted-foreground">Next to {selected.neighbors.join(" and ")}</p>
+                )}
+              </fieldset>
+            )}
+
+            <div className="mt-6 space-y-3">
+              <div className="grid gap-3 sm:grid-cols-2">
+                <label className="block">
+                  <span className="mb-1 block text-[12px] text-muted-foreground">Product</span>
+                  <input value={product} onChange={(e) => setProduct(e.target.value)} placeholder="Acme MCP" className={inputClass} autoFocus />
+                </label>
+                <label className="block">
+                  <span className="mb-1 block text-[12px] text-muted-foreground">Website</span>
+                  <input value={website} onChange={(e) => setWebsite(e.target.value)} placeholder="acme.dev" className={inputClass} />
+                </label>
+              </div>
+              <label className="block">
+                <span className="mb-1 flex justify-between text-[12px] text-muted-foreground">
+                  One line <span>{tagline.length}/{TAGLINE_MAX}</span>
+                </span>
+                <input
+                  value={tagline}
+                  onChange={(e) => setTagline(e.target.value.slice(0, TAGLINE_MAX))}
+                  placeholder="Turn any website into Claude-ready data"
+                  className={inputClass}
+                />
+              </label>
+              <label className="block">
+                <span className="mb-1 block text-[12px] text-muted-foreground">Email</span>
+                <input type="email" value={emailValue} onChange={(e) => setEmail(e.target.value)} placeholder="you@company.com" className={inputClass} />
+              </label>
             </div>
 
-            {step === 0 ? (
-              <>
-                <DialogTitle className="mt-3 text-2xl font-normal leading-tight">Sponsor a category</DialogTitle>
-                <DialogDescription className="mt-1.5 text-sm leading-6 text-muted-foreground">
-                  <span className="text-foreground">${SPONSOR_MONTHLY_PRICE} a month</span> for one category. Your card, a
-                  tracked link and a monthly click report.
-                </DialogDescription>
+            {/* Mobile has no preview column, so show the card here. */}
+            <div className="mt-4 sm:hidden">
+              <YourCard card={card} row />
+            </div>
 
-                <fieldset className="mt-5">
-                  <legend className="text-xs text-muted-foreground">Category</legend>
-                  <div role="radiogroup" className="mt-2 grid grid-cols-2 gap-x-4">
-                    {SPONSOR_CATEGORIES.map((c) => {
-                      const active = c.title === category;
-                      const soldOut = c.openSlots === 0;
-                      return (
-                        <button
-                          key={c.title}
-                          type="button"
-                          role="radio"
-                          aria-checked={active}
-                          disabled={soldOut}
-                          onClick={() => setCategory(c.title)}
-                          title={c.neighbors.length ? `Next to ${c.neighbors.join(" and ")}` : undefined}
-                          className="group flex items-center gap-2.5 border-b border-border py-2.5 text-left text-sm disabled:opacity-40"
-                        >
-                          <span
-                            className={`flex h-3.5 w-3.5 shrink-0 items-center justify-center rounded-full border ${
-                              active ? "border-foreground" : "border-muted-foreground/50 group-hover:border-foreground/70"
-                            }`}
-                          >
-                            {active && <span className="h-1.5 w-1.5 rounded-full bg-foreground" />}
-                          </span>
-                          <span className={active ? "font-medium text-foreground" : "text-foreground/80"}>{c.label}</span>
-                          {/* Real availability only: no invented scarcity. */}
-                          {(soldOut || c.openSlots === 1) && (
-                            <span className="ml-auto text-[10px] text-muted-foreground">{soldOut ? "Full" : "1 left"}</span>
-                          )}
-                        </button>
-                      );
-                    })}
-                  </div>
-                </fieldset>
-
-                <div className="mt-6 flex items-center justify-between gap-3">
-                  <p className="text-xs text-muted-foreground">Questions? {SPONSOR_EMAIL}</p>
-                  <button type="button" onClick={() => setStep(1)} className={primaryButton}>
-                    Continue
-                    <ArrowRight className="h-4 w-4" aria-hidden="true" />
-                  </button>
-                </div>
-              </>
-            ) : (
-              <form onSubmit={submit}>
-                {isLaunch ? (
-                  <>
-                    <DialogTitle className="mt-3 text-2xl font-normal leading-tight">Sponsor the launches list</DialogTitle>
-                    <DialogDescription className="mt-1.5 text-sm leading-6 text-muted-foreground">
-                      <span className="text-foreground">${SPONSOR_LAUNCH_PRICE} a month.</span> A sponsored row where builders
-                      browse new tools, with a tracked link and a monthly click report.
-                    </DialogDescription>
-                  </>
-                ) : (
-                  <>
-                    <DialogTitle className="mt-3 text-2xl font-normal leading-tight">Your card</DialogTitle>
-                    <DialogDescription className="mt-1.5 text-sm text-muted-foreground">
-                      {label} · ${SPONSOR_MONTHLY_PRICE}/month ·{" "}
-                      <button type="button" onClick={() => setStep(0)} className="text-foreground underline underline-offset-4 hover:text-primary">
-                        change
-                      </button>
-                    </DialogDescription>
-                  </>
-                )}
-
-                <div className="mt-5 space-y-3">
-                  <div className="grid gap-3 sm:grid-cols-2">
-                    <label className="block">
-                      <span className="mb-1 block text-xs text-muted-foreground">Product</span>
-                      <input value={product} onChange={(e) => setProduct(e.target.value)} placeholder="Acme MCP" className={inputClass} autoFocus />
-                    </label>
-                    <label className="block">
-                      <span className="mb-1 block text-xs text-muted-foreground">Website</span>
-                      <input value={website} onChange={(e) => setWebsite(e.target.value)} placeholder="acme.dev" className={inputClass} />
-                    </label>
-                  </div>
-                  <label className="block">
-                    <span className="mb-1 flex justify-between text-xs text-muted-foreground">
-                      One line <span>{tagline.length}/{TAGLINE_MAX}</span>
-                    </span>
-                    <input
-                      value={tagline}
-                      onChange={(e) => setTagline(e.target.value.slice(0, TAGLINE_MAX))}
-                      placeholder="Turn any website into Claude-ready data"
-                      className={inputClass}
-                    />
-                  </label>
-                  <label className="block">
-                    <span className="mb-1 block text-xs text-muted-foreground">Email</span>
-                    <input type="email" value={emailValue} onChange={(e) => setEmail(e.target.value)} placeholder="you@company.com" className={inputClass} />
-                  </label>
-                </div>
-
-                {/* Mobile has no site map, so show the card here. */}
-                <div className="mt-4 flex items-center gap-3 rounded-md border border-border bg-[#141311] p-3 sm:hidden">
-                  <ProductIcon website={website} product={product} className="h-8 w-8 text-xs" />
-                  <span className="min-w-0">
-                    <span className="block truncate text-sm font-semibold text-white">{product.trim() || "Your product"}</span>
-                    <span className="block truncate text-xs text-white/60">{tagline.trim() || "Your one line"}</span>
-                  </span>
-                </div>
-
-                <div className="mt-6 flex items-center justify-between gap-3">
-                  {isLaunch ? (
-                    <span />
-                  ) : (
-                    <button type="button" onClick={() => setStep(0)} className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground">
-                      <ArrowLeft className="h-3.5 w-3.5" aria-hidden="true" />
-                      Back
-                    </button>
-                  )}
-                  <button type="submit" disabled={!ready || paying} className={primaryButton}>
-                    {paying ? "Opening checkout..." : canPay ? `Pay $${price}` : "Request this slot"}
-                    <ArrowRight className="h-4 w-4" aria-hidden="true" />
-                  </button>
-                </div>
-                <p className="mt-3 text-right text-[11px] text-muted-foreground">
-                  {canPay ? "Secure checkout. Billed monthly." : "We confirm your slot and start date by email."}
-                </p>
-              </form>
-            )}
-          </div>
+            <button
+              type="submit"
+              disabled={!ready || paying}
+              className="mt-6 inline-flex h-10 w-full items-center justify-center gap-2 rounded-lg bg-primary px-5 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90 disabled:opacity-40"
+            >
+              {paying ? "Opening checkout..." : canPay ? `Continue to payment · $${price}/mo` : "Request this slot"}
+              {!paying && <ArrowRight className="h-4 w-4" aria-hidden="true" />}
+            </button>
+            <p className="mt-3 text-center text-[11.5px] text-muted-foreground">
+              {canPay ? "Secure checkout. " : "We confirm your slot and start date by email. "}
+              Questions? {SPONSOR_EMAIL}
+            </p>
+          </form>
         </div>
       </DialogContent>
     </Dialog>
