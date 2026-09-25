@@ -453,6 +453,8 @@ export interface SearchResult {
 export interface GuideLessonSummary {
   id: string;
   title: string;
+  /** Short sidebar label, e.g. "Context" for "Context is the real prompt". */
+  nav_title?: string;
   order: number;
   is_free: boolean;
   estimated_time: number;
@@ -461,6 +463,8 @@ export interface GuideLessonSummary {
 export interface GuideChapterSummary {
   id: string;
   title: string;
+  /** Short sidebar label for the chapter. */
+  nav_title?: string;
   order: number;
   lessons: GuideLessonSummary[];
 }
