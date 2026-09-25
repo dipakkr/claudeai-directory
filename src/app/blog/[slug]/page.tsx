@@ -22,6 +22,7 @@ import {
   tableOfContents,
 } from "@/lib/blog";
 import type { BlogPost } from "@/types";
+import { pageTitle } from "@/lib/seo";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -39,7 +40,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const url = postUrl(post.id);
   const profile = authorHref(post);
   return {
-    title: post.title,
+    title: pageTitle(post.title),
     description,
     // A post first published elsewhere points search engines at the original.
     alternates: { canonical: post.canonical_url || url },

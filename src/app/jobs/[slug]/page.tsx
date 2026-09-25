@@ -3,6 +3,7 @@ import { fetchApi } from "@/lib/api-server";
 import type { Job } from "@/types";
 import JobDetailClient from "./JobDetailClient";
 import { JobPostingSchema, BreadcrumbSchema } from "@/components/seo/JsonLd";
+import { pageTitle, plainText } from "@/lib/seo";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.claudeai.directory";
 
@@ -20,10 +21,10 @@ export async function generateMetadata({
 
   const title = `${job.title} at ${job.company}`;
   const description =
-    job.description?.replace(/<[^>]*>/g, "").slice(0, 160) || `${job.title} role at ${job.company}`;
+    (job.description ? plainText(job.description).slice(0, 160) : "") || `${job.title} role at ${job.company}`;
 
   return {
-    title,
+    title: pageTitle(title),
     description,
     alternates: { canonical: `/jobs/${slug}` },
     openGraph: {

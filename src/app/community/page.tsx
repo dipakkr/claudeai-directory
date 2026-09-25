@@ -7,7 +7,7 @@ import CommunityClient from "./CommunityClient";
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.claudeai.directory";
 
 export const metadata: Metadata = {
-  title: "Claude Forum & Community: Discussions, Questions & Answers",
+  title: { absolute: "Claude Forum & Community: Questions and Answers" },
   description:
     "Join the Claude AI community forum. Ask questions, share prompts and workflows, and connect with people building with Claude, Claude Code, and MCP.",
   alternates: { canonical: "/community" },

@@ -3,6 +3,7 @@ import { fetchApi } from "@/lib/api-server";
 import type { GuideDetail, GuideLesson } from "@/types";
 import LessonPage from "./LessonClient";
 import { ArticleSchema, BreadcrumbSchema } from "@/components/seo/JsonLd";
+import { pageTitle } from "@/lib/seo";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.claudeai.directory";
 
@@ -37,7 +38,7 @@ export async function generateMetadata({
   const ogImageUrl = `${SITE_URL}/guides/${slug}/${lessonId}/opengraph-image`;
 
   return {
-    title,
+    title: pageTitle(lesson.title, lesson.guide_title),
     description,
     alternates: { canonical: `/guides/${slug}/${lessonId}` },
     openGraph: {

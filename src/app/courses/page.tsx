@@ -8,7 +8,7 @@ import CourseInterestForm from "@/components/courses/CourseInterestForm";
 import { COURSES, getCourseStatusLabel } from "@/data/courses";
 
 export const metadata: Metadata = {
-  title: { absolute: "Claude Courses: Claude Mastery, GTM, SEO and Workflows | Claude AI Directory" },
+  title: { absolute: "Claude Courses: Mastery, GTM, SEO and Workflows" },
   description:
     "Free Claude Mastery course plus practical Claude courses for GTM, SEO, product, marketing and work systems.",
   alternates: { canonical: "/courses" },

@@ -7,6 +7,7 @@ import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import CourseInterestForm from "@/components/courses/CourseInterestForm";
 import { COURSES, getCourse, getCourseStatusLabel, isCourseCheckoutLive } from "@/data/courses";
+import { pageTitle } from "@/lib/seo";
 
 export function generateStaticParams() {
   return COURSES.map((course) => ({ slug: course.slug }));
@@ -22,7 +23,7 @@ export async function generateMetadata({
   if (!course) return { title: "Course Not Found" };
 
   return {
-    title: { absolute: `${course.title} | Claude AI Directory` },
+    title: pageTitle(course.title),
     description: course.description,
     alternates: { canonical: `/courses/${course.slug}` },
   };

@@ -92,7 +92,7 @@ function SkillBody({ skill, resolution, pluginHref }: { skill: Skill; resolution
         <DetailSection title="SKILL.md">
           <div className="rounded-[11px] border border-border p-5 sm:p-6">
             <article className="guide-prose guide-prose-compact">
-              <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeSlug]}>
+              <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeSlug]} components={{ h1: "h2" }}>
                 {skill.content}
               </ReactMarkdown>
             </article>

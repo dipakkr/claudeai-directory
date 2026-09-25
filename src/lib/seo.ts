@@ -33,3 +33,36 @@ export function listingRobots(params: Record<string, string | undefined>) {
   const filtered = Object.values(params).some(Boolean);
   return filtered ? { index: false, follow: true } : undefined;
 }
+
+const BRAND = " | Claude AI Directory";
+const TITLE_MAX = 60;
+
+function fitWords(text: string, max = TITLE_MAX): string {
+  if (text.length <= max) return text;
+  const cut = text.slice(0, max + 1);
+  const at = cut.lastIndexOf(" ");
+  return cut.slice(0, at > 20 ? at : max).replace(/[\s,:;|–-]+$/, "");
+}
+
+/**
+ * Page title within ~60 characters: keeps the site suffix when it fits, drops it
+ * when it doesn't, and only then shortens (at a word boundary). An optional
+ * secondary part (e.g. the guide a lesson belongs to) is kept while it fits.
+ */
+export function pageTitle(primary: string, secondary?: string): string | { absolute: string } {
+  const main = primary.replace(/\s+/g, " ").trim();
+  const full = secondary ? `${main} | ${secondary.replace(/\s+/g, " ").trim()}` : main;
+  if (full.length + BRAND.length <= TITLE_MAX) return full;
+  if (full.length <= TITLE_MAX) return { absolute: full };
+  if (main.length + BRAND.length <= TITLE_MAX) return main;
+  return { absolute: fitWords(main) };
+}
+
+/** Plain text for meta descriptions: decodes escaped HTML, strips tags, collapses space. */
+export function plainText(value: string): string {
+  return value
+    .replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, '"').replace(/&#39;|&#x27;/g, "'").replace(/&nbsp;/g, " ").replace(/&amp;/g, "&")
+    .replace(/<[^>]*>/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}

@@ -143,12 +143,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.7,
   }));
 
-  const guidePages: MetadataRoute.Sitemap = guideSlugs.map((slug) => ({
-    url: `${SITE_URL}/guides/${slug}`,
-    changeFrequency: "weekly",
-    priority: 0.7,
-  }));
-
+  // Guide index URLs redirect to their first lesson; the lessons are listed below.
   const launchPages: MetadataRoute.Sitemap = launchSlugs.map((slug) => ({
     url: `${SITE_URL}/launches/${slug}`,
     changeFrequency: "weekly",
@@ -205,7 +200,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...pluginPages,
     ...promptPages,
     ...jobPages,
-    ...guidePages,
     ...lessonPages,
     ...launchPages,
     ...blogPages,

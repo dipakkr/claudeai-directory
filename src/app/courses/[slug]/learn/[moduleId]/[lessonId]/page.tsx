@@ -5,6 +5,7 @@ import CourseLessonView, { type CourseOutlineModule } from "@/components/courses
 import { COURSES, getCourse } from "@/data/courses";
 import { getCourseContent, type CourseContent } from "@/data/course-content";
 import { courseLessonHref } from "@/lib/course-links";
+import { pageTitle } from "@/lib/seo";
 
 export function generateStaticParams() {
   return COURSES.flatMap((course) => {
@@ -47,7 +48,7 @@ export async function generateMetadata({
   const url = courseLessonHref(course.slug, courseModule.id, lesson.id);
 
   return {
-    title: { absolute: title },
+    title: pageTitle(lesson.title, course.title),
     description,
     alternates: { canonical: url },
     openGraph: { title, description, url, type: "article" },

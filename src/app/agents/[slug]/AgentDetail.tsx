@@ -64,7 +64,7 @@ export default function AgentDetail({
         <DetailSection title="Definition">
           <div className="rounded-[11px] border border-border p-5 sm:p-6">
             <article className="guide-prose guide-prose-compact">
-              <ReactMarkdown remarkPlugins={[remarkGfm]}>{agent.content}</ReactMarkdown>
+              <ReactMarkdown remarkPlugins={[remarkGfm]} components={{ h1: "h2" }}>{agent.content}</ReactMarkdown>
             </article>
           </div>
         </DetailSection>

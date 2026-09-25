@@ -3,6 +3,8 @@ import { fetchApi } from "@/lib/api-server";
 import type { GuideDetail } from "@/types";
 import GuideDetailPage from "./GuideRedirectClient";
 import { BreadcrumbSchema } from "@/components/seo/JsonLd";
+import { pageTitle } from "@/lib/seo";
+import { permanentRedirect } from "next/navigation";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.claudeai.directory";
 
@@ -22,7 +24,7 @@ export async function generateMetadata({
   const description = guide.description?.slice(0, 160) || `Learn ${guide.title} with Claude`;
 
   return {
-    title,
+    title: pageTitle(title),
     description,
     alternates: { canonical: `/guides/${slug}` },
     openGraph: { title, description, url: `/guides/${slug}` },
@@ -36,6 +38,10 @@ export default async function GuidePage({
 }) {
   const { slug } = await params;
   const guide = await fetchApi<GuideDetail>(`/guides/${slug}`);
+  // A guide's home is its first lesson. Redirect on the server so crawlers get a
+  // real 308 instead of an empty page that redirects in the browser.
+  const firstLesson = guide?.chapters?.[0]?.lessons?.[0]?.id;
+  if (firstLesson) permanentRedirect(`/guides/${slug}/${firstLesson}`);
 
   return (
     <>

@@ -3,6 +3,7 @@ import { fetchApi } from "@/lib/api-server";
 import type { PublicProfile, Thread, Reply } from "@/types";
 import ThreadDetail from "./ThreadDetailClient";
 import { BreadcrumbSchema, DiscussionForumPostingSchema } from "@/components/seo/JsonLd";
+import { pageTitle } from "@/lib/seo";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.claudeai.directory";
 
@@ -22,7 +23,7 @@ export async function generateMetadata({
   const description = thread.body?.slice(0, 160) || "Community discussion on ClaudeAI Directory";
 
   return {
-    title,
+    title: pageTitle(title),
     description,
     alternates: { canonical: `/community/${id}` },
     openGraph: { title, description, url: `/community/${id}`, type: "article" },

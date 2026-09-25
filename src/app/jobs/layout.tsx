@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "AI Jobs: Find Engineering, Product & AI/ML Roles",
+  title: { absolute: "AI Jobs: Engineering, Product and AI/ML Roles" },
   description:
     "Browse AI jobs across engineering, product, design, marketing, and AI/ML. Find roles at companies building with Claude and large language models.",
   alternates: { canonical: "/jobs" },
