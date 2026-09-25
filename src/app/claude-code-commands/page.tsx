@@ -142,190 +142,196 @@ export default function ClaudeCodeCommandsPage() {
       />
       <Header />
       <main className="flex-1">
-        <section className="mx-auto max-w-[1180px] px-4 pb-10 pt-12 md:px-8 md:pt-16">
-          <nav aria-label="Breadcrumb" className="text-[13px] text-muted-foreground">
-            <Link href="/" className="hover:text-foreground">Home</Link>
-            <span className="px-2">/</span>
-            <span className="text-foreground">Claude Code Commands</span>
-          </nav>
-          <h1 className="mt-5 max-w-[760px] text-[clamp(34px,4.6vw,52px)] font-normal leading-[1.05] text-foreground">
-            Claude Code commands
-          </h1>
-          <p className="mt-4 max-w-[680px] text-pretty text-[16px] leading-relaxed text-muted-foreground md:text-[17px]">
-            Every slash command in Claude Code, explained in plain words. Start with the {top.length} commands most people
-            use every day, then look up the other {active.length - top.length} by category, along with CLI flags and
-            keyboard shortcuts.
-          </p>
-          <p className="mt-3 text-[13px] text-muted-foreground">
-            Checked against the{" "}
-            <a href={docs.sources.commands} target="_blank" rel="noopener" className="underline underline-offset-4 hover:text-foreground">
-              official Claude Code docs
-            </a>{" "}
-            on {checked}. Type <kbd className={kbd}>/</kbd> in Claude Code to see what your version and plan include.
-          </p>
-        </section>
+        <CommandsExplorer
+          groups={groups}
+          start={[{ id: "top-commands", label: `Top ${top.length} to learn first` }]}
+          reference={[
+            { id: "cli", label: "Terminal commands and flags" },
+            { id: "shortcuts", label: "Keyboard shortcuts" },
+            { id: "removed", label: "Removed commands and mix-ups" },
+            { id: "faq", label: "FAQ" },
+          ]}
+          intro={
+            <>
+              <section className="pb-4 pt-10 md:pt-12">
+                <nav aria-label="Breadcrumb" className="text-[13px] text-muted-foreground">
+                  <Link href="/" className="hover:text-foreground">Home</Link>
+                  <span className="px-2">/</span>
+                  <span className="text-foreground">Claude Code Commands</span>
+                </nav>
+                <h1 className="mt-5 max-w-[760px] text-[clamp(34px,4.6vw,52px)] font-normal leading-[1.05] text-foreground">
+                  Claude Code commands
+                </h1>
+                <p className="mt-4 max-w-[680px] text-pretty text-[16px] leading-relaxed text-muted-foreground md:text-[17px]">
+                  Every slash command in Claude Code, explained in plain words. Start with the {top.length} commands most people
+                  use every day, then look up the other {active.length - top.length} by category, along with CLI flags and
+                  keyboard shortcuts.
+                </p>
+                <p className="mt-3 text-[13px] text-muted-foreground">
+                  Checked against the{" "}
+                  <a href={docs.sources.commands} target="_blank" rel="noopener" className="underline underline-offset-4 hover:text-foreground">
+                    official Claude Code docs
+                  </a>{" "}
+                  on {checked}. Type <kbd className={kbd}>/</kbd> in Claude Code to see what your version and plan include.
+                </p>
+              </section>
 
-        <section className="mx-auto max-w-[1180px] px-4 md:px-8" aria-labelledby="top-commands">
-          <h2 id="top-commands" className={heading}>
-            Top {top.length} commands to learn first
-          </h2>
-          <ol className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {top.map((t, i) => (
-              <li key={t.name} className="flex min-w-0 flex-col rounded-lg border border-border bg-card p-4">
-                <div className="flex items-baseline gap-2">
-                  <span className="font-mono text-[12px] text-muted-foreground">{String(i + 1).padStart(2, "0")}</span>
-                  <a href={`#cmd-${t.name.slice(1)}`} className="font-mono text-[16px] text-foreground hover:text-primary">
-                    {t.name}
-                  </a>
-                </div>
-                <p className="mt-2 flex-1 text-[14px] leading-relaxed text-muted-foreground">{t.why}</p>
-                <div className="mt-3 flex items-center gap-2 rounded-md bg-muted px-2.5 py-1.5">
-                  <code className="min-w-0 flex-1 truncate font-mono text-[12px] text-foreground" title={t.example}>
-                    {t.example}
-                  </code>
-                  <CopyButton text={t.example} />
-                </div>
-              </li>
-            ))}
-          </ol>
-        </section>
+              <section className="mt-10" aria-labelledby="top-commands">
+                <h2 id="top-commands" className={`${heading} scroll-mt-24`}>
+                  Top {top.length} commands to learn first
+                </h2>
+                <ol className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
+                  {top.map((t, i) => (
+                    <li key={t.name} className="flex min-w-0 flex-col rounded-lg border border-border bg-card p-4">
+                      <div className="flex items-baseline gap-2">
+                        <span className="font-mono text-[12px] text-muted-foreground">{String(i + 1).padStart(2, "0")}</span>
+                        <a href={`#cmd-${t.name.slice(1)}`} className="font-mono text-[16px] text-foreground hover:text-primary">
+                          {t.name}
+                        </a>
+                      </div>
+                      <p className="mt-2 flex-1 text-[14px] leading-relaxed text-muted-foreground">{t.why}</p>
+                      <div className="mt-3 flex items-center gap-2 rounded-md bg-muted px-2.5 py-1.5">
+                        <code className="min-w-0 flex-1 truncate font-mono text-[12px] text-foreground" title={t.example}>
+                          {t.example}
+                        </code>
+                        <CopyButton text={t.example} />
+                      </div>
+                    </li>
+                  ))}
+                </ol>
+              </section>
+            </>
+          }
+          after={
+            <>
+              <section className="mt-20" aria-labelledby="cli">
+                <h2 id="cli" className={`${heading} scroll-mt-24`}>Terminal commands</h2>
+                <p className="mt-3 max-w-[70ch] text-[14px] leading-relaxed text-muted-foreground">
+                  Run these from your shell, not inside a session.
+                </p>
+                <ul className="mt-4 divide-y divide-border border-y border-border">
+                  {docs.cli.map(c => (
+                    <li key={c.usage} className="grid gap-1 py-3 md:grid-cols-[300px_1fr] md:gap-6">
+                      <code className="break-words font-mono text-[13px] text-foreground">{c.usage}</code>
+                      <span className="text-[14px] text-muted-foreground">{cliGuide[c.usage] ?? ""}</span>
+                    </li>
+                  ))}
+                </ul>
 
-        <section className="mx-auto mt-16 max-w-[1180px] px-4 md:px-8" aria-labelledby="all-commands">
-          <h2 id="all-commands" className={heading}>
-            All {active.length} slash commands
-          </h2>
-          <p className="mt-3 max-w-[70ch] text-[14px] leading-relaxed text-muted-foreground">
-            Bundled skills and workflows run like any other command. Version tags show the minimum Claude Code version the
-            docs list; run <code className="font-mono text-foreground">claude update</code> if a command is missing.
-          </p>
-          <CommandsExplorer groups={groups} />
-        </section>
+                <h3 className="mt-12 text-[20px] font-normal text-foreground">Flags worth knowing</h3>
+                <ul className="mt-3 divide-y divide-border border-y border-border">
+                  {flags.map(f => (
+                    <li key={f.flag} className="grid gap-1.5 py-3 md:grid-cols-[300px_1fr] md:gap-6">
+                      <code className="font-mono text-[13px] text-foreground">{f.flag}</code>
+                      <div className="min-w-0">
+                        <p className="text-[14px] text-muted-foreground">{f.summary}</p>
+                        <code className="mt-1 block break-words font-mono text-[12px] text-foreground/80">{f.example}</code>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+                <p className="mt-3 text-[13px] text-muted-foreground">
+                  There are {docs.flags.length} flags in total. See the{" "}
+                  <a href={docs.sources.cli} target="_blank" rel="noopener" className="underline underline-offset-4 hover:text-foreground">
+                    CLI reference
+                  </a>{" "}
+                  for the full list.
+                </p>
+              </section>
 
-        <section className="mx-auto mt-20 max-w-[1180px] px-4 md:px-8" aria-labelledby="cli">
-          <h2 id="cli" className={heading}>Terminal commands</h2>
-          <p className="mt-3 max-w-[70ch] text-[14px] leading-relaxed text-muted-foreground">
-            Run these from your shell, not inside a session.
-          </p>
-          <ul className="mt-4 divide-y divide-border border-y border-border">
-            {docs.cli.map(c => (
-              <li key={c.usage} className="grid gap-1 py-3 md:grid-cols-[300px_1fr] md:gap-6">
-                <code className="break-words font-mono text-[13px] text-foreground">{c.usage}</code>
-                <span className="text-[14px] text-muted-foreground">{cliGuide[c.usage] ?? ""}</span>
-              </li>
-            ))}
-          </ul>
-
-          <h3 className="mt-12 text-[20px] font-normal text-foreground">Flags worth knowing</h3>
-          <ul className="mt-3 divide-y divide-border border-y border-border">
-            {flags.map(f => (
-              <li key={f.flag} className="grid gap-1.5 py-3 md:grid-cols-[300px_1fr] md:gap-6">
-                <code className="font-mono text-[13px] text-foreground">{f.flag}</code>
-                <div className="min-w-0">
-                  <p className="text-[14px] text-muted-foreground">{f.summary}</p>
-                  <code className="mt-1 block break-words font-mono text-[12px] text-foreground/80">{f.example}</code>
-                </div>
-              </li>
-            ))}
-          </ul>
-          <p className="mt-3 text-[13px] text-muted-foreground">
-            There are {docs.flags.length} flags in total. See the{" "}
-            <a href={docs.sources.cli} target="_blank" rel="noopener" className="underline underline-offset-4 hover:text-foreground">
-              CLI reference
-            </a>{" "}
-            for the full list.
-          </p>
-        </section>
-
-        <section className="mx-auto mt-20 max-w-[1180px] px-4 md:px-8" aria-labelledby="shortcuts">
-          <h2 id="shortcuts" className={heading}>Keyboard shortcuts and input prefixes</h2>
-          <div className="mt-4 grid gap-8 lg:grid-cols-2">
-            <div>
-              <h3 className="text-[20px] font-normal text-foreground">Start your prompt with</h3>
-              <dl className="mt-3 divide-y divide-border border-y border-border">
-                {shortcuts.prefixes.map(s => (
-                  <div key={s.keys} className="flex items-baseline gap-4 py-2.5">
-                    <dt className="w-32 shrink-0"><kbd className={kbd}>{s.keys}</kbd></dt>
-                    <dd className="text-[14px] text-muted-foreground">{s.description}</dd>
+              <section className="mt-20" aria-labelledby="shortcuts">
+                <h2 id="shortcuts" className={`${heading} scroll-mt-24`}>Keyboard shortcuts and input prefixes</h2>
+                <div className="mt-4 grid gap-8 xl:grid-cols-2">
+                  <div>
+                    <h3 className="text-[20px] font-normal text-foreground">Start your prompt with</h3>
+                    <dl className="mt-3 divide-y divide-border border-y border-border">
+                      {shortcuts.prefixes.map(s => (
+                        <div key={s.keys} className="flex items-baseline gap-4 py-2.5">
+                          <dt className="w-32 shrink-0"><kbd className={kbd}>{s.keys}</kbd></dt>
+                          <dd className="text-[14px] text-muted-foreground">{s.description}</dd>
+                        </div>
+                      ))}
+                    </dl>
+                    <h3 className="mt-10 text-[20px] font-normal text-foreground">New line without sending</h3>
+                    <dl className="mt-3 divide-y divide-border border-y border-border">
+                      {shortcuts.multiline.map(s => (
+                        <div key={s.keys} className="flex items-baseline gap-4 py-2.5">
+                          <dt className="w-32 shrink-0"><kbd className={kbd}>{s.keys}</kbd></dt>
+                          <dd className="text-[14px] text-muted-foreground">{s.notes}</dd>
+                        </div>
+                      ))}
+                    </dl>
                   </div>
-                ))}
-              </dl>
-              <h3 className="mt-10 text-[20px] font-normal text-foreground">New line without sending</h3>
-              <dl className="mt-3 divide-y divide-border border-y border-border">
-                {shortcuts.multiline.map(s => (
-                  <div key={s.keys} className="flex items-baseline gap-4 py-2.5">
-                    <dt className="w-32 shrink-0"><kbd className={kbd}>{s.keys}</kbd></dt>
-                    <dd className="text-[14px] text-muted-foreground">{s.notes}</dd>
+                  <div>
+                    <h3 className="text-[20px] font-normal text-foreground">While Claude works</h3>
+                    <dl className="mt-3 divide-y divide-border border-y border-border">
+                      {shortcuts.general.map(s => (
+                        <div key={s.keys} className="grid gap-1 py-2.5 sm:grid-cols-[180px_1fr] sm:gap-4">
+                          <dt><kbd className={`${kbd} inline-block whitespace-normal`}>{s.keys}</kbd></dt>
+                          <dd className="text-[14px] text-muted-foreground">{firstSentence(s.description)}</dd>
+                        </div>
+                      ))}
+                    </dl>
                   </div>
-                ))}
-              </dl>
-            </div>
-            <div>
-              <h3 className="text-[20px] font-normal text-foreground">While Claude works</h3>
-              <dl className="mt-3 divide-y divide-border border-y border-border">
-                {shortcuts.general.map(s => (
-                  <div key={s.keys} className="grid gap-1 py-2.5 sm:grid-cols-[180px_1fr] sm:gap-4">
-                    <dt><kbd className={`${kbd} inline-block whitespace-normal`}>{s.keys}</kbd></dt>
-                    <dd className="text-[14px] text-muted-foreground">{firstSentence(s.description)}</dd>
-                  </div>
-                ))}
-              </dl>
-            </div>
-          </div>
-          <details className="mt-8 rounded-lg border border-border bg-card p-4">
-            <summary className="cursor-pointer text-[15px] text-foreground">Text editing shortcuts</summary>
-            <dl className="mt-3 divide-y divide-border">
-              {shortcuts.editing.map(s => (
-                <div key={s.keys} className="grid gap-1 py-2 sm:grid-cols-[180px_1fr] sm:gap-4">
-                  <dt><kbd className={kbd}>{s.keys}</kbd></dt>
-                  <dd className="text-[14px] text-muted-foreground">{s.description}</dd>
                 </div>
-              ))}
-            </dl>
-          </details>
-        </section>
+                <details className="mt-8 rounded-lg border border-border bg-card p-4">
+                  <summary className="cursor-pointer text-[15px] text-foreground">Text editing shortcuts</summary>
+                  <dl className="mt-3 divide-y divide-border">
+                    {shortcuts.editing.map(s => (
+                      <div key={s.keys} className="grid gap-1 py-2 sm:grid-cols-[180px_1fr] sm:gap-4">
+                        <dt><kbd className={kbd}>{s.keys}</kbd></dt>
+                        <dd className="text-[14px] text-muted-foreground">{s.description}</dd>
+                      </div>
+                    ))}
+                  </dl>
+                </details>
+              </section>
 
-        <section className="mx-auto mt-20 max-w-[1180px] px-4 md:px-8" aria-labelledby="removed">
-          <h2 id="removed" className={heading}>Removed commands and common mix-ups</h2>
-          <ul className="mt-4 divide-y divide-border border-y border-border">
-            {removed.map(c => (
-              <li key={c.name} className="grid gap-1 py-3 md:grid-cols-[240px_1fr] md:gap-6">
-                <div>
-                  <code className="font-mono text-[14px] text-foreground">{c.name}</code>
-                  <span className="ml-2 rounded border border-border px-1.5 py-px text-[11px] text-muted-foreground">Removed</span>
-                </div>
-                <span className="text-[14px] text-muted-foreground">{commandGuide[c.name]?.details}</span>
-              </li>
-            ))}
-            {myths.map(m => (
-              <li key={m.name} className="grid gap-1 py-3 md:grid-cols-[240px_1fr] md:gap-6">
-                <div>
-                  <code className="font-mono text-[14px] text-foreground">{m.name}</code>
-                  <span className="ml-2 rounded border border-border px-1.5 py-px text-[11px] text-muted-foreground">Not a command</span>
-                </div>
-                <span className="text-[14px] text-muted-foreground">{m.instead}</span>
-              </li>
-            ))}
-          </ul>
-        </section>
+              <section className="mt-20" aria-labelledby="removed">
+                <h2 id="removed" className={`${heading} scroll-mt-24`}>Removed commands and common mix-ups</h2>
+                <ul className="mt-4 divide-y divide-border border-y border-border">
+                  {removed.map(c => (
+                    <li key={c.name} className="grid gap-1 py-3 md:grid-cols-[240px_1fr] md:gap-6">
+                      <div>
+                        <code className="font-mono text-[14px] text-foreground">{c.name}</code>
+                        <span className="ml-2 rounded border border-border px-1.5 py-px text-[11px] text-muted-foreground">Removed</span>
+                      </div>
+                      <span className="text-[14px] text-muted-foreground">{commandGuide[c.name]?.details}</span>
+                    </li>
+                  ))}
+                  {myths.map(m => (
+                    <li key={m.name} className="grid gap-1 py-3 md:grid-cols-[240px_1fr] md:gap-6">
+                      <div>
+                        <code className="font-mono text-[14px] text-foreground">{m.name}</code>
+                        <span className="ml-2 rounded border border-border px-1.5 py-px text-[11px] text-muted-foreground">Not a command</span>
+                      </div>
+                      <span className="text-[14px] text-muted-foreground">{m.instead}</span>
+                    </li>
+                  ))}
+                </ul>
+              </section>
 
-        <section className="mx-auto mb-24 mt-20 max-w-[840px] px-4 md:px-8" aria-labelledby="faq">
-          <h2 id="faq" className="text-[26px] font-normal text-foreground">Questions about Claude Code commands</h2>
-          <div className="mt-6 divide-y divide-border border-y border-border">
-            {faqs.map(f => (
-              <details key={f.q} className="group py-4">
-                <summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-[16px] text-foreground">
-                  {f.q}
-                  <span aria-hidden className="text-muted-foreground transition-transform group-open:rotate-45">+</span>
-                </summary>
-                <p className="mt-3 text-[15px] leading-relaxed text-muted-foreground">{f.a}</p>
-              </details>
-            ))}
-          </div>
-          <p className="mt-8 text-[14px] text-muted-foreground">
-            Looking for hooks, subagents and settings too? See the{" "}
-            <Link href="/cheatsheet" className="underline underline-offset-4 hover:text-foreground">Claude Code cheatsheet</Link>.
-          </p>
-        </section>
+              <section className="mb-24 mt-20" aria-labelledby="faq">
+                <h2 id="faq" className="scroll-mt-24 text-[26px] font-normal text-foreground">Questions about Claude Code commands</h2>
+                <div className="mt-6 divide-y divide-border border-y border-border">
+                  {faqs.map(f => (
+                    <details key={f.q} className="group py-4">
+                      <summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-[16px] text-foreground">
+                        {f.q}
+                        <span aria-hidden className="text-muted-foreground transition-transform group-open:rotate-45">+</span>
+                      </summary>
+                      <p className="mt-3 text-[15px] leading-relaxed text-muted-foreground">{f.a}</p>
+                    </details>
+                  ))}
+                </div>
+                <p className="mt-8 text-[14px] text-muted-foreground">
+                  Looking for hooks, subagents and settings too? See the{" "}
+                  <Link href="/cheatsheet" className="underline underline-offset-4 hover:text-foreground">Claude Code cheatsheet</Link>.
+                </p>
+              </section>
+            </>
+          }
+        />
       </main>
       <Footer />
     </div>
