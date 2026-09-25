@@ -57,6 +57,7 @@ import {
   Palette,
   Plane,
   Plug,
+  ArrowUpRight,
   Plus,
   Puzzle,
   Rocket,
@@ -587,12 +588,23 @@ export default function DiscoverListing({
             Submit
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-60">
-            <DropdownMenuItem asChild>
-              <Link href={type === "prompt" ? "/submit" : `/submit?type=${type}`} className="gap-2.5">
-                <Upload className="h-4 w-4" />
-                Submit {type === "mcp" ? "an MCP server" : type === "agent" ? "an Agent" : "a Skill"}
-              </Link>
-            </DropdownMenuItem>
+            {type === "plugin" ? (
+              // Plugins are listed from published marketplaces, so the route in is Anthropic's own submission.
+              <DropdownMenuItem asChild>
+                <a href="https://claude.com/docs/plugins/submit" target="_blank" rel="noopener noreferrer" className="gap-2.5">
+                  <Upload className="h-4 w-4" />
+                  <span className="flex-1">Submit to Claude Marketplace</span>
+                  <ArrowUpRight className="h-3.5 w-3.5 text-muted-foreground" />
+                </a>
+              </DropdownMenuItem>
+            ) : (
+              <DropdownMenuItem asChild>
+                <Link href={type === "prompt" ? "/submit" : `/submit?type=${type}`} className="gap-2.5">
+                  <Upload className="h-4 w-4" />
+                  Submit {type === "mcp" ? "an MCP server" : type === "agent" ? "an Agent" : "a Skill"}
+                </Link>
+              </DropdownMenuItem>
+            )}
             <DropdownMenuItem asChild>
               <Link href="/launches/submit" className="gap-2.5">
                 <Rocket className="h-4 w-4" />
