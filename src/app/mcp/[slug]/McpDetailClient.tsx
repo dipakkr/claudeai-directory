@@ -16,6 +16,9 @@ import type { InstallResolution } from "@/lib/install";
 import { useMCPServer, useMCPServers } from "@/hooks/use-mcp-servers";
 import { faviconFor, mcpToItem } from "@/lib/directory";
 import type { MCPServer } from "@/types";
+import marketplace from "@/data/claude-marketplace-connectors.json";
+
+const MARKETPLACE_CONNECTORS: Record<string, string> = marketplace.connectors;
 
 /** Project-scoped config for teams, generated from the same validated fields as the command. */
 function projectConfig(resolution: InstallResolution): string {
@@ -122,6 +125,8 @@ export default function MCPServerDetail({
             },
             ...facts.filter((f) => f.label === "Transport" || f.label === "Permissions" || f.label === "Version"),
             { label: "Server URL", value: serverUrl, mono: true },
+            // Exact slug match against Claude Marketplace's connector pages (names checked when the list was built).
+            { label: "Claude Marketplace", value: MARKETPLACE_CONNECTORS[slug] ? "Also listed" : null, href: MARKETPLACE_CONNECTORS[slug] },
           ]}
           links={[
             ...links,
