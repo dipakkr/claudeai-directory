@@ -56,6 +56,8 @@ export default async function MCPDetailPage({
   const { slug } = await params;
   const server = await fetchApi<MCPServer>(`/mcp-servers/${slug}`, { throwOnError: true });
   if (!server) notFound();
+  // Same slug in Plugins = the same vendor's Claude Code plugin; link across.
+  const plugin = await fetchApi<{ id: string }>(`/plugins/${server.slug || slug}`);
   const resolution = resolveMcpInstall({
     install: server?.install,
     slug: server?.slug || slug,
@@ -86,7 +88,7 @@ export default async function MCPDetailPage({
           />
         </>
       )}
-      <MCPServerDetail server={server} slug={slug} resolution={resolution} />
+      <MCPServerDetail server={server} slug={slug} resolution={resolution} pluginHref={plugin ? `/plugins/${plugin.id}` : null} />
     </>
   );
 }

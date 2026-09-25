@@ -27,10 +27,13 @@ export default function MCPServerDetail({
   server: initialServer,
   slug,
   resolution,
+  pluginHref = null,
 }: {
   server: MCPServer | null;
   slug: string;
   resolution: InstallResolution;
+  /** Our page for the same vendor's Claude Code plugin, when there is one. */
+  pluginHref?: string | null;
 }) {
   const { data: fetchedServer } = useMCPServer(initialServer ? "" : slug);
   const server = initialServer ?? fetchedServer ?? null;
@@ -137,6 +140,16 @@ export default function MCPServerDetail({
             ) : null}
             {guide ? <ResourceGuide guide={guide} /> : null}
           </div>
+
+          {pluginHref && (
+            <p className="text-[13.5px] text-[var(--cad-desc)]">
+              Want skills and commands too?{" "}
+              <Link href={pluginHref} className="text-[var(--cad-link)] underline underline-offset-[3px]">
+                {server.name} is also available as a Claude Code plugin
+              </Link>
+              .
+            </p>
+          )}
 
           <DetailSection id="install" title="Install">
             <InstallPanel resolution={resolution} kind="mcp" resourceId={slug} bare />
