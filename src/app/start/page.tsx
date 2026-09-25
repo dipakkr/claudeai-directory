@@ -1,8 +1,7 @@
 import { redirect } from "next/navigation";
 
-// Courses are temporarily removed from the site. This page redirects home.
-// All course code and data is preserved (src/data/courses.ts, src/data/course-content.ts,
-// src/components/courses/*, src/components/home/CoursesSection.tsx) for easy restore.
+// Courses were retired; their written content moved to /guides
+// (backend/app/seed/seed_course_guides.py). This old page redirects home.
 export default function Page() {
   redirect("/");
 }

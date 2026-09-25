@@ -16,7 +16,6 @@ const footerLinks = [
       { label: "Agents", href: "/agents" },
       { label: "Plugins", href: "/plugins" },
       { label: "Jobs", href: "/jobs" },
-      { label: "Courses", href: "/courses" },
       { label: "Prompts", href: "/prompts" },
       { label: "Connectors", href: "/connectors" },
     ],

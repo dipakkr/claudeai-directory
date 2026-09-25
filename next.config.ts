@@ -1,4 +1,16 @@
 import type { NextConfig } from "next";
+import courseRedirects from "./src/data/course-redirects.json";
+
+// Courses moved to /guides: every old lesson URL goes to the matching guide lesson.
+const courseLessonRedirects = Object.entries(courseRedirects as Record<string, Record<string, string>>).flatMap(([slug, lessons]) => [
+  ...Object.entries(lessons).map(([from, to]) => ({
+    source: `/courses/${slug}/learn/${from}`,
+    destination: `/guides/${slug}/${to}`,
+    permanent: true,
+  })),
+  { source: `/courses/${slug}/:path*`, destination: `/guides/${slug}`, permanent: true },
+  { source: `/courses/${slug}`, destination: `/guides/${slug}`, permanent: true },
+]);
 
 const nextConfig: NextConfig = {
   output: "standalone",
@@ -13,6 +25,10 @@ const nextConfig: NextConfig = {
   },
   async redirects() {
     return [
+      ...courseLessonRedirects,
+      // Courses without written lessons, and the old index, go to the guides list.
+      { source: "/courses/:path*", destination: "/guides", permanent: true },
+      { source: "/courses", destination: "/guides", permanent: true },
       // One host for search engines: send claudeai.directory to www (nginx
       // passes the real Host header through). Localhost is never matched.
       {

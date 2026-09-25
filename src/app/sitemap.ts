@@ -1,6 +1,4 @@
 import type { MetadataRoute } from "next";
-import { COURSES } from "@/data/courses";
-import { getCourseContent } from "@/data/course-content";
 import { reviewedAgents } from "@/data/resource-guides";
 import { publicLaunches } from "@/lib/home-community";
 import type { ShowcaseProject } from "@/types";
@@ -73,7 +71,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${SITE_URL}/submit`, changeFrequency: "monthly", priority: 0.5 },
     { url: `${SITE_URL}/prompts`, changeFrequency: "daily", priority: 0.9 },
     { url: `${SITE_URL}/jobs`, changeFrequency: "daily", priority: 0.8 },
-    { url: `${SITE_URL}/courses`, changeFrequency: "weekly", priority: 0.8 },
     { url: `${SITE_URL}/launches`, changeFrequency: "weekly", priority: 0.7 },
     { url: `${SITE_URL}/members`, changeFrequency: "weekly", priority: 0.5 },
     { url: `${SITE_URL}/cheatsheet`, changeFrequency: "monthly", priority: 0.7 },
@@ -170,27 +167,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.6,
   }));
 
-  const coursePages: MetadataRoute.Sitemap = COURSES.flatMap((course) => [
-    {
-      url: `${SITE_URL}/courses/${course.slug}`,
-      changeFrequency: "weekly" as const,
-      priority: 0.7,
-    },
-  ]);
-
-  // One page per lesson. Locked lessons are noindex, so only open ones are listed.
-  const courseLessonPages: MetadataRoute.Sitemap = COURSES.flatMap((course) => {
-    const content = getCourseContent(course.slug);
-    return (content?.modules ?? [])
-      .filter((module) => module.free)
-      .flatMap((module) =>
-        module.lessons.map((lesson) => ({
-          url: `${SITE_URL}/courses/${course.slug}/learn/${module.id}/${lesson.id}`,
-          changeFrequency: "weekly" as const,
-          priority: course.isFree ? 0.7 : 0.55,
-        }))
-      );
-  });
 
   const all: MetadataRoute.Sitemap = [
     ...staticPages,
@@ -204,8 +180,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...launchPages,
     ...blogPages,
     ...threadPages,
-    ...coursePages,
-    ...courseLessonPages,
   ];
   // One entry per URL (duplicate records, e.g. two MCP rows with the same slug, would repeat it).
   const seen = new Set<string>();
