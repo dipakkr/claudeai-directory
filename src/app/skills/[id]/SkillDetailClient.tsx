@@ -1,5 +1,6 @@
 "use client";
 
+import { AlsoPlugin } from "@/components/directory/AlsoPlugin";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeSlug from "rehype-slug";
@@ -20,10 +21,13 @@ export default function SkillDetail({
   skill: initialSkill,
   id,
   resolution,
+  pluginHref = null,
 }: {
   skill: Skill | null;
   id: string;
   resolution: InstallResolution;
+  /** Our page for a plugin with the same slug, when there is one. */
+  pluginHref?: string | null;
 }) {
   const { data: fetchedSkill } = useSkill(initialSkill ? "" : id);
   const skill = initialSkill ?? fetchedSkill ?? null;
@@ -33,7 +37,7 @@ export default function SkillDetail({
       <Header />
       <main>
         {skill ? (
-          <SkillBody skill={skill} resolution={resolution} />
+          <SkillBody skill={skill} resolution={resolution} pluginHref={pluginHref} />
         ) : (
           <p className="mx-auto max-w-[1000px] px-4 pt-14 text-sm text-muted-foreground md:px-8">Skill not found.</p>
         )}
@@ -43,7 +47,7 @@ export default function SkillDetail({
   );
 }
 
-function SkillBody({ skill, resolution }: { skill: Skill; resolution: InstallResolution }) {
+function SkillBody({ skill, resolution, pluginHref }: { skill: Skill; resolution: InstallResolution; pluginHref: string | null }) {
   const guide = resourceGuides[`skill/${skill.id}`];
   const name = guide?.name || skill.title || skill.name;
   const author = skill.github_url?.match(/github\.com\/([^/?#]+)/i)?.[1];
@@ -77,6 +81,8 @@ function SkillBody({ skill, resolution }: { skill: Skill; resolution: InstallRes
       links={[{ label: "Repository", href: resolution.sourceUrl || skill.github_url }]}
     >
       {guide && <ResourceGuide guide={guide} />}
+
+      {pluginHref && <AlsoPlugin href={pluginHref} name={name} lead="Prefer one install?" />}
 
       <DetailSection id="install" title="Install">
         <InstallPanel resolution={resolution} kind="skill" resourceId={skill.id} bare />

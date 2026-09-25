@@ -1,5 +1,6 @@
 "use client";
 
+import { AlsoPlugin } from "@/components/directory/AlsoPlugin";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { InstallActions, InstallPanel } from "@/components/directory/InstallPanel";
@@ -18,7 +19,16 @@ const tidy = (values: (string | undefined | null)[]) =>
     .map((c) => c.charAt(0).toUpperCase() + c.slice(1))
     .filter((c, i, all) => all.findIndex((x) => x.toLowerCase() === c.toLowerCase()) === i);
 
-export default function AgentDetail({ agent, resolution }: { agent: Agent; resolution: InstallResolution }) {
+export default function AgentDetail({
+  agent,
+  resolution,
+  pluginHref = null,
+}: {
+  agent: Agent;
+  resolution: InstallResolution;
+  /** Our page for a plugin with the same slug, when there is one. */
+  pluginHref?: string | null;
+}) {
   const name = agent.title || agent.name;
   const guide = resourceGuides[`agent/${agent.id}`];
 
@@ -43,6 +53,8 @@ export default function AgentDetail({ agent, resolution }: { agent: Agent; resol
       links={[{ label: "Repository", href: resolution.sourceUrl || agent.github_url }]}
     >
       {guide && <ResourceGuide guide={guide} />}
+
+      {pluginHref && <AlsoPlugin href={pluginHref} name={name} lead="Prefer one install?" />}
 
       <DetailSection id="install" title="Install">
         <InstallPanel resolution={resolution} kind="agent" resourceId={agent.id} bare />

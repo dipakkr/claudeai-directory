@@ -32,7 +32,11 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
 export default async function AgentPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const [record, registry] = await Promise.all([fetchApi<Agent>(`/agents/${slug}`), loadRegistryIndex()]);
+  const [record, registry, plugin] = await Promise.all([
+    fetchApi<Agent>(`/agents/${slug}`),
+    loadRegistryIndex(),
+    fetchApi<{ id: string }>(`/plugins/${slug}`),
+  ]);
   const agent = record ?? reviewedAgents.find(agent => agent.id === slug);
   if (!agent) notFound();
 
@@ -60,7 +64,7 @@ export default async function AgentPage({ params }: { params: Promise<{ slug: st
       />
       <Header />
       <main>
-        <AgentDetail agent={agent} resolution={resolution} />
+        <AgentDetail agent={agent} resolution={resolution} pluginHref={plugin ? `/plugins/${plugin.id}` : null} />
       </main>
       <Footer />
     </div>

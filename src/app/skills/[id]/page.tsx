@@ -1,3 +1,4 @@
+import { fetchApi } from "@/lib/api-server";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { resourceGuides } from "@/data/resource-guides";
@@ -61,7 +62,7 @@ export default async function SkillDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const [skill, registry] = await Promise.all([loadSkill(id), loadRegistryIndex(3000)]);
+  const [skill, registry, plugin] = await Promise.all([loadSkill(id), loadRegistryIndex(3000), fetchApi<{ id: string }>(`/plugins/${id}`)]);
   if (!skill) notFound();
   const source = skill ? skillSource(skill) : null;
   const resolution = resolvePluginInstall({
@@ -88,7 +89,7 @@ export default async function SkillDetailPage({
           />
         </>
       )}
-      <SkillDetailClient skill={skill} id={id} resolution={resolution} />
+      <SkillDetailClient skill={skill} id={id} resolution={resolution} pluginHref={plugin ? `/plugins/${plugin.id}` : null} />
     </>
   );
 }
