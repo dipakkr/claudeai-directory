@@ -1,8 +1,8 @@
 "use client";
 
-import { Fragment, type ReactNode } from "react";
+import { type ReactNode } from "react";
 import Link from "next/link";
-import { ArrowLeft, CheckCircle2, Lock } from "lucide-react";
+import { ArrowLeft, Check, ListChecks, Lock } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
@@ -40,6 +40,8 @@ export function LessonSidebar({
   footer?: ReactNode;
 }) {
   const progressPct = totalCount > 0 ? (completedCount / totalCount) * 100 : 0;
+  // Chapters that hold one lesson show no header, so they don't take a number.
+  const chapterNumbers = sections.map((_, i) => sections.slice(0, i + 1).filter((s) => s.items.length > 1).length);
 
   return (
     <div className="flex flex-col h-full">
@@ -60,7 +62,7 @@ export function LessonSidebar({
         <Progress value={progressPct} className="h-1 mb-2" />
         <div className="flex items-center justify-between">
           <span className="text-[11px] text-muted-foreground">
-            {completedCount} of {totalCount} lessons
+            {completedCount} of {totalCount} lessons done
           </span>
           {completedCount > 0 && (
             <span className="text-[11px] text-primary font-medium">{Math.round(progressPct)}%</span>
@@ -68,62 +70,76 @@ export function LessonSidebar({
         </div>
       </div>
 
-      {/* Lesson list */}
+      {/* Lesson list: numbered chapters, lessons on a thin timeline */}
       <ScrollArea className="flex-1 min-w-0">
-        <div className="py-3 px-2">
-          {sections.map((section, sectionIdx) => {
-            const showSectionLabel = section.items.length > 1;
+        <div className="px-2 py-3">
+          {sections.map((section, index) => {
+              const labelled = section.items.length > 1;
+              const chapterNo = chapterNumbers[index];
+              const here = section.items.some((item) => item.id === currentItemId);
+              const done = section.items.filter((item) => item.completed).length;
 
-            return (
-              <Fragment key={section.id}>
-                {/* Section label — only when it holds multiple lessons */}
-                {showSectionLabel && (
-                  <p
-                    className={`text-[10px] font-semibold uppercase tracking-widest text-muted-foreground/40 px-3 pb-1 ${
-                      sectionIdx > 0 ? "pt-4" : "pt-2"
-                    }`}
-                  >
-                    {section.title}
-                  </p>
-                )}
-
-                {section.items.map((item) => {
-                  const isActive = item.id === currentItemId;
-
-                  return (
-                    <Link
-                      key={item.id}
-                      href={item.href}
-                      aria-current={isActive ? "page" : undefined}
-                      className={`group flex items-start gap-3 px-3 py-2 rounded-lg text-xs transition-all mb-0.5 ${
-                        isActive
-                          ? "bg-primary/10 text-primary"
-                          : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
-                      }`}
-                    >
-                      {/* Status icon */}
-                      <span className="shrink-0 mt-[3px] w-3.5 flex items-center justify-center">
-                        {item.completed ? (
-                          <CheckCircle2 className="h-3.5 w-3.5 text-success" />
-                        ) : item.locked ? (
-                          <Lock className="h-3 w-3 text-muted-foreground/30" />
-                        ) : isActive ? (
-                          <span className="flex h-2 w-2 rounded-full bg-primary ring-[3px] ring-primary/20" />
-                        ) : (
-                          <span className="flex h-1.5 w-1.5 rounded-full bg-muted-foreground/25 group-hover:bg-muted-foreground/50 transition-colors" />
-                        )}
+              return (
+                <div key={section.id} className={labelled ? "mb-2" : ""}>
+                  {labelled && (
+                    <div className="flex items-center gap-2.5 px-2 pb-1 pt-2">
+                      <span
+                        className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-md text-[10.5px] font-medium tabular-nums ${
+                          here ? "bg-primary/15 text-primary" : "bg-[var(--cad-control)] text-muted-foreground"
+                        }`}
+                      >
+                        {chapterNo}
                       </span>
-
-                      {/* Lesson title */}
-                      <span className={`flex-1 min-w-0 leading-snug break-words ${isActive ? "font-medium" : ""}`}>
-                        {item.title}
+                      <span className={`min-w-0 flex-1 truncate text-[12.5px] font-medium ${here ? "text-foreground" : "text-foreground/75"}`}>
+                        {section.title}
                       </span>
-                    </Link>
-                  );
-                })}
-              </Fragment>
-            );
-          })}
+                      <span className="text-[11px] tabular-nums text-muted-foreground/70">
+                        {done}/{section.items.length}
+                      </span>
+                    </div>
+                  )}
+
+                  <ul className="relative ml-[17px] border-l border-border">
+                    {section.items.map((item) => {
+                      const isActive = item.id === currentItemId;
+                      const isQuiz = item.title === "Quiz" || /^check yourself/i.test(item.title);
+                      return (
+                        <li key={item.id}>
+                          <Link
+                            href={item.href}
+                            aria-current={isActive ? "page" : undefined}
+                            className={`group relative flex items-center gap-2 rounded-r-md py-[7px] pl-4 pr-2 text-[13px] leading-snug transition-colors ${
+                              isActive
+                                ? "bg-primary/10 font-medium text-foreground"
+                                : "text-muted-foreground hover:bg-[var(--cad-control)]/60 hover:text-foreground"
+                            }`}
+                          >
+                            {/* Marker sits on the timeline */}
+                            <span className="absolute -left-[5px] top-1/2 flex h-[9px] w-[9px] -translate-y-1/2 items-center justify-center">
+                              {item.completed ? (
+                                <span className="flex h-[13px] w-[13px] items-center justify-center rounded-full bg-success text-background">
+                                  <Check className="h-2.5 w-2.5" strokeWidth={3} />
+                                </span>
+                              ) : isActive ? (
+                                <span className="h-[9px] w-[9px] rounded-full bg-primary ring-[3px] ring-primary/20" />
+                              ) : (
+                                <span className="h-[7px] w-[7px] rounded-full border border-muted-foreground/40 bg-background transition-colors group-hover:border-muted-foreground/70" />
+                              )}
+                            </span>
+                            <span className="min-w-0 flex-1 break-words">{item.title}</span>
+                            {item.locked ? (
+                              <Lock className="h-3 w-3 shrink-0 text-muted-foreground/50" />
+                            ) : isQuiz ? (
+                              <ListChecks className="h-3.5 w-3.5 shrink-0 text-muted-foreground/60" aria-label="Quiz" />
+                            ) : null}
+                          </Link>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </div>
+              );
+            })}
           {footer}
         </div>
       </ScrollArea>
