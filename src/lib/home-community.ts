@@ -19,6 +19,11 @@ export function publicLaunches(projects: ShowcaseProject[]): ShowcaseProject[] {
   });
 }
 
+/** Launch ranking everywhere: most upvotes first; ties keep publicLaunches' newest-first order. */
+export function rankedLaunches(projects: ShowcaseProject[]): ShowcaseProject[] {
+  return publicLaunches(projects).sort((a, b) => (b.upvotes ?? 0) - (a.upvotes ?? 0));
+}
+
 export function selectedDiscussions(threads: Thread[]): Thread[] {
   return threads.filter(thread => thread.author_username && thread.body.trim().length >= 40 && /\b(claude|mcp|anthropic)\b/i.test(`${thread.title} ${thread.tags.join(" ")}`))
     .sort((a, b) => Date.parse(b.created_at) - Date.parse(a.created_at)).slice(0, 8);

@@ -18,7 +18,7 @@ import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
 import { faviconFor } from "@/lib/directory";
-import { publicLaunches } from "@/lib/home-community";
+import { rankedLaunches } from "@/lib/home-community";
 import { useSignIn } from "@/components/auth/SignInDialog";
 import { useAuth } from "@/lib/auth";
 import { SPONSOR_LAUNCH_PRICE, openAdvertiseDialog } from "@/lib/advertise";
@@ -267,14 +267,12 @@ export default function ShowcaseClient({
 
   const listedProjects = useMemo(() => {
     const seen = new Set<string>();
-    return publicLaunches(projects ?? [])
-      .filter((project) => {
-        const key = projectKey(project);
-        if (seen.has(key)) return false;
-        seen.add(key);
-        return true;
-      })
-      .sort((a, b) => (b.upvotes ?? 0) - (a.upvotes ?? 0));
+    return rankedLaunches(projects ?? []).filter((project) => {
+      const key = projectKey(project);
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
   }, [projects]);
 
   const filters = useMemo(
