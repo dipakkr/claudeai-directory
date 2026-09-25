@@ -47,7 +47,7 @@ export function AnnouncementBanner() {
     if (dismissed) return null;
 
     return (
-        <div className="relative z-[60] w-full border-b border-border bg-card text-muted-foreground">
+        <div className="announcement-bar relative z-[60] w-full border-b border-border bg-card text-muted-foreground">
             <div className="mx-auto flex max-w-[1180px] items-center justify-center gap-2.5 px-10 py-2 text-[13px]">
                 <DiscordIcon className="h-4 w-4 shrink-0 text-[#7984F5]" />
                 <span className="text-center">

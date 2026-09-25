@@ -638,6 +638,11 @@ body.side-ads-active {
     100% 100%;
 }
 
+/* Rails and the top banner sit above the page (z-60); drop them under an open modal's blurred overlay. */
+body:has([role="dialog"][data-state="open"], [role="alertdialog"][data-state="open"]) :is(.side-ad-rail-surface, .announcement-bar) {
+  z-index: 40;
+}
+
 .advertise-hero-surface {
   background-color: #050505;
   background-image:
