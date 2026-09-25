@@ -22,6 +22,7 @@ import { publicLaunches } from "@/lib/home-community";
 import { useSignIn } from "@/components/auth/SignInDialog";
 import { useAuth } from "@/lib/auth";
 import { SPONSOR_LAUNCH_PRICE, openAdvertiseDialog } from "@/lib/advertise";
+import { DofollowBanner } from "./DofollowBanner";
 import { myLaunchUpvotesQuery, useMyLaunchUpvotes, useShowcaseProjects, useUpvoteShowcase } from "@/hooks/use-showcase";
 import type { ShowcaseProject } from "@/types";
 import { track } from "@/lib/analytics";
@@ -335,7 +336,7 @@ export default function ShowcaseClient({
               </h1>
             </div>
             <Button asChild className="h-9 self-start px-4 text-sm">
-              <Link href="/showcase/submit">
+              <Link href="/launches/submit">
                 <Plus className="h-4 w-4" />
                 Submit launch
               </Link>
@@ -374,6 +375,10 @@ export default function ShowcaseClient({
               </div>
             )}
           </div>
+
+          <div className="mt-6">
+            <DofollowBanner />
+          </div>
         </section>
 
         <section className="mx-auto max-w-[1120px] px-4 md:px-8">
@@ -400,7 +405,7 @@ export default function ShowcaseClient({
                   Try another search or submit the first launch for this category.
                 </p>
                 <Button className="mt-5" asChild>
-                  <Link href="/showcase/submit">Submit launch</Link>
+                  <Link href="/launches/submit">Submit launch</Link>
                 </Button>
               </div>
             )}

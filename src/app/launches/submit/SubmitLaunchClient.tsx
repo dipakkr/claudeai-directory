@@ -1,5 +1,6 @@
 "use client";
 
+import { DofollowBanner } from "../DofollowBanner";
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { toast } from "sonner";
@@ -693,6 +694,10 @@ export default function SubmitLaunchClient() {
             Get a public page for what you built with Claude, collect upvotes and feedback from builders. It takes about a
             minute.
           </p>
+
+          <div className="mt-6 max-w-[760px]">
+            <DofollowBanner cta={false} />
+          </div>
 
           {!isAuthenticated ? (
             <div className="mt-8 max-w-[560px] rounded-lg border border-border bg-card p-6">

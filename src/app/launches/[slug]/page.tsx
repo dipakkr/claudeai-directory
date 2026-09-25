@@ -184,6 +184,8 @@ export default async function LaunchDetailPage({
   if (!project) notFound();
 
   const appUrl = project.app_url || project.demo_url;
+  // Verified badge = the maker links back to us, so the website link is dofollow. Otherwise nofollow.
+  const websiteRel = project.badge_verified ? "noopener noreferrer" : "nofollow noopener noreferrer";
   const listedDate = formatDate(project.listed_at || project.created_at);
   const useCases = splitUseCases(project.use_cases);
   const publisherHost = hostFromUrl(appUrl);
@@ -277,7 +279,7 @@ export default async function LaunchDetailPage({
                 <a
                   href={appUrl}
                   target="_blank"
-                  rel="nofollow sponsored noopener noreferrer"
+                  rel={websiteRel}
                   {...trackAttrs("website_clicked", { slug: project.id })}
                   className="inline-flex h-10 items-center gap-2 rounded-full bg-foreground px-5 text-sm font-medium text-background transition-colors hover:bg-foreground/85"
                 >
@@ -383,7 +385,7 @@ export default async function LaunchDetailPage({
                 <a
                   href={appUrl}
                   target="_blank"
-                  rel="nofollow sponsored noopener noreferrer"
+                  rel={websiteRel}
                   className="inline-flex items-center gap-1.5 text-sm text-foreground hover:text-primary"
                 >
                   {publisherHost || "Open website"}
