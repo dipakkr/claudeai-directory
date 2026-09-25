@@ -415,8 +415,7 @@ export default function AdvertiseDialog() {
               {!paying && <ArrowRight className="h-4 w-4" aria-hidden="true" />}
             </button>
             <p className="mt-3 text-center text-[11.5px] text-muted-foreground">
-              {canPay ? "Secure checkout. " : "We confirm your slot and start date by email. "}
-              Questions? {SPONSOR_EMAIL}
+              {canPay ? "Secure checkout with Stripe | Cancel anytime" : `We confirm your slot and start date by email. Questions? ${SPONSOR_EMAIL}`}
             </p>
           </form>
         </div>
