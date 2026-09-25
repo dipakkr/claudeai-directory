@@ -21,7 +21,7 @@ import { faviconFor } from "@/lib/directory";
 import { publicLaunches } from "@/lib/home-community";
 import { useSignIn } from "@/components/auth/SignInDialog";
 import { useAuth } from "@/lib/auth";
-import { openAdvertiseDialog } from "@/lib/advertise";
+import { SPONSOR_LAUNCH_PRICE, openAdvertiseDialog } from "@/lib/advertise";
 import { myLaunchUpvotesQuery, useMyLaunchUpvotes, useShowcaseProjects, useUpvoteShowcase } from "@/hooks/use-showcase";
 import type { ShowcaseProject } from "@/types";
 import { track } from "@/lib/analytics";
@@ -236,7 +236,7 @@ function SponsoredLaunchSlot() {
           </p>
           <p className="mt-4 inline-flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
             <span className="h-px w-8 bg-foreground" />
-            Sponsor a launch slot · $99/month
+            Sponsor a launch slot · ${SPONSOR_LAUNCH_PRICE}/month
           </p>
         </div>
         <div className="flex h-20 w-20 items-center justify-center md:justify-self-end">

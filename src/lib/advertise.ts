@@ -4,7 +4,7 @@ import { sideAdCollections } from "@/data/sideAdPlacements";
 export const SPONSOR_MONTHLY_PRICE = 499;
 
 /** Monthly price for the sponsored row in the launches list, in USD. */
-export const SPONSOR_LAUNCH_PRICE = 99;
+export const SPONSOR_LAUNCH_PRICE = 149;
 
 /** "sidebar": a card in one category rail. "launch": the row in the launches list. */
 export type SponsorSlot = "sidebar" | "launch";
