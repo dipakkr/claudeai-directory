@@ -4,7 +4,7 @@ import Link from "next/link";
 import { InstallActions, InstallPanel } from "@/components/directory/InstallPanel";
 import { DetailSection, ResourceDetail, scrollToInstall } from "@/components/directory/ResourceDetail";
 import { CategoryGlyph } from "@/components/directory/DiscoverListing";
-import { compactNumber, faviconFor, type DirectoryItem } from "@/lib/directory";
+import { compactNumber, pluginIcon, type DirectoryItem } from "@/lib/directory";
 import type { InstallResolution } from "@/lib/install";
 import type { Plugin } from "@/types";
 
@@ -43,7 +43,7 @@ export default function PluginDetail({
     <ResourceDetail
       backHref="/plugins"
       backLabel="Plugins"
-      iconSrc={faviconFor(plugin.author?.url || plugin.homepage)}
+      iconSrc={pluginIcon(plugin)}
       icon={<CategoryGlyph category={plugin.category} type="plugin" name={name} className="h-6 w-6" />}
       name={name}
       verified={official?.anthropic_verified}

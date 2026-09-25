@@ -130,6 +130,21 @@ export function promptToItem(p: Prompt): DirectoryItem {
   };
 }
 
+// Hosts whose favicon says nothing about the plugin (many authors link a GitHub profile or Anthropic).
+const GENERIC_ICON_HOSTS = /(^|\.)(github\.com|githubusercontent\.com|anthropic\.com|claude\.com|claude\.ai)$/i;
+
+/** The plugin's own logo when it has a real site; null lets the tile use a topic icon instead. */
+export function pluginIcon(p: Pick<Plugin, "author" | "homepage">): string | null {
+  for (const url of [p.author?.url, p.homepage]) {
+    try {
+      if (url && !GENERIC_ICON_HOSTS.test(new URL(url).hostname)) return faviconFor(url);
+    } catch {
+      // Not a URL: try the next one.
+    }
+  }
+  return null;
+}
+
 export function pluginToItem(p: Plugin): DirectoryItem {
   const installs = p.official?.installs ?? 0;
   return {
@@ -139,7 +154,7 @@ export function pluginToItem(p: Plugin): DirectoryItem {
     name: p.title || p.name,
     description: p.description || "",
     href: `/plugins/${p.id}`,
-    iconUrl: faviconFor(p.author?.url || p.homepage),
+    iconUrl: pluginIcon(p),
     category: p.category || "",
     tags: [],
     verified: Boolean(p.official?.anthropic_verified),
