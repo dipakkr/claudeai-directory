@@ -276,11 +276,12 @@ function Section({ title, action, children }: { title: string; action?: ReactNod
 }
 
 // Collection band gradients (tinted like the directory's curated carousel).
+// Light pastels in light mode, deep tones in dark mode; text uses the theme foreground on both.
 const BANDS = [
-  "from-[#1d2b25] to-[#34594a]",
-  "from-[#1c2433] to-[#2f4a6b]",
-  "from-[#2b2119] to-[#5a3d2a]",
-  "from-[#241d2e] to-[#46365e]",
+  "from-[#eef5f0] to-[#cfe3d7] dark:from-[#1d2b25] dark:to-[#34594a]",
+  "from-[#eef2f8] to-[#cfdced] dark:from-[#1c2433] dark:to-[#2f4a6b]",
+  "from-[#f8f1ea] to-[#ebd6c3] dark:from-[#2b2119] dark:to-[#5a3d2a]",
+  "from-[#f3eff8] to-[#ddd2eb] dark:from-[#241d2e] dark:to-[#46365e]",
 ];
 
 interface Collection {
