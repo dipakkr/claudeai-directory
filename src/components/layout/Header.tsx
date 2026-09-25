@@ -23,11 +23,11 @@ import { SignInButton, useSignIn } from "@/components/auth/SignInDialog";
 // hidden from the header for now (⌘K still opens search). Everything else
 // stays reachable from the footer.
 const navLinks = [
+  { href: "/launches", label: "Launches" },
   { href: "/skills", label: "Skills" },
   { href: "/mcp", label: "MCP" },
   { href: "/agents", label: "Agents" },
   { href: "/plugins", label: "Plugins" },
-  { href: "/launches", label: "Launches" },
   { href: "/feed", label: "Feed" },
   { href: "/members", label: "Members" },
 ];
