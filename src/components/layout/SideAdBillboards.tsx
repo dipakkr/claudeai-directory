@@ -184,10 +184,12 @@ function SideStack({
   );
 }
 
-/** No ads inside the signed-in dashboard: it is a workspace, not a browse page. */
+// Workspace and form pages where ads would distract: the dashboard and app submission.
+const NO_ADS = ["/dashboard", "/launches/submit"];
+
 export default function SideAdBillboards() {
-  const pathname = usePathname();
-  if (pathname === "/dashboard" || pathname?.startsWith("/dashboard/")) return null;
+  const pathname = usePathname() ?? "";
+  if (NO_ADS.some((p) => pathname === p || pathname.startsWith(`${p}/`))) return null;
   return <SideAdRails />;
 }
 
