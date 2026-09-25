@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { toast } from "sonner";
+import { api, ApiError } from "@/lib/api";
 
 export function FooterSubscribe() {
   const [email, setEmail] = useState("");
@@ -12,16 +13,19 @@ export function FooterSubscribe() {
     if (!email) return;
     setIsSubmitting(true);
     try {
-      const res = await fetch("https://substackapi.com/api/subscribe", {
+      // Our own list is the source of truth.
+      await api.post("/newsletter/subscribe", { email, source: window.location.pathname });
+      // Also forward to the Substack; a failure there doesn't undo the signup.
+      void fetch("https://substackapi.com/api/subscribe", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, domain: "tooljunction.substack.com" }),
-      });
-      if (!res.ok) throw new Error();
-      toast.success("You're subscribed! Check your inbox.");
+      }).catch(() => undefined);
+      toast.success("You're subscribed. The next digest lands in your inbox.");
       setEmail("");
-    } catch {
-      toast.error("Something went wrong. Try subscribing at tooljunction.substack.com");
+    } catch (error) {
+      const detail = error instanceof ApiError ? (error.data as { detail?: unknown })?.detail : undefined;
+      toast.error(typeof detail === "string" ? detail : "Something went wrong. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
