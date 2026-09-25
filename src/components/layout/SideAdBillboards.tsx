@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Megaphone, Pause, Play } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import {
@@ -183,7 +184,14 @@ function SideStack({
   );
 }
 
+/** No ads inside the signed-in dashboard: it is a workspace, not a browse page. */
 export default function SideAdBillboards() {
+  const pathname = usePathname();
+  if (pathname === "/dashboard" || pathname?.startsWith("/dashboard/")) return null;
+  return <SideAdRails />;
+}
+
+function SideAdRails() {
   const [activePage, setActivePage] = useState(0);
   const [paused, setPaused] = useState(false);
   const [railFocused, setRailFocused] = useState(false);
