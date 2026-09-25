@@ -281,11 +281,11 @@ export function InstallPanel({
 
       {resolution.method === "manual" && (
         <div className="rounded-xl border border-dashed border-border p-5">
-          <p className="text-[15px] text-foreground">Direct install not available yet</p>
+          <p className="text-[15px] text-foreground">{resolution.title ?? "Direct install not available yet"}</p>
           <p className="mt-1.5 text-sm text-muted-foreground">{resolution.reason}</p>
           {resolution.setupUrl && (
             <div className="mt-4">
-              <SourceLink href={resolution.setupUrl} kind={kind} resourceId={resourceId} label="View setup instructions" />
+              <SourceLink href={resolution.setupUrl} kind={kind} resourceId={resourceId} label={resolution.setupLabel ?? "View setup instructions"} />
             </div>
           )}
         </div>

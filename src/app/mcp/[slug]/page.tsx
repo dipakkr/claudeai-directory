@@ -54,10 +54,12 @@ export default async function MCPDetailPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const server = await fetchApi<MCPServer>(`/mcp-servers/${slug}`, { throwOnError: true });
+  // Same slug in Plugins = the same vendor's Claude Code plugin; link across. Fetched in parallel.
+  const [server, plugin] = await Promise.all([
+    fetchApi<MCPServer>(`/mcp-servers/${slug}`, { throwOnError: true }),
+    fetchApi<{ id: string }>(`/plugins/${slug}`),
+  ]);
   if (!server) notFound();
-  // Same slug in Plugins = the same vendor's Claude Code plugin; link across.
-  const plugin = await fetchApi<{ id: string }>(`/plugins/${server.slug || slug}`);
   const resolution = resolveMcpInstall({
     install: server?.install,
     slug: server?.slug || slug,

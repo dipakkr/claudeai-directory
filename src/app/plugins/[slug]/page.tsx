@@ -5,7 +5,7 @@ import Footer from "@/components/layout/Footer";
 import { BreadcrumbSchema, SoftwareApplicationSchema } from "@/components/seo/JsonLd";
 import { fetchApi } from "@/lib/api-server";
 import { pluginToItem } from "@/lib/directory";
-import { resolvePluginInstall } from "@/lib/install";
+import { resolvePluginInstall, type InstallResolution } from "@/lib/install";
 import { resourceTitle } from "@/lib/seo";
 import type { MCPServer, Plugin } from "@/types";
 import PluginDetail from "./PluginDetail";
@@ -13,6 +13,8 @@ import PluginDetail from "./PluginDetail";
 const SITE_URL = "https://www.claudeai.directory";
 /** Marketplaces Claude Code ships with, so users never need to add them. */
 const PREINSTALLED = new Set(["claude-plugins-official"]);
+/** Marketplaces whose own README says their plugins work in Claude Code. */
+const CLAUDE_CODE_OK = new Set(["claude-plugins-official", "knowledge-work-plugins"]);
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
@@ -41,7 +43,19 @@ export default async function PluginPage({ params }: { params: Promise<{ slug: s
   ]);
 
   const m = plugin.marketplace;
-  const resolution = resolvePluginInstall({
+  // Cowork-only on Claude Marketplace and no Claude Code support stated: link to Cowork, no CLI command.
+  const coworkOnly = !plugin.works_in?.claude_code && !CLAUDE_CODE_OK.has(m.name);
+  const resolution: InstallResolution = coworkOnly
+    ? {
+        method: "manual",
+        verified: false,
+        title: "Install in Claude (Cowork)",
+        reason: "This plugin is published for Claude Cowork. Its publisher doesn't list Claude Code support.",
+        setupUrl: plugin.works_in?.cowork_url || plugin.official?.url,
+        setupLabel: "Open in Claude",
+        sourceUrl: plugin.github_url || undefined,
+      }
+    : resolvePluginInstall({
     match: {
       marketplaceName: m.name,
       marketplaceSource: m.source,

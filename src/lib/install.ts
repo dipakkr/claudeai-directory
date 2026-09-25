@@ -77,6 +77,9 @@ export type InstallResolution =
       verified: false;
       /** Why there is no direct install, in plain words. */
       reason: string;
+      /** Heading and link text when "not available yet" is the wrong framing (e.g. Cowork-only plugins). */
+      title?: string;
+      setupLabel?: string;
       setupUrl?: string;
       sourceUrl?: string;
     };
