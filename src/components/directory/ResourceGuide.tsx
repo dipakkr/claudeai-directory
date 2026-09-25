@@ -66,7 +66,7 @@ export function ResourceGuide({ guide }: { guide: Guide }) {
         <p className="mt-2">Publisher: {guide.publisher}. This editorial guide checks published documentation, not runtime behavior. The examples and acceptance checks are our suggested exercises.</p>
         <ul className="mt-4 space-y-4">{guide.sources.map(x => <li key={x.href}><a href={x.href} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 font-medium text-foreground underline underline-offset-4">{x.label}<ArrowUpRight className="h-3.5 w-3.5" /></a><p className="text-xs leading-6">{x.supports}</p></li>)}</ul>
         <p className="mt-4 text-xs">Reviewed {guide.checkedAt}. Recheck due 2026-10-21, or sooner if setup changes. No installation or workflow execution is claimed.</p>
-        <a className="mt-3 inline-block text-sm text-foreground underline underline-offset-4" href={`mailto:axivionlabs@gmail.com?subject=${encodeURIComponent(`Correction: ${guide.title}`)}`}>Report an issue with this guide</a>
+        <a className="mt-3 inline-block text-sm text-foreground underline underline-offset-4" href={`mailto:claudeai.directory@gmail.com?subject=${encodeURIComponent(`Correction: ${guide.title}`)}`}>Report an issue with this guide</a>
       </section>
     </div>
   );

@@ -16,7 +16,7 @@ export type SponsorSlot = "sidebar" | "launch";
  */
 export const SPONSOR_CHECKOUT_URL = process.env.NEXT_PUBLIC_SPONSOR_CHECKOUT_URL || "";
 
-export const SPONSOR_EMAIL = "axivionlabs@gmail.com";
+export const SPONSOR_EMAIL = "claudeai.directory@gmail.com";
 
 export interface SponsorCategory {
   title: string;
