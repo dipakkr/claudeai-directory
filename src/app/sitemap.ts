@@ -2,6 +2,8 @@ import type { MetadataRoute } from "next";
 import { COURSES } from "@/data/courses";
 import { getCourseContent } from "@/data/course-content";
 import { reviewedAgents } from "@/data/resource-guides";
+import { publicLaunches } from "@/lib/home-community";
+import type { ShowcaseProject } from "@/types";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.claudeai.directory";
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api";
@@ -48,6 +50,18 @@ async function fetchGuideLessonPaths(guideSlugs: string[]): Promise<string[]> {
   return perGuide.flat();
 }
 
+async function fetchPublicLaunchSlugs(): Promise<string[]> {
+  try {
+    const res = await fetch(`${API_BASE}/showcase?limit=500`, { next: { revalidate: 3600 } });
+    if (!res.ok) return [];
+    const json = await res.json();
+    const rows = (Array.isArray(json) ? json : (json.data ?? [])) as (ShowcaseProject & { _id?: string })[];
+    return publicLaunches(rows.map((row) => ({ ...row, id: row.id || String(row._id || "") }))).map((p) => p.id).filter(Boolean);
+  } catch {
+    return [];
+  }
+}
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Static pages
   const staticPages: MetadataRoute.Sitemap = [
@@ -72,7 +86,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${SITE_URL}/feed`, changeFrequency: "daily", priority: 0.6 },
     { url: `${SITE_URL}/claude-code-commands`, changeFrequency: "weekly", priority: 0.8 },
     { url: `${SITE_URL}/llm-api-pricing`, changeFrequency: "weekly", priority: 0.7 },
-    { url: `${SITE_URL}/llm-api-pricing/cost-calculator`, changeFrequency: "weekly", priority: 0.6 },
     { url: `${SITE_URL}/claude-md-generator`, changeFrequency: "monthly", priority: 0.6 },
   ];
 
@@ -87,9 +100,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     fetchSlugs("/community/threads", "id"),
   ]);
 
-  const resourceSlugs = await fetchSlugs("/resources", "_id");
-  // Live launches only: the public list already leaves out pending and rejected ones.
-  const launchSlugs = await fetchSlugs("/showcase", "id");
+  // Resource pages are mirrors whose canonical is the author's original, so they are not listed here.
+  // Launches: the same public, de-duplicated set the launches page shows.
+  const launchSlugs = await fetchPublicLaunchSlugs();
   const agentSlugs = await fetchSlugs("/agents", "_id");
   const pluginSlugs = await fetchSlugs("/plugins", "_id");
   const lessonPaths = await fetchGuideLessonPaths(guideSlugs);
@@ -156,12 +169,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.7,
   }));
 
-  const resourcePages: MetadataRoute.Sitemap = resourceSlugs.map((slug) => ({
-    url: `${SITE_URL}/resources/${slug}`,
-    changeFrequency: "monthly",
-    priority: 0.7,
-  }));
-
   const threadPages: MetadataRoute.Sitemap = threadIds.map((id) => ({
     url: `${SITE_URL}/community/${id}`,
     changeFrequency: "weekly",
@@ -190,7 +197,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       );
   });
 
-  return [
+  const all: MetadataRoute.Sitemap = [
     ...staticPages,
     ...mcpPages,
     ...skillPages,
@@ -200,11 +207,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...jobPages,
     ...guidePages,
     ...lessonPages,
-    ...resourcePages,
     ...launchPages,
     ...blogPages,
     ...threadPages,
     ...coursePages,
     ...courseLessonPages,
   ];
+  // One entry per URL (duplicate records, e.g. two MCP rows with the same slug, would repeat it).
+  const seen = new Set<string>();
+  return all.filter((entry) => !seen.has(entry.url) && Boolean(seen.add(entry.url)));
 }
