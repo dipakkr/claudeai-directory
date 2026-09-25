@@ -84,7 +84,7 @@ export function ResourceDetail({
             </h1>
             {tagline && <p className="mt-1 max-w-[70ch] text-[13.5px] leading-relaxed text-[var(--cad-desc)]">{tagline}</p>}
           </div>
-          {action && <div className="flex shrink-0 items-center gap-2">{action}</div>}
+          {action && <div className="flex w-full shrink-0 items-center gap-2 sm:w-auto">{action}</div>}
         </div>
       </div>
 
