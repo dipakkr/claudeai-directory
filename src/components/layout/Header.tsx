@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { Menu, X, LogOut, User as UserIcon, Moon, Sun } from "lucide-react";
+import { ChevronDown, Menu, X, LogOut, User as UserIcon, Moon, Sun } from "lucide-react";
 import { useState } from "react";
 import { useAuth } from "@/lib/auth";
 import { useTheme } from "next-themes";
@@ -11,6 +11,7 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
@@ -31,6 +32,36 @@ const navLinks = [
   { href: "/feed", label: "Feed" },
   { href: "/members", label: "Members" },
 ];
+
+// Everything else worth finding, grouped under "More".
+const moreGroups = [
+  {
+    label: "Learn",
+    links: [
+      { href: "/guides", label: "Guides" },
+      { href: "/blog", label: "Blog" },
+      { href: "/cheatsheet", label: "Claude Code cheatsheet" },
+      { href: "/claude-code-commands", label: "Claude Code commands" },
+      { href: "/anthropic-claude-release-timelines", label: "Release timeline" },
+    ],
+  },
+  {
+    label: "Tools",
+    links: [
+      { href: "/claude-md-generator", label: "CLAUDE.md generator" },
+      { href: "/llm-api-pricing", label: "LLM API pricing" },
+      { href: "/prompts", label: "Prompts" },
+    ],
+  },
+  {
+    label: "Community",
+    links: [
+      { href: "/community", label: "Forum" },
+      { href: "/jobs", label: "Jobs" },
+    ],
+  },
+];
+const moreHrefs = moreGroups.flatMap((g) => g.links.map((l) => l.href));
 
 const pill =
   "inline-flex h-8 items-center justify-center whitespace-nowrap rounded-full px-4 text-sm font-medium transition-colors";
@@ -57,13 +88,40 @@ const Header = () => {
             <Link
               key={link.href}
               href={link.href}
-              className={`rounded-full px-3 py-1.5 text-sm transition-colors ${
+              className={`rounded-full px-2.5 py-1.5 text-sm transition-colors xl:px-3 ${
                 isActive(link.href) ? "text-foreground" : "text-muted-foreground hover:text-foreground"
               }`}
             >
               {link.label}
             </Link>
           ))}
+          <DropdownMenu>
+            <DropdownMenuTrigger
+              className={`inline-flex cursor-pointer items-center gap-1 rounded-full px-2.5 py-1.5 text-sm outline-none transition-colors xl:px-3 ${
+                moreHrefs.some(isActive) ? "text-foreground" : "text-muted-foreground hover:text-foreground data-[state=open]:text-foreground"
+              }`}
+            >
+              More
+              <ChevronDown className="h-3.5 w-3.5" aria-hidden="true" />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="center" className="w-56">
+              {moreGroups.map((group, i) => (
+                <div key={group.label}>
+                  {i > 0 && <DropdownMenuSeparator />}
+                  <DropdownMenuLabel className="text-[11px] font-normal uppercase tracking-[0.06em] text-muted-foreground">
+                    {group.label}
+                  </DropdownMenuLabel>
+                  {group.links.map((link) => (
+                    <DropdownMenuItem key={link.href} asChild>
+                      <Link href={link.href} className={isActive(link.href) ? "text-foreground" : undefined}>
+                        {link.label}
+                      </Link>
+                    </DropdownMenuItem>
+                  ))}
+                </div>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
         </nav>
 
         <div className="ml-auto hidden items-center lg:flex">
@@ -115,6 +173,23 @@ const Header = () => {
               >
                 {link.label}
               </Link>
+            ))}
+            {moreGroups.map((group) => (
+              <div key={group.label} className="border-b border-border/60 py-3">
+                <p className="text-[11px] uppercase tracking-[0.06em] text-muted-foreground/80">{group.label}</p>
+                <div className="mt-1.5 flex flex-wrap gap-x-4 gap-y-1.5">
+                  {group.links.map((link) => (
+                    <Link
+                      key={link.href}
+                      href={link.href}
+                      onClick={closeMenu}
+                      className={`text-[14px] ${isActive(link.href) ? "text-foreground" : "text-muted-foreground"}`}
+                    >
+                      {link.label}
+                    </Link>
+                  ))}
+                </div>
+              </div>
             ))}
             <button
               type="button"
