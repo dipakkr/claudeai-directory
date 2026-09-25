@@ -4,7 +4,7 @@ import { ArrowRight, Bot, Server, Sparkles } from "lucide-react";
 import DirectoryList from "@/components/directory/DirectoryList";
 import RecentlyViewed from "@/components/directory/RecentlyViewed";
 import type { DirectoryItem, SortKey } from "@/lib/directory";
-import { HeroJoin, HeroSearch, type HeroChip } from "@/components/home/HeroActions";
+import { HeroJoin, HeroSearch } from "@/components/home/HeroActions";
 import type { PublicProfile } from "@/types";
 
 interface HomeContentProps {
@@ -41,29 +41,6 @@ const BROWSE = [
   },
 ];
 
-const CHIP_ROUTES: Partial<Record<DirectoryItem["type"], string>> = { skill: "/skills", mcp: "/mcp", agent: "/agents" };
-
-/** The most-listed categories, each linking to its filtered list. Real data only. */
-function popularChips(items: DirectoryItem[], limit = 5): HeroChip[] {
-  const counts = new Map<string, { label: string; href: string; count: number }>();
-  for (const item of items) {
-    const route = CHIP_ROUTES[item.type];
-    if (!route || !item.category) continue;
-    const href = `${route}?category=${encodeURIComponent(item.category)}`;
-    const label = item.category.charAt(0).toUpperCase() + item.category.slice(1);
-    const entry = counts.get(href) ?? { label, href, count: 0 };
-    entry.count += 1;
-    counts.set(href, entry);
-  }
-  const seen = new Set<string>();
-  return [...counts.values()]
-    .filter((chip) => chip.count > 1)
-    .sort((x, y) => y.count - x.count)
-    .filter((chip) => !seen.has(chip.label) && seen.add(chip.label))
-    .slice(0, limit)
-    .map(({ label, href }) => ({ label, href }));
-}
-
 export default function HomeContent({ items, orders, launches, community, feed, members, memberCount }: HomeContentProps) {
   const count = (type: DirectoryItem["type"]) => items.filter((i) => i.type === type).length;
 
@@ -77,7 +54,7 @@ export default function HomeContent({ items, orders, launches, community, feed, 
           Discover community-built Claude Skills, MCP servers and Agents. Find what is trending or publish something you
           built.
         </p>
-        <HeroSearch chips={popularChips(items)} />
+        <HeroSearch />
         <HeroJoin members={members} total={memberCount} />
         <p className="mt-5 text-sm text-muted-foreground">
           Built something for Claude?{" "}

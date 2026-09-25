@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ArrowRight, Search } from "lucide-react";
 
@@ -10,13 +9,8 @@ import { useAuth } from "@/lib/auth";
 import { compactNumber } from "@/lib/directory";
 import type { PublicProfile } from "@/types";
 
-export interface HeroChip {
-  label: string;
-  href: string;
-}
-
 /** The hero's main action: a search field that opens the site search (⌘K). */
-export function HeroSearch({ chips }: { chips: HeroChip[] }) {
+export function HeroSearch() {
   const { open } = useCommandMenu();
   return (
     <div className="mx-auto mt-8 w-full max-w-[560px]">
@@ -29,20 +23,6 @@ export function HeroSearch({ chips }: { chips: HeroChip[] }) {
         <span className="flex-1 truncate">Search Skills, MCPs and Agents...</span>
         <kbd className="hidden rounded border border-border px-1.5 font-mono text-[11px] sm:inline">⌘K</kbd>
       </button>
-      {chips.length > 0 && (
-        <div className="mt-3 flex flex-wrap items-center justify-center gap-x-1 gap-y-1.5 text-sm">
-          <span className="mr-1 text-muted-foreground">Popular:</span>
-          {chips.map((chip) => (
-            <Link
-              key={chip.href}
-              href={chip.href}
-              className="rounded-full px-2.5 py-1 text-foreground/80 transition-colors hover:bg-secondary hover:text-foreground"
-            >
-              {chip.label}
-            </Link>
-          ))}
-        </div>
-      )}
     </div>
   );
 }
