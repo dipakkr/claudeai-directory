@@ -639,7 +639,8 @@ body.side-ads-active {
 }
 
 /* Rails and the top banner sit above the page (z-60); drop them under an open modal's blurred overlay. */
-body:has([role="dialog"][data-state="open"], [role="alertdialog"][data-state="open"]) :is(.side-ad-rail-surface, .announcement-bar) {
+body:has([role="dialog"][data-state="open"], [role="alertdialog"][data-state="open"]) .side-ad-rail-surface,
+body:has([role="dialog"][data-state="open"], [role="alertdialog"][data-state="open"]) .announcement-bar {
   z-index: 40;
 }
 
