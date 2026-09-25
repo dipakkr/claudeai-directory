@@ -7,7 +7,7 @@
 
 export type InstallMethod = "plugin_marketplace" | "mcp_http" | "mcp_stdio" | "manual";
 export type InstallStatus = "verified" | "unverified" | "broken" | "needs_review";
-export type ResourceKind = "skill" | "mcp" | "agent";
+export type ResourceKind = "skill" | "mcp" | "agent" | "plugin";
 
 /** The `install` object from the API (snake_case, all optional except method/status). */
 export interface ResourceInstall {
@@ -37,6 +37,10 @@ export interface MarketplaceMatch {
   bundledWith: string[];
   /** Our own registry, as opposed to the creator's marketplace. */
   ours: boolean;
+  /** Claude Code ships with this marketplace (claude-plugins-official), so there is nothing to add. */
+  preinstalled?: boolean;
+  /** Who publishes the marketplace, when it is not the creator (e.g. "Anthropic"). */
+  publisher?: string;
 }
 
 export type InstallResolution =
@@ -227,7 +231,9 @@ export function resolvePluginInstall(input: {
       verified: true,
       installCommand: pluginInstallCommand(m.pluginName, m.marketplaceName),
       addMarketplaceCommand: marketplaceAddCommand(m.marketplaceSource),
-      terminalCommand: pluginTerminalCommand(m.pluginName, m.marketplaceName, m.marketplaceSource),
+      terminalCommand: m.preinstalled
+        ? `claude plugin install ${m.pluginName}@${m.marketplaceName}`
+        : pluginTerminalCommand(m.pluginName, m.marketplaceName, m.marketplaceSource),
       match: m,
       sourceUrl,
     };

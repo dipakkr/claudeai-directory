@@ -4,7 +4,7 @@
 // nothing about what is installed locally.
 
 export interface RecentItem {
-  kind: "skill" | "mcp" | "agent";
+  kind: "skill" | "mcp" | "agent" | "plugin";
   id: string;
   name: string;
   href: string;

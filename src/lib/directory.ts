@@ -1,8 +1,8 @@
-import type { Agent, MCPServer, Prompt, Skill } from "@/types";
+import type { Agent, MCPServer, Prompt, Skill, Plugin } from "@/types";
 
 // One row in the ranked directory list. Every catalog type maps onto this, so
 // adding a new type (plugins, setups…) means a new mapper, not a new list.
-export type DirectoryType = "skill" | "mcp" | "agent" | "prompt";
+export type DirectoryType = "skill" | "mcp" | "agent" | "plugin" | "prompt";
 
 export interface DirectoryItem {
   key: string;
@@ -33,12 +33,14 @@ export const DIRECTORY_TYPES: { type: DirectoryType; label: string; chip: string
   { type: "skill", label: "Skills", chip: "Skill" },
   { type: "mcp", label: "MCP", chip: "MCP" },
   { type: "agent", label: "Agents", chip: "Agent" },
+  { type: "plugin", label: "Plugins", chip: "Plugin" },
   { type: "prompt", label: "Prompts", chip: "Prompt" },
 ];
 
 export const itemKey = (type: DirectoryType, id: string) => `${type}:${id}`;
 
 export function compactNumber(n: number): string {
+  if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1).replace(/\.0$/, "")}M`;
   if (n >= 1000) return `${(n / 1000).toFixed(n >= 10000 ? 0 : 1).replace(/\.0$/, "")}k`;
   return String(n);
 }
@@ -128,6 +130,26 @@ export function promptToItem(p: Prompt): DirectoryItem {
   };
 }
 
+export function pluginToItem(p: Plugin): DirectoryItem {
+  const installs = p.official?.installs ?? 0;
+  return {
+    key: itemKey("plugin", p.id),
+    author: p.author?.name || githubAuthor(p.github_url),
+    type: "plugin",
+    name: p.title || p.name,
+    description: p.description || "",
+    href: `/plugins/${p.id}`,
+    iconUrl: faviconFor(p.author?.url || p.homepage),
+    category: p.category || "",
+    tags: [],
+    verified: Boolean(p.official?.anthropic_verified),
+    // Anthropic's count, labelled as such wherever it is shown.
+    metric: installs > 0 ? { value: compactNumber(installs), label: "marketplace installs", icon: "download" } : null,
+    score: installs,
+    createdAt: p.created_at,
+  };
+}
+
 export function agentToItem(a: Agent): DirectoryItem {
   const stars = a.stars ?? 0;
   return {
@@ -152,7 +174,7 @@ export function agentToItem(a: Agent): DirectoryItem {
  * the merged list interleaves types in proportion to their catalog size.
  */
 export function rankMixed(items: DirectoryItem[]): DirectoryItem[] {
-  const typeOrder: Record<DirectoryType, number> = { skill: 0, mcp: 1, agent: 2, prompt: 3 };
+  const typeOrder: Record<DirectoryType, number> = { skill: 0, mcp: 1, agent: 2, plugin: 3, prompt: 4 };
   const byType = new Map<DirectoryType, DirectoryItem[]>();
   for (const item of items) {
     const list = byType.get(item.type) ?? [];

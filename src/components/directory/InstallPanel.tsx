@@ -12,6 +12,7 @@ const CTA_LABEL: Record<ResourceKind, string> = {
   skill: "Install Skill",
   mcp: "Add MCP",
   agent: "Install Agent",
+  plugin: "Install Plugin",
 };
 
 function Step({ n, title, children }: { n?: number; title: string; children: React.ReactNode }) {
@@ -178,8 +179,12 @@ export function InstallPanel({
               resourceId={resourceId}
             />
             <p className="mt-2.5 text-[13px] leading-relaxed text-muted-foreground">
-              Adds the {resolution.match.marketplaceName} marketplace if you don&apos;t have it yet, then installs. Start a
-              new Claude Code session to use it.
+              {resolution.match.preinstalled ? (
+                <>Claude Code already includes the {resolution.match.marketplaceName} marketplace, so this installs directly.</>
+              ) : (
+                <>Adds the {resolution.match.marketplaceName} marketplace if you don&apos;t have it yet, then installs.</>
+              )}{" "}
+              Start a new Claude Code session to use it.
             </p>
           </Step>
           <details className="group rounded-xl border border-border bg-card/40 p-4 [&_summary::-webkit-details-marker]:hidden">
@@ -188,7 +193,7 @@ export function InstallPanel({
               <ChevronDown className="h-4 w-4 text-muted-foreground transition-transform group-open:rotate-180" />
             </summary>
             <div className="mt-3 space-y-3">
-              <div>
+              {!resolution.match.preinstalled && <div>
                 <p className="mb-1.5 text-[13px] text-muted-foreground">1. Add the marketplace (first time only)</p>
                 <CommandRow
                   command={resolution.addMarketplaceCommand}
@@ -197,9 +202,9 @@ export function InstallPanel({
                   kind={kind}
                   resourceId={resourceId}
                 />
-              </div>
+              </div>}
               <div>
-                <p className="mb-1.5 text-[13px] text-muted-foreground">2. Install</p>
+                <p className="mb-1.5 text-[13px] text-muted-foreground">{resolution.match.preinstalled ? "Install" : "2. Install"}</p>
                 <CommandRow
                   command={resolution.installCommand}
                   event="install_command_copied"
@@ -218,9 +223,12 @@ export function InstallPanel({
                 includes: {resolution.match.bundledWith.join(", ")}.
               </>
             )}
-            {!resolution.match.ours && (
-              <> Published in the creator&apos;s own marketplace ({resolution.match.marketplaceSource}).</>
-            )}
+            {!resolution.match.ours &&
+              (resolution.match.publisher ? (
+                <> Published in {resolution.match.publisher}&apos;s {resolution.match.marketplaceName} marketplace ({resolution.match.marketplaceSource}).</>
+              ) : (
+                <> Published in the creator&apos;s own marketplace ({resolution.match.marketplaceSource}).</>
+              ))}
           </p>
         </div>
       )}

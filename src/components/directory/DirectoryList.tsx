@@ -107,7 +107,7 @@ export default function DirectoryList({
   }, [items, orders, sort]);
 
   const counts = useMemo(() => {
-    const c: Record<TypeFilter, number> = { all: items.length, skill: 0, mcp: 0, agent: 0, prompt: 0 };
+    const c: Record<TypeFilter, number> = { all: items.length, skill: 0, mcp: 0, agent: 0, plugin: 0, prompt: 0 };
     for (const item of items) c[item.type] += 1;
     return c;
   }, [items]);

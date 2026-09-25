@@ -26,6 +26,7 @@ const navLinks = [
   { href: "/skills", label: "Skills" },
   { href: "/mcp", label: "MCP" },
   { href: "/agents", label: "Agents" },
+  { href: "/plugins", label: "Plugins" },
   { href: "/launches", label: "Launches" },
   { href: "/feed", label: "Feed" },
 ];

@@ -11,7 +11,7 @@ const SORTS: SortKey[] = ["trending", "top", "new"];
  * Orders from GET /rankings (install intent drives Trending). Returns {} when the
  * endpoint is not deployed yet, so callers fall back to per-type ordering.
  */
-export async function loadOrders(type?: "skill" | "mcp" | "agent", timeoutMs = 15000): Promise<Orders> {
+export async function loadOrders(type?: "skill" | "mcp" | "agent" | "plugin", timeoutMs = 15000): Promise<Orders> {
   const results = await Promise.all(
     SORTS.map((sort) =>
       fetchApi<RankingsResponse>(`/rankings?sort=${sort}&limit=500${type ? `&type=${type}` : ""}`, { timeoutMs }),

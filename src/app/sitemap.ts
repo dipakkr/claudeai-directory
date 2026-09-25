@@ -55,6 +55,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${SITE_URL}/mcp`, changeFrequency: "daily", priority: 0.9 },
     { url: `${SITE_URL}/skills`, changeFrequency: "daily", priority: 0.9 },
     { url: `${SITE_URL}/agents`, changeFrequency: "daily", priority: 0.9 },
+    { url: `${SITE_URL}/plugins`, changeFrequency: "daily", priority: 0.9 },
     { url: `${SITE_URL}/submit`, changeFrequency: "monthly", priority: 0.5 },
     { url: `${SITE_URL}/prompts`, changeFrequency: "daily", priority: 0.9 },
     { url: `${SITE_URL}/jobs`, changeFrequency: "daily", priority: 0.8 },
@@ -90,6 +91,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Live launches only: the public list already leaves out pending and rejected ones.
   const launchSlugs = await fetchSlugs("/showcase", "id");
   const agentSlugs = await fetchSlugs("/agents", "_id");
+  const pluginSlugs = await fetchSlugs("/plugins", "_id");
   const lessonPaths = await fetchGuideLessonPaths(guideSlugs);
 
   const mcpPages: MetadataRoute.Sitemap = mcpSlugs.map((slug) => ({
@@ -100,6 +102,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const agentPages: MetadataRoute.Sitemap = [...new Set([...agentSlugs, ...reviewedAgents.map(agent => agent.id)])].map((slug) => ({
     url: `${SITE_URL}/agents/${slug}`,
+    changeFrequency: "weekly",
+    priority: 0.8,
+  }));
+
+  const pluginPages: MetadataRoute.Sitemap = pluginSlugs.map((slug) => ({
+    url: `${SITE_URL}/plugins/${slug}`,
     changeFrequency: "weekly",
     priority: 0.8,
   }));
@@ -187,6 +195,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...mcpPages,
     ...skillPages,
     ...agentPages,
+    ...pluginPages,
     ...promptPages,
     ...jobPages,
     ...guidePages,

@@ -58,6 +58,7 @@ import {
   Plane,
   Plug,
   Plus,
+  Puzzle,
   Rocket,
   Search,
   Shield,
@@ -92,7 +93,7 @@ const TYPE_TABS: { type: DirectoryType; label: string; href: string; noun: strin
   { type: "agent", label: "Agents", href: "/agents", noun: "agents" },
 ];
 
-const TYPE_ICON: Record<DirectoryType, Icon> = { skill: Sparkles, mcp: Plug, agent: Bot, prompt: MessageSquare };
+const TYPE_ICON: Record<DirectoryType, Icon> = { skill: Sparkles, mcp: Plug, agent: Bot, plugin: Puzzle, prompt: MessageSquare };
 
 const CATEGORY_ICON: Record<string, Icon> = {
   business: Briefcase,
@@ -205,7 +206,7 @@ const PAGE = 30;
 
 // --- Small pieces --------------------------------------------------------------
 
-const TYPE_NOUN: Record<DirectoryType, string> = { skill: "Skill", mcp: "MCP server", agent: "Agent", prompt: "Prompt" };
+const TYPE_NOUN: Record<DirectoryType, string> = { skill: "Skill", mcp: "MCP server", agent: "Agent", plugin: "Plugin", prompt: "Prompt" };
 
 export function Tile({ item, size = 48 }: { item: DirectoryItem; size?: number }) {
   const [failed, setFailed] = useState(false);

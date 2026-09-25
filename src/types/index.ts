@@ -67,6 +67,26 @@ export interface Skill {
   updated_at: string;
 }
 
+export interface Plugin {
+  id: string;
+  name: string;
+  title: string;
+  description: string;
+  category: string;
+  author?: { name?: string; url?: string };
+  homepage?: string | null;
+  github_url?: string | null;
+  /** Counted from the plugin's files; absent when not checked. */
+  contents?: { skills: number; agents: number; commands: number; hooks: boolean; mcp: boolean } | null;
+  /** The published marketplace.json entry it installs from. */
+  marketplace: { name: string; source: string; plugin_name: string };
+  works_in?: { claude_code?: boolean; cowork_url?: string | null };
+  /** Its listing on Claude Marketplace (claude.com). Installs are Anthropic's count. */
+  official?: { url: string; anthropic_verified?: boolean; installs?: number | null } | null;
+  created_at: string;
+  updated_at?: string;
+}
+
 export interface Agent {
   id: string;
   name: string;

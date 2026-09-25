@@ -8,7 +8,10 @@ import Footer from "@/components/layout/Footer";
 import { ApiError, api } from "@/lib/api";
 import { track } from "@/lib/analytics";
 import { useAuth } from "@/lib/auth";
-import type { ResourceInstall, ResourceKind } from "@/lib/install";
+import type { ResourceInstall, ResourceKind as AnyKind } from "@/lib/install";
+
+// Plugins are listed from marketplaces, not submitted here.
+type ResourceKind = Exclude<AnyKind, "plugin">;
 import { SignInButton } from "@/components/auth/SignInDialog";
 
 // CLAUDE.md "Submit" + INSTALL_REGISTRY.md "Skill Submission Flow":

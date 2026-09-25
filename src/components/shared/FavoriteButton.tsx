@@ -9,11 +9,11 @@ import { bookmarksQuery, useAddBookmark, useOptionalBookmarks, useRemoveBookmark
 import { useAuth } from "@/lib/auth";
 import { cn } from "@/lib/utils";
 
-export type FavoriteTargetType = "skill" | "mcp_server" | "agent" | "prompt" | "showcase" | "resource" | "job";
+export type FavoriteTargetType = "skill" | "mcp_server" | "agent" | "plugin" | "prompt" | "showcase" | "resource" | "job";
 
 export function favoriteTargetType(kind: string): FavoriteTargetType {
   if (kind === "mcp") return "mcp_server";
-  if (kind === "skill" || kind === "agent" || kind === "prompt" || kind === "showcase" || kind === "resource" || kind === "job") return kind;
+  if (kind === "skill" || kind === "agent" || kind === "plugin" || kind === "prompt" || kind === "showcase" || kind === "resource" || kind === "job") return kind;
   return "resource";
 }
 

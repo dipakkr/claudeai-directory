@@ -14,6 +14,7 @@ const footerLinks = [
       { label: "Skills", href: "/skills" },
       { label: "MCP servers", href: "/mcp" },
       { label: "Agents", href: "/agents" },
+      { label: "Plugins", href: "/plugins" },
       { label: "Jobs", href: "/jobs" },
       { label: "Courses", href: "/courses" },
       { label: "Prompts", href: "/prompts" },
