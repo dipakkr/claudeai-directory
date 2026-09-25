@@ -29,6 +29,7 @@ const navLinks = [
   { href: "/plugins", label: "Plugins" },
   { href: "/launches", label: "Launches" },
   { href: "/feed", label: "Feed" },
+  { href: "/members", label: "Members" },
 ];
 
 const pill =
