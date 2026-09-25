@@ -330,14 +330,14 @@ export default function AdvertiseDialog() {
 
           {/* Right: pick, fill in, pay */}
           <form onSubmit={submit} className="p-6 sm:p-7">
-            <p className="text-[11px] uppercase tracking-[0.08em] text-muted-foreground">Sponsor</p>
-            <DialogTitle className="mt-2 pr-6 text-[22px] font-normal leading-tight">
-              {isLaunch ? "Sponsor the launches list" : "Reach people building with Claude"}
-            </DialogTitle>
-            <DialogDescription className="mt-3 flex items-baseline gap-1.5">
-              <span className="text-[28px] font-light leading-none text-foreground">${price}</span>
-              <span className="text-[13px] text-muted-foreground">/ month{isLaunch ? "" : " · one category"}</span>
+            <DialogTitle className="pr-6 text-[22px] font-normal leading-tight">Advertise on Claude AI Directory</DialogTitle>
+            <DialogDescription className="mt-1.5 text-[13px] leading-relaxed text-[var(--cad-desc)]">
+              A community of builders, founders and marketers building with Claude.
             </DialogDescription>
+            <div className="mt-5 flex items-baseline gap-1.5">
+              <span className="text-[28px] font-light leading-none text-foreground">${price}</span>
+              <span className="text-[13px] text-muted-foreground">/ month · {isLaunch ? "launches list" : "one category"}</span>
+            </div>
 
             {!isLaunch && (
               <fieldset className="mt-6">
