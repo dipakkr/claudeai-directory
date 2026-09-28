@@ -26,6 +26,8 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [
       ...courseLessonRedirects,
+      // Launch slug renamed after a duplicate was removed.
+      { source: "/launches/tooljunction-2", destination: "/launches/tooljunction", permanent: true },
       // Courses without written lessons, and the old index, go to the guides list.
       { source: "/courses/:path*", destination: "/guides", permanent: true },
       { source: "/courses", destination: "/guides", permanent: true },
