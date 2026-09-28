@@ -4,7 +4,6 @@ import "./globals.css";
 import Providers from "@/components/providers";
 import Script from "next/script";
 import { OpenPanelComponent } from '@openpanel/nextjs';
-import { AnnouncementBanner } from "@/components/layout/AnnouncementBanner";
 import SideAdBillboards from "@/components/layout/SideAdBillboards";
 import { ExternalLinkTracker } from "@/components/tracking/ExternalLinkTracker";
 import { KeyClickTracker } from "@/components/tracking/KeyClickTracker";
@@ -91,7 +90,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${sourceSerif.variable} ${geistMono.variable} antialiased overflow-x-hidden`}
       >
         <Providers>
-          <AnnouncementBanner />
+          {/* Discord announcement banner paused; the component stays in components/layout/AnnouncementBanner.tsx. */}
           <SideAdBillboards />
           <ExternalLinkTracker />
           {children}
