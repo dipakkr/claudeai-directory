@@ -242,6 +242,8 @@ export interface ShowcaseProject {
   featured: boolean;
   status?: "pending_badge" | "listed" | "rejected" | string;
   badge_verified?: boolean;
+  /** Listed by paying the one-time fee instead of adding the badge. */
+  paid_listing?: boolean;
   badge_verified_at?: string;
   listed_at?: string;
   gallery_images?: string[];

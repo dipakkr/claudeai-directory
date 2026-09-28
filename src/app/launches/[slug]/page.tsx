@@ -184,8 +184,13 @@ export default async function LaunchDetailPage({
   if (!project) notFound();
 
   const appUrl = project.app_url || project.demo_url;
-  // Verified badge = the maker links back to us, so the website link is dofollow. Otherwise nofollow.
-  const websiteRel = project.badge_verified ? "noopener noreferrer" : "nofollow noopener noreferrer";
+  // Verified badge = the maker links back to us, so the website link is dofollow.
+  // Paid-only listings are paid links, so they are marked sponsored (Google's rule for paid links).
+  const websiteRel = project.badge_verified
+    ? "noopener noreferrer"
+    : project.paid_listing
+      ? "sponsored nofollow noopener noreferrer"
+      : "nofollow noopener noreferrer";
   const listedDate = formatDate(project.listed_at || project.created_at);
   const useCases = splitUseCases(project.use_cases);
   const publisherHost = hostFromUrl(appUrl);

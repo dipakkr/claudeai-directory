@@ -1,7 +1,8 @@
 "use client";
 
 import { DofollowBanner } from "../DofollowBanner";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { toast } from "sonner";
 import {
@@ -12,6 +13,7 @@ import {
   Copy,
   ExternalLink,
   Linkedin,
+  CreditCard,
   Loader2,
   Rocket,
   Sparkles,
@@ -19,7 +21,7 @@ import {
 
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
-import { ApiError } from "@/lib/api";
+import { api, ApiError } from "@/lib/api";
 import { useAuth } from "@/lib/auth";
 import { faviconFor } from "@/lib/directory";
 import {
@@ -362,6 +364,26 @@ function BadgeStep({
   const [option, setOption] = useState<BadgeOption>(BADGE_OPTIONS[0]);
   const [format, setFormat] = useState<"html" | "markdown">("html");
   const snippet = badgeSnippet(app, option, format);
+  const [paying, setPaying] = useState(false);
+  // The $29 option only shows when online checkout is set up on the server.
+  const { data: checkout } = useQuery({
+    queryKey: ["sponsors", "config"],
+    queryFn: () => api.get<{ enabled: boolean; listing?: number }>("/sponsors/config"),
+    staleTime: 5 * 60_000,
+    retry: false,
+  });
+  const listingPrice = checkout?.enabled && checkout.listing ? checkout.listing / 100 : null;
+
+  const payToList = () => {
+    setPaying(true);
+    api
+      .post<{ url: string }>("/sponsors/launch-listing", { slug: app.id })
+      .then(({ url }) => window.location.assign(url))
+      .catch((error) => {
+        setPaying(false);
+        toast.error(errorDetail(error, "Could not start checkout. Try again in a minute."));
+      });
+  };
 
   const copy = async () => {
     await navigator.clipboard.writeText(snippet);
@@ -483,6 +505,25 @@ function BadgeStep({
         </li>
       </ol>
 
+      {listingPrice !== null && (
+        <div className="mt-8 rounded-lg border border-dashed border-border p-4 sm:p-5">
+          <p className="text-sm font-medium text-foreground">Don&apos;t want to add a badge?</p>
+          <p className="mt-1 text-sm leading-6 text-muted-foreground">
+            List {app.title} for a one-time ${listingPrice}. It goes live as soon as payment clears. Badge listings get a
+            free dofollow link; paid listings link to your site as sponsored.
+          </p>
+          <button
+            type="button"
+            onClick={payToList}
+            disabled={paying}
+            className="mt-3 inline-flex h-10 items-center gap-2 rounded-full border border-border px-4 text-sm font-medium text-foreground transition-colors hover:border-[var(--cad-line-hover)] disabled:opacity-60"
+          >
+            {paying ? <Loader2 className="h-4 w-4 animate-spin" /> : <CreditCard className="h-4 w-4" />}
+            {paying ? "Opening checkout..." : `List for $${listingPrice}, one time`}
+          </button>
+        </div>
+      )}
+
       <div className="mt-8 flex items-center justify-between border-t border-border pt-4 text-sm">
         <button type="button" onClick={onBack} className="inline-flex items-center gap-1.5 text-muted-foreground hover:text-foreground">
           <ArrowLeft className="h-3.5 w-3.5" />
@@ -554,6 +595,26 @@ export default function SubmitLaunchClient() {
   const submit = useSubmitShowcaseProject();
   const autofill = useLaunchAutofill();
   const { data: myApps } = useMyShowcaseProjects({ enabled: !isLoading && isAuthenticated });
+
+  // Back from Stripe: the webhook puts the launch live a few seconds after payment.
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const listing = params.get("listing");
+    if (!listing) return;
+    const launch = params.get("launch");
+    const timer = window.setTimeout(() => {
+      if (listing === "paid") {
+        toast.success("Payment received. Your launch goes live in a few seconds.", {
+          action: launch ? { label: "View", onClick: () => window.location.assign(`/launches/${launch}`) } : undefined,
+          duration: 10000,
+        });
+      } else if (listing === "cancelled") {
+        toast("Checkout cancelled. Your launch is still saved.");
+      }
+    }, 400);
+    window.history.replaceState(null, "", window.location.pathname);
+    return () => window.clearTimeout(timer);
+  }, []);
 
   const [form, setForm] = useState<Form>(EMPTY_FORM);
   const [step, setStep] = useState<Step>(0);
