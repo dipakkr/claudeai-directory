@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import {
   ArrowLeft,
   BadgeCheck,
@@ -182,6 +182,8 @@ export default async function LaunchDetailPage({
   ]);
 
   if (!project) notFound();
+  // Merged duplicates keep their old slugs as aliases: send those URLs to the real one.
+  if (project.id && project.id !== slug) permanentRedirect(`/launches/${project.id}`);
 
   const appUrl = project.app_url || project.demo_url;
   // Verified badge = the maker links back to us, so the website link is dofollow.
