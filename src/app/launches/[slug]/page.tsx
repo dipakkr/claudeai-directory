@@ -11,7 +11,6 @@ import {
   Github,
   Linkedin,
   Tag,
-  UserRound,
 } from "lucide-react";
 
 import Header from "@/components/layout/Header";
@@ -35,6 +34,7 @@ import {
 } from "@/components/launches";
 import { trackAttrs } from "@/lib/track-attrs";
 import { ViewTracker } from "@/components/tracking/ViewTracker";
+import { MakerPhoto } from "@/components/launches/MakerPhoto";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.claudeai.directory";
 
@@ -64,31 +64,12 @@ function splitUseCases(useCases?: string[]) {
     .filter(Boolean);
 }
 
-function initials(name: string) {
-  return name
-    .split(/\s+/)
-    .map((part) => part[0])
-    .join("")
-    .slice(0, 2)
-    .toUpperCase();
-}
 
 function XIcon({ className }: { className?: string }) {
   return (
     <svg viewBox="0 0 24 24" aria-hidden="true" className={className} fill="currentColor">
       <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
     </svg>
-  );
-}
-
-function MakerAvatar({ name, size = "base" }: { name?: string; size?: "sm" | "base" }) {
-  const dimension = size === "sm" ? "h-9 w-9 text-xs" : "h-12 w-12 text-sm";
-  return (
-    <span
-      className={`flex shrink-0 items-center justify-center rounded-full border border-border bg-card font-semibold text-muted-foreground ${dimension}`}
-    >
-      {name ? initials(name) : <UserRound className="h-5 w-5" />}
-    </span>
   );
 }
 
@@ -329,7 +310,7 @@ export default async function LaunchDetailPage({
               <UpvoteSummary slug={project.id} initialCount={upvotes} />
             </div>
             <a href="#discussion" className="group flex min-w-0 items-center gap-3 px-5 py-5 transition-colors hover:bg-card/60 md:px-8">
-              <MakerAvatar name={project.author_name} size="sm" />
+              <MakerPhoto src={project.author_avatar} name={project.author_name} size="sm" />
               <div className="min-w-0">
                 <p className="text-sm text-foreground">
                   {builderName}
@@ -363,7 +344,7 @@ export default async function LaunchDetailPage({
           <LaunchSection title="Built by">
             <div className="flex flex-wrap items-center justify-between gap-4">
               <div className="flex items-center gap-4">
-                <MakerAvatar name={project.author_name} />
+                <MakerPhoto src={project.author_avatar} name={project.author_name} />
                 <div className="min-w-0">
                   {authorHref ? (
                     <Link href={authorHref} className="font-semibold text-foreground hover:text-primary">
@@ -468,7 +449,7 @@ export default async function LaunchDetailPage({
               intro={
                 project.feedback_prompt ? (
                   <div className="flex gap-3">
-                    <MakerAvatar name={project.author_name} size="sm" />
+                    <MakerPhoto src={project.author_avatar} name={project.author_name} size="sm" />
                     <div className="min-w-0">
                       <p className="text-sm">
                         <span className="font-semibold text-foreground">{builderName}</span>

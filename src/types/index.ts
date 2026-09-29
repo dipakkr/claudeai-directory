@@ -224,6 +224,8 @@ export interface ShowcaseProject {
   title: string;
   /** Page views, one per visitor per day. */
   views?: number;
+  /** The maker's current profile photo, added by the API. */
+  author_avatar?: string;
   tagline?: string;
   description: string;
   images: string[];
