@@ -401,7 +401,7 @@ export default async function LaunchDetailPage({
 
           <LaunchSection title="Details" padded={false}>
             {/* Short facts on one line (wraps on phones); multi-value rows follow. */}
-            <div className="flex flex-wrap gap-x-10 gap-y-4 border-b border-border px-5 py-5 last:border-b-0 md:px-8">
+            <div className="grid grid-cols-[repeat(auto-fit,minmax(140px,1fr))] gap-x-6 gap-y-4 border-b border-border px-5 py-5 last:border-b-0 md:px-8">
               {project.category && <Fact label="Category">{project.category}</Fact>}
               {appUrl && (
                 <Fact label="Website">
