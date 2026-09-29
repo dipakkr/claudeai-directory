@@ -1,4 +1,4 @@
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api";
+export const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api";
 
 // Recursively transform MongoDB _id fields to id
 function normalizeIds(data: unknown): unknown {

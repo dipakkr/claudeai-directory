@@ -1,16 +1,9 @@
-import { api } from "@/lib/api";
+import { api, API_BASE, ApiError } from "@/lib/api";
 import type { UploadKind } from "@/hooks/use-showcase";
 
-interface PresignedUpload {
-  upload_url: string;
-  public_url: string;
-  headers: Record<string, string>;
-}
-
 /**
- * Upload one launch file straight to storage.
- * 1. Ask the API for a presigned URL (it checks type and size).
- * 2. PUT the file to that URL. XHR rather than fetch so we get upload progress.
+ * Upload one launch file. It goes to our API, which checks it and stores it in
+ * S3 (served from CloudFront). XHR rather than fetch so we get upload progress.
  * Resolves with the file's public URL.
  */
 export async function uploadLaunchMedia(
@@ -18,23 +11,30 @@ export async function uploadLaunchMedia(
   file: File,
   onProgress?: (fraction: number) => void,
 ): Promise<string> {
-  const presigned = await api.post<PresignedUpload>("/showcase/uploads", {
-    kind,
-    content_type: file.type,
-    size: file.size,
-  });
+  const form = new FormData();
+  form.append("kind", kind);
+  form.append("file", file);
 
-  await new Promise<void>((resolve, reject) => {
+  return new Promise<string>((resolve, reject) => {
     const xhr = new XMLHttpRequest();
-    xhr.open("PUT", presigned.upload_url);
-    for (const [header, value] of Object.entries(presigned.headers)) xhr.setRequestHeader(header, value);
+    xhr.open("POST", `${API_BASE}/showcase/uploads`);
+    const token = api.getToken();
+    if (token) xhr.setRequestHeader("Authorization", `Bearer ${token}`);
     xhr.upload.onprogress = (event) => {
       if (event.lengthComputable) onProgress?.(event.loaded / event.total);
     };
-    xhr.onload = () => (xhr.status >= 200 && xhr.status < 300 ? resolve() : reject(new Error(`Upload failed (${xhr.status})`)));
+    xhr.onload = () => {
+      let body: { public_url?: string; detail?: unknown } = {};
+      try {
+        body = JSON.parse(xhr.responseText || "{}");
+      } catch {
+        /* non-JSON error page */
+      }
+      if (xhr.status >= 200 && xhr.status < 300 && body.public_url) resolve(body.public_url);
+      else if (xhr.status === 413) reject(new Error("That file is too big."));
+      else reject(new ApiError(xhr.status, body));
+    };
     xhr.onerror = () => reject(new Error("Upload failed. Check your connection and try again."));
-    xhr.send(file);
+    xhr.send(form);
   });
-
-  return presigned.public_url;
 }
