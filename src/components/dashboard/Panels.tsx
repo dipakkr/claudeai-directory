@@ -126,6 +126,7 @@ export function LaunchesPanel({ apps, loading }: { apps: ShowcaseProject[]; load
                   </div>
                   <p className="mt-0.5 truncate text-xs text-muted-foreground">
                     {app.tagline || app.category || "Launch"} · {timeAgo(app.listed_at || app.created_at)}
+                    {(app.views ?? 0) > 0 && ` · ${app.views} ${app.views === 1 ? "view" : "views"}`}
                   </p>
                 </div>
                 {app.badge_verified && (

@@ -270,6 +270,7 @@ export default function DashboardClient() {
                     <div className="grid grid-cols-2 gap-3 md:grid-cols-3">
                       <StatTile label="Live launches" value={s?.launches.live ?? "-"} sub={s?.launches.pending ? `${s.launches.pending} waiting for badge` : undefined} href="/dashboard?tab=launches" />
                       <StatTile label="Upvotes received" value={s?.launches.upvotes ?? "-"} sub="On your live launches" href="/dashboard?tab=launches" />
+                      <StatTile label="Launch views" value={s?.launches.views ?? "-"} sub="Visitors to your live launches" href="/dashboard?tab=launches" />
                       <StatTile label="Resources published" value={s?.submissions.published ?? "-"} sub={s?.submissions.pending ? `${s.submissions.pending} in review` : undefined} href="/dashboard?tab=submissions" />
                       <StatTile label="Discussions" value={s?.discussions.threads ?? "-"} sub={s ? `${s.discussions.replies} replies written` : undefined} href="/dashboard?tab=discussions" />
                       <StatTile label="Saved" value={s?.saved ?? "-"} href="/dashboard?tab=saved" />

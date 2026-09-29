@@ -4,6 +4,7 @@ import type { PublicProfile, Thread, Reply } from "@/types";
 import ThreadDetail from "./ThreadDetailClient";
 import { BreadcrumbSchema, DiscussionForumPostingSchema } from "@/components/seo/JsonLd";
 import { pageTitle } from "@/lib/seo";
+import { ViewTracker } from "@/components/tracking/ViewTracker";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.claudeai.directory";
 
@@ -79,6 +80,7 @@ export default async function CommunityThreadPage({
           />
         </>
       )}
+      <ViewTracker type="thread" id={id} />
       <ThreadDetail
         id={id}
         initialThread={thread ?? undefined}

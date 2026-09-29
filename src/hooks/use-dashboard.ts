@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { api } from "@/lib/api";
 
 export interface DashboardSummary {
-  launches: { total: number; live: number; pending: number; upvotes: number };
+  launches: { total: number; live: number; pending: number; upvotes: number; views?: number };
   submissions: { total: number; published: number; pending: number; rejected: number };
   discussions: {
     threads: number;

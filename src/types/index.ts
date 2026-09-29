@@ -222,6 +222,8 @@ export interface Job {
 export interface ShowcaseProject {
   id: string;
   title: string;
+  /** Page views, one per visitor per day. */
+  views?: number;
   tagline?: string;
   description: string;
   images: string[];

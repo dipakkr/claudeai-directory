@@ -32,7 +32,7 @@ export type AnalyticsEvent = InstallEvent | ProductEvent;
 export type PropValue = string | number | boolean | null | undefined;
 
 export interface EventProps {
-  resource_type?: "skill" | "mcp" | "agent" | "plugin";
+  resource_type?: "skill" | "mcp" | "agent" | "plugin" | "launch" | "thread";
   resource_id?: string;
   query?: string;
   [key: string]: PropValue;

@@ -33,6 +33,7 @@ import {
   OwnerEditButton,
 } from "@/components/launches";
 import { trackAttrs } from "@/lib/track-attrs";
+import { ViewTracker } from "@/components/tracking/ViewTracker";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.claudeai.directory";
 
@@ -305,6 +306,7 @@ export default async function LaunchDetailPage({
             </div>
           </header>
 
+          <ViewTracker type="launch" id={project.id} />
           {/* Activity strip */}
           <div className="grid border-b border-border sm:grid-cols-2">
             <div className="flex items-center gap-3 border-b border-border px-5 py-5 sm:border-b-0 sm:border-r md:px-8">
@@ -424,6 +426,11 @@ export default async function LaunchDetailPage({
             <DetailRow label="Launched">
               <span className="text-sm text-muted-foreground">{listedDate || "Recently"}</span>
             </DetailRow>
+            {(project.views ?? 0) > 0 && (
+              <DetailRow label="Views">
+                <span className="text-sm tabular-nums text-muted-foreground">{(project.views ?? 0).toLocaleString()}</span>
+              </DetailRow>
+            )}
           </LaunchSection>
 
           {comparisons.length > 0 && (
