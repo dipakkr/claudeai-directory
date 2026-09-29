@@ -7,6 +7,7 @@ import {
   BadgeCheck,
   CalendarDays,
   ExternalLink,
+  Eye,
   Github,
   Linkedin,
   Tag,
@@ -96,6 +97,15 @@ function DetailRow({ label, children }: { label: string; children: ReactNode }) 
     <div className="border-b border-border px-5 py-5 last:border-b-0 md:px-8">
       <h3 className="text-sm font-semibold text-foreground">{label}</h3>
       <div className="mt-2.5 flex flex-wrap gap-2">{children}</div>
+    </div>
+  );
+}
+
+function Fact({ label, children }: { label: string; children: ReactNode }) {
+  return (
+    <div className="min-w-0">
+      <p className="text-[11px] uppercase tracking-[0.06em] text-muted-foreground">{label}</p>
+      <div className="mt-1 text-sm tabular-nums text-foreground">{children}</div>
     </div>
   );
 }
@@ -272,6 +282,12 @@ export default async function LaunchDetailPage({
                       {project.category}
                     </span>
                   )}
+                  {(project.views ?? 0) > 0 && (
+                    <span className="inline-flex items-center gap-1.5 tabular-nums">
+                      <Eye className="h-4 w-4" />
+                      {(project.views ?? 0).toLocaleString()} {project.views === 1 ? "view" : "views"}
+                    </span>
+                  )}
                 </div>
               </div>
               <div className="hidden sm:block">
@@ -384,24 +400,24 @@ export default async function LaunchDetailPage({
           </LaunchSection>
 
           <LaunchSection title="Details" padded={false}>
-            {project.category && (
-              <DetailRow label="Category">
-                <Chip>{project.category}</Chip>
-              </DetailRow>
-            )}
-            {appUrl && (
-              <DetailRow label="Website">
-                <a
-                  href={appUrl}
-                  target="_blank"
-                  rel={websiteRel}
-                  className="inline-flex items-center gap-1.5 text-sm text-foreground hover:text-primary"
-                >
-                  {publisherHost || "Open website"}
-                  <ExternalLink className="h-3.5 w-3.5" />
-                </a>
-              </DetailRow>
-            )}
+            {/* Short facts on one line (wraps on phones); multi-value rows follow. */}
+            <div className="flex flex-wrap gap-x-10 gap-y-4 border-b border-border px-5 py-5 last:border-b-0 md:px-8">
+              {project.category && <Fact label="Category">{project.category}</Fact>}
+              {appUrl && (
+                <Fact label="Website">
+                  <a
+                    href={appUrl}
+                    target="_blank"
+                    rel={websiteRel}
+                    className="inline-flex items-center gap-1.5 text-foreground hover:text-primary"
+                  >
+                    {publisherHost || "Open website"}
+                    <ExternalLink className="h-3.5 w-3.5" />
+                  </a>
+                </Fact>
+              )}
+              <Fact label="Launched">{listedDate || "Recently"}</Fact>
+            </div>
             {platforms.length > 0 && (
               <DetailRow label="Platforms">
                 {platforms.map((item) => (
@@ -421,14 +437,6 @@ export default async function LaunchDetailPage({
                 {collections.map((item) => (
                   <Chip key={item}>{item}</Chip>
                 ))}
-              </DetailRow>
-            )}
-            <DetailRow label="Launched">
-              <span className="text-sm text-muted-foreground">{listedDate || "Recently"}</span>
-            </DetailRow>
-            {(project.views ?? 0) > 0 && (
-              <DetailRow label="Views">
-                <span className="text-sm tabular-nums text-muted-foreground">{(project.views ?? 0).toLocaleString()}</span>
               </DetailRow>
             )}
           </LaunchSection>
