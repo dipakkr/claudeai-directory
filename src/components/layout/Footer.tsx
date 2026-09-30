@@ -23,7 +23,7 @@ const footerLinks = [
   {
     title: "Community",
     links: [
-      { label: "Discussions", href: "/community" },
+      { label: "Community feed", href: "/feed" },
       { label: "Members", href: "/members" },
       { label: "Launches", href: "/launches" },
       { label: "Discord", href: SOCIAL_LINKS.discord },

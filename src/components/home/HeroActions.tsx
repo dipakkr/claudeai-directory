@@ -42,7 +42,7 @@ export function HeroJoin({ members, total }: { members: PublicProfile[]; total: 
   return (
     <button
       type="button"
-      onClick={() => (isAuthenticated ? router.push("/community") : openSignIn("join the community"))}
+      onClick={() => (isAuthenticated ? router.push("/feed") : openSignIn("join the community"))}
       className="group mx-auto mt-7 flex w-fit max-w-full cursor-pointer items-center justify-center"
     >
       <span className="flex -space-x-2">

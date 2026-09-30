@@ -359,10 +359,23 @@ export interface Stat {
   description: string;
 }
 
+export interface LinkPreview {
+  url: string;
+  title?: string;
+  description?: string;
+  image?: string | null;
+  site?: string;
+}
+
+/** A feed post (formerly a forum thread). Quick posts have no title. */
 export interface Thread {
   id: string;
-  title: string;
+  title?: string | null;
+  /** Title, or the post's first words when it has none. */
+  display_title?: string;
   body: string;
+  link_url?: string | null;
+  link_preview?: LinkPreview | null;
   author: string;
   author_username?: string;
   author_avatar?: string;

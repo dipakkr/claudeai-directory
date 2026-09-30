@@ -233,27 +233,27 @@ export function DiscussionsPanel({
   return (
     <section>
       <PanelHeader
-        title="Your discussions"
-        description={`Threads you started. You have also written ${replies} ${replies === 1 ? "reply" : "replies"}.`}
-        action={<PrimaryAction href="/community"><MessageSquare className="h-4 w-4" />Start a discussion</PrimaryAction>}
+        title="Your posts"
+        description={`Posts you shared on the feed. You have also written ${replies} ${replies === 1 ? "comment" : "comments"}.`}
+        action={<PrimaryAction href="/feed#compose"><MessageSquare className="h-4 w-4" />Write a post</PrimaryAction>}
       />
       {loading ? (
         <SkeletonRows />
       ) : threads.length === 0 ? (
         <EmptyState
           icon={MessageSquare}
-          title="No discussions yet"
-          body="Ask a question or share what you are building. Builders reply fast."
-          action={<PrimaryAction href="/community">Go to discussions</PrimaryAction>}
+          title="No posts yet"
+          body="Share what you are building or ask a question. Builders reply fast."
+          action={<PrimaryAction href="/feed">Go to the feed</PrimaryAction>}
         />
       ) : (
         <ul className={listClass}>
           {threads.map((thread) => (
             <li key={thread.id}>
-              <Link href={`/community/${thread.id}`} className="flex items-center gap-3 p-4 hover:bg-background/60">
+              <Link href={`/feed/${thread.id}`} className="flex items-center gap-3 p-4 hover:bg-background/60">
                 <p className="min-w-0 flex-1 truncate text-sm font-medium text-foreground">{thread.title}</p>
                 <span className="shrink-0 text-xs text-muted-foreground">
-                  {thread.replies} {thread.replies === 1 ? "reply" : "replies"} · {timeAgo(thread.created_at)}
+                  {thread.replies} {thread.replies === 1 ? "comment" : "comments"} · {timeAgo(thread.created_at)}
                 </span>
               </Link>
             </li>
@@ -336,7 +336,7 @@ export function NotificationsPanel({
       {loading ? (
         <SkeletonRows />
       ) : items.length === 0 ? (
-        <EmptyState icon={Bell} title="No notifications yet" body="Replies to your discussions and updates on your launches show up here." />
+        <EmptyState icon={Bell} title="No notifications yet" body="Comments on your posts and updates on your launches show up here." />
       ) : (
         <ul className={listClass}>
           {items.map((item) => (

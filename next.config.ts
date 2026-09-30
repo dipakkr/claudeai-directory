@@ -26,6 +26,9 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [
       ...courseLessonRedirects,
+      // The forum merged into the feed: posts keep their ids.
+      { source: "/community", destination: "/feed", permanent: true },
+      { source: "/community/:id", destination: "/feed/:id", permanent: true },
       // Launch slug renamed after a duplicate was removed.
       { source: "/launches/tooljunction-2", destination: "/launches/tooljunction", permanent: true },
       // Courses without written lessons, and the old index, go to the guides list.

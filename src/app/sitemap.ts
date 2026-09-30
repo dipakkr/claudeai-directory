@@ -1,4 +1,6 @@
 import type { MetadataRoute } from "next";
+import { isIndexable } from "@/lib/feed";
+import type { Thread } from "@/types";
 import { reviewedAgents } from "@/data/resource-guides";
 import { publicLaunches } from "@/lib/home-community";
 import type { ShowcaseProject } from "@/types";
@@ -18,6 +20,19 @@ async function fetchSlugs(endpoint: string, slugField = "id"): Promise<string[]>
     return (data as Record<string, unknown>[]).map(
       (item) => String(item[slugField] || item._id || "")
     ).filter(Boolean);
+  } catch {
+    return [];
+  }
+}
+
+/** Feed posts with enough substance to index (see isIndexable). */
+async function fetchIndexablePosts(): Promise<string[]> {
+  try {
+    const res = await fetch(`${API_BASE}/community/threads?limit=500`, { next: { revalidate: 3600 } });
+    if (!res.ok) return [];
+    // Raw fetch: the API's _id is not mapped to id here.
+    const posts = (await res.json()) as (Thread & { _id?: string })[];
+    return posts.filter(isIndexable).map((p) => String(p._id ?? p.id));
   } catch {
     return [];
   }
@@ -79,8 +94,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${SITE_URL}/guides`, changeFrequency: "weekly", priority: 0.7 },
     { url: `${SITE_URL}/blog`, changeFrequency: "daily", priority: 0.8 },
     { url: `${SITE_URL}/learn`, changeFrequency: "weekly", priority: 0.7 },
-    { url: `${SITE_URL}/community`, changeFrequency: "daily", priority: 0.6 },
-    { url: `${SITE_URL}/feed`, changeFrequency: "daily", priority: 0.6 },
+    { url: `${SITE_URL}/feed`, changeFrequency: "daily", priority: 0.7 },
     { url: `${SITE_URL}/claude-code-commands`, changeFrequency: "weekly", priority: 0.8 },
     { url: `${SITE_URL}/llm-api-pricing`, changeFrequency: "weekly", priority: 0.7 },
     { url: `${SITE_URL}/claude-md-generator`, changeFrequency: "monthly", priority: 0.6 },
@@ -94,7 +108,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     fetchSlugs("/jobs", "_id"),
     fetchSlugs("/guides", "_id"),
     fetchSlugs("/blog", "_id"),
-    fetchSlugs("/community/threads", "id"),
+    fetchIndexablePosts(),
   ]);
 
   // Resource pages are mirrors whose canonical is the author's original, so they are not listed here.
@@ -162,7 +176,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }));
 
   const threadPages: MetadataRoute.Sitemap = threadIds.map((id) => ({
-    url: `${SITE_URL}/community/${id}`,
+    url: `${SITE_URL}/feed/${id}`,
     changeFrequency: "weekly",
     priority: 0.6,
   }));

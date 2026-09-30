@@ -231,7 +231,7 @@ export default async function ShowcaseDetailPage({
   const appUrl = project.app_url || project.demo_url;
   const authorHref = project.author_username ? `/u/${project.author_username}` : null;
   const listedDate = formatDate(project.listed_at || project.created_at);
-  const feedbackHref = `/community?search=${encodeURIComponent(project.title)}`;
+  const feedbackHref = "/feed#compose";
   const techStack = project.tech_stack ?? [];
   const useCases = fallbackUseCases(project);
   const features = featureItems(project);

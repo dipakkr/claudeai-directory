@@ -5,6 +5,7 @@ import ReactMarkdown from "react-markdown";
 import { ArrowRight, MessageSquare } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import type { Reply, Thread } from "@/types";
+import { postTitle } from "@/lib/feed";
 
 function MemberAvatar({ src, name }: { src?: string | null; name: string }) {
   return (
@@ -35,7 +36,7 @@ export default function HomeCommunity({ threads, replies, unavailable }: { threa
     <section id="community" aria-labelledby="community-heading" className="mx-auto mt-16 max-w-[840px] scroll-mt-24 px-4 md:px-8">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <h2 id="community-heading" className="text-2xl text-foreground">Questions from the community</h2>
-        <Link href="/community" className="inline-flex items-center gap-2 py-2 text-sm text-foreground underline underline-offset-4">Join the discussion <ArrowRight className="h-4 w-4" /></Link>
+        <Link href="/feed" className="inline-flex items-center gap-2 py-2 text-sm text-foreground underline underline-offset-4">Open the feed <ArrowRight className="h-4 w-4" /></Link>
       </div>
       <p className="mt-2 text-sm leading-6 text-muted-foreground">Selected Claude discussions from member profiles. Replies are community advice, not verified solutions.</p>
       <Tabs defaultValue="recent" className="mt-5">
@@ -48,7 +49,7 @@ export default function HomeCommunity({ threads, replies, unavailable }: { threa
               <div className="flex items-start gap-3">
                 <MemberAvatar src={thread.author_avatar} name={thread.author || thread.author_username || "Member"} />
                 <div className="min-w-0 flex-1">
-                  <Link href={`/community/${encodeURIComponent(thread.id)}`} className="block break-words text-base font-medium leading-6 text-foreground hover:underline">{thread.title}</Link>
+                  <Link href={`/feed/${encodeURIComponent(thread.id)}`} className="block break-words text-base font-medium leading-6 text-foreground hover:underline">{postTitle(thread)}</Link>
                   <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
                     <Link href={`/u/${encodeURIComponent(thread.author_username!)}`} className="hover:underline">{thread.author?.includes("@") ? thread.author_username : thread.author || thread.author_username}</Link>
                     <time dateTime={thread.created_at}>{new Date(thread.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric", timeZone: "UTC" })}</time>
@@ -58,12 +59,12 @@ export default function HomeCommunity({ threads, replies, unavailable }: { threa
                   {replies[thread.id] && <div className="mt-3 border-l-2 border-border pl-3 text-sm leading-6">
                     <p className="text-xs font-medium text-foreground">Reply from {replies[thread.id].author?.includes("@") ? "a member" : replies[thread.id].author || "a member"}</p>
                     <Excerpt text={replies[thread.id].body} />
-                    <Link href={`/community/${encodeURIComponent(thread.id)}`} className="mt-1 inline-block text-xs text-foreground underline underline-offset-4">Read the full conversation</Link>
+                    <Link href={`/feed/${encodeURIComponent(thread.id)}`} className="mt-1 inline-block text-xs text-foreground underline underline-offset-4">Read the full conversation</Link>
                   </div>}
                 </div>
               </div>
             </article>)}
-          </div> : <p role="status" className="border-t border-border py-8 text-sm text-muted-foreground">{unavailable ? "Discussions are temporarily unavailable." : "No matching discussions in this selection yet."} <Link href="/community" className="text-foreground underline">Visit the community</Link>.</p>}
+          </div> : <p role="status" className="border-t border-border py-8 text-sm text-muted-foreground">{unavailable ? "Discussions are temporarily unavailable." : "No matching discussions in this selection yet."} <Link href="/feed" className="text-foreground underline">Visit the feed</Link>.</p>}
         </TabsContent>)}
       </Tabs>
     </section>

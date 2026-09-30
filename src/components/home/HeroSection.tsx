@@ -49,7 +49,7 @@ const categories: CategoryItem[] = [
   {
     name: "Community",
     description: "Ask questions and compare real workflows",
-    href: "/community",
+    href: "/feed",
     icon: MessageSquare,
     iconColor: "text-primary",
     iconBg: "bg-primary/10",
@@ -138,10 +138,10 @@ const HeroSection = ({ initialQuery = "" }: { initialQuery?: string; initialStat
 
             <div className="mb-5 flex flex-col gap-2 sm:flex-row">
               <Link
-                href="/community"
+                href="/feed"
                 className="inline-flex h-10 items-center justify-center gap-2 rounded-lg bg-primary px-4 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
               >
-                Open forum
+                Open the feed
                 <MessageSquare className="h-4 w-4" />
               </Link>
               <Link

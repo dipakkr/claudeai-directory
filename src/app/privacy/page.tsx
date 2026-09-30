@@ -125,7 +125,7 @@ export default function PrivacyPage() {
               <p>
                 To exercise these rights, contact us through our{" "}
                 <Link
-                  href="/community"
+                  href="/feed"
                   className="text-primary hover:underline"
                 >
                   community page
@@ -163,7 +163,7 @@ export default function PrivacyPage() {
                 If you have questions about this Privacy Policy, please reach
                 out via our{" "}
                 <Link
-                  href="/community"
+                  href="/feed"
                   className="text-primary hover:underline"
                 >
                   community page

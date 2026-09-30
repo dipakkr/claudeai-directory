@@ -11,7 +11,7 @@ const CategorySection = () => {
     { label: "Showcase", href: "/showcase", icon: Rocket },
     { label: "Learn", href: "/learn", icon: BookOpen },
     { label: "LLM Pricing", href: "/llm-api-pricing", icon: Calculator },
-    { label: "Community", href: "/community", icon: MessageSquare },
+    { label: "Community", href: "/feed", icon: MessageSquare },
   ];
 
   return (

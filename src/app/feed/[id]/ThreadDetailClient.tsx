@@ -16,6 +16,10 @@ import { toast } from "sonner";
 import { formatPlainPost } from "@/lib/format-post";
 import { countryName } from "@/lib/profile-options";
 import type { PublicProfile, Reply, Thread } from "@/types";
+import { postTitle } from "@/lib/feed";
+import { LinkPreviewCard } from "@/components/feed/LinkPreviewCard";
+import { PostMenu } from "@/components/feed/PostMenu";
+import { useRouter } from "next/navigation";
 
 function timeAgo(dateStr: string): string {
   const now = Date.now();
@@ -245,6 +249,7 @@ export default function ThreadDetail({
   const { data: myVotes } = useCommunityVotes(id, isAuthenticated);
   const upvote = useCommunityUpvote(id);
   const createReply = useCreateReply(id);
+  const router = useRouter();
   const votes: VoteContext = {
     voted: new Set(myVotes ?? []),
     onVote: async (type, targetId) =>
@@ -281,9 +286,9 @@ export default function ThreadDetail({
           ) : thread ? (
             <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_300px] lg:items-start">
               <article className="min-w-0">
-                <Link href="/community" className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground">
+                <Link href="/feed" className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground">
                   <ArrowLeft className="h-3.5 w-3.5" />
-                  Discussions
+                  Feed
                 </Link>
 
                 <div className="mt-6 flex items-center gap-3">
@@ -291,21 +296,32 @@ export default function ThreadDetail({
                   <Byline author={thread.author} username={thread.author_username} headline={thread.author_headline || role} created={thread.created_at} />
                   <span
                     className="ml-auto inline-flex shrink-0 items-center gap-1.5 rounded-full border border-border bg-card px-3 py-1 text-sm text-foreground"
-                    title="Times this discussion was opened"
+                    title="Times this post was opened"
                   >
                     <Eye className="h-4 w-4 text-muted-foreground" />
                     <span className="font-medium tabular-nums">{(thread.views ?? 0).toLocaleString()}</span>
                     <span className="text-muted-foreground">{thread.views === 1 ? "view" : "views"}</span>
                   </span>
+                  <PostMenu postId={thread.id} authorUsername={thread.author_username} onDeleted={() => router.push("/feed")} />
                 </div>
 
-                <h1 className="mt-4 text-balance font-sans text-[1.75rem] font-bold leading-tight tracking-tight text-foreground md:text-[2rem]">
-                  {thread.title}
-                </h1>
+                {thread.title ? (
+                  <h1 className="mt-4 text-balance font-sans text-[1.75rem] font-bold leading-tight tracking-tight text-foreground md:text-[2rem]">
+                    {thread.title}
+                  </h1>
+                ) : (
+                  <h1 className="sr-only">{postTitle(thread)}</h1>
+                )}
 
                 <div className="mt-5 max-w-[72ch] text-[15px] [&_.prose]:text-[15px] [&_.prose]:leading-7 [&_blockquote]:border-l-primary/60 [&_blockquote]:not-italic [&_blockquote_p]:before:content-none [&_blockquote_p]:after:content-none [&_h3]:mt-8 [&_h3]:text-lg [&_li]:my-1">
                   <UserMarkdown>{formatPlainPost(thread.body)}</UserMarkdown>
                 </div>
+
+                {thread.link_url && (
+                  <div className="mt-5 max-w-[72ch]">
+                    <LinkPreviewCard url={thread.link_url} preview={thread.link_preview} />
+                  </div>
+                )}
 
                 {thread.tags && thread.tags.length > 0 && (
                   <div className="mt-6 flex flex-wrap gap-1.5">
@@ -343,7 +359,7 @@ export default function ThreadDetail({
                     isLoading={repliesLoading}
                     allowReplies
                     onPost={({ body, parentId }) => createReply.mutateAsync({ body, ...(parentId ? { parent_id: parentId } : {}) })}
-                    permalink={(commentId) => `${SITE_URL}/community/${id}#${commentId}`}
+                    permalink={(commentId) => `${SITE_URL}/feed/${id}#${commentId}`}
                     placeholder="What do you think?"
                     emptyText={`No comments yet. Be the first to share what you think with ${thread.author.split(" ")[0]}.`}
                     renderActions={(comment) => (
@@ -407,16 +423,16 @@ export default function ThreadDetail({
                   </SidebarSection>
 
                   <SidebarSection title="Share">
-                    <ShareButtons title={thread.title} url={`${SITE_URL}/community/${id}`} />
+                    <ShareButtons title={postTitle(thread)} url={`${SITE_URL}/feed/${id}`} />
                   </SidebarSection>
 
                   {related.length > 0 && (
-                    <SidebarSection title="More discussions">
+                    <SidebarSection title="More posts">
                       <ul className="-mx-2">
                         {related.map((item) => (
                           <li key={item.id}>
-                            <Link href={`/community/${item.id}`} className="group block rounded-lg px-2 py-2 transition-colors hover:bg-background">
-                              <span className="line-clamp-2 text-sm leading-5 text-foreground group-hover:text-primary">{item.title}</span>
+                            <Link href={`/feed/${item.id}`} className="group block rounded-lg px-2 py-2 transition-colors hover:bg-background">
+                              <span className="line-clamp-2 text-sm leading-5 text-foreground group-hover:text-primary">{postTitle(item)}</span>
                               <span className="mt-0.5 block text-xs text-muted-foreground">
                                 {item.replies} {item.replies === 1 ? "reply" : "replies"} · {timeAgo(item.created_at)}
                               </span>
@@ -424,8 +440,8 @@ export default function ThreadDetail({
                           </li>
                         ))}
                       </ul>
-                      <Link href="/community" className="mt-2 inline-flex items-center gap-1 text-xs font-medium text-muted-foreground hover:text-foreground">
-                        All discussions
+                      <Link href="/feed" className="mt-2 inline-flex items-center gap-1 text-xs font-medium text-muted-foreground hover:text-foreground">
+                        All posts
                         <ArrowRight className="h-3 w-3" />
                       </Link>
                     </SidebarSection>
@@ -433,23 +449,23 @@ export default function ThreadDetail({
                 </div>
 
                 <Link
-                  href="/community"
+                  href="/feed#compose"
                   className="flex items-center gap-3 rounded-2xl border border-primary/25 bg-primary/[0.06] px-4 py-3.5 transition-colors hover:border-primary/40"
                 >
                   <PenSquare className="h-4 w-4 shrink-0 text-primary" />
                   <span className="text-sm">
-                    <span className="block font-medium text-foreground">Start a discussion</span>
-                    <span className="block text-xs text-muted-foreground">Ask a question or share what you built.</span>
+                    <span className="block font-medium text-foreground">Write a post</span>
+                    <span className="block text-xs text-muted-foreground">Share what you built, a tip, or a question.</span>
                   </span>
                 </Link>
               </aside>
             </div>
           ) : (
             <div className="rounded-2xl border border-dashed border-border px-6 py-16 text-center">
-              <p className="text-sm font-medium text-foreground">This discussion was not found.</p>
-              <Link href="/community" className="mt-3 inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground">
+              <p className="text-sm font-medium text-foreground">This post was not found.</p>
+              <Link href="/feed" className="mt-3 inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground">
                 <ArrowLeft className="h-3.5 w-3.5" />
-                All discussions
+                Back to the feed
               </Link>
             </div>
           )}

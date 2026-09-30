@@ -8,6 +8,8 @@ interface ThreadsParams {
   tag?: string;
   skip?: number;
   limit?: number;
+  sort?: "latest" | "popular";
+  author?: string;
 }
 
 export function useThreads(params?: ThreadsParams, initialData?: Thread[]) {
@@ -30,7 +32,7 @@ export function useThread(id: string, initialData?: Thread) {
 export function useCreateThread() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (data: { title: string; body: string; tags: string[] }) =>
+    mutationFn: (data: { title?: string; body: string; link_url?: string; tags?: string[] }) =>
       api.post<Thread>("/community/threads", data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["community-threads"] });
@@ -78,5 +80,16 @@ export function useCommunityUpvote(threadId: string) {
         type === "thread" ? `/community/threads/${id}/upvote` : `/community/replies/${id}/upvote`,
       ),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["community", "votes", threadId] }),
+  });
+}
+
+/** Which of these feed posts the signed-in user has upvoted. */
+export function useMyPostVotes(ids: string[], enabled: boolean) {
+  const key = [...ids].sort().join(",");
+  return useQuery({
+    queryKey: ["community", "post-votes", key],
+    queryFn: () => api.get<string[]>("/community/my-thread-votes", { ids: key }),
+    enabled: enabled && ids.length > 0,
+    staleTime: 60_000,
   });
 }

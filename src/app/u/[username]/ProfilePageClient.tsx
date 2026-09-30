@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { useAuth } from "@/lib/auth";
 import { BadgeCheck, CalendarDays, ArrowLeft, Globe, Github, Twitter, Pencil, ArrowRight, ExternalLink } from "lucide-react";
 import type { PublicProfile } from "@/types";
+import { MemberPosts } from "@/components/feed/MemberPosts";
 
 // Warm banners that sit inside the site palette in both themes.
 const BANNER_COLORS = [
@@ -228,6 +229,8 @@ export default function PublicProfilePage({
                 </div>
               </section>
             )}
+
+            <MemberPosts username={profile.username} />
 
             {isOwnProfile ? (
               <div className="rounded-xl border border-dashed border-border p-8 text-center">

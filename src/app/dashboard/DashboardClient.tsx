@@ -39,7 +39,7 @@ const TABS = [
   { id: "overview", label: "Overview", icon: LayoutDashboard },
   { id: "launches", label: "Launches", icon: Rocket },
   { id: "submissions", label: "Submissions", icon: Package },
-  { id: "discussions", label: "Discussions", icon: MessageSquare },
+  { id: "discussions", label: "Posts", icon: MessageSquare },
   { id: "saved", label: "Saved", icon: Bookmark },
   { id: "notifications", label: "Notifications", icon: Bell },
   { id: "settings", label: "Settings", icon: Settings },
@@ -272,7 +272,7 @@ export default function DashboardClient() {
                       <StatTile label="Upvotes received" value={s?.launches.upvotes ?? "-"} sub="On your live launches" href="/dashboard?tab=launches" />
                       <StatTile label="Launch views" value={s?.launches.views ?? "-"} sub="Visitors to your live launches" href="/dashboard?tab=launches" />
                       <StatTile label="Resources published" value={s?.submissions.published ?? "-"} sub={s?.submissions.pending ? `${s.submissions.pending} in review` : undefined} href="/dashboard?tab=submissions" />
-                      <StatTile label="Discussions" value={s?.discussions.threads ?? "-"} sub={s ? `${s.discussions.replies} replies written` : undefined} href="/dashboard?tab=discussions" />
+                      <StatTile label="Posts" value={s?.discussions.threads ?? "-"} sub={s ? `${s.discussions.replies} comments written` : undefined} href="/dashboard?tab=discussions" />
                       <StatTile label="Saved" value={s?.saved ?? "-"} href="/dashboard?tab=saved" />
                       <StatTile label="Tweets added" value={s?.tweets_added ?? "-"} sub="To the community feed" href="/feed" />
                     </div>
@@ -285,15 +285,15 @@ export default function DashboardClient() {
                     <div className="grid gap-3 sm:grid-cols-2">
                       <ActionCard href="/launches/submit" icon={Rocket} title="Launch an app" body="Get a public page, upvotes and feedback." />
                       <ActionCard href="/submit" icon={Package} title="Submit a resource" body="Publish a Skill, Agent or MCP server from GitHub." />
-                      <ActionCard href="/community" icon={MessageSquare} title="Start a discussion" body="Ask a question or share what you are building." />
-                      <ActionCard href="/feed" icon={Twitter} title="Add a tweet to the feed" body="Share a great post about Claude." />
+                      <ActionCard href="/feed#compose" icon={MessageSquare} title="Write a post" body="Share what you are building or ask a question." />
+                      <ActionCard href="/feed?tab=x" icon={Twitter} title="Add a tweet to the feed" body="Share a great post about Claude." />
                     </div>
                   </section>
 
                   {s && s.discussions.recent.length > 0 && (
                     <section>
                       <div className="mb-3 flex items-center justify-between">
-                        <h2 className="text-sm font-semibold text-foreground">Recent discussions</h2>
+                        <h2 className="text-sm font-semibold text-foreground">Your recent posts</h2>
                         <Link href="/dashboard?tab=discussions" className="text-xs text-muted-foreground hover:text-foreground">
                           See all
                         </Link>
@@ -301,7 +301,7 @@ export default function DashboardClient() {
                       <ul className="divide-y divide-border overflow-hidden rounded-2xl border border-border bg-card">
                         {s.discussions.recent.slice(0, 3).map((thread) => (
                           <li key={thread.id}>
-                            <Link href={`/community/${thread.id}`} className="flex items-center gap-3 p-3.5 text-sm hover:bg-background/60">
+                            <Link href={`/feed/${thread.id}`} className="flex items-center gap-3 p-3.5 text-sm hover:bg-background/60">
                               <span className="min-w-0 flex-1 truncate text-foreground">{thread.title}</span>
                               <span className="shrink-0 text-xs text-muted-foreground">
                                 {thread.replies} {thread.replies === 1 ? "reply" : "replies"} · {timeAgo(thread.created_at)}

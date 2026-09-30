@@ -155,7 +155,7 @@ export default function TermsPage() {
                 If you have questions about these Terms, please reach out via
                 our{" "}
                 <Link
-                  href="/community"
+                  href="/feed"
                   className="text-primary hover:underline"
                 >
                   community page

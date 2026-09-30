@@ -25,6 +25,6 @@ export function rankedLaunches(projects: ShowcaseProject[]): ShowcaseProject[] {
 }
 
 export function selectedDiscussions(threads: Thread[]): Thread[] {
-  return threads.filter(thread => thread.author_username && thread.body.trim().length >= 40 && /\b(claude|mcp|anthropic)\b/i.test(`${thread.title} ${thread.tags.join(" ")}`))
+  return threads.filter(thread => thread.author_username && thread.body.trim().length >= 40 && /\b(claude|mcp|anthropic)\b/i.test(`${thread.title ?? ""} ${thread.body} ${thread.tags.join(" ")}`))
     .sort((a, b) => Date.parse(b.created_at) - Date.parse(a.created_at)).slice(0, 8);
 }

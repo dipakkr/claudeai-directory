@@ -109,7 +109,7 @@ export default function AboutPage() {
                 submission page
               </Link>{" "}
               or join the{" "}
-              <Link href="/community" className="text-primary hover:underline">
+              <Link href="/feed" className="text-primary hover:underline">
                 community discussions
               </Link>
               .
@@ -119,7 +119,7 @@ export default function AboutPage() {
             <p>
               Have questions, feedback, or want to get in touch? Reach out to us
               through our{" "}
-              <Link href="/community" className="text-primary hover:underline">
+              <Link href="/feed" className="text-primary hover:underline">
                 community page
               </Link>
               .
