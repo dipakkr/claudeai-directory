@@ -23,9 +23,11 @@ export default function AboutPage() {
           <div className="prose prose-neutral dark:prose-invert max-w-none space-y-6 text-muted-foreground">
             <p className="text-lg leading-relaxed">
               <strong className="text-foreground">ClaudeAI Directory</strong>{" "}
-              (claudeai.directory) is an independent, community-driven project
-              built to help developers, builders, and AI enthusiasts discover and
-              understand more about the Claude AI ecosystem.
+              (claudeai.directory) is an independent, community-driven project built by{" "}
+              <a href="https://x.com/dipakkr_" target="_blank" rel="noopener noreferrer me" className="text-primary hover:underline">
+                @dipakkr_
+              </a>{" "}
+              to help developers, builders, and AI enthusiasts discover and understand more about the Claude AI ecosystem.
             </p>
 
             <p>
@@ -113,15 +115,6 @@ export default function AboutPage() {
                 community discussions
               </Link>
               .
-            </p>
-
-            <h2 className="text-xl font-semibold text-foreground">Who builds this</h2>
-            <p>
-              Claude AI Directory is built and run by{" "}
-              <a href="https://x.com/dipakkr_" target="_blank" rel="noopener noreferrer me" className="text-primary hover:underline">
-                @dipakkr_
-              </a>{" "}
-              on X. Say hi there, or send ideas for what the directory should cover next.
             </p>
 
             <h2 className="text-xl font-semibold text-foreground">Contact</h2>
