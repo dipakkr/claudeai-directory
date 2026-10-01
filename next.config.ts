@@ -26,6 +26,8 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [
       ...courseLessonRedirects,
+      // One submit flow for launches.
+      { source: "/showcase/submit", destination: "/launches/submit", permanent: true },
       // The forum merged into the feed: posts keep their ids.
       { source: "/community", destination: "/feed", permanent: true },
       { source: "/community/:id", destination: "/feed/:id", permanent: true },

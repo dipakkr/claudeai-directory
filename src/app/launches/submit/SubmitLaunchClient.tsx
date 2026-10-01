@@ -39,7 +39,7 @@ type Media = { logo: string[]; screenshot: string[]; video: string[] };
 
 const SITE_URL = "https://www.claudeai.directory";
 
-import { CATEGORIES, PLATFORMS } from "@/lib/launch-options";
+import { CATEGORIES } from "@/lib/launch-options";
 import { SignInButton } from "@/components/auth/SignInDialog";
 import { track } from "@/lib/analytics";
 
@@ -67,6 +67,7 @@ const EMPTY_FORM = {
   github: "",
   linkedin: "",
   feedback_prompt: "",
+  maker_comment: "",
 };
 
 type Form = typeof EMPTY_FORM;
@@ -649,6 +650,17 @@ export default function SubmitLaunchClient() {
       twitter: current.twitter || meta.twitter || "",
     }));
 
+  // A starting point for the maker's first comment; they edit it before submitting.
+  const draftMakerComment = () =>
+    setForm((current) =>
+      current.maker_comment
+        ? current
+        : {
+            ...current,
+            maker_comment: `Hey everyone, I'm the maker of ${current.title || "this app"}.${current.tagline ? ` ${current.tagline.replace(/[.!]*$/, ".")}` : ""}\n\nI built it because ...\n\nI'd love your feedback on ...`,
+          },
+    );
+
   // "What are you launching?" -> read the site (at least as long as the progress screen) -> review.
   const startFromUrl = async (raw: string) => {
     const url = normalizeUrl(raw);
@@ -667,6 +679,7 @@ export default function SubmitLaunchClient() {
     }
     setFilledFrom(url);
     await new Promise((resolve) => window.setTimeout(resolve, Math.max(0, 3600 - (Date.now() - started))));
+    draftMakerComment();
     setStage("form");
   };
 
@@ -698,6 +711,11 @@ export default function SubmitLaunchClient() {
       toast.error("Name and description are required");
       return;
     }
+    if (form.maker_comment.trim().length < 20 || /because \.\.\.|feedback on \.\.\./.test(form.maker_comment)) {
+      toast.error("Finish your first comment: replace the ... parts with your own words");
+      document.getElementById("maker_comment")?.focus();
+      return;
+    }
     const overview = {
       audience: form.audience.trim() || undefined,
       problem: form.problem.trim() || undefined,
@@ -723,6 +741,7 @@ export default function SubmitLaunchClient() {
         skills_used: [],
         use_cases: splitList(form.use_cases, /\n/),
         feedback_prompt: form.feedback_prompt.trim() || undefined,
+        maker_comment: form.maker_comment.trim(),
         gallery_images: [...media.screenshot, ...splitList(form.images, /\s*\n\s*/).filter(isValidUrl)].slice(0, 8),
         logo_url: media.logo[0],
         video_url: media.video[0],
@@ -821,7 +840,10 @@ export default function SubmitLaunchClient() {
                   ) : step === 2 && activeApp ? (
                     <ShareStep app={activeApp} onAnother={startOver} />
                   ) : stage === "url" ? (
-                    <LaunchStart initialUrl={form.app_url} onContinue={(url) => void startFromUrl(url)} onManual={() => setStage("form")} />
+                    <LaunchStart initialUrl={form.app_url} onContinue={(url) => void startFromUrl(url)} onManual={() => {
+                        draftMakerComment();
+                        setStage("form");
+                      }} />
                   ) : stage === "reading" ? (
                     <LaunchReading url={form.app_url} />
                   ) : (
@@ -897,7 +919,7 @@ export default function SubmitLaunchClient() {
                         </Field>
                         </FormSection>
 
-                        <FormSection n="02" title="Media" hint="Optional. Launches with screenshots get more upvotes.">
+                        <FormSection n="02" title="Media" hint="Optional. Screenshots get more upvotes.">
                       {uploadConfig?.enabled && (
                         <div key={mediaKey} className="space-y-5">
                           <MediaUpload
@@ -918,85 +940,32 @@ export default function SubmitLaunchClient() {
                             onChange={(urls) => setMedia((m) => ({ ...m, screenshot: urls }))}
                             onBusyChange={(busy) => setUploading((u) => ({ ...u, screenshot: busy }))}
                           />
-                          <MediaUpload
-                            kind="video"
-                            max={1}
-                            limits={uploadConfig.limits.video}
-                            label="Demo video"
-                            hint="MP4 or WEBM, up to 50 MB"
-                            onChange={(urls) => setMedia((m) => ({ ...m, video: urls }))}
-                            onBusyChange={(busy) => setUploading((u) => ({ ...u, video: busy }))}
-                          />
                         </div>
                       )}
 
-                            <Field label={uploadConfig?.enabled ? "Or paste screenshot URLs" : "Screenshots"} htmlFor="images" hint="Image URLs, one per line">
+                          {!uploadConfig?.enabled && (
+                            <Field label="Screenshots" htmlFor="images" hint="Image URLs, one per line">
                               <textarea id="images" value={form.images} onChange={(e) => set("images", e.target.value)} rows={3} placeholder="https://yourapp.com/screenshot.png" className={textareaClass} />
                             </Field>
-                              <Field label="YouTube demo" htmlFor="demo_video_url" hint="YouTube link">
-                                <input id="demo_video_url" type="url" value={form.demo_video_url} onChange={(e) => set("demo_video_url", e.target.value)} placeholder="https://youtube.com/watch?v=..." className={inputClass} />
-                              </Field>
+                          )}
                         </FormSection>
 
-                        <FormSection n="03" title="Tell the story" hint="Optional">
-                            <div className="grid gap-5 sm:grid-cols-2">
-                              <Field label="Who is it for?" htmlFor="audience">
-                                <textarea id="audience" value={form.audience} onChange={(e) => set("audience", e.target.value)} rows={3} className={textareaClass} />
-                              </Field>
-                              <Field label="What problem does it solve?" htmlFor="problem">
-                                <textarea id="problem" value={form.problem} onChange={(e) => set("problem", e.target.value)} rows={3} className={textareaClass} />
-                              </Field>
-                              <Field label="How does it solve it?" htmlFor="solution">
-                                <textarea id="solution" value={form.solution} onChange={(e) => set("solution", e.target.value)} rows={3} className={textareaClass} />
-                              </Field>
-                              <Field label="What makes it different?" htmlFor="unique">
-                                <textarea id="unique" value={form.unique} onChange={(e) => set("unique", e.target.value)} rows={3} className={textareaClass} />
-                              </Field>
-                            </div>
-                            <Field label="Use cases" htmlFor="use_cases" hint="One per line">
-                              <textarea id="use_cases" value={form.use_cases} onChange={(e) => set("use_cases", e.target.value)} rows={3} placeholder={"Summarize support tickets\nDraft replies in your voice"} className={textareaClass} />
-                            </Field>
+                        <FormSection n="03" title="Your first comment">
+                          <Field label="Say hi as the maker" htmlFor="maker_comment" required hint={`${form.maker_comment.length}/2000`}>
+                            <p className="text-xs leading-5 text-muted-foreground">
+                              Posted on your launch page under your name, so visitors know you&apos;re around. Say why you built it and what
+                              feedback you want. We drafted a start: replace the ... parts.
+                            </p>
+                            <textarea
+                              id="maker_comment"
+                              value={form.maker_comment}
+                              onChange={(e) => set("maker_comment", e.target.value)}
+                              maxLength={2000}
+                              rows={6}
+                              className={textareaClass}
+                            />
+                          </Field>
                         </FormSection>
-
-                        <FormSection n="04" title="Details" hint="Optional">
-                            <div className="space-y-1.5">
-                              <p className="text-sm font-medium text-foreground">Platforms</p>
-                              <ChipGroup
-                                label="Platforms"
-                                options={PLATFORMS}
-                                value={form.platforms}
-                                onToggle={(option) =>
-                                  set(
-                                    "platforms",
-                                    form.platforms.includes(option)
-                                      ? form.platforms.filter((item) => item !== option)
-                                      : [...form.platforms, option],
-                                  )
-                                }
-                              />
-                            </div>
-                              <Field label="Tech stack and tags" htmlFor="tags" hint="Comma separated">
-                                <input id="tags" value={form.tags} onChange={(e) => set("tags", e.target.value)} placeholder="Next.js, MCP, Supabase" className={inputClass} />
-                              </Field>
-                            <Field label="Source code" htmlFor="github_url" hint="If it's open source">
-                              <input id="github_url" type="url" value={form.github_url} onChange={(e) => set("github_url", e.target.value)} placeholder="https://github.com/you/app" className={inputClass} />
-                            </Field>
-                            <div className="space-y-1.5">
-                              <p className="text-sm font-medium text-foreground">Your profiles</p>
-                              <div className="grid gap-2 sm:grid-cols-3">
-                                <input aria-label="X handle" value={form.twitter} onChange={(e) => set("twitter", e.target.value)} placeholder="X handle" className={inputClass} />
-                                <input aria-label="GitHub username" value={form.github} onChange={(e) => set("github", e.target.value)} placeholder="GitHub username" className={inputClass} />
-                                <input aria-label="LinkedIn URL" value={form.linkedin} onChange={(e) => set("linkedin", e.target.value)} placeholder="LinkedIn URL" className={inputClass} />
-                              </div>
-                            </div>
-                        </FormSection>
-
-                        <FormSection n="05" title="Ask the community" hint="Optional">
-                            <Field label="What feedback do you want?" htmlFor="feedback_prompt" hint="Shown to visitors">
-                              <input id="feedback_prompt" value={form.feedback_prompt} onChange={(e) => set("feedback_prompt", e.target.value)} placeholder="What would make this more useful for you?" className={inputClass} />
-                            </Field>
-                        </FormSection>
-
                       </div>
 
                       <div className="mt-7 flex flex-wrap items-center gap-3 border-t border-border pt-5">
@@ -1009,7 +978,7 @@ export default function SubmitLaunchClient() {
                           {submit.isPending ? "Saving..." : anyUploading ? "Uploading..." : "Continue to badge"}
                           {!submit.isPending && <ArrowRight className="h-4 w-4" />}
                         </button>
-                        <p className="text-xs text-muted-foreground">Nothing is public until the badge is verified.</p>
+                        <p className="text-xs text-muted-foreground">Nothing is public until the badge is verified. Add the story, video, platforms and links any time from Edit.</p>
                       </div>
                     </form>
                   )}

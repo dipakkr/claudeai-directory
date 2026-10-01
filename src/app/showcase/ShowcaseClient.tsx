@@ -299,7 +299,7 @@ export default function ShowcaseClient({
               </h1>
             </div>
             <Button asChild className="h-9 self-start px-4 text-sm">
-              <Link href="/showcase/submit">
+              <Link href="/launches/submit">
                 <Plus className="h-4 w-4" />
                 Submit launch
               </Link>
@@ -361,7 +361,7 @@ export default function ShowcaseClient({
                   Try another search or submit the first launch for this category.
                 </p>
                 <Button className="mt-5" asChild>
-                  <Link href="/showcase/submit">Submit launch</Link>
+                  <Link href="/launches/submit">Submit launch</Link>
                 </Button>
               </div>
             )}

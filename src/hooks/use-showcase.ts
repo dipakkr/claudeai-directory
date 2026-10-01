@@ -55,6 +55,8 @@ export function useMyShowcaseProjects(options?: { enabled?: boolean }) {
 
 export interface ShowcaseSubmission {
   title: string;
+  /** Required: posted as the maker's first comment on the launch page. */
+  maker_comment: string;
   tagline?: string;
   description: string;
   app_url: string;

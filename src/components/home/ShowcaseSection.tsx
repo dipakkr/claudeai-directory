@@ -23,7 +23,7 @@ const ShowcaseSection = ({
             </p>
           </div>
           <Link
-            href="/showcase/submit"
+            href="/launches/submit"
             className="inline-flex min-h-10 shrink-0 items-center justify-center rounded-lg bg-foreground px-5 text-sm font-medium text-background transition-opacity hover:opacity-90"
           >
             Submit your app

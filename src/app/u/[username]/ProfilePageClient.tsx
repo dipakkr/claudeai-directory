@@ -245,7 +245,7 @@ export default function PublicProfilePage({
                     </Link>
                   </Button>
                   <Button size="sm" asChild>
-                    <Link href="/showcase/submit">Submit app</Link>
+                    <Link href="/launches/submit">Submit app</Link>
                   </Button>
                 </div>
               </div>
