@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { ArrowRight, ChevronUp, Rocket } from "lucide-react";
+import { ArrowRight, Rocket } from "lucide-react";
+import { UpvotePill } from "@/components/launches/UpvotePill";
 
 import { DiscussionAvatar } from "@/components/discussion/Discussion";
 import { faviconFor } from "@/lib/directory";
@@ -50,10 +51,7 @@ export function FeedSidebar({ launches, members, memberTotal }: { launches: Show
                     <span className="block truncate text-sm font-medium text-foreground group-hover:text-primary">{project.title}</span>
                     <span className="block truncate text-xs text-muted-foreground">{project.tagline || project.category}</span>
                   </span>
-                  <span className="flex h-9 w-9 shrink-0 flex-col items-center justify-center rounded-[4px] border border-border text-[11px] font-medium tabular-nums text-foreground">
-                    <ChevronUp className="h-3 w-3" strokeWidth={2.5} />
-                    {project.upvotes}
-                  </span>
+                  <UpvotePill count={project.upvotes} />
                 </Link>
               </li>
             ))}

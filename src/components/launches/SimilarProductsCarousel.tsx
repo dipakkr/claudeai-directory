@@ -1,7 +1,6 @@
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
-import { faviconFor } from "@/lib/directory";
-import { FaviconBox } from "./FaviconBox";
+import { LaunchCompactRow } from "./LaunchListRow";
+import { UpvotePill } from "./UpvotePill";
 import type { ShowcaseProject } from "@/types";
 import { LaunchSection } from "./LaunchSection";
 
@@ -39,52 +38,21 @@ export function SimilarProductsCarousel({
 
   return (
     <LaunchSection title="Related launches">
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {similar.map((project) => {
-          const logo = project.logo_url || faviconFor(project.app_url || project.demo_url);
-          return (
-            <Link
-              key={project.id}
-              href={`/launches/${project.id}`}
-              data-launch-impression={project.id}
-              data-surface="similar"
-              className="group rounded-[10px] border border-border bg-card/40 p-4 transition-all hover:border-primary/50 hover:bg-card/60"
-            >
-              <div className="flex items-start justify-between gap-3 mb-3">
-                <FaviconBox
-                  src={logo}
-                  name={project.title}
-                  className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-border bg-background text-sm font-semibold text-muted-foreground"
-                />
-                <ArrowRight className="h-4 w-4 shrink-0 text-muted-foreground group-hover:text-primary transition-colors" />
-              </div>
-              <h3 className="font-semibold text-sm text-foreground truncate">
-                {project.title}
-              </h3>
-              <p className="mt-2 text-xs text-muted-foreground line-clamp-2">
-                {project.tagline || project.description}
-              </p>
-              {project.tech_stack?.length > 0 && (
-                <div className="mt-3 flex flex-wrap gap-1">
-                  {project.tech_stack.slice(0, 2).map((tech) => (
-                    <span
-                      key={tech}
-                      className="inline-block rounded-full bg-foreground/5 px-2 py-0.5 text-xs text-muted-foreground"
-                    >
-                      {tech}
-                    </span>
-                  ))}
-                  {project.tech_stack.length > 2 && (
-                    <span className="inline-block text-xs text-muted-foreground">
-                      +{project.tech_stack.length - 2}
-                    </span>
-                  )}
-                </div>
-              )}
-            </Link>
-          );
-        })}
-      </div>
+      <ol className="divide-y divide-border">
+        {similar.map((project, index) => (
+          <LaunchCompactRow
+            key={project.id}
+            project={project}
+            rank={index + 1}
+            surface="similar"
+            right={
+              <Link href={`/launches/${project.id}`} aria-label={`Upvote ${project.title}`} className="shrink-0">
+                <UpvotePill count={project.upvotes ?? 0} />
+              </Link>
+            }
+          />
+        ))}
+      </ol>
     </LaunchSection>
   );
 }

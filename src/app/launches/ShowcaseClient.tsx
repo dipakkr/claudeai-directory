@@ -6,21 +6,19 @@ import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useLaunchVisited } from "@/components/launches/UpvoteBox";
 import { UpvoteCount } from "@/components/feed/UpvoteMotion";
+import { UpTriangle, upvotePillClass } from "@/components/launches/UpvotePill";
+import { LaunchListRow } from "@/components/launches/LaunchListRow";
 import { markLaunchVisited } from "@/lib/launch-visits";
 import {
-  ArrowUp,
   Megaphone,
-  BadgeCheck,
   Plus,
   Rocket,
   Search,
-  Tag,
 } from "lucide-react";
 
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
-import { faviconFor } from "@/lib/directory";
 import { rankedLaunches } from "@/lib/home-community";
 import { useSignIn } from "@/components/auth/SignInDialog";
 import { useAuth } from "@/lib/auth";
@@ -68,51 +66,6 @@ function projectKey(project: ShowcaseProject) {
     authorLabel(project).toLowerCase().trim(),
     (project.tagline || project.description).toLowerCase().trim().slice(0, 120),
   ].join("|");
-}
-
-function shortPitch(project: ShowcaseProject) {
-  return project.tagline?.trim() || project.description.trim();
-}
-
-function LaunchIcon({ project }: { project: ShowcaseProject }) {
-  const src = project.logo_url || faviconFor(project.app_url || project.demo_url);
-  const fallback = project.title.trim()[0]?.toUpperCase() || "L";
-
-  return (
-    <div className="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-border bg-background shadow-sm sm:h-16 sm:w-16">
-      {src ? (
-        // eslint-disable-next-line @next/next/no-img-element -- dynamic favicon for submitted launch URLs
-        <img
-          src={src}
-          alt=""
-          className="h-full w-full object-cover"
-          loading="lazy"
-          referrerPolicy="no-referrer"
-          onError={(event) => {
-            event.currentTarget.style.display = "none";
-          }}
-        />
-      ) : (
-        <span className="text-xl font-semibold text-muted-foreground">{fallback}</span>
-      )}
-    </div>
-  );
-}
-
-function RankMark({ rank }: { rank: number }) {
-  if (rank <= 3) {
-    return (
-      <div className="flex w-10 shrink-0 flex-col items-center justify-center text-primary">
-        <span className="text-base font-semibold leading-none">#{rank}</span>
-      </div>
-    );
-  }
-
-  return (
-    <div className="flex w-10 shrink-0 items-center justify-center font-mono text-sm text-muted-foreground">
-      #{rank}
-    </div>
-  );
 }
 
 function VoteButton({
@@ -167,11 +120,7 @@ function VoteButton({
       aria-pressed={voted}
       aria-label={voted ? `Remove upvote from ${project.title}` : `Upvote ${project.title}`}
       title={!authenticated ? "Sign in to upvote" : voted ? "You upvoted this. Click to undo." : locked ? "Try the product first" : "Upvote this launch"}
-      className={`relative flex h-14 w-12 shrink-0 cursor-pointer flex-col items-center justify-center gap-0.5 rounded-[8px] border shadow-sm transition-[transform,background-color,border-color] duration-200 active:scale-95 sm:h-16 sm:w-14 ${
-        voted
-          ? "border-primary bg-primary/10 text-primary"
-          : "border-border bg-background text-foreground hover:border-[var(--cad-line-hover)] hover:bg-card"
-      } ${locked && shake ? "upvote-shake" : ""} disabled:opacity-70`}
+      className={`relative cursor-pointer active:scale-95 ${upvotePillClass(voted)} ${locked && shake ? "upvote-shake" : ""} disabled:opacity-70`}
     >
       {voted && bump > 0 && (
         <span key={`float-${bump}`} aria-hidden className="upvote-float pointer-events-none absolute -top-1 left-1/2 text-[11px] font-bold text-primary">
@@ -180,11 +129,11 @@ function VoteButton({
       )}
       <span className="relative inline-flex">
         {voted && bump > 0 && <span key={`ring-${bump}`} aria-hidden className="upvote-ring absolute inset-[-6px] rounded-full bg-primary/40" />}
-        <ArrowUp key={`arrow-${bump}`} className={`h-4 w-4 ${bump > 0 ? "upvote-pop" : ""}`} aria-hidden="true" />
+        <span key={`arrow-${bump}`} className={`inline-flex ${bump > 0 ? "upvote-pop" : ""} ${voted ? "text-primary" : "text-muted-foreground"}`}>
+          <UpTriangle className="h-2.5 w-3" />
+        </span>
       </span>
-      <span className="text-base font-semibold leading-none">
-        <UpvoteCount count={project.upvotes ?? 0} bump={bump} up={voted} />
-      </span>
+      <UpvoteCount count={project.upvotes ?? 0} bump={bump} up={voted} />
     </button>
   );
 }
@@ -204,44 +153,13 @@ function LaunchRow({
   pending: boolean;
   voted: boolean;
 }) {
-  const category = normalizeCategory(project);
-  const tags = [category, ...(project.tech_stack ?? []).filter((tag) => tag !== category)].slice(0, 3);
-
   return (
-    <article data-launch-impression={project.id} data-surface="launches_list" className={`border-b border-border ${rank <= 3 ? "bg-primary/[0.045]" : "bg-background"}`}>
-      <div className="flex items-center gap-3 px-4 py-4 md:px-6">
-        <RankMark rank={rank} />
-        <Link href={`/showcase/${project.id}`} className="flex min-w-0 flex-1 items-center gap-4">
-          <LaunchIcon project={project} />
-          <div className="min-w-0 flex-1">
-            <div className="flex min-w-0 items-center gap-2">
-              <h2 className="truncate text-base font-semibold leading-tight text-foreground sm:text-lg">
-                {project.title}
-              </h2>
-              {project.badge_verified && (
-                <BadgeCheck className="h-4 w-4 shrink-0 fill-amber-400 text-amber-400" aria-hidden="true" />
-              )}
-            </div>
-            <p className="mt-1.5 line-clamp-1 text-sm leading-5 text-muted-foreground">
-              {shortPitch(project)}
-            </p>
-            <div className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs font-medium text-muted-foreground">
-              <span className="inline-flex min-w-0 items-center gap-1.5">
-                <Tag className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
-                <span className="truncate">{tags.join(", ")}</span>
-              </span>
-            </div>
-          </div>
-        </Link>
-        <VoteButton
-          project={project}
-          authenticated={authenticated}
-          pending={pending}
-          voted={voted}
-          onVote={() => onVote(project)}
-        />
-      </div>
-    </article>
+    <LaunchListRow
+      project={project}
+      rank={rank}
+      surface="launches_list"
+      right={<VoteButton project={project} authenticated={authenticated} pending={pending} voted={voted} onVote={() => onVote(project)} />}
+    />
   );
 }
 
@@ -253,28 +171,18 @@ function SponsoredLaunchSlot() {
         track("ad_slot_clicked", { slot: "launch_row" });
         openAdvertiseDialog(undefined, "launch");
       }}
-      className="block w-full text-left border-b border-border bg-[linear-gradient(100deg,rgba(251,191,36,0.08),rgba(255,255,255,0.02),rgba(168,85,247,0.08))] transition-colors hover:bg-card/55"
+      className="flex w-full items-center gap-4 rounded-[8px] border border-primary/30 bg-primary/[0.04] px-4 py-3.5 text-left transition-colors hover:border-primary/50"
     >
-      <div className="grid gap-5 px-4 py-8 md:grid-cols-[72px_minmax(0,1fr)_104px] md:items-center md:px-6">
-        <div className="hidden justify-center md:flex">
-          <span className="origin-center -rotate-90 font-mono text-xs font-semibold uppercase tracking-[0.32em] text-muted-foreground">
-            Sponsored
-          </span>
-        </div>
-        <div className="relative min-w-0">
-          <p className="text-balance text-2xl font-normal leading-tight text-foreground sm:text-[30px]">
-            Put your Claude product in front of builders
-          </p>
-          <p className="mt-4 inline-flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
-            <span className="h-px w-8 bg-foreground" />
-            Sponsor a launch slot · ${SPONSOR_LAUNCH_PRICE}/month
-          </p>
-        </div>
-        <div className="flex h-20 w-20 items-center justify-center md:justify-self-end">
-          {/* Our own mark for the paid slot: get seen by builders. */}
-          <Megaphone aria-hidden="true" className="h-10 w-10 -rotate-12 text-primary" strokeWidth={1.5} />
-        </div>
-      </div>
+      <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-[6px] border border-dashed border-primary/40 text-primary">
+        <Megaphone aria-hidden="true" className="h-3.5 w-3.5" />
+      </span>
+      <span className="min-w-0 flex-1 truncate text-[14px]">
+        <span className="font-medium text-foreground">Your Claude product here</span>
+        <span className="text-muted-foreground"> · Sponsor this spot for ${SPONSOR_LAUNCH_PRICE}/month</span>
+      </span>
+      <span className="shrink-0 rounded-[4px] border border-border px-1.5 py-0.5 font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
+        Sponsored
+      </span>
     </button>
   );
 }
@@ -409,8 +317,8 @@ export default function ShowcaseClient({
           </div>
         </section>
 
-        <section className="mx-auto max-w-[1120px] px-4 md:px-8">
-          <div className="overflow-hidden rounded-2xl border border-border">
+        <section className="mx-auto max-w-[880px] px-4 md:px-8">
+          <ol className="border-t border-border">
             {visibleProjects.length > 0 ? (
               visibleProjects.map((project, index) => (
                 <Fragment key={project.id}>
@@ -422,11 +330,15 @@ export default function ShowcaseClient({
                     voted={votedSlugs.has(project.id)}
                     onVote={handleVote}
                   />
-                  {index === Math.min(2, visibleProjects.length - 1) ? <SponsoredLaunchSlot /> : null}
+                  {index === Math.min(2, visibleProjects.length - 1) ? (
+                    <li className="border-b border-border py-3">
+                      <SponsoredLaunchSlot />
+                    </li>
+                  ) : null}
                 </Fragment>
               ))
             ) : (
-              <div className="px-4 py-16 text-center md:px-6">
+              <li className="px-4 py-16 text-center md:px-6">
                 <Rocket className="mx-auto h-10 w-10 text-muted-foreground/35" />
                 <p className="mt-4 text-base font-medium text-foreground">No launches found</p>
                 <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-muted-foreground">
@@ -435,9 +347,9 @@ export default function ShowcaseClient({
                 <Button className="mt-5" asChild>
                   <Link href="/launches/submit">Submit launch</Link>
                 </Button>
-              </div>
+              </li>
             )}
-          </div>
+          </ol>
         </section>
       </main>
       <Footer />
