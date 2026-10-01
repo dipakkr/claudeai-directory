@@ -115,6 +115,15 @@ export default function AboutPage() {
               .
             </p>
 
+            <h2 className="text-xl font-semibold text-foreground">Who builds this</h2>
+            <p>
+              Claude AI Directory is built and run by{" "}
+              <a href="https://x.com/dipakkr_" target="_blank" rel="noopener noreferrer me" className="text-primary hover:underline">
+                @dipakkr_
+              </a>{" "}
+              on X. Say hi there, or send ideas for what the directory should cover next.
+            </p>
+
             <h2 className="text-xl font-semibold text-foreground">Contact</h2>
             <p>
               Have questions, feedback, or want to get in touch? Reach out to us
