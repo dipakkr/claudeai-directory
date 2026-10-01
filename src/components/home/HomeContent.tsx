@@ -4,7 +4,7 @@ import { ArrowRight, Bot, Server, Sparkles } from "lucide-react";
 import DirectoryList from "@/components/directory/DirectoryList";
 import RecentlyViewed from "@/components/directory/RecentlyViewed";
 import type { DirectoryItem, SortKey } from "@/lib/directory";
-import { HeroJoin, HeroSearch } from "@/components/home/HeroActions";
+import { HeroJoin } from "@/components/home/HeroActions";
 import type { PublicProfile } from "@/types";
 
 interface HomeContentProps {
@@ -54,7 +54,6 @@ export default function HomeContent({ items, orders, launches, community, member
           Discover community-built Claude Skills, MCP servers and Agents. Find what is trending or publish something you
           built.
         </p>
-        <HeroSearch />
         <HeroJoin members={members} total={memberCount} />
         {pulse}
         <p className="mt-5 text-sm text-muted-foreground">

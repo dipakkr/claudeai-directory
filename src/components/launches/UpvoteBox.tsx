@@ -109,7 +109,13 @@ export function UpvoteBox({ slug, title, initialCount, websiteUrl, websiteRel = 
           title={!isAuthenticated ? "Sign in to upvote" : voted ? "You upvoted this. Click to undo." : locked ? "Try the product first" : "Upvote this launch"}
           className={`relative flex shrink-0 cursor-pointer items-center justify-center border shadow-sm transition-[transform,background-color,border-color,box-shadow] duration-200 hover:shadow-md active:scale-95 disabled:cursor-default ${
             compact ? "h-10 gap-1.5 rounded-full px-4" : "h-24 w-24 flex-col gap-1.5 rounded-[10px] hover:-translate-y-0.5"
-          } ${voted ? "border-primary bg-primary text-primary-foreground" : "border-border bg-card text-foreground hover:border-primary/50"} ${
+          } ${
+            voted
+              ? "border-primary bg-primary text-primary-foreground"
+              : compact
+                ? "border-primary/50 bg-primary/10 text-primary hover:border-primary hover:bg-primary/15"
+                : "border-border bg-card text-foreground hover:border-primary/50"
+          } ${
             locked && shake ? "upvote-shake" : ""
           } ${!voted && visited && Boolean(websiteUrl) ? "upvote-ready border-primary/60" : ""}`}
         >
@@ -123,6 +129,8 @@ export function UpvoteBox({ slug, title, initialCount, websiteUrl, websiteRel = 
             {voted && bump > 0 && <span key={`ring-${bump}`} aria-hidden className="upvote-ring absolute inset-[-8px] rounded-full bg-primary/40" />}
             <ArrowUp key={`arrow-${bump}`} className={`${icon} ${bump > 0 ? "upvote-pop" : ""}`} strokeWidth={2.25} aria-hidden="true" />
           </span>
+          {compact && <span className="text-sm font-medium">{voted ? "Upvoted" : "Upvote"}</span>}
+          {compact && <span className="h-4 w-px bg-current opacity-30" aria-hidden />}
           <span className={`${compact ? "text-sm" : "text-xl"} font-semibold leading-none`}>
             <UpvoteCount count={count} bump={bump} up={voted} />
           </span>

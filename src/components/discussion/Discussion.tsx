@@ -110,14 +110,10 @@ export function DiscussionAvatar({ src, name, size = "md" }: { src?: string | nu
 
 export function DiscussionHeader({ title, count }: { title: ReactNode; count?: number }) {
   return (
-    <div className="flex items-center gap-3 border-b border-border pb-4">
-      <span className="h-1.5 w-1.5 rounded-full bg-primary" aria-hidden="true" />
-      <h2 className="font-mono text-[11px] font-medium uppercase tracking-[0.18em] text-primary">{title}</h2>
-      {typeof count === "number" && (
-        <span className="rounded-full border border-border px-2 py-0.5 font-mono text-[10px] tabular-nums text-muted-foreground">
-          {count}
-        </span>
-      )}
+    <div className="flex items-center gap-3 pb-4">
+      <h2 className="shrink-0 font-mono text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground">{title}</h2>
+      {typeof count === "number" && <span className="font-mono text-[11px] tabular-nums text-muted-foreground/70">{count}</span>}
+      <span className="h-px flex-1 bg-border" aria-hidden="true" />
     </div>
   );
 }

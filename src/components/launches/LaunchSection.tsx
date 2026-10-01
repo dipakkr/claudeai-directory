@@ -11,17 +11,14 @@ interface LaunchSectionProps {
 
 export function LaunchSection({ id, title, count, children, padded = true }: LaunchSectionProps) {
   return (
-    <section id={id} className="scroll-mt-24 border-b border-border">
-      <div className="flex items-center gap-3 border-b border-border px-5 py-5 md:px-8">
-        <span className="h-1.5 w-1.5 rounded-full bg-primary" aria-hidden="true" />
-        <h2 className="font-mono text-[11px] font-medium uppercase tracking-[0.18em] text-primary">{title}</h2>
-        {typeof count === "number" && (
-          <span className="rounded-full border border-border px-2 py-0.5 font-mono text-[10px] text-muted-foreground">
-            {count}
-          </span>
-        )}
+    <section id={id} className="scroll-mt-32">
+      {/* Quiet label with a rule, like "THE MAKER ————" */}
+      <div className="flex items-center gap-3">
+        <h2 className="shrink-0 font-mono text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground">{title}</h2>
+        {typeof count === "number" && <span className="font-mono text-[11px] text-muted-foreground/70">{count}</span>}
+        <span className="h-px flex-1 bg-border" aria-hidden="true" />
       </div>
-      <div className={padded ? "px-5 py-6 md:px-8" : undefined}>{children}</div>
+      <div className={padded ? "pt-5" : "pt-2"}>{children}</div>
     </section>
   );
 }

@@ -5,12 +5,9 @@ import { notFound, permanentRedirect } from "next/navigation";
 import {
   ArrowLeft,
   BadgeCheck,
-  CalendarDays,
   ExternalLink,
-  Eye,
   Github,
   Linkedin,
-  Tag,
 } from "lucide-react";
 
 import Header from "@/components/layout/Header";
@@ -75,7 +72,7 @@ function XIcon({ className }: { className?: string }) {
 
 function DetailRow({ label, children }: { label: string; children: ReactNode }) {
   return (
-    <div className="border-b border-border px-5 py-5 last:border-b-0 md:px-8">
+    <div className="border-b border-border py-4 last:border-b-0">
       <h3 className="text-sm font-semibold text-foreground">{label}</h3>
       <div className="mt-2.5 flex flex-wrap gap-2">{children}</div>
     </div>
@@ -214,7 +211,7 @@ export default async function LaunchDetailPage({
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      <main className="mx-auto max-w-[960px] px-4 pb-16 pt-8 md:px-8 md:pt-10">
+      <main className="mx-auto max-w-[820px] px-4 pb-20 pt-8 md:px-8 md:pt-10">
         <Link
           href="/launches"
           aria-label="Back to app launches"
@@ -224,62 +221,25 @@ export default async function LaunchDetailPage({
           App launches
         </Link>
 
-        <article className="mt-6 overflow-hidden rounded-2xl border border-border bg-background [&>section:last-child]:border-b-0">
-          {/* Hero */}
-          <header className="border-b border-border bg-gradient-to-br from-primary/12 via-primary/[0.04] to-transparent px-5 py-8 md:px-8 md:py-10">
-            <div className="flex items-start gap-5 md:gap-6">
+        <article className="mt-6">
+          {/* Header: logo, name, pitch, then one row of actions. No boxes. */}
+          <header>
+            <div className="flex items-start gap-4 md:gap-5">
               <FaviconBox
                 src={logo}
                 name={project.title}
-                className="flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-border bg-card text-xl font-semibold text-muted-foreground shadow-sm md:h-24 md:w-24 md:text-2xl"
+                className="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-[12px] border border-border bg-card text-xl font-semibold text-muted-foreground md:h-[72px] md:w-[72px]"
               />
               <div className="min-w-0 flex-1">
-                <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
-                  <h1 className="text-balance text-3xl font-semibold leading-tight text-foreground md:text-4xl">
-                    {project.title}
-                  </h1>
-                  {project.badge_verified && (
-                    <span className="inline-flex items-center gap-1.5 rounded-full border border-success/30 bg-success/10 px-2.5 py-1 text-xs font-medium text-success">
-                      <BadgeCheck className="h-3.5 w-3.5" />
-                      Listed
-                    </span>
-                  )}
+                <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1">
+                  <h1 className="text-balance text-[26px] font-semibold leading-tight text-foreground md:text-[32px]">{project.title}</h1>
+                  {project.badge_verified && <BadgeCheck className="h-5 w-5 shrink-0 fill-amber-400 text-background" aria-label="Badge verified" />}
                 </div>
-                {project.tagline && (
-                  <p className="mt-2 max-w-[640px] text-base leading-7 text-muted-foreground md:text-lg">
-                    {project.tagline}
-                  </p>
-                )}
-                <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-muted-foreground">
-                  {listedDate && (
-                    <span className="inline-flex items-center gap-1.5">
-                      <CalendarDays className="h-4 w-4" />
-                      {listedDate}
-                    </span>
-                  )}
-                  {project.category && (
-                    <span className="inline-flex items-center gap-1.5">
-                      <Tag className="h-4 w-4" />
-                      {project.category}
-                    </span>
-                  )}
-                  {(project.views ?? 0) > 0 && (
-                    <span className="inline-flex items-center gap-1.5 tabular-nums">
-                      <Eye className="h-4 w-4" />
-                      {(project.views ?? 0).toLocaleString()} {project.views === 1 ? "view" : "views"}
-                    </span>
-                  )}
-                </div>
-              </div>
-              <div className="hidden sm:block">
-                <UpvoteBox slug={project.id} title={project.title} initialCount={upvotes} websiteUrl={appUrl} websiteRel={websiteRel} />
+                {project.tagline && <p className="mt-1.5 max-w-[640px] text-[15px] leading-7 text-muted-foreground md:text-base">{project.tagline}</p>}
               </div>
             </div>
 
-            <div className="mt-6 flex flex-wrap items-center gap-2.5 md:pl-30">
-              <div className="sm:hidden">
-                <UpvoteBox slug={project.id} title={project.title} initialCount={upvotes} websiteUrl={appUrl} websiteRel={websiteRel} compact />
-              </div>
+            <div className="mt-5 flex flex-wrap items-center gap-2.5">
               {appUrl && (
                 <a
                   href={appUrl}
@@ -293,6 +253,7 @@ export default async function LaunchDetailPage({
                   <ExternalLink className="h-3.5 w-3.5" />
                 </a>
               )}
+              <UpvoteBox slug={project.id} title={project.title} initialCount={upvotes} websiteUrl={appUrl} websiteRel={websiteRel} compact />
               {project.github_url && (
                 <a href={project.github_url} target="_blank" rel="nofollow noopener noreferrer" className={secondaryButton}>
                   <Github className="h-4 w-4" />
@@ -302,39 +263,74 @@ export default async function LaunchDetailPage({
               <FavoriteButton targetType="showcase" targetId={project.id} />
               <OwnerEditButton slug={project.id} authorId={project.author_id} />
             </div>
+
+            {/* One quiet meta line */}
+            <p className="mt-4 flex flex-wrap items-center gap-x-2 gap-y-1 font-mono text-[12px] text-muted-foreground">
+              {[project.category, (project.views ?? 0) > 0 ? `${(project.views ?? 0).toLocaleString()} ${project.views === 1 ? "view" : "views"}` : null, listedDate ? `launched ${listedDate}` : null]
+                .filter(Boolean)
+                .map((item, i) => (
+                  <span key={i} className="inline-flex items-center gap-2">
+                    {i > 0 && <span aria-hidden>·</span>}
+                    {item}
+                  </span>
+                ))}
+            </p>
+            <div className="mt-4">
+              <UpvoteSummary slug={project.id} initialCount={upvotes} />
+            </div>
           </header>
 
           <ViewTracker type="launch" id={project.id} />
-          {/* Activity strip */}
-          <div className="grid border-b border-border sm:grid-cols-2">
-            <div className="flex items-center gap-3 border-b border-border px-5 py-5 sm:border-b-0 sm:border-r md:px-8">
-              <UpvoteSummary slug={project.id} initialCount={upvotes} />
-            </div>
-            <a href="#discussion" className="group flex min-w-0 items-center gap-3 px-5 py-5 transition-colors hover:bg-card/60 md:px-8">
-              <MakerPhoto src={project.author_avatar} name={project.author_name} size="sm" />
-              <div className="min-w-0">
-                <p className="text-sm text-foreground">
-                  {builderName}
-                  <span className="text-muted-foreground"> · Maker</span>
-                </p>
-                <p className="truncate text-sm text-muted-foreground group-hover:text-foreground">
-                  {project.feedback_prompt || "Share feedback with the maker"}
-                </p>
-              </div>
-            </a>
-          </div>
 
-          {aboutBlocks.length > 0 && (
-            <LaunchSection title={`About ${project.title}`}>
-              <div className="space-y-5">
-                {aboutBlocks.map((block) => (
-                  <p key={block} className="whitespace-pre-line text-base leading-8 text-foreground/85">
-                    {block}
-                  </p>
-                ))}
-              </div>
-            </LaunchSection>
-          )}
+          {/* Section tabs, sticky under the site header */}
+          <nav aria-label="Launch sections" className="sticky top-16 z-20 -mx-4 mt-8 border-b border-border bg-background/95 px-4 backdrop-blur md:-mx-8 md:px-8">
+            <div className="flex gap-6 overflow-x-auto text-sm">
+              {[
+                ["#discussion", "Comments"],
+                ["#about", "About"],
+                ["#maker", "Maker"],
+                ["#related", "Related"],
+              ].map(([href, label]) => (
+                <a key={href} href={href} className="-mb-px whitespace-nowrap border-b-2 border-transparent py-3 text-muted-foreground transition-colors hover:border-foreground hover:text-foreground">
+                  {label}
+                </a>
+              ))}
+            </div>
+          </nav>
+
+          <div className="mt-8 space-y-12">
+            <section id="discussion" className="scroll-mt-32">
+            <LaunchDiscussion
+              slug={project.id}
+              title={project.title}
+              intro={
+                project.feedback_prompt ? (
+                  <div className="flex gap-3">
+                    <MakerPhoto src={project.author_avatar} name={project.author_name} size="sm" />
+                    <div className="min-w-0">
+                      <p className="text-sm">
+                        <span className="font-semibold text-foreground">{builderName}</span>
+                        <span className="ml-2 rounded-full bg-primary/10 px-2 py-0.5 text-[11px] font-medium text-primary">Maker</span>
+                      </p>
+                      <p className="mt-1.5 text-sm leading-7 text-foreground/85">{project.feedback_prompt}</p>
+                    </div>
+                  </div>
+                ) : undefined
+              }
+            />
+            </section>
+
+            {aboutBlocks.length > 0 && (
+              <LaunchSection id="about" title={`About ${project.title}`}>
+                <div className="space-y-4">
+                  {aboutBlocks.map((block) => (
+                    <p key={block} className="whitespace-pre-line text-[15px] leading-7 text-foreground/85">
+                      {block}
+                    </p>
+                  ))}
+                </div>
+              </LaunchSection>
+            )}
 
           <GalleryCarousel images={galleryImages} title={project.title} />
 
@@ -342,7 +338,7 @@ export default async function LaunchDetailPage({
 
           <OverviewSection project={project} useCases={useCases} />
 
-          <LaunchSection title="Built by">
+          <LaunchSection id="maker" title="The maker">
             <div className="flex flex-wrap items-center justify-between gap-4">
               <div className="flex items-center gap-4">
                 <MakerPhoto src={project.author_avatar} name={project.author_name} />
@@ -383,7 +379,7 @@ export default async function LaunchDetailPage({
 
           <LaunchSection title="Details" padded={false}>
             {/* Short facts on one line (wraps on phones); multi-value rows follow. */}
-            <div className="grid grid-cols-[repeat(auto-fit,minmax(140px,1fr))] gap-x-6 gap-y-4 border-b border-border px-5 py-5 last:border-b-0 md:px-8">
+            <div className="grid grid-cols-[repeat(auto-fit,minmax(140px,1fr))] gap-x-6 gap-y-4 border-b border-border py-4 last:border-b-0">
               {project.category && <Fact label="Category">{project.category}</Fact>}
               {appUrl && (
                 <Fact label="Website">
@@ -434,38 +430,20 @@ export default async function LaunchDetailPage({
             </LaunchSection>
           )}
 
-          <div className="flex items-center justify-center gap-3 border-b border-border px-5 py-6">
-            <span className="text-sm text-muted-foreground">Share this launch</span>
-            <a href={shareOnX} target="_blank" rel="noopener noreferrer" aria-label="Share on X" className="text-muted-foreground transition-colors hover:text-foreground">
-              <XIcon className="h-4 w-4" />
-            </a>
-            <a href={shareOnLinkedIn} target="_blank" rel="noopener noreferrer" aria-label="Share on LinkedIn" className="text-muted-foreground transition-colors hover:text-foreground">
-              <Linkedin className="h-4 w-4" />
-            </a>
-          </div>
+            <div className="flex items-center gap-3 text-sm text-muted-foreground">
+              <span>Share this launch</span>
+              <a href={shareOnX} target="_blank" rel="noopener noreferrer" aria-label="Share on X" className="transition-colors hover:text-foreground">
+                <XIcon className="h-4 w-4" />
+              </a>
+              <a href={shareOnLinkedIn} target="_blank" rel="noopener noreferrer" aria-label="Share on LinkedIn" className="transition-colors hover:text-foreground">
+                <Linkedin className="h-4 w-4" />
+              </a>
+            </div>
 
-          <div className="border-b border-border px-5 py-8 md:px-8">
-            <LaunchDiscussion
-              slug={project.id}
-              title={project.title}
-              intro={
-                project.feedback_prompt ? (
-                  <div className="flex gap-3">
-                    <MakerPhoto src={project.author_avatar} name={project.author_name} size="sm" />
-                    <div className="min-w-0">
-                      <p className="text-sm">
-                        <span className="font-semibold text-foreground">{builderName}</span>
-                        <span className="ml-2 rounded-full bg-primary/10 px-2 py-0.5 text-[11px] font-medium text-primary">Maker</span>
-                      </p>
-                      <p className="mt-1.5 text-sm leading-7 text-foreground/85">{project.feedback_prompt}</p>
-                    </div>
-                  </div>
-                ) : undefined
-              }
-            />
+            <div id="related" className="scroll-mt-32">
+              <SimilarProductsCarousel currentProject={project} projects={allProjects ?? []} />
+            </div>
           </div>
-
-          <SimilarProductsCarousel currentProject={project} projects={allProjects ?? []} />
         </article>
       </main>
       <Footer />

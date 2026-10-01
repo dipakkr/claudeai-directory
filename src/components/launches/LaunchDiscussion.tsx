@@ -34,7 +34,9 @@ export default function LaunchDiscussion({ slug, title, intro }: { slug: string;
 
   return (
     <Discussion
-      comments={(data ?? []).map(c => ({
+      title="Comments"
+      // The maker's first comment leads the conversation, like a launch post.
+      comments={pinMakerFirst(data ?? []).map(c => ({
         id: c._id,
         parentId: c.parent_id,
         author: c.author,
@@ -54,4 +56,11 @@ export default function LaunchDiscussion({ slug, title, intro }: { slug: string;
       emptyText={`No comments yet. Be the first to share feedback on ${title}.`}
     />
   );
+}
+
+function pinMakerFirst(comments: LaunchComment[]): LaunchComment[] {
+  const first = comments
+    .filter((c) => c.is_maker && !c.parent_id)
+    .sort((a, b) => Date.parse(a.created_at) - Date.parse(b.created_at))[0];
+  return first ? [first, ...comments.filter((c) => c !== first)] : comments;
 }

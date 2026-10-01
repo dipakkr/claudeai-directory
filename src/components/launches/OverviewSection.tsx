@@ -18,7 +18,7 @@ interface Row {
 function OverviewRow({ icon: Icon, label, content }: Row) {
   return (
     <div
-      className={`flex gap-4 border-b border-border px-5 last:border-b-0 md:px-8 ${label ? "py-6" : "items-center py-4"}`}
+      className={`flex gap-4 border-b border-border last:border-b-0 ${label ? "py-5" : "items-center py-3.5"}`}
     >
       <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-border bg-card text-primary">
         <Icon className="h-4.5 w-4.5" aria-hidden="true" />
