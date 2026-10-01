@@ -91,11 +91,11 @@ export default function AboutPage() {
                 Guides, tutorials, and blog posts to level up your AI skills
               </li>
               <li>
-                <strong className="text-foreground">Job Board</strong> AI and
+                <strong className="text-foreground">Job Board</strong>: AI and
                 Claude-related job opportunities
               </li>
               <li>
-                <strong className="text-foreground">Community</strong> Connect
+                <strong className="text-foreground">Community</strong>: Connect
                 with other builders in the ecosystem
               </li>
             </ul>
