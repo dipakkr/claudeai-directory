@@ -44,7 +44,7 @@ export function FeedSidebar({ launches, members, memberTotal }: { launches: Show
           <ul>
             {launches.map((project) => (
               <li key={project.id}>
-                <Link href={`/launches/${project.id}`} className="group flex items-center gap-3 rounded-[4px] px-2 py-2 transition-colors hover:bg-background">
+                <Link href={`/launches/${project.id}`} data-launch-impression={project.id} data-surface="feed_sidebar" className="group flex items-center gap-3 rounded-[4px] px-2 py-2 transition-colors hover:bg-background">
                   <LaunchLogo project={project} />
                   <span className="min-w-0 flex-1">
                     <span className="block truncate text-sm font-medium text-foreground group-hover:text-primary">{project.title}</span>

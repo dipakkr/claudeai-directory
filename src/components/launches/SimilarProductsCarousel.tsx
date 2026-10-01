@@ -46,6 +46,8 @@ export function SimilarProductsCarousel({
             <Link
               key={project.id}
               href={`/launches/${project.id}`}
+              data-launch-impression={project.id}
+              data-surface="similar"
               className="group rounded-2xl border border-border bg-card/40 p-4 transition-all hover:border-primary/50 hover:bg-card/60"
             >
               <div className="flex items-start justify-between gap-3 mb-3">

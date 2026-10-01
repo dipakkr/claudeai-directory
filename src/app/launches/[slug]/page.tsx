@@ -285,6 +285,7 @@ export default async function LaunchDetailPage({
                   href={appUrl}
                   target="_blank"
                   rel={websiteRel}
+                  data-launch-click={project.id}
                   {...trackAttrs("website_clicked", { slug: project.id })}
                   className="inline-flex h-10 items-center gap-2 rounded-full bg-foreground px-5 text-sm font-medium text-background transition-colors hover:bg-foreground/85"
                 >
@@ -390,6 +391,7 @@ export default async function LaunchDetailPage({
                     href={appUrl}
                     target="_blank"
                     rel={websiteRel}
+                    data-launch-click={project.id}
                     className="inline-flex items-center gap-1.5 text-foreground hover:text-primary"
                   >
                     {publisherHost || "Open website"}

@@ -178,7 +178,7 @@ function LaunchRow({
   const tags = [category, ...(project.tech_stack ?? []).filter((tag) => tag !== category)].slice(0, 3);
 
   return (
-    <article className={`border-b border-border ${rank <= 3 ? "bg-primary/[0.045]" : "bg-background"}`}>
+    <article data-launch-impression={project.id} data-surface="launches_list" className={`border-b border-border ${rank <= 3 ? "bg-primary/[0.045]" : "bg-background"}`}>
       <div className="flex items-center gap-3 px-4 py-4 md:px-6">
         <RankMark rank={rank} />
         <Link href={`/showcase/${project.id}`} className="flex min-w-0 flex-1 items-center gap-4">

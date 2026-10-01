@@ -3,6 +3,9 @@
 import Link from "next/link";
 import { ArrowUp, Bell, Bookmark, MessageSquare, Package, Rocket } from "lucide-react";
 import type { ReactNode } from "react";
+import { useQuery } from "@tanstack/react-query";
+
+import { api } from "@/lib/api";
 
 import { faviconFor } from "@/lib/directory";
 import type { MySubmission, SavedItem } from "@/hooks/use-dashboard";
@@ -82,6 +85,13 @@ const listClass = "divide-y divide-border overflow-hidden rounded-2xl border bor
 /* ---------- launches ---------- */
 
 export function LaunchesPanel({ apps, loading }: { apps: ShowcaseProject[]; loading: boolean }) {
+  // All-time impressions and website clicks per launch.
+  const { data: metrics } = useQuery({
+    queryKey: ["launch-metrics", "mine"],
+    queryFn: () => api.get<Record<string, { impressions: number; clicks: number }>>("/metrics/my-launches"),
+    enabled: apps.length > 0,
+    staleTime: 60_000,
+  });
   return (
     <section>
       <PanelHeader
@@ -126,7 +136,11 @@ export function LaunchesPanel({ apps, loading }: { apps: ShowcaseProject[]; load
                   </div>
                   <p className="mt-0.5 truncate text-xs text-muted-foreground">
                     {app.tagline || app.category || "Launch"} · {timeAgo(app.listed_at || app.created_at)}
-                    {(app.views ?? 0) > 0 && ` · ${app.views} ${app.views === 1 ? "view" : "views"}`}
+                  </p>
+                  <p className="mt-1 flex flex-wrap gap-x-3 text-xs tabular-nums text-muted-foreground">
+                    <span>{(metrics?.[app.id]?.impressions ?? 0).toLocaleString("en-US")} impressions</span>
+                    <span>{(app.views ?? 0).toLocaleString("en-US")} views</span>
+                    <span>{(metrics?.[app.id]?.clicks ?? 0).toLocaleString("en-US")} website clicks</span>
                   </p>
                 </div>
                 {app.badge_verified && (
@@ -135,6 +149,9 @@ export function LaunchesPanel({ apps, loading }: { apps: ShowcaseProject[]; load
                     {app.upvotes ?? 0}
                   </span>
                 )}
+                <Link href={`/launches/${app.id}/analytics`} className="shrink-0 text-sm text-muted-foreground hover:text-foreground">
+                  Analytics
+                </Link>
                 <Link href={`/launches/${app.id}/edit`} className="shrink-0 text-sm text-muted-foreground hover:text-foreground">
                   Edit
                 </Link>

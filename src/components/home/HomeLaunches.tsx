@@ -46,7 +46,7 @@ export default function HomeLaunches({ projects, unavailable }: { projects: Show
           const tags = [category, ...(project.tech_stack ?? []).filter((tag) => tag !== category)].slice(0, 3);
 
           return (
-            <article key={project.id} className={`border-b border-border last:border-b-0 ${index < 3 ? "bg-primary/[0.035]" : "bg-background"}`}>
+            <article key={project.id} data-launch-impression={project.id} data-surface="home" className={`border-b border-border last:border-b-0 ${index < 3 ? "bg-primary/[0.035]" : "bg-background"}`}>
               <div className="flex items-center gap-3 py-4">
                 <div className="flex w-10 shrink-0 items-center justify-center text-primary">
                   <span className="text-base font-semibold leading-none">#{index + 1}</span>
