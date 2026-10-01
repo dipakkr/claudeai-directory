@@ -375,11 +375,12 @@ function BadgeStep({
   // The $29 option only shows when online checkout is set up on the server.
   const { data: checkout } = useQuery({
     queryKey: ["sponsors", "config"],
-    queryFn: () => api.get<{ enabled: boolean; listing?: number }>("/sponsors/config"),
+    queryFn: () => api.get<{ enabled: boolean; listing?: number; listing_feature_days?: number }>("/sponsors/config"),
     staleTime: 5 * 60_000,
     retry: false,
   });
   const listingPrice = checkout?.enabled && checkout.listing ? checkout.listing / 100 : null;
+  const featureDays = checkout?.listing_feature_days ?? 7;
 
   const payToList = () => {
     setPaying(true);
@@ -425,7 +426,8 @@ function BadgeStep({
         Put {app.title} in front of people building with Claude
       </h2>
       <p className="mt-3 max-w-[62ch] text-[15px] leading-7 text-muted-foreground">
-        {app.title} is saved. It goes live free when you add our badge to your site{listingPrice !== null ? `, or right away for a one-time $${listingPrice}` : ""}.
+        {app.title} is saved. It goes live free when you add our badge to your site
+        {listingPrice !== null ? `, or right away and pinned to the top for ${featureDays} days for a one-time $${listingPrice}` : ""}.
       </p>
 
       <div className="mt-10 grid gap-10 lg:grid-cols-[minmax(0,1fr)_340px] lg:items-start">
@@ -532,7 +534,7 @@ function BadgeStep({
           {listingPrice !== null ? (
             <div className="rounded-[14px] border border-border bg-card p-5">
               <div className="flex items-baseline justify-between gap-3">
-                <p className="text-[15px] font-medium text-foreground">Skip the badge</p>
+                <p className="text-[15px] font-medium text-foreground">Featured launch</p>
                 <p>
                   <span className="text-[28px] font-semibold tabular-nums text-foreground">${listingPrice}</span>
                   <span className="ml-1 text-sm text-muted-foreground">one-time</span>
@@ -549,9 +551,9 @@ function BadgeStep({
               </button>
               <ul className="mt-5 space-y-2.5 text-[13.5px] leading-5 text-muted-foreground">
                 {[
-                  "Live as soon as payment clears, no code to add",
+                  `Pinned to the top of the homepage and launches list for ${featureDays} days`,
+                  "Live as soon as payment clears, no badge or code to add",
                   "Same launch page with upvotes and comments",
-                  "On the homepage and the launches list",
                   "Your analytics: impressions, views and clicks",
                 ].map((item) => (
                   <li key={item} className="flex gap-2.5">
@@ -561,8 +563,8 @@ function BadgeStep({
                 ))}
               </ul>
               <p className="mt-5 border-t border-border pt-4 text-xs leading-5 text-muted-foreground">
-                Paid listings link to your site as sponsored. Badge listings get a dofollow link. Secure payment by Stripe, no
-                subscription.
+                Shown with a Promoted label while featured. Paid listings link to your site as sponsored; badge listings get a
+                dofollow link. Secure payment by Stripe, no subscription.
               </p>
             </div>
           ) : null}

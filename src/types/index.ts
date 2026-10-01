@@ -248,6 +248,10 @@ export interface ShowcaseProject {
   badge_verified?: boolean;
   /** Listed by paying the one-time fee instead of adding the badge. */
   paid_listing?: boolean;
+  /** Paid perk: pinned to the top of launch lists until this time. */
+  featured_until?: string | null;
+  /** Set by rankedLaunches: currently pinned as a paid placement. */
+  promoted?: boolean;
   badge_verified_at?: string;
   listed_at?: string;
   gallery_images?: string[];

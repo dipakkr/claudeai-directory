@@ -19,9 +19,15 @@ export function publicLaunches(projects: ShowcaseProject[]): ShowcaseProject[] {
   });
 }
 
-/** Launch ranking everywhere: most upvotes first; ties keep publicLaunches' newest-first order. */
-export function rankedLaunches(projects: ShowcaseProject[]): ShowcaseProject[] {
-  return publicLaunches(projects).sort((a, b) => (b.upvotes ?? 0) - (a.upvotes ?? 0));
+/**
+ * Launch ranking everywhere: paid launches still in their featured week first (marked `promoted`),
+ * then most upvotes; ties keep publicLaunches' newest-first order.
+ */
+export function rankedLaunches(projects: ShowcaseProject[], now = Date.now()): ShowcaseProject[] {
+  const promoted = (p: ShowcaseProject) => Boolean(p.featured_until && Date.parse(p.featured_until) > now);
+  return publicLaunches(projects)
+    .map((p) => ({ ...p, promoted: promoted(p) }))
+    .sort((a, b) => Number(b.promoted) - Number(a.promoted) || (b.upvotes ?? 0) - (a.upvotes ?? 0));
 }
 
 export function selectedDiscussions(threads: Thread[]): Thread[] {

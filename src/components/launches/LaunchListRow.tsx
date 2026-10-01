@@ -57,6 +57,9 @@ export function LaunchListRow({
             <div className="flex min-w-0 items-center gap-1.5">
               <h3 className="truncate font-sans text-[16px] font-medium leading-tight text-foreground group-hover:underline">{project.title}</h3>
               {project.badge_verified && <BadgeCheck className="h-4 w-4 shrink-0 fill-amber-400 text-background" aria-label="Badge verified" />}
+              {project.promoted && (
+                <span className="shrink-0 rounded-[4px] border border-primary/40 px-1.5 py-0.5 font-mono text-[10px] uppercase tracking-[0.1em] text-primary">Promoted</span>
+              )}
             </div>
             <p className="mt-1 line-clamp-1 text-[15px] leading-6 text-muted-foreground">{pitch(project)}</p>
             <p className="mt-1 flex flex-wrap items-center gap-x-2 font-mono text-[12px] text-muted-foreground/80">
