@@ -22,6 +22,7 @@ export type ProductEvent =
   | "website_clicked" // "Visit website" on a launch page
   | "launch_upvoted"
   | "launch_upvote_gated"
+  | "launch_url_entered"
   | "launch_submitted"
   | "user_profile_clicked" // any link to a member profile
   | "community_posted" // a new discussion or a reply

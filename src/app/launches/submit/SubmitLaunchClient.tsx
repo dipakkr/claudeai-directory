@@ -9,7 +9,6 @@ import {
   ArrowLeft,
   ArrowRight,
   Check,
-  ChevronDown,
   Copy,
   ExternalLink,
   Linkedin,
@@ -30,8 +29,10 @@ import {
   useMyShowcaseProjects,
   useSubmitShowcaseProject,
   useVerifyShowcaseBadge,
+  type LaunchAutofill,
 } from "@/hooks/use-showcase";
 import { MediaUpload } from "@/components/launches/MediaUpload";
+import { FormSection, LaunchReading, LaunchStart } from "./LaunchStart";
 import type { ShowcaseProject } from "@/types";
 
 type Media = { logo: string[]; screenshot: string[]; video: string[] };
@@ -618,8 +619,9 @@ export default function SubmitLaunchClient() {
 
   const [form, setForm] = useState<Form>(EMPTY_FORM);
   const [step, setStep] = useState<Step>(0);
+  // Step 0 has three stages: the website, reading it, then reviewing the filled-in form.
+  const [stage, setStage] = useState<"url" | "reading" | "form">("url");
   const [activeApp, setActiveApp] = useState<ShowcaseProject | null>(null);
-  const [showMore, setShowMore] = useState(false);
   const [filledFrom, setFilledFrom] = useState<string | null>(null);
   const { data: uploadConfig } = useUploadConfig();
   const [media, setMedia] = useState<Media>({ logo: [], screenshot: [], video: [] });
@@ -636,21 +638,45 @@ export default function SubmitLaunchClient() {
     return list.map((app) => (app.id === activeApp?.id ? activeApp : app));
   }, [myApps, activeApp]);
 
+  const fillFrom = (meta: LaunchAutofill) =>
+    // Only fill empty fields: never overwrite what the creator typed.
+    setForm((current) => ({
+      ...current,
+      title: current.title || meta.name || "",
+      tagline: current.tagline || meta.tagline || "",
+      description: current.description || meta.description || "",
+      images: current.images || meta.image || "",
+      twitter: current.twitter || meta.twitter || "",
+    }));
+
+  // "What are you launching?" -> read the site (at least as long as the progress screen) -> review.
+  const startFromUrl = async (raw: string) => {
+    const url = normalizeUrl(raw);
+    if (!isValidUrl(url)) {
+      toast.error("That doesn't look like a website. Try something like yourapp.com");
+      return;
+    }
+    set("app_url", url);
+    setStage("reading");
+    track("launch_url_entered", {});
+    const started = Date.now();
+    try {
+      fillFrom(await autofill.mutateAsync(url));
+    } catch {
+      // Reading is a convenience: on failure the form is simply filled in by hand.
+    }
+    setFilledFrom(url);
+    await new Promise((resolve) => window.setTimeout(resolve, Math.max(0, 3600 - (Date.now() - started))));
+    setStage("form");
+  };
+
   const runAutofill = (raw: string) => {
     const url = normalizeUrl(raw);
     if (!isValidUrl(url) || url === filledFrom || autofill.isPending) return;
     autofill.mutate(url, {
       onSuccess: (meta) => {
         setFilledFrom(url);
-        // Only fill empty fields: never overwrite what the creator typed.
-        setForm((current) => ({
-          ...current,
-          title: current.title || meta.name,
-          tagline: current.tagline || meta.tagline,
-          description: current.description || meta.description,
-          images: current.images || meta.image || "",
-          twitter: current.twitter || meta.twitter || "",
-        }));
+        fillFrom(meta);
       },
       // Auto-fill is a convenience: on any failure, the form just stays manual.
       onError: () => setFilledFrom(url),
@@ -729,7 +755,7 @@ export default function SubmitLaunchClient() {
     setMediaKey((key) => key + 1);
     setFilledFrom(null);
     setActiveApp(null);
-    setShowMore(false);
+    setStage("url");
     setStep(0);
   };
 
@@ -794,9 +820,27 @@ export default function SubmitLaunchClient() {
                     />
                   ) : step === 2 && activeApp ? (
                     <ShareStep app={activeApp} onAnother={startOver} />
+                  ) : stage === "url" ? (
+                    <LaunchStart initialUrl={form.app_url} onContinue={(url) => void startFromUrl(url)} onManual={() => setStage("form")} />
+                  ) : stage === "reading" ? (
+                    <LaunchReading url={form.app_url} />
                   ) : (
                     <form onSubmit={handleSubmit} className="rounded-lg border border-border bg-card p-5 sm:p-7" noValidate>
-                      <div className="space-y-5">
+                      <div className="mb-6">
+                        <h2 className="text-xl font-semibold text-foreground">Review your launch</h2>
+                        {autofill.isSuccess && filledFrom ? (
+                          <p className="mt-3 rounded-lg border border-green-500/30 bg-green-500/[0.06] px-3.5 py-2.5 font-mono text-xs text-green-600 dark:text-green-400">
+                            ✓ Filled in from {filledFrom.replace(/^https?:\/\//, "")}. Check everything, then continue.
+                          </p>
+                        ) : filledFrom ? (
+                          <p className="mt-3 text-sm text-muted-foreground">We couldn&apos;t read that page, so fill in the details below.</p>
+                        ) : (
+                          <p className="mt-2 text-sm text-muted-foreground">Tell builders what you made. Only the basics are required.</p>
+                        )}
+                      </div>
+
+                      <div className="space-y-8">
+                        <FormSection n="01" title="The basics">
                         <Field label="Your app's URL" htmlFor="app_url" required>
                           <div className="flex gap-2">
                             <input
@@ -823,15 +867,7 @@ export default function SubmitLaunchClient() {
                               <span className="hidden sm:inline">{autofill.isPending ? "Reading..." : "Auto-fill"}</span>
                             </button>
                           </div>
-                          <p className="text-xs text-muted-foreground" aria-live="polite">
-                            {autofill.isPending
-                              ? "Reading your page..."
-                              : autofill.isSuccess && filledFrom
-                                ? "Filled from your site. Review and edit anything below."
-                                : autofill.isError && filledFrom
-                                  ? "Could not read your page, so fill the details in below."
-                                  : "Paste your link and we fill in the name, pitch and description."}
-                          </p>
+                          {autofill.isPending && <p className="text-xs text-muted-foreground" aria-live="polite">Reading your page...</p>}
                         </Field>
 
                         <div className="grid gap-5 sm:grid-cols-2">
@@ -859,10 +895,11 @@ export default function SubmitLaunchClient() {
                             className={textareaClass}
                           />
                         </Field>
-                      </div>
+                        </FormSection>
 
+                        <FormSection n="02" title="Media" hint="Optional. Launches with screenshots get more upvotes.">
                       {uploadConfig?.enabled && (
-                        <div key={mediaKey} className="mt-6 space-y-5 border-t border-border pt-5">
+                        <div key={mediaKey} className="space-y-5">
                           <MediaUpload
                             kind="logo"
                             max={1}
@@ -893,27 +930,15 @@ export default function SubmitLaunchClient() {
                         </div>
                       )}
 
-                      <div className="mt-6 border-t border-border pt-5">
-                        <button
-                          type="button"
-                          onClick={() => setShowMore((value) => !value)}
-                          aria-expanded={showMore}
-                          className="flex w-full items-center justify-between text-left"
-                        >
-                          <span>
-                            <span className="block text-sm font-medium text-foreground">Make your page stand out</span>
-                            <span className="block text-xs text-muted-foreground">
-                              Optional. Overview, platforms, tags and links. Richer pages get more upvotes.
-                            </span>
-                          </span>
-                          <ChevronDown className={`h-4 w-4 shrink-0 text-muted-foreground transition-transform ${showMore ? "rotate-180" : ""}`} />
-                        </button>
-
-                        {showMore && (
-                          <div className="mt-5 space-y-5">
                             <Field label={uploadConfig?.enabled ? "Or paste screenshot URLs" : "Screenshots"} htmlFor="images" hint="Image URLs, one per line">
                               <textarea id="images" value={form.images} onChange={(e) => set("images", e.target.value)} rows={3} placeholder="https://yourapp.com/screenshot.png" className={textareaClass} />
                             </Field>
+                              <Field label="YouTube demo" htmlFor="demo_video_url" hint="YouTube link">
+                                <input id="demo_video_url" type="url" value={form.demo_video_url} onChange={(e) => set("demo_video_url", e.target.value)} placeholder="https://youtube.com/watch?v=..." className={inputClass} />
+                              </Field>
+                        </FormSection>
+
+                        <FormSection n="03" title="Tell the story" hint="Optional">
                             <div className="grid gap-5 sm:grid-cols-2">
                               <Field label="Who is it for?" htmlFor="audience">
                                 <textarea id="audience" value={form.audience} onChange={(e) => set("audience", e.target.value)} rows={3} className={textareaClass} />
@@ -928,6 +953,12 @@ export default function SubmitLaunchClient() {
                                 <textarea id="unique" value={form.unique} onChange={(e) => set("unique", e.target.value)} rows={3} className={textareaClass} />
                               </Field>
                             </div>
+                            <Field label="Use cases" htmlFor="use_cases" hint="One per line">
+                              <textarea id="use_cases" value={form.use_cases} onChange={(e) => set("use_cases", e.target.value)} rows={3} placeholder={"Summarize support tickets\nDraft replies in your voice"} className={textareaClass} />
+                            </Field>
+                        </FormSection>
+
+                        <FormSection n="04" title="Details" hint="Optional">
                             <div className="space-y-1.5">
                               <p className="text-sm font-medium text-foreground">Platforms</p>
                               <ChipGroup
@@ -944,17 +975,9 @@ export default function SubmitLaunchClient() {
                                 }
                               />
                             </div>
-                            <div className="grid gap-5 sm:grid-cols-2">
                               <Field label="Tech stack and tags" htmlFor="tags" hint="Comma separated">
                                 <input id="tags" value={form.tags} onChange={(e) => set("tags", e.target.value)} placeholder="Next.js, MCP, Supabase" className={inputClass} />
                               </Field>
-                              <Field label="YouTube demo" htmlFor="demo_video_url" hint="YouTube link">
-                                <input id="demo_video_url" type="url" value={form.demo_video_url} onChange={(e) => set("demo_video_url", e.target.value)} placeholder="https://youtube.com/watch?v=..." className={inputClass} />
-                              </Field>
-                            </div>
-                            <Field label="Use cases" htmlFor="use_cases" hint="One per line">
-                              <textarea id="use_cases" value={form.use_cases} onChange={(e) => set("use_cases", e.target.value)} rows={3} placeholder={"Summarize support tickets\nDraft replies in your voice"} className={textareaClass} />
-                            </Field>
                             <Field label="Source code" htmlFor="github_url" hint="If it's open source">
                               <input id="github_url" type="url" value={form.github_url} onChange={(e) => set("github_url", e.target.value)} placeholder="https://github.com/you/app" className={inputClass} />
                             </Field>
@@ -966,11 +989,14 @@ export default function SubmitLaunchClient() {
                                 <input aria-label="LinkedIn URL" value={form.linkedin} onChange={(e) => set("linkedin", e.target.value)} placeholder="LinkedIn URL" className={inputClass} />
                               </div>
                             </div>
+                        </FormSection>
+
+                        <FormSection n="05" title="Ask the community" hint="Optional">
                             <Field label="What feedback do you want?" htmlFor="feedback_prompt" hint="Shown to visitors">
                               <input id="feedback_prompt" value={form.feedback_prompt} onChange={(e) => set("feedback_prompt", e.target.value)} placeholder="What would make this more useful for you?" className={inputClass} />
                             </Field>
-                          </div>
-                        )}
+                        </FormSection>
+
                       </div>
 
                       <div className="mt-7 flex flex-wrap items-center gap-3 border-t border-border pt-5">
@@ -990,7 +1016,7 @@ export default function SubmitLaunchClient() {
                 </div>
 
                 <aside className="space-y-4 lg:sticky lg:top-24">
-                  {step === 0 && <LivePreview form={form} media={media} />}
+                  {step === 0 && stage === "form" && <LivePreview form={form} media={media} />}
                   <MyLaunches apps={apps} activeId={step === 1 ? activeApp?.id : undefined} onContinue={continueApp} />
                 </aside>
               </div>
