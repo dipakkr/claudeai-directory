@@ -9,7 +9,7 @@ function Card({ title, href, linkLabel, children }: { title: string; href: strin
   return (
     <section className="rounded-[6px] border border-border bg-card">
       <div className="flex items-center justify-between px-4 pt-4">
-        <h2 className="text-sm font-semibold text-foreground">{title}</h2>
+        <h2 className="font-sans text-sm font-semibold text-foreground">{title}</h2>
         <Link href={href} className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground">
           {linkLabel}
           <ArrowRight className="h-3 w-3" />
@@ -87,7 +87,7 @@ export function FeedSidebar({ launches, members, memberTotal }: { launches: Show
       )}
 
       <section className="rounded-[6px] border border-border bg-card p-4">
-        <h2 className="text-sm font-semibold text-foreground">Built something with Claude?</h2>
+        <h2 className="font-sans text-sm font-semibold text-foreground">Built something with Claude?</h2>
         <p className="mt-1 text-[13px] leading-5 text-muted-foreground">Launch it for upvotes, feedback and a backlink.</p>
         <Link
           href="/launches/submit"

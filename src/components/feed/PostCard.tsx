@@ -207,7 +207,7 @@ export function PostCard({ post, voted, onDeleted }: { post: Thread; voted: bool
         </header>
 
         {post.title && (
-          <h2 className="mt-3 text-[17px] font-semibold leading-snug text-foreground">
+          <h2 className="mt-3 font-sans text-[16px] font-semibold leading-snug text-foreground">
             <Link href={`/feed/${post.id}`} className="hover:underline">
               {post.title}
             </Link>
