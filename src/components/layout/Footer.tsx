@@ -48,6 +48,7 @@ const footerLinks = [
       { label: "Submit your app", href: "/launches/submit" },
       { label: "Advertise", href: "/?advertise=1" },
       { label: "Sign up", href: "/signup" },
+      { label: "Open stats", href: "/stats" },
       { label: "About", href: "/about" },
       { label: "Privacy", href: "/privacy" },
       { label: "Terms", href: "/terms" },

@@ -57,6 +57,7 @@ const moreGroups = [
     label: "Community",
     links: [
       { href: "/jobs", label: "Jobs" },
+      { href: "/stats", label: "Open stats" },
     ],
   },
 ];

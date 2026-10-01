@@ -6,6 +6,7 @@ import Script from "next/script";
 import { OpenPanelComponent } from '@openpanel/nextjs';
 import SideAdBillboards from "@/components/layout/SideAdBillboards";
 import { ExternalLinkTracker } from "@/components/tracking/ExternalLinkTracker";
+import { VisitBeacon } from "@/components/tracking/VisitBeacon";
 import { KeyClickTracker } from "@/components/tracking/KeyClickTracker";
 
 const geistSans = Geist({
@@ -93,6 +94,7 @@ export default function RootLayout({
           {/* Discord announcement banner paused; the component stays in components/layout/AnnouncementBanner.tsx. */}
           <SideAdBillboards />
           <ExternalLinkTracker />
+          <VisitBeacon />
           {children}
         </Providers>
 
