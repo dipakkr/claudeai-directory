@@ -16,10 +16,11 @@ import { useMyShowcaseProjects, useUpdateLaunch, useUploadConfig } from "@/hooks
 import type { ShowcaseProject } from "@/types";
 import { SignInButton } from "@/components/auth/SignInDialog";
 
+// Same filled, full-width fields as the submit form.
 const inputClass =
-  "h-10 w-full rounded-lg border border-border bg-card px-3.5 text-sm text-foreground placeholder:text-muted-foreground/70 focus:border-primary/60 focus:outline-none";
+  "h-12 w-full rounded-[10px] border border-transparent bg-foreground/[0.06] px-4 text-[15px] text-foreground placeholder:text-muted-foreground/60 transition-colors focus:border-[var(--cad-line-hover)] focus:outline-none";
 const textareaClass =
-  "w-full rounded-lg border border-border bg-card px-3.5 py-2.5 text-sm leading-6 text-foreground placeholder:text-muted-foreground/70 focus:border-primary/60 focus:outline-none";
+  "w-full rounded-[10px] border border-transparent bg-foreground/[0.06] px-4 py-3 text-[15px] leading-6 text-foreground placeholder:text-muted-foreground/60 transition-colors focus:border-[var(--cad-line-hover)] focus:outline-none";
 
 function lines(value: string) {
   return value
@@ -36,19 +37,22 @@ function isHttpsUrl(value: string) {
   }
 }
 
-function Section({ title, hint, children }: { title: string; hint?: string; children: React.ReactNode }) {
+function Section({ n, title, hint, children }: { n: string; title: string; hint?: string; children: React.ReactNode }) {
   return (
-    <section className="border-b border-border py-6 first:pt-0 last:border-b-0">
-      <h2 className="text-sm font-semibold text-foreground">{title}</h2>
-      {hint && <p className="mt-0.5 text-xs text-muted-foreground">{hint}</p>}
-      <div className="mt-4 space-y-4">{children}</div>
+    <section>
+      <div className="mb-6 flex flex-wrap items-baseline gap-x-3 gap-y-1 border-b border-border pb-3">
+        <span className="font-mono text-xs text-primary">{n}</span>
+        <h2 className="font-mono text-xs uppercase tracking-[0.14em] text-foreground">{title}</h2>
+        {hint && <span className="text-xs text-muted-foreground">{hint}</span>}
+      </div>
+      <div className="space-y-6">{children}</div>
     </section>
   );
 }
 
 function Label({ text, htmlFor, hint }: { text: string; htmlFor: string; hint?: string }) {
   return (
-    <label htmlFor={htmlFor} className="mb-1.5 flex items-baseline justify-between text-sm font-medium text-foreground">
+    <label htmlFor={htmlFor} className="mb-2 flex items-baseline justify-between text-[14px] text-muted-foreground">
       {text}
       {hint && <span className="text-xs font-normal text-muted-foreground">{hint}</span>}
     </label>
@@ -190,9 +194,9 @@ function EditForm({ app }: { app: ShowcaseProject }) {
   };
 
   return (
-    <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_280px] lg:items-start">
-      <div className="rounded-2xl border border-border bg-card/40 p-5 sm:p-7">
-        <Section title="Basics">
+    <div>
+      <div className="space-y-12">
+        <Section n="01" title="The basics">
           <div>
             <Label text="Name" htmlFor="title" />
             <input id="title" value={title} onChange={(e) => setTitle(e.target.value)} maxLength={80} className={inputClass} />
@@ -202,7 +206,7 @@ function EditForm({ app }: { app: ShowcaseProject }) {
             <input id="tagline" value={tagline} onChange={(e) => setTagline(e.target.value)} maxLength={140} className={inputClass} />
           </div>
           <div>
-            <p className="mb-1.5 text-sm font-medium text-foreground">Category</p>
+            <p className="mb-2 text-[14px] text-muted-foreground">Category</p>
             <Chips options={CATEGORIES} value={[category]} onToggle={setCategory} />
           </div>
           <div>
@@ -211,9 +215,9 @@ function EditForm({ app }: { app: ShowcaseProject }) {
           </div>
         </Section>
 
-        <Section title="Media" hint="Logo, screenshots and a demo video. The first screenshot is your cover.">
+        <Section n="02" title="Media" hint="The first screenshot is your cover.">
           <div>
-            <p className="mb-1.5 text-sm font-medium text-foreground">Logo</p>
+            <p className="mb-2 text-[14px] text-muted-foreground">Logo</p>
             <CurrentMedia urls={logo} onRemove={() => setLogo([])} square />
             {uploads ? (
               <div className={logo.length ? "mt-3" : ""}>
@@ -238,7 +242,7 @@ function EditForm({ app }: { app: ShowcaseProject }) {
           </div>
 
           <div>
-            <p className="mb-1.5 text-sm font-medium text-foreground">Screenshots</p>
+            <p className="mb-2 text-[14px] text-muted-foreground">Screenshots</p>
             <CurrentMedia urls={shots} onRemove={(url) => setShots((list) => list.filter((u) => u !== url))} />
             {uploads && (
               <div className={shots.length ? "mt-3" : ""}>
@@ -263,7 +267,7 @@ function EditForm({ app }: { app: ShowcaseProject }) {
           </div>
 
           <div>
-            <p className="mb-1.5 text-sm font-medium text-foreground">Demo video</p>
+            <p className="mb-2 text-[14px] text-muted-foreground">Demo video</p>
             <CurrentMedia urls={video} onRemove={() => setVideo([])} video />
             {uploads && !video.length && (
               <MediaUpload
@@ -280,8 +284,8 @@ function EditForm({ app }: { app: ShowcaseProject }) {
           </div>
         </Section>
 
-        <Section title="Details" hint="Optional. Richer pages get more upvotes.">
-          <div className="grid gap-4 sm:grid-cols-2">
+        <Section n="03" title="Tell the story" hint="Optional. Richer pages get more upvotes.">
+          <div className="space-y-6">
             {(
               [
                 ["audience", "Who is it for?"],
@@ -297,14 +301,21 @@ function EditForm({ app }: { app: ShowcaseProject }) {
             ))}
           </div>
           <div>
-            <p className="mb-1.5 text-sm font-medium text-foreground">Platforms</p>
+            <Label text="Use cases" htmlFor="use_cases" hint="One per line" />
+            <textarea id="use_cases" rows={3} value={useCases} onChange={(e) => setUseCases(e.target.value)} className={textareaClass} />
+          </div>
+        </Section>
+
+        <Section n="04" title="Details" hint="Optional">
+          <div>
+            <p className="mb-2 text-[14px] text-muted-foreground">Platforms</p>
             <Chips
               options={PLATFORMS}
               value={platforms}
               onToggle={(p) => setPlatforms((list) => (list.includes(p) ? list.filter((x) => x !== p) : [...list, p]))}
             />
           </div>
-          <div className="grid gap-4 sm:grid-cols-2">
+          <div className="space-y-6">
             <div>
               <Label text="Tech stack and tags" htmlFor="tags" hint="Comma separated" />
               <input id="tags" value={tags} onChange={(e) => setTags(e.target.value)} className={inputClass} />
@@ -315,37 +326,32 @@ function EditForm({ app }: { app: ShowcaseProject }) {
             </div>
           </div>
           <div>
-            <Label text="Use cases" htmlFor="use_cases" hint="One per line" />
-            <textarea id="use_cases" rows={3} value={useCases} onChange={(e) => setUseCases(e.target.value)} className={textareaClass} />
-          </div>
-          <div>
             <Label text="What feedback do you want?" htmlFor="feedback" />
             <input id="feedback" value={feedback} onChange={(e) => setFeedback(e.target.value)} className={inputClass} />
           </div>
         </Section>
       </div>
 
-      <aside className="space-y-3 lg:sticky lg:top-24">
-        <div className="rounded-2xl border border-border bg-card p-4">
-          <p className="text-sm font-medium text-foreground">{app.title}</p>
-          <p className="mt-0.5 text-xs text-muted-foreground">{app.badge_verified ? "Live" : app.status === "rejected" ? "Not approved" : "Waiting for badge"}</p>
-          <p className="mt-3 text-xs leading-5 text-muted-foreground">
-            The app URL stays the same ({app.app_url?.replace(/^https?:\/\//, "")}). Everything else can change.
+      {/* Save bar stays in reach on a long form. */}
+      <div className="sticky bottom-0 z-10 -mx-4 mt-12 border-t border-border bg-background/95 px-4 py-3 backdrop-blur md:-mx-8 md:px-8" style={{ paddingBottom: "max(0.75rem, env(safe-area-inset-bottom, 0px))" }}>
+        <div className="flex items-center gap-3">
+          <p className="min-w-0 flex-1 truncate text-xs text-muted-foreground">
+            The app URL stays {app.app_url?.replace(/^https?:\/\//, "")}. Everything else can change.
           </p>
+          <Link href={app.badge_verified ? `/launches/${app.id}` : "/dashboard?tab=launches"} className="shrink-0 text-sm text-muted-foreground hover:text-foreground">
+            Cancel
+          </Link>
           <button
             type="button"
             onClick={save}
             disabled={update.isPending || uploading}
-            className="mt-4 inline-flex h-10 w-full items-center justify-center gap-2 rounded-full bg-foreground text-sm font-medium text-background hover:bg-foreground/85 disabled:opacity-50"
+            className="inline-flex h-10 shrink-0 items-center justify-center gap-2 rounded-full bg-primary px-5 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90 disabled:opacity-50"
           >
             {update.isPending && <Loader2 className="h-4 w-4 animate-spin" />}
             {uploading ? "Uploading..." : "Save changes"}
           </button>
-          <Link href={app.badge_verified ? `/launches/${app.id}` : "/dashboard?tab=launches"} className="mt-2 block text-center text-xs text-muted-foreground hover:text-foreground">
-            Cancel
-          </Link>
         </div>
-      </aside>
+      </div>
     </div>
   );
 }
@@ -359,12 +365,27 @@ export default function EditLaunchClient({ slug }: { slug: string }) {
     <div className="flex min-h-screen flex-col bg-background">
       <Header />
       <main className="flex-1">
-        <div className="mx-auto max-w-[1080px] px-4 pb-16 pt-8 md:px-8 md:pt-10">
+        <div className="mx-auto max-w-[680px] px-4 pt-8 md:px-8 md:pt-12">
           <Link href="/dashboard?tab=launches" className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground">
             <ArrowLeft className="h-3.5 w-3.5" />
             Your launches
           </Link>
-          <h1 className="mb-6 mt-4 text-3xl font-semibold text-foreground">Edit launch</h1>
+          <p className="mt-8 font-mono text-[11px] uppercase tracking-[0.16em] text-primary">Edit launch</p>
+          <h1 className="mt-3 font-sans text-3xl font-semibold tracking-tight text-foreground md:text-4xl">{app?.title ?? "Your launch"}</h1>
+          {app && (
+            <p className="mt-2 flex flex-wrap items-center gap-x-2 text-sm text-muted-foreground">
+              <span>{app.badge_verified || app.paid_listing ? "Live" : app.status === "rejected" ? "Not approved" : "Waiting for badge"}</span>
+              {(app.badge_verified || app.paid_listing) && (
+                <>
+                  <span aria-hidden>·</span>
+                  <Link href={`/launches/${app.id}`} className="hover:text-foreground hover:underline">View launch</Link>
+                  <span aria-hidden>·</span>
+                  <Link href={`/launches/${app.id}/analytics`} className="hover:text-foreground hover:underline">Analytics</Link>
+                </>
+              )}
+            </p>
+          )}
+          <div className="mt-10" />
 
           {isLoading || (isAuthenticated && appsLoading) ? (
             <p className="text-sm text-muted-foreground">Loading...</p>
