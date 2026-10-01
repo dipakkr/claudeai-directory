@@ -1,7 +1,7 @@
 import { sideAdCollections } from "@/data/sideAdPlacements";
 
 /** Monthly price for one sidebar sponsor slot, in USD. */
-export const SPONSOR_MONTHLY_PRICE = 499;
+export const SPONSOR_MONTHLY_PRICE = 249;
 
 /** Monthly price for the sponsored row in the launches list, in USD. */
 export const SPONSOR_LAUNCH_PRICE = 149;

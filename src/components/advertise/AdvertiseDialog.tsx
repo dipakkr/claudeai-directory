@@ -201,7 +201,7 @@ export default function AdvertiseDialog() {
   const serverCheckout = !!checkout?.enabled;
   const isLaunch = slot === "launch";
   const price = isLaunch ? SPONSOR_LAUNCH_PRICE : SPONSOR_MONTHLY_PRICE;
-  // The payment-link fallback is the $499 sidebar product only.
+  // The payment-link fallback is the sidebar product only.
   const canPay = serverCheckout || (!isLaunch && !!SPONSOR_CHECKOUT_URL);
 
   // Open from sidebar buttons (custom event) or from old /advertise links (?advertise=1).
@@ -330,7 +330,9 @@ export default function AdvertiseDialog() {
 
           {/* Right: pick, fill in, pay */}
           <form onSubmit={submit} className="p-6 sm:p-7">
-            <DialogTitle className="pr-6 text-[22px] font-normal leading-tight">Advertise on Claude AI Directory</DialogTitle>
+            <DialogTitle className="pr-6 text-[22px] font-normal leading-tight">
+              {isLaunch ? "Advertise on Claude AI Directory" : "Advertise your MCP on Claude AI Directory"}
+            </DialogTitle>
             <DialogDescription className="mt-1.5 text-[13px] leading-relaxed text-[var(--cad-desc)]">
               A community of builders, founders and marketers building with Claude.
             </DialogDescription>
