@@ -7,8 +7,9 @@ import { ArrowRight } from "lucide-react";
 export function LaunchStart({ initialUrl, onContinue, onManual }: { initialUrl: string; onContinue: (url: string) => void; onManual: () => void }) {
   const [url, setUrl] = useState(initialUrl.replace(/^https?:\/\//i, ""));
   return (
-    <div className="max-w-[620px] pt-2">
-      <h2 className="text-2xl font-semibold text-foreground">What are you launching?</h2>
+    <div className="pt-2">
+      <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-primary">Launch</p>
+      <h2 className="mt-3 font-sans text-3xl font-semibold tracking-tight text-foreground md:text-4xl">What are you launching?</h2>
       <p className="mt-2 text-[15px] text-muted-foreground">Paste your website. We read it and fill in the details; you review them.</p>
       <form
         className="mt-6 flex flex-col gap-2.5 sm:flex-row"
@@ -65,8 +66,9 @@ export function LaunchReading({ url }: { url: string }) {
 
   const host = url.replace(/^https?:\/\//i, "").replace(/\/$/, "");
   return (
-    <div className="max-w-[620px] pt-2" aria-live="polite" aria-busy="true">
-      <h2 className="text-2xl font-semibold text-foreground">Reading your site…</h2>
+    <div className="pt-2" aria-live="polite" aria-busy="true">
+      <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-primary">Launch</p>
+      <h2 className="mt-3 font-sans text-3xl font-semibold tracking-tight text-foreground md:text-4xl">Reading your site…</h2>
       <div className="mt-6 overflow-hidden rounded-[10px] border border-border bg-card font-mono text-[13px] leading-7">
         <div className="flex items-center gap-1.5 border-b border-border px-4 py-2.5 text-[11px] text-muted-foreground">
           <span className="h-2 w-2 rounded-full bg-border" />
@@ -97,8 +99,8 @@ export function LaunchReading({ url }: { url: string }) {
 /** Numbered section of the review form (01 The basics, 02 Media, ...). */
 export function FormSection({ n, title, hint, children }: { n: string; title: string; hint?: string; children: React.ReactNode }) {
   return (
-    <fieldset className="space-y-5 border-t border-border pt-6 first:border-t-0 first:pt-0">
-      <legend className="flex w-full flex-wrap items-baseline gap-x-3 gap-y-1 pb-1">
+    <fieldset className="space-y-6">
+      <legend className="mb-6 flex w-full flex-wrap items-baseline gap-x-3 gap-y-1 border-b border-border pb-3">
         <span className="font-mono text-xs text-primary">{n}</span>
         <span className="font-mono text-xs uppercase tracking-[0.14em] text-foreground">{title}</span>
         {hint && <span className="text-xs text-muted-foreground">{hint}</span>}

@@ -8,11 +8,15 @@ import { toast } from "sonner";
 import {
   ArrowLeft,
   ArrowRight,
+  BarChart3,
   Check,
   Copy,
   ExternalLink,
   Linkedin,
   CreditCard,
+  Home,
+  Link2,
+  MessageSquare,
   Loader2,
   Rocket,
   Sparkles,
@@ -72,10 +76,11 @@ const EMPTY_FORM = {
 
 type Form = typeof EMPTY_FORM;
 
+// Filled, full-width fields (DevHunt-style): no visible border until focus.
 const inputClass =
-  "h-11 w-full rounded-lg border border-border bg-card px-3.5 text-sm text-foreground placeholder:text-muted-foreground/70 transition-colors focus:border-primary/60 focus:outline-none";
+  "h-12 w-full rounded-[10px] border border-transparent bg-foreground/[0.06] px-4 text-[15px] text-foreground placeholder:text-muted-foreground/60 transition-colors focus:border-[var(--cad-line-hover)] focus:outline-none";
 const textareaClass =
-  "w-full rounded-lg border border-border bg-card px-3.5 py-3 text-sm leading-6 text-foreground placeholder:text-muted-foreground/70 transition-colors focus:border-primary/60 focus:outline-none";
+  "w-full rounded-[10px] border border-transparent bg-foreground/[0.06] px-4 py-3 text-[15px] leading-6 text-foreground placeholder:text-muted-foreground/60 transition-colors focus:border-[var(--cad-line-hover)] focus:outline-none";
 
 function splitList(value: string, separator: RegExp = /[,\n]/) {
   return value
@@ -161,8 +166,8 @@ function Field({
   children: React.ReactNode;
 }) {
   return (
-    <div className="space-y-1.5">
-      <label htmlFor={htmlFor} className="flex items-baseline justify-between gap-3 text-sm font-medium text-foreground">
+    <div className="space-y-2">
+      <label htmlFor={htmlFor} className="flex items-baseline justify-between gap-3 text-[14px] text-muted-foreground">
         <span>
           {label}
           {required && <span className="ml-0.5 text-primary">*</span>}
@@ -414,125 +419,214 @@ function BadgeStep({
   };
 
   return (
-    <div className="rounded-lg border border-border bg-card p-5 sm:p-7">
-      <h2 className="text-xl font-semibold text-foreground">Add the badge to go live</h2>
-      <p className="mt-2 text-sm leading-6 text-muted-foreground">
-        <span className="font-medium text-foreground">{app.title}</span> is saved. Paste this badge anywhere on your site,
-        like the footer, then verify. Your listing goes public as soon as we find it.
+    <div>
+      <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-primary">Go live · {app.title}</p>
+      <h2 className="mt-3 max-w-[22ch] font-sans text-3xl font-semibold tracking-tight text-foreground md:text-[40px] md:leading-[1.1]">
+        Put {app.title} in front of people building with Claude
+      </h2>
+      <p className="mt-3 max-w-[62ch] text-[15px] leading-7 text-muted-foreground">
+        {app.title} is saved. It goes live free when you add our badge to your site{listingPrice !== null ? `, or right away for a one-time $${listingPrice}` : ""}.
       </p>
 
-      <ol className="mt-6 space-y-6">
-        <li>
-          <p className="text-sm font-medium text-foreground">1. Pick a badge and copy the code</p>
-          <div role="radiogroup" aria-label="Badge style" className="mt-3 grid gap-2 sm:grid-cols-2">
-            {BADGE_OPTIONS.map((item) => {
-              const active = item.id === option.id;
-              return (
+      <div className="mt-10 grid gap-10 lg:grid-cols-[minmax(0,1fr)_340px] lg:items-start">
+        <div className="min-w-0 space-y-12">
+          <LaunchBenefits />
+
+          <section id="badge-steps" className="scroll-mt-28">
+            <div className="flex items-center gap-3">
+              <h3 className="shrink-0 font-mono text-[11px] uppercase tracking-[0.16em] text-foreground">Free: add the badge</h3>
+              <span className="h-px flex-1 bg-border" aria-hidden />
+            </div>
+            <p className="mt-3 text-[14px] leading-6 text-muted-foreground">
+              Paste the badge anywhere on your site (the footer is fine) or your GitHub README. We check it, and {app.title} goes
+              live with a dofollow link to your site.
+            </p>
+
+            <ol className="mt-6 space-y-8">
+              <li>
+                <p className="text-[14px] text-muted-foreground"><span className="font-mono text-primary">1</span>  Pick a badge and copy the code</p>
+                <div role="radiogroup" aria-label="Badge style" className="mt-3 grid gap-2 sm:grid-cols-2">
+                  {BADGE_OPTIONS.map((item) => {
+                    const active = item.id === option.id;
+                    return (
+                      <button
+                        key={item.id}
+                        type="button"
+                        role="radio"
+                        aria-checked={active}
+                        onClick={() => setOption(item)}
+                        className={`flex items-center justify-between gap-3 rounded-[10px] border p-3 text-left transition-colors ${
+                          active ? "border-primary ring-1 ring-primary/40" : "border-border hover:border-[var(--cad-line-hover)]"
+                        } ${item.theme === "dark" ? "bg-[#2a2622]" : "bg-[#f6f3ee]"}`}
+                      >
+                        {/* eslint-disable-next-line @next/next/no-img-element -- live SVG badge preview */}
+                        <img src={badgePath(app, item)} alt={item.label} width={item.width} height={item.height} className="max-w-[75%]" />
+                        <span className={`shrink-0 text-[11px] ${item.theme === "dark" ? "text-[#e9e2d8]" : "text-[#4a4239]"}`}>{active ? "✓" : ""}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+                <div className="mt-4 flex items-center gap-4 text-xs">
+                  {(["html", "markdown"] as const).map((item) => (
+                    <button
+                      key={item}
+                      type="button"
+                      onClick={() => setFormat(item)}
+                      aria-pressed={format === item}
+                      className={format === item ? "font-medium text-foreground underline underline-offset-4" : "text-muted-foreground hover:text-foreground"}
+                    >
+                      {item === "html" ? "HTML (website)" : "Markdown (GitHub README)"}
+                    </button>
+                  ))}
+                </div>
+                <div className="relative mt-2">
+                  <pre className="whitespace-pre-wrap break-all rounded-[10px] bg-foreground/[0.06] p-4 pr-24 font-mono text-xs leading-5 text-muted-foreground">{snippet}</pre>
+                  <button
+                    type="button"
+                    onClick={copy}
+                    className="absolute right-2 top-2 inline-flex h-8 items-center gap-1.5 rounded-md border border-border bg-background px-2.5 text-xs font-medium text-foreground hover:border-[var(--cad-line-hover)]"
+                  >
+                    {copied ? <Check className="h-3.5 w-3.5 text-success" /> : <Copy className="h-3.5 w-3.5" />}
+                    {copied ? "Copied" : "Copy"}
+                  </button>
+                </div>
+              </li>
+              <li>
+                <Field label="2  Where did you add it?" htmlFor="badge_page" hint="Homepage or GitHub README">
+                  <input
+                    id="badge_page"
+                    type="url"
+                    inputMode="url"
+                    value={badgePage}
+                    onChange={(event) => setBadgePage(event.target.value)}
+                    placeholder="https://yourapp.com"
+                    className={inputClass}
+                  />
+                </Field>
+              </li>
+              <li>
                 <button
-                  key={item.id}
                   type="button"
-                  role="radio"
-                  aria-checked={active}
-                  onClick={() => setOption(item)}
-                  className={`flex flex-col items-start gap-2.5 rounded-md border p-3 text-left transition-colors ${
-                    active ? "border-primary ring-1 ring-primary/40" : "border-border hover:border-[var(--cad-line-hover)]"
-                  } ${item.theme === "dark" ? "bg-[#2a2622]" : "bg-[#f6f3ee]"}`}
+                  onClick={handleVerify}
+                  disabled={verify.isPending}
+                  className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-[12px] bg-foreground text-[15px] font-medium text-background transition-colors hover:bg-foreground/85 disabled:opacity-60"
                 >
-                  <span className="flex h-[54px] items-center">
-                    {/* eslint-disable-next-line @next/next/no-img-element -- live SVG badge preview */}
-                    <img src={badgePath(app, item)} alt="" width={item.width} height={item.height} className="max-w-full" />
-                  </span>
-                  <span className={`text-xs font-medium ${item.theme === "dark" ? "text-[#e9e2d8]" : "text-[#4a4239]"}`}>
-                    {active && "✓ "}
-                    {item.label}
-                  </span>
+                  {verify.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Rocket className="h-4 w-4" />}
+                  {verify.isPending ? "Checking your page..." : "Verify badge and go live"}
                 </button>
-              );
-            })}
+                <p className="mt-2 text-center text-xs text-muted-foreground">Just deployed? Give it a minute, then verify.</p>
+              </li>
+            </ol>
+          </section>
+
+          <div className="flex items-center justify-between border-t border-border pt-4 text-sm">
+            <button type="button" onClick={onBack} className="inline-flex items-center gap-1.5 text-muted-foreground hover:text-foreground">
+              <ArrowLeft className="h-3.5 w-3.5" />
+              Launch another app
+            </button>
+            <span className="text-xs text-muted-foreground">Not ready? It stays saved under Your launches.</span>
           </div>
-          <div className="mt-4 flex items-center gap-4 text-xs">
-            {(["html", "markdown"] as const).map((item) => (
+        </div>
+
+        <aside className="space-y-4 lg:sticky lg:top-24">
+          {listingPrice !== null ? (
+            <div className="rounded-[14px] border border-border bg-card p-5">
+              <div className="flex items-baseline justify-between gap-3">
+                <p className="text-[15px] font-medium text-foreground">Skip the badge</p>
+                <p>
+                  <span className="text-[28px] font-semibold tabular-nums text-foreground">${listingPrice}</span>
+                  <span className="ml-1 text-sm text-muted-foreground">one-time</span>
+                </p>
+              </div>
               <button
-                key={item}
                 type="button"
-                onClick={() => setFormat(item)}
-                aria-pressed={format === item}
-                className={format === item ? "font-medium text-foreground underline underline-offset-4" : "text-muted-foreground hover:text-foreground"}
+                onClick={payToList}
+                disabled={paying}
+                className="mt-5 inline-flex h-12 w-full items-center justify-center gap-2 rounded-[12px] bg-primary text-[15px] font-medium text-primary-foreground transition-opacity hover:opacity-90 disabled:opacity-60"
               >
-                {item === "html" ? "HTML (website)" : "Markdown (GitHub README)"}
+                {paying ? <Loader2 className="h-4 w-4 animate-spin" /> : <CreditCard className="h-4 w-4" />}
+                {paying ? "Opening checkout..." : `Go live now for $${listingPrice}`}
               </button>
+              <ul className="mt-5 space-y-2.5 text-[13.5px] leading-5 text-muted-foreground">
+                {[
+                  "Live as soon as payment clears, no code to add",
+                  "Same launch page with upvotes and comments",
+                  "On the homepage and the launches list",
+                  "Your analytics: impressions, views and clicks",
+                ].map((item) => (
+                  <li key={item} className="flex gap-2.5">
+                    <Check className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+                    {item}
+                  </li>
+                ))}
+              </ul>
+              <p className="mt-5 border-t border-border pt-4 text-xs leading-5 text-muted-foreground">
+                Paid listings link to your site as sponsored. Badge listings get a dofollow link. Secure payment by Stripe, no
+                subscription.
+              </p>
+            </div>
+          ) : null}
+          <div className="text-center text-[13px] leading-6 text-muted-foreground">
+            <a href="#badge-steps" className="font-medium text-foreground underline underline-offset-4">Go live free with the badge</a>
+            <p>Takes a minute, and you keep a dofollow link.</p>
+          </div>
+        </aside>
+      </div>
+    </div>
+  );
+}
+
+/** Why go live: what a launch gets, with the directory's real last-30-day numbers. */
+function LaunchBenefits() {
+  const { data } = useQuery({
+    queryKey: ["stats", "open"],
+    queryFn: () => api.get<{ summary: Record<string, { range?: number; all_time?: number }> }>("/stats/open"),
+    staleTime: 10 * 60_000,
+  });
+  const s = data?.summary;
+  const items = [
+    { icon: Home, title: "On the homepage", body: "Live launches are listed in Built with Claude on the homepage, the launches page and the community feed sidebar, ranked by upvotes." },
+    { icon: MessageSquare, title: "A launch page people can respond to", body: "Upvotes, comments and your first comment as the maker, so visitors can ask questions and give feedback." },
+    { icon: BarChart3, title: "Your own analytics", body: "See impressions, page views and clicks to your website for your launch, day by day." },
+    { icon: Link2, title: "A dofollow backlink", body: "Launches with our badge link to your site with a dofollow link, which helps you rank in search." },
+  ];
+  return (
+    <div>
+      <ul className="space-y-7">
+        {items.map(({ icon: Icon, title, body }) => (
+          <li key={title} className="flex gap-4">
+            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[10px] border border-border bg-card text-primary">
+              <Icon className="h-4 w-4" />
+            </span>
+            <div>
+              <p className="text-[16px] font-medium text-foreground">{title}</p>
+              <p className="mt-1 text-[14.5px] leading-6 text-muted-foreground">{body}</p>
+            </div>
+          </li>
+        ))}
+      </ul>
+      {s && (
+        <div className="mt-10">
+          <div className="flex items-center gap-3">
+            <p className="shrink-0 font-mono text-[11px] uppercase tracking-[0.16em] text-muted-foreground">Claude AI Directory, last 30 days</p>
+            <span className="h-px flex-1 bg-border" aria-hidden />
+            <Link href="/stats" className="shrink-0 text-xs text-primary hover:underline">Open stats ↗</Link>
+          </div>
+          <div className="mt-4 grid grid-cols-2 gap-px overflow-hidden rounded-[10px] border border-border bg-border sm:grid-cols-4">
+            {[
+              ["listing_views", s.listing_views?.range],
+              ["install_actions", s.installs?.range],
+              ["new_members", s.members?.range],
+              ["apps_launched", s.launches?.all_time],
+            ].map(([label, value]) => (
+              <div key={label as string} className="bg-card px-4 py-3">
+                <p className="font-mono text-[11px] text-muted-foreground">{label}</p>
+                <p className="mt-1 font-mono text-[18px] tabular-nums text-foreground">{typeof value === "number" ? value.toLocaleString("en-US") : "-"}</p>
+              </div>
             ))}
           </div>
-          <div className="relative mt-2">
-            <pre className="whitespace-pre-wrap break-all rounded-lg border border-border bg-background p-3.5 pr-24 text-xs leading-5 text-muted-foreground">
-              {snippet}
-            </pre>
-            <button
-              type="button"
-              onClick={copy}
-              className="absolute right-2 top-2 inline-flex h-8 items-center gap-1.5 rounded-md border border-border bg-card px-2.5 text-xs font-medium text-foreground hover:border-[var(--cad-line-hover)]"
-            >
-              {copied ? <Check className="h-3.5 w-3.5 text-success" /> : <Copy className="h-3.5 w-3.5" />}
-              {copied ? "Copied" : "Copy"}
-            </button>
-          </div>
-        </li>
-        <li>
-          <Field label="2. Where did you add it?" htmlFor="badge_page" hint="Your homepage or GitHub README">
-            <input
-              id="badge_page"
-              type="url"
-              inputMode="url"
-              value={badgePage}
-              onChange={(event) => setBadgePage(event.target.value)}
-              placeholder="https://yourapp.com"
-              className={inputClass}
-            />
-          </Field>
-        </li>
-        <li>
-          <p className="text-sm font-medium text-foreground">3. Verify and go live</p>
-          <div className="mt-2 flex flex-wrap items-center gap-3">
-            <button
-              type="button"
-              onClick={handleVerify}
-              disabled={verify.isPending}
-              className="inline-flex h-11 items-center gap-2 rounded-full bg-foreground px-5 text-sm font-medium text-background transition-colors hover:bg-foreground/85 disabled:opacity-60"
-            >
-              {verify.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Rocket className="h-4 w-4" />}
-              {verify.isPending ? "Checking your page..." : "Verify badge"}
-            </button>
-            <p className="text-xs text-muted-foreground">Just deployed? Give it a minute, then verify.</p>
-          </div>
-        </li>
-      </ol>
-
-      {listingPrice !== null && (
-        <div className="mt-8 rounded-lg border border-dashed border-border p-4 sm:p-5">
-          <p className="text-sm font-medium text-foreground">Don&apos;t want to add a badge?</p>
-          <p className="mt-1 text-sm leading-6 text-muted-foreground">
-            List {app.title} for a one-time ${listingPrice}. It goes live as soon as payment clears. Badge listings get a
-            free dofollow link; paid listings link to your site as sponsored.
-          </p>
-          <button
-            type="button"
-            onClick={payToList}
-            disabled={paying}
-            className="mt-3 inline-flex h-10 items-center gap-2 rounded-full border border-border px-4 text-sm font-medium text-foreground transition-colors hover:border-[var(--cad-line-hover)] disabled:opacity-60"
-          >
-            {paying ? <Loader2 className="h-4 w-4 animate-spin" /> : <CreditCard className="h-4 w-4" />}
-            {paying ? "Opening checkout..." : `List for $${listingPrice}, one time`}
-          </button>
         </div>
       )}
-
-      <div className="mt-8 flex items-center justify-between border-t border-border pt-4 text-sm">
-        <button type="button" onClick={onBack} className="inline-flex items-center gap-1.5 text-muted-foreground hover:text-foreground">
-          <ArrowLeft className="h-3.5 w-3.5" />
-          Launch another app
-        </button>
-        <span className="text-xs text-muted-foreground">Not ready? It stays saved under Your launches.</span>
-      </div>
     </div>
   );
 }
@@ -785,25 +879,29 @@ export default function SubmitLaunchClient() {
   };
 
   if (isLoading) return null;
+  // The details step is a single quiet column, like DevHunt; badge and share keep the stepper and side panel.
+  const focused = isAuthenticated && step === 0;
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
       <Header />
       <main className="flex-1">
-        <div className="mx-auto max-w-[1080px] px-4 pb-16 pt-8 md:px-8 md:pt-12">
+        <div className={`mx-auto px-4 pb-20 pt-8 md:px-8 md:pt-12 ${focused ? "max-w-[680px]" : "max-w-[1080px]"}`}>
           <Link href="/launches" className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground">
             <ArrowLeft className="h-3.5 w-3.5" />
             App launches
           </Link>
-          <h1 className="mt-5 text-3xl font-semibold text-foreground md:text-4xl">Launch your app</h1>
-          <p className="mt-2 max-w-[60ch] text-base leading-7 text-muted-foreground">
-            Get a public page for what you built with Claude, collect upvotes and feedback from builders. It takes about a
-            minute.
-          </p>
-
-          <div className="mt-6 max-w-[760px]">
-            <DofollowBanner cta={false} />
-          </div>
+          {!isAuthenticated && (
+            <>
+              <h1 className="mt-5 text-3xl font-semibold text-foreground md:text-4xl">Launch your app</h1>
+              <p className="mt-2 max-w-[60ch] text-base leading-7 text-muted-foreground">
+                Get a public page for what you built with Claude, collect upvotes and feedback from builders. It takes about a minute.
+              </p>
+              <div className="mt-6 max-w-[760px]">
+                <DofollowBanner cta={false} />
+              </div>
+            </>
+          )}
 
           {!isAuthenticated ? (
             <div className="mt-8 max-w-[560px] rounded-lg border border-border bg-card p-6">
@@ -822,11 +920,13 @@ export default function SubmitLaunchClient() {
             </div>
           ) : (
             <>
-              <div className="mt-8">
-                <Stepper step={step} />
-              </div>
+              {!focused && (
+                <div className="mt-8">
+                  <Stepper step={step} />
+                </div>
+              )}
 
-              <div className="mt-6 grid gap-8 lg:grid-cols-[minmax(0,1fr)_320px] lg:items-start">
+              <div className={focused || step === 1 ? "mt-10" : "mt-6 grid gap-8 lg:grid-cols-[minmax(0,1fr)_320px] lg:items-start"}>
                 <div className="min-w-0">
                   {step === 1 && activeApp ? (
                     <BadgeStep
@@ -840,16 +940,24 @@ export default function SubmitLaunchClient() {
                   ) : step === 2 && activeApp ? (
                     <ShareStep app={activeApp} onAnother={startOver} />
                   ) : stage === "url" ? (
-                    <LaunchStart initialUrl={form.app_url} onContinue={(url) => void startFromUrl(url)} onManual={() => {
-                        draftMakerComment();
-                        setStage("form");
-                      }} />
+                    <>
+                      <LaunchStart initialUrl={form.app_url} onContinue={(url) => void startFromUrl(url)} onManual={() => {
+                          draftMakerComment();
+                          setStage("form");
+                        }} />
+                      {apps.length > 0 && (
+                        <div className="mt-14">
+                          <MyLaunches apps={apps} onContinue={continueApp} />
+                        </div>
+                      )}
+                    </>
                   ) : stage === "reading" ? (
                     <LaunchReading url={form.app_url} />
                   ) : (
-                    <form onSubmit={handleSubmit} className="rounded-lg border border-border bg-card p-5 sm:p-7" noValidate>
-                      <div className="mb-6">
-                        <h2 className="text-xl font-semibold text-foreground">Review your launch</h2>
+                    <form onSubmit={handleSubmit} noValidate>
+                      <div className="mb-10">
+                        <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-primary">Launch</p>
+                        <h2 className="mt-3 font-sans text-3xl font-semibold tracking-tight text-foreground md:text-4xl">Review your launch</h2>
                         {autofill.isSuccess && filledFrom ? (
                           <p className="mt-3 rounded-lg border border-green-500/30 bg-green-500/[0.06] px-3.5 py-2.5 font-mono text-xs text-green-600 dark:text-green-400">
                             ✓ Filled in from {filledFrom.replace(/^https?:\/\//, "")}. Check everything, then continue.
@@ -861,7 +969,7 @@ export default function SubmitLaunchClient() {
                         )}
                       </div>
 
-                      <div className="space-y-8">
+                      <div className="space-y-12">
                         <FormSection n="01" title="The basics">
                         <Field label="Your app's URL" htmlFor="app_url" required>
                           <div className="flex gap-2">
@@ -883,7 +991,7 @@ export default function SubmitLaunchClient() {
                                 runAutofill(form.app_url);
                               }}
                               disabled={autofill.isPending || !form.app_url.trim()}
-                              className="inline-flex h-11 shrink-0 items-center gap-1.5 rounded-lg border border-border bg-card px-3.5 text-sm font-medium text-foreground transition-colors hover:border-[var(--cad-line-hover)] disabled:opacity-50"
+                              className="inline-flex h-12 shrink-0 items-center gap-1.5 rounded-[10px] bg-foreground/[0.06] px-4 text-sm font-medium text-foreground transition-colors hover:bg-foreground/[0.1] disabled:opacity-50"
                             >
                               {autofill.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
                               <span className="hidden sm:inline">{autofill.isPending ? "Reading..." : "Auto-fill"}</span>
@@ -892,7 +1000,7 @@ export default function SubmitLaunchClient() {
                           {autofill.isPending && <p className="text-xs text-muted-foreground" aria-live="polite">Reading your page...</p>}
                         </Field>
 
-                        <div className="grid gap-5 sm:grid-cols-2">
+                        <div className="space-y-6">
                           <Field label="Name" htmlFor="title" required>
                             <input id="title" value={form.title} onChange={(e) => set("title", e.target.value)} maxLength={80} placeholder="Claude Desk" className={inputClass} />
                           </Field>
@@ -968,26 +1076,26 @@ export default function SubmitLaunchClient() {
                         </FormSection>
                       </div>
 
-                      <div className="mt-7 flex flex-wrap items-center gap-3 border-t border-border pt-5">
+                      <div className="mt-12 space-y-3">
                         <button
                           type="submit"
                           disabled={submit.isPending || anyUploading}
-                          className="inline-flex h-11 items-center gap-2 rounded-full bg-foreground px-6 text-sm font-medium text-background transition-colors hover:bg-foreground/85 disabled:opacity-60"
+                          className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-[12px] bg-primary text-[15px] font-medium text-primary-foreground transition-opacity hover:opacity-90 disabled:opacity-60"
                         >
                           {submit.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
                           {submit.isPending ? "Saving..." : anyUploading ? "Uploading..." : "Continue to badge"}
                           {!submit.isPending && <ArrowRight className="h-4 w-4" />}
                         </button>
-                        <p className="text-xs text-muted-foreground">Nothing is public until the badge is verified. Add the story, video, platforms and links any time from Edit.</p>
+                        <p className="text-center text-xs text-muted-foreground">Nothing is public until the badge is verified. Add the story, video, platforms and links any time from Edit.</p>
                       </div>
                     </form>
                   )}
                 </div>
 
-                <aside className="space-y-4 lg:sticky lg:top-24">
+                {!focused && step !== 1 && <aside className="space-y-4 lg:sticky lg:top-24">
                   {step === 0 && stage === "form" && <LivePreview form={form} media={media} />}
-                  <MyLaunches apps={apps} activeId={step === 1 ? activeApp?.id : undefined} onContinue={continueApp} />
-                </aside>
+                  <MyLaunches apps={apps} onContinue={continueApp} />
+                </aside>}
               </div>
             </>
           )}
