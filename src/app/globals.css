@@ -665,3 +665,41 @@ body:has([role="dialog"][data-state="open"], [role="alertdialog"][data-state="op
     animation: none;
   }
 }
+
+/* Upvote feedback on feed posts: arrow pops, a ring bursts, the count rolls up. */
+@keyframes upvote-pop {
+  0% { transform: translateY(0) scale(1); }
+  30% { transform: translateY(-3px) scale(1.35); }
+  60% { transform: translateY(0) scale(0.9); }
+  100% { transform: translateY(0) scale(1); }
+}
+
+@keyframes upvote-ring {
+  from { opacity: 0.55; transform: scale(0.4); }
+  to { opacity: 0; transform: scale(1.9); }
+}
+
+@keyframes upvote-count-up {
+  from { opacity: 0; transform: translateY(70%); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes upvote-count-down {
+  from { opacity: 0; transform: translateY(-70%); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.upvote-pop { animation: upvote-pop 420ms cubic-bezier(0.3, 1.4, 0.5, 1) both; }
+.upvote-ring { animation: upvote-ring 520ms ease-out both; }
+.upvote-count-up { animation: upvote-count-up 260ms ease-out both; }
+.upvote-count-down { animation: upvote-count-down 260ms ease-out both; }
+
+@media (prefers-reduced-motion: reduce) {
+  .upvote-pop,
+  .upvote-ring,
+  .upvote-count-up,
+  .upvote-count-down {
+    animation: none;
+  }
+  .upvote-ring { display: none; }
+}

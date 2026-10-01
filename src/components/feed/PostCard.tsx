@@ -3,7 +3,8 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useQueryClient } from "@tanstack/react-query";
-import { ChevronUp, Eye, Link2, MessageSquare } from "lucide-react";
+import { Eye, Link2, MessageSquare } from "lucide-react";
+import { UpvoteCount, UpvoteIcon } from "@/components/feed/UpvoteMotion";
 import { toast } from "sonner";
 
 import UserMarkdown from "@/components/shared/UserMarkdown";
@@ -22,7 +23,7 @@ const SITE_URL = "https://www.claudeai.directory";
 const LONG_POST = 420; // characters before "See more"
 
 const action =
-  "inline-flex h-9 items-center gap-1.5 rounded-full px-3 text-[13px] font-medium text-muted-foreground transition-colors hover:bg-[var(--cad-control)] hover:text-foreground";
+  "inline-flex h-9 items-center gap-1.5 rounded-full px-3 text-[13px] font-medium text-muted-foreground transition-[color,background-color,transform] duration-150 hover:bg-[var(--cad-control)] hover:text-foreground";
 
 function Upvote({ post, voted: initialVoted }: { post: Thread; voted: boolean }) {
   const { requireAuth } = useSignIn();
@@ -31,6 +32,9 @@ function Upvote({ post, voted: initialVoted }: { post: Thread; voted: boolean })
   const voted = state?.voted ?? initialVoted;
   const count = state?.count ?? post.upvotes ?? 0;
   const [busy, setBusy] = useState(false);
+  // Replays the animation; positive = last change was an upvote.
+  const [bump, setBump] = useState(0);
+  const [wentUp, setWentUp] = useState(true);
 
   const click = () =>
     requireAuth("upvote", async ({ resumed }) => {
@@ -44,8 +48,10 @@ function Upvote({ post, voted: initialVoted }: { post: Thread; voted: boolean })
         }
       }
       setBusy(true);
-      // Optimistic: flip now, settle with the server's count.
+      // Optimistic: flip and animate now, settle with the server's count.
       setState({ voted: !voted, count: count + (voted ? -1 : 1) });
+      setWentUp(!voted);
+      setBump((b) => b + 1);
       try {
         const result = await api.post<{ voted: boolean; upvotes: number }>(`/community/threads/${post.id}/upvote`);
         setState({ voted: result.voted, count: result.upvotes });
@@ -59,10 +65,15 @@ function Upvote({ post, voted: initialVoted }: { post: Thread; voted: boolean })
     });
 
   return (
-    <button type="button" onClick={() => void click()} aria-pressed={voted} className={`${action} ${voted ? "text-primary hover:text-primary" : ""}`}>
-      <ChevronUp className="h-4 w-4" strokeWidth={2.5} />
+    <button
+      type="button"
+      onClick={() => void click()}
+      aria-pressed={voted}
+      className={`${action} active:scale-95 ${voted ? "bg-primary/10 text-primary hover:bg-primary/15 hover:text-primary" : ""}`}
+    >
+      <UpvoteIcon voted={voted} bump={bump} />
       {voted ? "Upvoted" : "Upvote"}
-      {count > 0 && <span className="tabular-nums">{count}</span>}
+      {count > 0 && <UpvoteCount count={count} bump={bump} up={wentUp} />}
     </button>
   );
 }
@@ -106,7 +117,7 @@ function InlineComments({ post, onCount }: { post: Thread; onCount: (n: number) 
             {shown.map((r) => (
               <li key={r.id} className="flex gap-2.5">
                 <DiscussionAvatar src={r.author_avatar} name={r.author} size="sm" />
-                <div className="min-w-0 flex-1 rounded-lg bg-[var(--cad-control)] px-3 py-2">
+                <div className="min-w-0 flex-1 rounded-[4px] bg-[var(--cad-control)] px-3 py-2">
                   <div className="flex items-baseline gap-1.5 text-[13px]">
                     {r.author_username ? (
                       <Link href={`/u/${r.author_username}`} className="font-semibold text-foreground hover:underline">
@@ -173,7 +184,7 @@ export function PostCard({ post, voted, onDeleted }: { post: Thread; voted: bool
   };
 
   return (
-    <article className="overflow-hidden rounded-xl border border-border bg-card">
+    <article className="overflow-hidden rounded-[6px] border border-border bg-card">
       <div className="px-4 pt-4 sm:px-5">
         <header className="flex items-start gap-3">
           <DiscussionAvatar src={post.author_avatar} name={post.author} />

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowRight, AtSign, BookOpen, Briefcase, Flame, Home, PenSquare, Rocket, Users } from "lucide-react";
+import { AtSign, BookOpen, Briefcase, Flame, Home, PenSquare, Rocket, Users } from "lucide-react";
 
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
@@ -9,7 +9,9 @@ import { CollectionPageSchema } from "@/components/seo/JsonLd";
 import { FeedClient } from "@/components/feed/FeedClient";
 import { FEED_PAGE_SIZE } from "@/lib/feed";
 import { fetchApi } from "@/lib/api-server";
-import type { Thread } from "@/types";
+import type { PublicProfile, ShowcaseProject, Thread } from "@/types";
+import { FeedSidebar } from "@/components/feed/FeedSidebar";
+import { rankedLaunches } from "@/lib/home-community";
 import { FromX, type FromXParams } from "./FromX";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.claudeai.directory";
@@ -56,7 +58,7 @@ const MORE_LINKS = [
 ];
 
 function LeftNav({ tab }: { tab: Tab }) {
-  const item = "flex h-10 items-center gap-3 rounded-lg px-3 text-sm transition-colors";
+  const item = "flex h-10 items-center gap-3 rounded-[4px] px-3 text-sm transition-colors";
   return (
     <aside className="hidden lg:sticky lg:top-24 lg:block">
       <nav aria-label="Feed" className="space-y-0.5">
@@ -96,48 +98,17 @@ function LeftNav({ tab }: { tab: Tab }) {
   );
 }
 
-function Sidebar() {
-  return (
-    <aside className="hidden space-y-3 xl:sticky xl:top-24 xl:block">
-      <div className="rounded-xl border border-border bg-card p-5">
-        <h2 className="text-sm font-semibold text-foreground">About the feed</h2>
-        <p className="mt-2 text-[13px] leading-6 text-muted-foreground">
-          A place for people building with Claude. Share what you shipped, a workflow that works, or a question you are stuck on.
-        </p>
-        <ul className="mt-3 space-y-1.5 text-[13px] text-muted-foreground">
-          <li>Be useful and specific</li>
-          <li>Show your work, not just a link</li>
-          <li>No spam or repeated self-promotion</li>
-        </ul>
-      </div>
-      <Link href="/members" className="group flex items-center justify-between rounded-xl border border-border bg-card p-5 transition-colors hover:border-[var(--cad-line-hover)]">
-        <span>
-          <span className="flex items-center gap-2 text-sm font-semibold text-foreground">
-            <Users className="h-4 w-4 text-primary" />
-            Meet the members
-          </span>
-          <span className="mt-1 block text-[13px] text-muted-foreground">See who is building with Claude.</span>
-        </span>
-        <ArrowRight className="h-4 w-4 shrink-0 text-muted-foreground/50 group-hover:text-muted-foreground" />
-      </Link>
-      <Link href="/launches" className="group flex items-center justify-between rounded-xl border border-border bg-card p-5 transition-colors hover:border-[var(--cad-line-hover)]">
-        <span>
-          <span className="text-sm font-semibold text-foreground">Launched something?</span>
-          <span className="mt-1 block text-[13px] text-muted-foreground">List it on Launches to get upvotes and a link.</span>
-        </span>
-        <ArrowRight className="h-4 w-4 shrink-0 text-muted-foreground/50 group-hover:text-muted-foreground" />
-      </Link>
-    </aside>
-  );
-}
-
 export default async function FeedPage({ searchParams }: { searchParams: Promise<Params> }) {
   const params = await searchParams;
   const tab = tabOf(params);
   const sort = tab === "popular" ? "popular" : "latest";
   // Posts change often; the API caches in redis and clears on every write.
-  const posts =
-    tab === "x" ? [] : ((await fetchApi<Thread[]>(`/community/threads?sort=${sort}&limit=${FEED_PAGE_SIZE}`, { revalidate: 0 })) ?? []);
+  const [postsData, showcase, membersData] = await Promise.all([
+    tab === "x" ? Promise.resolve([]) : fetchApi<Thread[]>(`/community/threads?sort=${sort}&limit=${FEED_PAGE_SIZE}`, { revalidate: 0 }),
+    fetchApi<ShowcaseProject[]>("/showcase?limit=100"),
+    fetchApi<{ members: PublicProfile[]; total: number }>("/users?per_page=8"),
+  ]);
+  const posts = postsData ?? [];
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
@@ -179,7 +150,7 @@ export default async function FeedPage({ searchParams }: { searchParams: Promise
             </div>
           </div>
 
-          <Sidebar />
+          <FeedSidebar launches={rankedLaunches(showcase ?? []).slice(0, 4)} members={membersData?.members ?? []} memberTotal={membersData?.total ?? 0} />
         </div>
       </main>
       <Footer />

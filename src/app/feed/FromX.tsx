@@ -91,7 +91,7 @@ export async function FromX({ params }: { params: FromXParams }) {
           ))}
         </div>
       ) : (
-        <div className="mt-5 rounded-xl border border-dashed border-border px-6 py-16 text-center">
+        <div className="mt-5 rounded-[6px] border border-dashed border-border px-6 py-16 text-center">
           <p className="text-sm font-medium text-foreground">No tweets here yet.</p>
           <p className="mt-1 text-sm text-muted-foreground">
             {source || view === "articles" ? (

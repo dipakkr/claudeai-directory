@@ -66,7 +66,7 @@ export function Composer({ onPosted }: { onPosted: (post: Thread) => void }) {
   };
 
   return (
-    <div id="compose" className="scroll-mt-24 rounded-xl border border-border bg-card p-4 sm:p-5">
+    <div id="compose" className="scroll-mt-24 rounded-[6px] border border-border bg-card p-4 sm:p-5">
       <div className="flex gap-3">
         {user ? (
           <DiscussionAvatar src={user.avatar} name={user.name || user.username || "You"} />
@@ -99,7 +99,7 @@ export function Composer({ onPosted }: { onPosted: (post: Thread) => void }) {
             className="w-full resize-none bg-transparent py-2 text-[15px] leading-6 text-foreground placeholder:text-muted-foreground focus:outline-none"
           />
           {showLink && (
-            <div className="mt-2 flex items-center gap-2 rounded-lg border border-border bg-background px-3">
+            <div className="mt-2 flex items-center gap-2 rounded-[4px] border border-border bg-background px-3">
               <Link2 className="h-4 w-4 shrink-0 text-muted-foreground" />
               <input
                 value={link}

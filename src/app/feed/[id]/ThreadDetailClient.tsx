@@ -6,7 +6,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { Skeleton } from "@/components/ui/skeleton";
-import { ArrowLeft, ArrowRight, ChevronUp, Eye, Github, Globe, Link2, Linkedin, MessageSquare, PenSquare } from "lucide-react";
+import { ArrowLeft, ArrowRight, Eye, Github, Globe, Link2, Linkedin, MessageSquare, PenSquare } from "lucide-react";
 import UserMarkdown from "@/components/shared/UserMarkdown";
 import Discussion from "@/components/discussion/Discussion";
 import { communityVotesQuery, useThread, useReplies, useCreateReply, useCommunityVotes, useCommunityUpvote } from "@/hooks/use-community";
@@ -14,6 +14,7 @@ import { useSignIn } from "@/components/auth/SignInDialog";
 import { useAuth } from "@/lib/auth";
 import { toast } from "sonner";
 import { formatPlainPost } from "@/lib/format-post";
+import { UpvoteCount, UpvoteIcon } from "@/components/feed/UpvoteMotion";
 import { countryName } from "@/lib/profile-options";
 import type { PublicProfile, Reply, Thread } from "@/types";
 import { postTitle } from "@/lib/feed";
@@ -104,12 +105,16 @@ function VoteButton({
   const voted = state?.voted ?? ctx.voted.has(id);
   const shown = state?.count ?? count;
   const [busy, setBusy] = useState(false);
+  const [bump, setBump] = useState(0);
 
   const click = async () => {
     if (busy) return;
     setBusy(true);
     const result = await ctx.onVote(type, id);
-    if (result) setState({ voted: result.voted, count: result.upvotes });
+    if (result) {
+      setState({ voted: result.voted, count: result.upvotes });
+      setBump((b) => b + 1);
+    }
     setBusy(false);
   };
 
@@ -119,13 +124,15 @@ function VoteButton({
         type="button"
         onClick={click}
         aria-pressed={voted}
-        className={`cursor-pointer inline-flex h-10 items-center gap-2 rounded-full border px-4 text-sm font-medium transition-colors ${
+        className={`cursor-pointer inline-flex h-10 items-center gap-2 rounded-full border px-4 text-sm font-medium transition-[color,background-color,border-color,transform] duration-150 active:scale-95 ${
           voted ? "border-primary bg-primary text-primary-foreground" : "border-border bg-card text-foreground hover:border-primary/60"
         }`}
       >
-        <ChevronUp className="h-4 w-4" strokeWidth={2.5} />
+        <UpvoteIcon voted={voted} bump={bump} />
         {voted ? "Upvoted" : "Upvote"}
-        <span className={`tabular-nums ${voted ? "" : "text-muted-foreground"}`}>{shown}</span>
+        <span className={voted ? "" : "text-muted-foreground"}>
+          <UpvoteCount count={shown} bump={bump} up={voted} />
+        </span>
       </button>
     );
   }
@@ -136,7 +143,7 @@ function VoteButton({
       aria-pressed={voted}
       className={`cursor-pointer inline-flex items-center gap-1 font-medium transition-colors ${voted ? "text-primary" : "hover:text-foreground"}`}
     >
-      <ChevronUp className="h-3.5 w-3.5" strokeWidth={2.5} />
+      <UpvoteIcon voted={voted} bump={bump} className="h-3.5 w-3.5" />
       {voted ? "Upvoted" : "Upvote"}
       {shown > 0 && <span className="tabular-nums">({shown})</span>}
     </button>
@@ -375,7 +382,7 @@ export default function ThreadDetail({
               </article>
 
               <aside className="space-y-3 lg:sticky lg:top-24">
-                <div className="overflow-hidden rounded-xl border border-border bg-card">
+                <div className="overflow-hidden rounded-[6px] border border-border bg-card">
                   <SidebarSection title="Posted by">
                     <div className="flex items-center gap-3">
                       <AuthorAvatar src={thread.author_avatar} author={thread.author} className="h-10 w-10 text-sm" />
@@ -431,7 +438,7 @@ export default function ThreadDetail({
                       <ul className="-mx-2">
                         {related.map((item) => (
                           <li key={item.id}>
-                            <Link href={`/feed/${item.id}`} className="group block rounded-lg px-2 py-2 transition-colors hover:bg-background">
+                            <Link href={`/feed/${item.id}`} className="group block rounded-[4px] px-2 py-2 transition-colors hover:bg-background">
                               <span className="line-clamp-2 text-sm leading-5 text-foreground group-hover:text-primary">{postTitle(item)}</span>
                               <span className="mt-0.5 block text-xs text-muted-foreground">
                                 {item.replies} {item.replies === 1 ? "reply" : "replies"} · {timeAgo(item.created_at)}
@@ -450,7 +457,7 @@ export default function ThreadDetail({
 
                 <Link
                   href="/feed#compose"
-                  className="flex items-center gap-3 rounded-xl border border-primary/25 bg-primary/[0.06] px-4 py-3.5 transition-colors hover:border-primary/40"
+                  className="flex items-center gap-3 rounded-[6px] border border-primary/25 bg-primary/[0.06] px-4 py-3.5 transition-colors hover:border-primary/40"
                 >
                   <PenSquare className="h-4 w-4 shrink-0 text-primary" />
                   <span className="text-sm">
@@ -461,7 +468,7 @@ export default function ThreadDetail({
               </aside>
             </div>
           ) : (
-            <div className="rounded-xl border border-dashed border-border px-6 py-16 text-center">
+            <div className="rounded-[6px] border border-dashed border-border px-6 py-16 text-center">
               <p className="text-sm font-medium text-foreground">This post was not found.</p>
               <Link href="/feed" className="mt-3 inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground">
                 <ArrowLeft className="h-3.5 w-3.5" />
