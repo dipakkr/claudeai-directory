@@ -16,12 +16,12 @@ export default function AboutPage() {
       <Header />
       <main className="flex-1">
         <div className="container max-w-3xl py-16">
-          <h1 className="text-3xl font-bold tracking-tight mb-8">
+          <h1 className="text-2xl font-bold tracking-tight mb-6">
             About ClaudeAI Directory
           </h1>
 
-          <div className="prose prose-neutral dark:prose-invert max-w-none space-y-6 text-muted-foreground">
-            <p className="text-lg leading-relaxed">
+          <div className="prose prose-sm prose-neutral dark:prose-invert max-w-none space-y-5 text-[14.5px] leading-7 text-muted-foreground">
+            <p className="text-base leading-relaxed">
               <strong className="text-foreground">ClaudeAI Directory</strong>{" "}
               (claudeai.directory) is an independent, community-driven project built by{" "}
               <a href="https://x.com/dipakkr_" target="_blank" rel="noopener noreferrer me" className="text-primary hover:underline">
@@ -39,7 +39,7 @@ export default function AboutPage() {
             </p>
 
             <div className="rounded-lg border border-border bg-muted/30 p-6 my-8">
-              <h2 className="text-lg font-semibold text-foreground mt-0 mb-3">
+              <h2 className="text-base font-semibold text-foreground mt-0 mb-3">
                 Important Disclaimer
               </h2>
               <p className="mb-0">
@@ -70,24 +70,24 @@ export default function AboutPage() {
               </p>
             </div>
 
-            <h2 className="text-xl font-semibold text-foreground">
+            <h2 className="text-lg font-semibold text-foreground">
               What We Offer
             </h2>
             <ul className="space-y-2">
               <li>
-                <strong className="text-foreground">Skills Directory</strong>
+                <strong className="text-foreground">Skills Directory</strong>:{" "}
                 Browse and discover Claude skills and capabilities
               </li>
               <li>
-                <strong className="text-foreground">MCP Servers</strong>
+                <strong className="text-foreground">MCP Servers</strong>:{" "}
                 Explore Model Context Protocol servers and integrations
               </li>
               <li>
-                <strong className="text-foreground">Prompts Library</strong>
+                <strong className="text-foreground">Prompts Library</strong>:{" "}
                 Find and share effective prompts for Claude
               </li>
               <li>
-                <strong className="text-foreground">Learning Resources</strong>{" "}
+                <strong className="text-foreground">Learning Resources</strong>:{" "}
                 Guides, tutorials, and blog posts to level up your AI skills
               </li>
               <li>
@@ -100,7 +100,7 @@ export default function AboutPage() {
               </li>
             </ul>
 
-            <h2 className="text-xl font-semibold text-foreground">
+            <h2 className="text-lg font-semibold text-foreground">
               Community Driven
             </h2>
             <p>
@@ -117,7 +117,7 @@ export default function AboutPage() {
               .
             </p>
 
-            <h2 className="text-xl font-semibold text-foreground">Contact</h2>
+            <h2 className="text-lg font-semibold text-foreground">Contact</h2>
             <p>
               Have questions, feedback, or want to get in touch? Reach out to us
               through our{" "}
