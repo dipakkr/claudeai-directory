@@ -15,6 +15,7 @@ export interface Pulse {
   generated_at: string;
   stats: {
     members: { total: number; today: number };
+    visitors_24h?: number;
     launches: { total: number; week: number };
     listings: { total: number };
     installs: { total: number; today: number };
@@ -72,7 +73,7 @@ export function HomePulse({ pulse }: { pulse: Pulse }) {
   return (
     <div className="mx-auto mt-8 max-w-[760px] overflow-hidden rounded-[10px] border border-border">
       <div className="grid grid-cols-2 gap-px bg-border sm:grid-cols-4">
-        <Stat label="members" value={s.members.total} delta={s.members.today ? `+${s.members.today} today` : undefined} />
+        <Stat label="visitors_24h" value={s.visitors_24h ?? 0} />
         <Stat label="apps_launched" value={s.launches.total} delta={s.launches.week ? `+${s.launches.week} this week` : undefined} />
         <Stat label="listings" value={s.listings.total} />
         <Stat label="install_actions" value={s.installs.total} delta={s.installs.today ? `+${s.installs.today} today` : undefined} />
