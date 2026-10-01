@@ -7,6 +7,7 @@ import { OpenPanelComponent } from '@openpanel/nextjs';
 import SideAdBillboards from "@/components/layout/SideAdBillboards";
 import { ExternalLinkTracker } from "@/components/tracking/ExternalLinkTracker";
 import { VisitBeacon } from "@/components/tracking/VisitBeacon";
+import { ViewAsBanner } from "@/components/layout/ViewAsBanner";
 import { LaunchImpressions } from "@/components/tracking/LaunchImpressions";
 import { KeyClickTracker } from "@/components/tracking/KeyClickTracker";
 
@@ -93,6 +94,7 @@ export default function RootLayout({
       >
         <Providers>
           {/* Discord announcement banner paused; the component stays in components/layout/AnnouncementBanner.tsx. */}
+          <ViewAsBanner />
           <SideAdBillboards />
           <ExternalLinkTracker />
           <VisitBeacon />
