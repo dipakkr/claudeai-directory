@@ -63,12 +63,12 @@ export default function HomeContent({ items, orders, launches, community, member
         </p>
       </section>
 
-      {/* Launches sit right under the hero: what people are building with Claude. */}
-      {launches}
-
-      <section className="mx-auto mt-16 max-w-[840px] px-4 md:px-8">
+      <section className="mx-auto max-w-[840px] px-4 md:px-8">
         <DirectoryList items={items} orders={orders} showTypeFilter hideSearch feedId="trending" pageSize={8} />
       </section>
+
+      {/* Then what people are building with Claude. */}
+      <div className="mt-16">{launches}</div>
 
       {community}
 

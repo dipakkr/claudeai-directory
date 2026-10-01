@@ -16,115 +16,86 @@ export default function AboutPage() {
       <Header />
       <main className="flex-1">
         <div className="container max-w-3xl py-16">
-          <h1 className="text-2xl font-bold tracking-tight mb-6">
-            About ClaudeAI Directory
-          </h1>
+          <h1 className="text-2xl font-bold tracking-tight mb-6">About Claude AI Directory</h1>
 
           <div className="prose prose-sm prose-neutral dark:prose-invert max-w-none space-y-5 text-[14.5px] leading-7 text-muted-foreground">
             <p className="text-base leading-relaxed">
-              <strong className="text-foreground">ClaudeAI Directory</strong>{" "}
-              (claudeai.directory) is an independent, community-driven project built by{" "}
+              Claude AI Directory (claudeai.directory) is an independent, community-run directory built by{" "}
               <a href="https://x.com/dipakkr_" target="_blank" rel="noopener noreferrer me" className="text-primary hover:underline">
                 @dipakkr_
               </a>{" "}
-              to help developers, builders, and AI enthusiasts discover and understand more about the Claude AI ecosystem.
+              to help people find, install and share what works with Claude and Claude Code.
             </p>
 
             <p>
-              We curate skills, MCP servers, prompts, guides, jobs, and other
-              resources that help you get the most out of Claude AI. Whether
-              you&apos;re a seasoned developer or just getting started, our goal
-              is to make the Claude ecosystem more accessible and easier to
-              navigate.
+              Every listing aims to answer four questions quickly: what it is, what it helps you do, who built it and how to
+              install it. Where a resource can be installed, we show the install command instead of sending you to dig
+              through a README.
             </p>
 
-            <div className="rounded-lg border border-border bg-muted/30 p-6 my-8">
-              <h2 className="text-base font-semibold text-foreground mt-0 mb-3">
-                Important Disclaimer
-              </h2>
+            <div className="rounded-lg border border-border bg-muted/30 p-5 my-8">
+              <h2 className="text-base font-semibold text-foreground mt-0 mb-2">Not affiliated with Anthropic</h2>
               <p className="mb-0">
-                ClaudeAI Directory is <strong className="text-foreground">NOT</strong>{" "}
-                associated with Anthropic, Claude.com, or Claude.ai in any way.
-                This is a community project and we are in{" "}
-                <strong className="text-foreground">no way</strong> officially
-                associated with{" "}
-                <Link
-                  href="https://claude.ai"
-                  className="text-primary hover:underline"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
+                Claude AI Directory is an independent community project. It is not affiliated with, endorsed by or sponsored
+                by Anthropic,{" "}
+                <a href="https://claude.ai" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
                   Claude.ai
-                </Link>{" "}
-                or{" "}
-                <Link
-                  href="https://anthropic.com"
-                  className="text-primary hover:underline"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Anthropic
-                </Link>
-                . All trademarks and brand names belong to their respective
-                owners.
+                </a>{" "}
+                or Claude.com. Claude and Anthropic are trademarks of Anthropic. All other names belong to their owners.
               </p>
             </div>
 
-            <h2 className="text-lg font-semibold text-foreground">
-              What We Offer
-            </h2>
-            <ul className="space-y-2">
+            <h2 className="text-lg font-semibold text-foreground">What you will find here</h2>
+            <ul className="space-y-1.5">
               <li>
-                <strong className="text-foreground">Skills Directory</strong>:{" "}
-                Browse and discover Claude skills and capabilities
+                <Link href="/mcp" className="font-normal text-foreground underline-offset-4">MCP servers</Link>: connect Claude to your tools and
+                data, with the command to add each one to Claude Code.
               </li>
               <li>
-                <strong className="text-foreground">MCP Servers</strong>:{" "}
-                Explore Model Context Protocol servers and integrations
+                <Link href="/skills" className="font-normal text-foreground underline-offset-4">Skills</Link> and{" "}
+                <Link href="/agents" className="font-normal text-foreground underline-offset-4">Agents</Link>: reusable instructions and
+                subagents for coding, testing, research and more.
               </li>
               <li>
-                <strong className="text-foreground">Prompts Library</strong>:{" "}
-                Find and share effective prompts for Claude
+                <Link href="/plugins" className="font-normal text-foreground underline-offset-4">Plugins</Link>: Claude Code plugins from
+                Anthropic&apos;s published marketplaces. Install counts shown there are Anthropic&apos;s.
               </li>
               <li>
-                <strong className="text-foreground">Learning Resources</strong>:{" "}
-                Guides, tutorials, and blog posts to level up your AI skills
+                <Link href="/launches" className="font-normal text-foreground underline-offset-4">Launches</Link>: apps people built with
+                Claude, with upvotes and feedback from the community.
               </li>
               <li>
-                <strong className="text-foreground">Job Board</strong>: AI and
-                Claude-related job opportunities
+                <Link href="/feed" className="font-normal text-foreground underline-offset-4">Community feed</Link>: posts, questions and
+                answers from people building with Claude.
               </li>
               <li>
-                <strong className="text-foreground">Community</strong>: Connect
-                with other builders in the ecosystem
+                <Link href="/guides" className="font-normal text-foreground underline-offset-4">Guides</Link>,{" "}
+                <Link href="/prompts" className="font-normal text-foreground underline-offset-4">prompts</Link> and{" "}
+                <Link href="/jobs" className="font-normal text-foreground underline-offset-4">jobs</Link> for learning Claude and finding work
+                with it.
               </li>
             </ul>
 
-            <h2 className="text-lg font-semibold text-foreground">
-              Community Driven
-            </h2>
+            <h2 className="text-lg font-semibold text-foreground">Add what you built</h2>
             <p>
-              This project is built by the community, for the community. We
-              welcome contributions, resource submissions, and feedback. If
-              you&apos;d like to submit a resource or get involved, visit our{" "}
-              <Link href="/submit" className="text-primary hover:underline">
-                submission page
-              </Link>{" "}
-              or join the{" "}
-              <Link href="/feed" className="text-primary hover:underline">
-                community discussions
-              </Link>
-              .
+              Anyone can list a Skill, MCP server or Agent from its GitHub repository on the{" "}
+              <Link href="/submit" className="text-primary hover:underline">submit page</Link>, or launch an app on{" "}
+              <Link href="/launches/submit" className="text-primary hover:underline">Launches</Link>. Skill, MCP and Agent
+              submissions are reviewed before they go live. Directory rankings come from install activity and recent
+              interest; sponsored spots are always labelled as sponsored.
             </p>
 
             <h2 className="text-lg font-semibold text-foreground">Contact</h2>
             <p>
-              Have questions, feedback, or want to get in touch? Reach out to us
-              through our{" "}
-              <Link href="/feed" className="text-primary hover:underline">
-                community page
-              </Link>
-              .
+              Questions, corrections or ideas: email{" "}
+              <a href="mailto:claudeai.directory@gmail.com" className="text-primary hover:underline">
+                claudeai.directory@gmail.com
+              </a>{" "}
+              or message{" "}
+              <a href="https://x.com/dipakkr_" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
+                @dipakkr_
+              </a>{" "}
+              on X.
             </p>
           </div>
         </div>
