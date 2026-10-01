@@ -58,7 +58,7 @@ const MORE_LINKS = [
 ];
 
 function LeftNav({ tab }: { tab: Tab }) {
-  const item = "flex h-10 items-center gap-3 rounded-[4px] px-3 text-sm transition-colors";
+  const item = "flex h-8 items-center gap-2.5 rounded-[4px] px-2.5 text-[13px] transition-colors";
   return (
     <aside className="hidden lg:sticky lg:top-24 lg:block">
       <nav aria-label="Feed" className="space-y-0.5">
@@ -72,26 +72,26 @@ function LeftNav({ tab }: { tab: Tab }) {
               aria-current={active ? "page" : undefined}
               className={`${item} ${active ? "bg-card font-medium text-foreground ring-1 ring-border" : "text-muted-foreground hover:bg-card hover:text-foreground"}`}
             >
-              <Icon className="h-4 w-4" />
+              <Icon className="h-3.5 w-3.5" />
               {t.label}
             </Link>
           );
         })}
       </nav>
-      <div className="my-4 border-t border-border" />
+      <div className="my-3 border-t border-border" />
       <nav aria-label="Explore" className="space-y-0.5">
         {MORE_LINKS.map(({ href, label, icon: Icon }) => (
           <Link key={href} href={href} className={`${item} text-muted-foreground hover:bg-card hover:text-foreground`}>
-            <Icon className="h-4 w-4" />
+            <Icon className="h-3.5 w-3.5" />
             {label}
           </Link>
         ))}
       </nav>
       <Link
         href={tab === "x" ? "/feed#compose" : "#compose"}
-        className="mt-5 flex h-10 items-center justify-center gap-2 rounded-full bg-primary text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90"
+        className="mt-4 flex h-8 items-center justify-center gap-2 rounded-full bg-primary text-[13px] font-medium text-primary-foreground transition-opacity hover:opacity-90"
       >
-        <PenSquare className="h-4 w-4" />
+        <PenSquare className="h-3.5 w-3.5" />
         Write a post
       </Link>
     </aside>
@@ -116,7 +116,7 @@ export default async function FeedPage({ searchParams }: { searchParams: Promise
       <Header />
       <main className="flex-1">
         {/* Peerlist-style: nav on the left, the feed centred, context on the right. */}
-        <div className="mx-auto grid max-w-[1240px] gap-8 px-4 pb-16 pt-6 md:px-8 lg:grid-cols-[200px_minmax(0,1fr)] lg:items-start xl:grid-cols-[200px_minmax(0,620px)_300px] xl:justify-center">
+        <div className="mx-auto grid max-w-[1240px] gap-8 px-4 pb-16 pt-6 md:px-8 lg:grid-cols-[180px_minmax(0,1fr)] lg:items-start xl:grid-cols-[180px_minmax(0,620px)_300px] xl:justify-center">
           <LeftNav tab={tab} />
 
           <div className="min-w-0">
