@@ -272,13 +272,13 @@ export default async function LaunchDetailPage({
                 </div>
               </div>
               <div className="hidden sm:block">
-                <UpvoteBox slug={project.id} title={project.title} initialCount={upvotes} />
+                <UpvoteBox slug={project.id} title={project.title} initialCount={upvotes} websiteUrl={appUrl} websiteRel={websiteRel} />
               </div>
             </div>
 
             <div className="mt-6 flex flex-wrap items-center gap-2.5 md:pl-30">
               <div className="sm:hidden">
-                <UpvoteBox slug={project.id} title={project.title} initialCount={upvotes} compact />
+                <UpvoteBox slug={project.id} title={project.title} initialCount={upvotes} websiteUrl={appUrl} websiteRel={websiteRel} compact />
               </div>
               {appUrl && (
                 <a

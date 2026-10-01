@@ -703,3 +703,35 @@ body:has([role="dialog"][data-state="open"], [role="alertdialog"][data-state="op
   }
   .upvote-ring { display: none; }
 }
+
+/* Launch upvotes: "+1" floats off, the button shakes when a visit is needed first, and pulses once it's unlocked. */
+@keyframes upvote-float {
+  0% { opacity: 0; transform: translate(-50%, 4px) scale(0.8); }
+  20% { opacity: 1; }
+  100% { opacity: 0; transform: translate(-50%, -28px) scale(1.1); }
+}
+
+@keyframes upvote-shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-4px) rotate(-2deg); }
+  40% { transform: translateX(4px) rotate(2deg); }
+  60% { transform: translateX(-3px); }
+  80% { transform: translateX(2px); }
+}
+
+@keyframes upvote-ready {
+  0% { box-shadow: 0 0 0 0 hsl(var(--primary) / 0.45); }
+  100% { box-shadow: 0 0 0 12px hsl(var(--primary) / 0); }
+}
+
+.upvote-float { animation: upvote-float 750ms ease-out both; }
+.upvote-shake { animation: upvote-shake 420ms ease-in-out both; }
+.upvote-ready { animation: upvote-ready 1.2s ease-out 3; }
+
+@media (prefers-reduced-motion: reduce) {
+  .upvote-float,
+  .upvote-shake,
+  .upvote-ready {
+    animation: none;
+  }
+}

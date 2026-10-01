@@ -4,6 +4,9 @@ import { Fragment, useMemo, useState } from "react";
 import Link from "next/link";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
+import { useLaunchVisited } from "@/components/launches/UpvoteBox";
+import { UpvoteCount } from "@/components/feed/UpvoteMotion";
+import { markLaunchVisited } from "@/lib/launch-visits";
 import {
   ArrowUp,
   Megaphone,
@@ -125,35 +128,62 @@ function VoteButton({
   voted: boolean;
   onVote: () => void;
 }) {
-  const [animating, setAnimating] = useState(false);
+  const website = project.app_url || project.demo_url;
+  const visited = useLaunchVisited(project.id);
+  // Only people who opened the website can upvote; removing a vote is always allowed.
+  const locked = Boolean(website) && !visited && !voted;
+  const [bump, setBump] = useState(0);
+  const [shake, setShake] = useState(0);
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     event.stopPropagation();
-    if (!animating) {
-      setAnimating(true);
-      onVote();
-      setTimeout(() => setAnimating(false), 600);
+    if (locked && website) {
+      setShake((n) => n + 1);
+      track("launch_upvote_gated", { slug: project.id });
+      toast(`Try ${project.title} before you upvote`, {
+        id: `gate-${project.id}`,
+        description: "Upvotes come from people who opened the product.",
+        action: {
+          label: "Visit website",
+          onClick: () => {
+            window.open(website, "_blank", "noopener,noreferrer");
+            markLaunchVisited(project.id);
+          },
+        },
+      });
+      return;
     }
+    setBump((n) => n + 1);
+    onVote();
   };
 
   return (
     <button
+      key={`shake-${shake}`}
       type="button"
       onClick={handleClick}
       disabled={pending}
       aria-pressed={voted}
       aria-label={voted ? `Remove upvote from ${project.title}` : `Upvote ${project.title}`}
-      title={!authenticated ? "Sign in to upvote" : voted ? "You upvoted this. Click to undo." : "Upvote this launch"}
-      className={`flex h-14 w-12 shrink-0 cursor-pointer flex-col items-center justify-center gap-0.5 rounded-xl border shadow-sm transition sm:h-16 sm:w-14 ${
+      title={!authenticated ? "Sign in to upvote" : voted ? "You upvoted this. Click to undo." : locked ? "Try the product first" : "Upvote this launch"}
+      className={`relative flex h-14 w-12 shrink-0 cursor-pointer flex-col items-center justify-center gap-0.5 rounded-[8px] border shadow-sm transition-[transform,background-color,border-color] duration-200 active:scale-95 sm:h-16 sm:w-14 ${
         voted
           ? "border-primary bg-primary/10 text-primary"
           : "border-border bg-background text-foreground hover:border-[var(--cad-line-hover)] hover:bg-card"
-      } ${animating ? "scale-105" : ""} disabled:opacity-70`}
+      } ${locked && shake ? "upvote-shake" : ""} disabled:opacity-70`}
     >
-      <ArrowUp className={`h-4 w-4 transition-transform ${animating ? "scale-125" : ""}`} aria-hidden="true" />
-      <span className={`text-base font-semibold leading-none transition ${animating ? "scale-110" : ""}`}>
-        {project.upvotes ?? 0}
+      {voted && bump > 0 && (
+        <span key={`float-${bump}`} aria-hidden className="upvote-float pointer-events-none absolute -top-1 left-1/2 text-[11px] font-bold text-primary">
+          +1
+        </span>
+      )}
+      <span className="relative inline-flex">
+        {voted && bump > 0 && <span key={`ring-${bump}`} aria-hidden className="upvote-ring absolute inset-[-6px] rounded-full bg-primary/40" />}
+        <ArrowUp key={`arrow-${bump}`} className={`h-4 w-4 ${bump > 0 ? "upvote-pop" : ""}`} aria-hidden="true" />
+      </span>
+      <span className="text-base font-semibold leading-none">
+        <UpvoteCount count={project.upvotes ?? 0} bump={bump} up={voted} />
       </span>
     </button>
   );
