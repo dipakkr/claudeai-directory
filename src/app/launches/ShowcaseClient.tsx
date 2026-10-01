@@ -23,7 +23,6 @@ import { rankedLaunches } from "@/lib/home-community";
 import { useSignIn } from "@/components/auth/SignInDialog";
 import { useAuth } from "@/lib/auth";
 import { SPONSOR_LAUNCH_PRICE, openAdvertiseDialog } from "@/lib/advertise";
-import { DofollowBanner } from "./DofollowBanner";
 import { myLaunchUpvotesQuery, useMyLaunchUpvotes, useShowcaseProjects, useUpvoteShowcase } from "@/hooks/use-showcase";
 import type { ShowcaseProject } from "@/types";
 import { track } from "@/lib/analytics";
@@ -261,47 +260,53 @@ export default function ShowcaseClient({
     <div className="min-h-screen bg-background flex flex-col">
       <Header />
       <main className="flex-1">
-        <section className="mx-auto max-w-[1120px] px-4 pb-6 pt-8 md:px-8 md:pt-11">
-          <div className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
+        <section className="mx-auto max-w-[880px] px-4 pb-4 pt-10 md:px-8 md:pt-14">
+          <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
             <div>
-              <p className="font-mono text-xs uppercase tracking-[0.16em] text-muted-foreground">
-                Community launches
-              </p>
-              <h1 className="mt-2 max-w-[720px] text-balance text-[28px] font-normal leading-tight text-foreground md:text-[38px]">
-                Discover Claude products and their makers
+              <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-primary">Launches</p>
+              <h1 className="mt-3 max-w-[18ch] font-sans text-3xl font-semibold tracking-tight text-foreground md:text-[40px] md:leading-[1.1]">
+                Apps built with Claude, upvoted by builders
               </h1>
+              <p className="mt-3 text-[15px] text-muted-foreground">Try them, meet the makers and upvote your favorites.</p>
             </div>
-            <Button asChild className="h-9 self-start px-4 text-sm">
-              <Link href="/launches/submit">
-                <Plus className="h-4 w-4" />
-                Submit launch
-              </Link>
-            </Button>
+            <Link
+              href="/launches/submit"
+              className="inline-flex h-10 shrink-0 items-center gap-1.5 self-start rounded-full bg-foreground px-4 text-sm font-medium text-background transition-colors hover:bg-foreground/85 sm:self-auto"
+            >
+              <Plus className="h-4 w-4" />
+              Launch your app
+            </Link>
           </div>
 
-          <div className="mt-5 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-            <div className="relative max-w-[420px]">
+          <p className="mt-6 flex flex-wrap items-center gap-x-2 gap-y-1 rounded-[10px] border border-primary/25 bg-primary/[0.05] px-4 py-3 text-[13.5px] text-muted-foreground">
+            <span className="rounded-[4px] bg-foreground/[0.08] px-1.5 py-0.5 font-mono text-[11px] text-foreground">dofollow</span>
+            Listing is free: add our badge to your site and your launch links back with a dofollow link.
+            <Link href="/launches/submit" className="font-medium text-primary hover:underline">
+              Launch your app →
+            </Link>
+          </p>
+
+          <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div className="relative w-full sm:max-w-[300px]">
               <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <input
                 type="search"
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
                 placeholder="Search launches"
-                className="h-10 w-full rounded-lg border border-border bg-card pl-10 pr-4 text-sm text-foreground outline-none transition-colors placeholder:text-muted-foreground focus:border-[var(--cad-line-hover)]"
+                className="h-10 w-full rounded-[10px] border border-transparent bg-foreground/[0.06] pl-10 pr-4 text-sm text-foreground outline-none transition-colors placeholder:text-muted-foreground focus:border-[var(--cad-line-hover)]"
               />
             </div>
             {filters.length > 1 && (
-              <div className="flex flex-wrap gap-2" role="group" aria-label="Filter launches">
+              <div className="flex flex-wrap gap-1.5" role="group" aria-label="Filter launches">
                 {filters.map((f) => (
                   <button
                     key={f.id}
                     type="button"
                     aria-pressed={activeFilter === f.id}
                     onClick={() => setActiveFilter(f.id)}
-                    className={`cursor-pointer rounded-lg border px-3 py-1.5 text-xs transition ${
-                      activeFilter === f.id
-                        ? "border-foreground bg-foreground text-background"
-                        : "border-border bg-card text-muted-foreground hover:border-[var(--cad-line-hover)] hover:text-foreground"
+                    className={`cursor-pointer rounded-full px-3 py-1.5 text-xs transition ${
+                      activeFilter === f.id ? "bg-foreground text-background" : "bg-foreground/[0.06] text-muted-foreground hover:text-foreground"
                     }`}
                   >
                     {f.label}
@@ -312,13 +317,15 @@ export default function ShowcaseClient({
             )}
           </div>
 
-          <div className="mt-6">
-            <DofollowBanner />
+          <div className="mt-8 flex items-center gap-3">
+            <h2 className="shrink-0 font-mono text-[11px] uppercase tracking-[0.16em] text-foreground">All launches</h2>
+            <span className="h-px flex-1 bg-border" aria-hidden />
+            <span className="shrink-0 text-xs text-muted-foreground">Ranked by upvotes</span>
           </div>
         </section>
 
         <section className="mx-auto max-w-[880px] px-4 md:px-8">
-          <ol className="border-t border-border">
+          <ol>
             {visibleProjects.length > 0 ? (
               visibleProjects.map((project, index) => (
                 <Fragment key={project.id}>
