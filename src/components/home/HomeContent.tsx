@@ -12,7 +12,6 @@ interface HomeContentProps {
   orders: Record<SortKey, string[]>;
   launches: ReactNode;
   community: ReactNode;
-  feed?: ReactNode;
   members: PublicProfile[];
   memberCount: number;
 }
@@ -41,7 +40,7 @@ const BROWSE = [
   },
 ];
 
-export default function HomeContent({ items, orders, launches, community, feed, members, memberCount }: HomeContentProps) {
+export default function HomeContent({ items, orders, launches, community, members, memberCount }: HomeContentProps) {
   const count = (type: DirectoryItem["type"]) => items.filter((i) => i.type === type).length;
 
   return (
@@ -72,7 +71,6 @@ export default function HomeContent({ items, orders, launches, community, feed, 
 
       {launches}
 
-      {feed}
 
       <section className="mx-auto mt-10 max-w-[840px] px-4 md:px-8">
         <RecentlyViewed />
