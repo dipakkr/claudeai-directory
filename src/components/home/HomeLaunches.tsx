@@ -37,7 +37,7 @@ export default function HomeLaunches({ projects, unavailable }: { projects: Show
   const shownProjects = projects.slice(0, 3);
 
   return (
-    <section id="launches" aria-labelledby="launches-heading" className="mx-auto mt-16 max-w-[840px] scroll-mt-24 px-4 md:px-8">
+    <section id="launches" aria-labelledby="launches-heading" className="mx-auto max-w-[840px] scroll-mt-24 px-4 md:px-8">
       <h2 id="launches-heading" className="text-2xl leading-tight text-foreground">Built with Claude</h2>
       <p className="mt-2 text-sm leading-6 text-muted-foreground">Top apps launched by the community. Try them, meet the makers and share feedback.</p>
       <div className="mt-5 border-y border-border">
