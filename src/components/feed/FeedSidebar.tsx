@@ -86,22 +86,20 @@ export function FeedSidebar({ launches, members, memberTotal }: { launches: Show
         </Card>
       )}
 
-      <Link
-        href="/launches/submit"
-        className="group flex items-center gap-3 rounded-[6px] border border-primary/25 bg-primary/[0.06] p-4 transition-colors hover:border-primary/40"
-      >
-        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[4px] bg-primary/15 text-primary">
-          <Rocket className="h-4 w-4" />
-        </span>
-        <span className="min-w-0 flex-1">
-          <span className="block text-sm font-medium text-foreground">Built something with Claude?</span>
-          <span className="block text-xs text-muted-foreground">Launch it for upvotes, feedback and a backlink.</span>
-        </span>
-        <ArrowRight className="h-4 w-4 shrink-0 text-muted-foreground group-hover:text-foreground" />
-      </Link>
+      <section className="rounded-[6px] border border-border bg-card p-4">
+        <h2 className="text-sm font-semibold text-foreground">Built something with Claude?</h2>
+        <p className="mt-1 text-[13px] leading-5 text-muted-foreground">Launch it for upvotes, feedback and a backlink.</p>
+        <Link
+          href="/launches/submit"
+          className="mt-3 inline-flex h-8 w-full items-center justify-center gap-1.5 rounded-full bg-primary text-[13px] font-medium text-primary-foreground transition-opacity hover:opacity-90"
+        >
+          <Rocket className="h-3.5 w-3.5" />
+          Launch your app
+        </Link>
+      </section>
 
-      <p className="px-1 text-xs leading-5 text-muted-foreground/80">
-        Feed guidelines: be specific, show your work rather than just a link, and skip repeated self-promotion.
+      <p className="px-1 text-[12px] leading-5 text-muted-foreground/70">
+        Be specific, show your work rather than just a link, and skip repeated self-promotion.
       </p>
     </aside>
   );
