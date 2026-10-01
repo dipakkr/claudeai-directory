@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowRight, Users } from "lucide-react";
+import { ArrowRight, AtSign, BookOpen, Briefcase, Flame, Home, PenSquare, Rocket, Users } from "lucide-react";
 
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
@@ -46,10 +46,60 @@ export async function generateMetadata({ searchParams }: { searchParams: Promise
   };
 }
 
+const TAB_ICONS: Record<Tab, typeof Home> = { latest: Home, popular: Flame, x: AtSign };
+
+const MORE_LINKS = [
+  { href: "/launches", label: "Launches", icon: Rocket },
+  { href: "/members", label: "Members", icon: Users },
+  { href: "/jobs", label: "Jobs", icon: Briefcase },
+  { href: "/guides", label: "Guides", icon: BookOpen },
+];
+
+function LeftNav({ tab }: { tab: Tab }) {
+  const item = "flex h-10 items-center gap-3 rounded-lg px-3 text-sm transition-colors";
+  return (
+    <aside className="hidden lg:sticky lg:top-24 lg:block">
+      <nav aria-label="Feed" className="space-y-0.5">
+        {TABS.map((t) => {
+          const Icon = TAB_ICONS[t.id];
+          const active = tab === t.id;
+          return (
+            <Link
+              key={t.id}
+              href={t.href}
+              aria-current={active ? "page" : undefined}
+              className={`${item} ${active ? "bg-card font-medium text-foreground ring-1 ring-border" : "text-muted-foreground hover:bg-card hover:text-foreground"}`}
+            >
+              <Icon className="h-4 w-4" />
+              {t.label}
+            </Link>
+          );
+        })}
+      </nav>
+      <div className="my-4 border-t border-border" />
+      <nav aria-label="Explore" className="space-y-0.5">
+        {MORE_LINKS.map(({ href, label, icon: Icon }) => (
+          <Link key={href} href={href} className={`${item} text-muted-foreground hover:bg-card hover:text-foreground`}>
+            <Icon className="h-4 w-4" />
+            {label}
+          </Link>
+        ))}
+      </nav>
+      <Link
+        href={tab === "x" ? "/feed#compose" : "#compose"}
+        className="mt-5 flex h-10 items-center justify-center gap-2 rounded-full bg-primary text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90"
+      >
+        <PenSquare className="h-4 w-4" />
+        Write a post
+      </Link>
+    </aside>
+  );
+}
+
 function Sidebar() {
   return (
-    <aside className="hidden space-y-3 lg:sticky lg:top-24 lg:block">
-      <div className="rounded-2xl border border-border bg-card p-5">
+    <aside className="hidden space-y-3 xl:sticky xl:top-24 xl:block">
+      <div className="rounded-xl border border-border bg-card p-5">
         <h2 className="text-sm font-semibold text-foreground">About the feed</h2>
         <p className="mt-2 text-[13px] leading-6 text-muted-foreground">
           A place for people building with Claude. Share what you shipped, a workflow that works, or a question you are stuck on.
@@ -60,7 +110,7 @@ function Sidebar() {
           <li>No spam or repeated self-promotion</li>
         </ul>
       </div>
-      <Link href="/members" className="group flex items-center justify-between rounded-2xl border border-border bg-card p-5 transition-colors hover:border-[var(--cad-line-hover)]">
+      <Link href="/members" className="group flex items-center justify-between rounded-xl border border-border bg-card p-5 transition-colors hover:border-[var(--cad-line-hover)]">
         <span>
           <span className="flex items-center gap-2 text-sm font-semibold text-foreground">
             <Users className="h-4 w-4 text-primary" />
@@ -70,7 +120,7 @@ function Sidebar() {
         </span>
         <ArrowRight className="h-4 w-4 shrink-0 text-muted-foreground/50 group-hover:text-muted-foreground" />
       </Link>
-      <Link href="/launches" className="group flex items-center justify-between rounded-2xl border border-border bg-card p-5 transition-colors hover:border-[var(--cad-line-hover)]">
+      <Link href="/launches" className="group flex items-center justify-between rounded-xl border border-border bg-card p-5 transition-colors hover:border-[var(--cad-line-hover)]">
         <span>
           <span className="text-sm font-semibold text-foreground">Launched something?</span>
           <span className="mt-1 block text-[13px] text-muted-foreground">List it on Launches to get upvotes and a link.</span>
@@ -94,39 +144,42 @@ export default async function FeedPage({ searchParams }: { searchParams: Promise
       <CollectionPageSchema name={TITLE} description={DESCRIPTION} url={`${SITE_URL}/feed`} />
       <Header />
       <main className="flex-1">
-        <div className="mx-auto max-w-[1120px] px-4 pb-16 pt-8 md:px-8 md:pt-10">
-          <PageBreadcrumb items={[{ label: "Feed" }]} />
-          <div className="mt-2">
-            <h1 className="text-[clamp(26px,3.2vw,34px)] font-semibold leading-tight tracking-tight text-foreground">Community Feed</h1>
-            <p className="mt-1.5 text-[15px] text-muted-foreground">What people are building, asking and sharing about Claude.</p>
-          </div>
+        {/* Peerlist-style: nav on the left, the feed centred, context on the right. */}
+        <div className="mx-auto grid max-w-[1240px] gap-8 px-4 pb-16 pt-6 md:px-8 lg:grid-cols-[200px_minmax(0,1fr)] lg:items-start xl:grid-cols-[200px_minmax(0,620px)_300px] xl:justify-center">
+          <LeftNav tab={tab} />
 
-          <nav aria-label="Feed" className="mt-6 flex items-center gap-6 border-b border-border">
-            {TABS.map((item) => (
-              <Link
-                key={item.id}
-                href={item.href}
-                aria-current={tab === item.id ? "page" : undefined}
-                className={`-mb-px border-b-2 pb-3 text-sm transition-colors ${
-                  tab === item.id ? "border-foreground font-medium text-foreground" : "border-transparent text-muted-foreground hover:text-foreground"
-                }`}
-              >
-                {item.label}
-              </Link>
-            ))}
-          </nav>
+          <div className="min-w-0">
+            <PageBreadcrumb items={[{ label: "Feed" }]} />
+            <h1 className="mt-1 text-[22px] font-semibold leading-tight tracking-tight text-foreground">Community Feed</h1>
+            <p className="mt-1 text-sm text-muted-foreground">What people are building, asking and sharing about Claude.</p>
 
-          <div className="mt-6">
-            {tab === "x" ? (
-              <FromX params={params} />
-            ) : (
-              <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_300px] lg:items-start">
-                {/* key: switching tabs remounts the list with that tab's posts */}
+            {/* Below lg the left nav is hidden, so the tabs sit above the feed. */}
+            <nav aria-label="Feed" className="mt-5 flex items-center gap-6 border-b border-border lg:hidden">
+              {TABS.map((item) => (
+                <Link
+                  key={item.id}
+                  href={item.href}
+                  aria-current={tab === item.id ? "page" : undefined}
+                  className={`-mb-px border-b-2 pb-3 text-sm transition-colors ${
+                    tab === item.id ? "border-foreground font-medium text-foreground" : "border-transparent text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  {item.label}
+                </Link>
+              ))}
+            </nav>
+
+            <div className="mt-5">
+              {tab === "x" ? (
+                <FromX params={params} />
+              ) : (
+                // key: switching tabs remounts the list with that tab's posts
                 <FeedClient key={sort} initialPosts={posts} sort={sort} />
-                <Sidebar />
-              </div>
-            )}
+              )}
+            </div>
           </div>
+
+          <Sidebar />
         </div>
       </main>
       <Footer />

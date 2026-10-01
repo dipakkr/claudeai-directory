@@ -375,7 +375,7 @@ export default function ThreadDetail({
               </article>
 
               <aside className="space-y-3 lg:sticky lg:top-24">
-                <div className="overflow-hidden rounded-2xl border border-border bg-card">
+                <div className="overflow-hidden rounded-xl border border-border bg-card">
                   <SidebarSection title="Posted by">
                     <div className="flex items-center gap-3">
                       <AuthorAvatar src={thread.author_avatar} author={thread.author} className="h-10 w-10 text-sm" />
@@ -450,7 +450,7 @@ export default function ThreadDetail({
 
                 <Link
                   href="/feed#compose"
-                  className="flex items-center gap-3 rounded-2xl border border-primary/25 bg-primary/[0.06] px-4 py-3.5 transition-colors hover:border-primary/40"
+                  className="flex items-center gap-3 rounded-xl border border-primary/25 bg-primary/[0.06] px-4 py-3.5 transition-colors hover:border-primary/40"
                 >
                   <PenSquare className="h-4 w-4 shrink-0 text-primary" />
                   <span className="text-sm">
@@ -461,7 +461,7 @@ export default function ThreadDetail({
               </aside>
             </div>
           ) : (
-            <div className="rounded-2xl border border-dashed border-border px-6 py-16 text-center">
+            <div className="rounded-xl border border-dashed border-border px-6 py-16 text-center">
               <p className="text-sm font-medium text-foreground">This post was not found.</p>
               <Link href="/feed" className="mt-3 inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground">
                 <ArrowLeft className="h-3.5 w-3.5" />

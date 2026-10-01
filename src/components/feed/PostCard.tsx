@@ -106,7 +106,7 @@ function InlineComments({ post, onCount }: { post: Thread; onCount: (n: number) 
             {shown.map((r) => (
               <li key={r.id} className="flex gap-2.5">
                 <DiscussionAvatar src={r.author_avatar} name={r.author} size="sm" />
-                <div className="min-w-0 flex-1 rounded-xl bg-[var(--cad-control)] px-3 py-2">
+                <div className="min-w-0 flex-1 rounded-lg bg-[var(--cad-control)] px-3 py-2">
                   <div className="flex items-baseline gap-1.5 text-[13px]">
                     {r.author_username ? (
                       <Link href={`/u/${r.author_username}`} className="font-semibold text-foreground hover:underline">
@@ -173,7 +173,7 @@ export function PostCard({ post, voted, onDeleted }: { post: Thread; voted: bool
   };
 
   return (
-    <article className="overflow-hidden rounded-2xl border border-border bg-card">
+    <article className="overflow-hidden rounded-xl border border-border bg-card">
       <div className="px-4 pt-4 sm:px-5">
         <header className="flex items-start gap-3">
           <DiscussionAvatar src={post.author_avatar} name={post.author} />

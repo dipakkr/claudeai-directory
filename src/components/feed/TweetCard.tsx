@@ -87,7 +87,7 @@ export function TweetCard({ tweet }: { tweet: FeedTweet }) {
   const article = tweet.article?.title ? tweet.article : null;
 
   return (
-    <article id={`tweet-${tweet.id}`} className="flex h-full scroll-mt-24 flex-col rounded-2xl border border-border bg-card p-5 transition-colors hover:border-[var(--cad-line-hover)]">
+    <article id={`tweet-${tweet.id}`} className="flex h-full scroll-mt-24 flex-col rounded-xl border border-border bg-card p-5 transition-colors hover:border-[var(--cad-line-hover)]">
       <header className="flex items-start gap-3">
         <a href={`https://x.com/${author.screen_name}`} target="_blank" rel={OUTBOUND_REL} className="shrink-0">
           {author.avatar ? (
@@ -165,7 +165,7 @@ export function TweetCard({ tweet }: { tweet: FeedTweet }) {
           href={tweet.url}
           target="_blank"
           rel={OUTBOUND_REL}
-          className="group mt-4 block overflow-hidden rounded-xl border border-border bg-background transition-colors hover:border-[var(--cad-line-hover)]"
+          className="group mt-4 block overflow-hidden rounded-lg border border-border bg-background transition-colors hover:border-[var(--cad-line-hover)]"
         >
           {article.cover && (
             // eslint-disable-next-line @next/next/no-img-element
@@ -198,7 +198,7 @@ export function TweetCard({ tweet }: { tweet: FeedTweet }) {
           href={tweet.url}
           target="_blank"
           rel={OUTBOUND_REL}
-          className={`mt-4 grid gap-1 overflow-hidden rounded-xl border border-border ${media.length > 1 ? "grid-cols-2" : ""}`}
+          className={`mt-4 grid gap-1 overflow-hidden rounded-lg border border-border ${media.length > 1 ? "grid-cols-2" : ""}`}
         >
           {media.map((item, index) => (
             <span key={`${item.url}-${index}`} className="relative block bg-background">

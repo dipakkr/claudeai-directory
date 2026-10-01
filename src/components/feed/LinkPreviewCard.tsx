@@ -25,7 +25,7 @@ export function LinkPreviewCard({ url, preview }: { url: string; preview?: LinkP
       href={href}
       target="_blank"
       rel={rel}
-      className="group flex overflow-hidden rounded-xl border border-border bg-card transition-colors hover:border-[var(--cad-line-hover)]"
+      className="group flex overflow-hidden rounded-lg border border-border bg-card transition-colors hover:border-[var(--cad-line-hover)]"
     >
       {preview.image && (
         // eslint-disable-next-line @next/next/no-img-element -- remote og:image from the linked site

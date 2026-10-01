@@ -84,14 +84,14 @@ export async function FromX({ params }: { params: FromXParams }) {
         </div>
       </div>
       {data.items.length > 0 ? (
-        // Row grid: cards in a row share one height, footers line up.
-        <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        // One column, like the posts feed.
+        <div className="mt-5 space-y-4">
           {data.items.map((tweet) => (
             <TweetCard key={tweet.id} tweet={tweet} />
           ))}
         </div>
       ) : (
-        <div className="mt-6 rounded-2xl border border-dashed border-border px-6 py-16 text-center">
+        <div className="mt-5 rounded-xl border border-dashed border-border px-6 py-16 text-center">
           <p className="text-sm font-medium text-foreground">No tweets here yet.</p>
           <p className="mt-1 text-sm text-muted-foreground">
             {source || view === "articles" ? (

@@ -49,7 +49,7 @@ export function FeedClient({ initialPosts, sort }: { initialPosts: Thread[]; sor
           />
         ))
       ) : (
-        <div className="rounded-2xl border border-dashed border-border px-6 py-16 text-center">
+        <div className="rounded-xl border border-dashed border-border px-6 py-16 text-center">
           <MessageSquare className="mx-auto h-8 w-8 text-muted-foreground/40" />
           <p className="mt-3 text-sm font-medium text-foreground">
             {sort === "popular" ? "Nothing popular this week yet." : "No posts yet."}

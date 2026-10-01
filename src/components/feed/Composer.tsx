@@ -66,7 +66,7 @@ export function Composer({ onPosted }: { onPosted: (post: Thread) => void }) {
   };
 
   return (
-    <div id="compose" className="scroll-mt-24 rounded-2xl border border-border bg-card p-4 sm:p-5">
+    <div id="compose" className="scroll-mt-24 rounded-xl border border-border bg-card p-4 sm:p-5">
       <div className="flex gap-3">
         {user ? (
           <DiscussionAvatar src={user.avatar} name={user.name || user.username || "You"} />
