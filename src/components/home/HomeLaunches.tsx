@@ -33,7 +33,17 @@ function LaunchIcon({ project }: { project: ShowcaseProject }) {
   );
 }
 
-export default function HomeLaunches({ projects, unavailable }: { projects: ShowcaseProject[]; unavailable: boolean }) {
+export default function HomeLaunches({
+  projects,
+  unavailable,
+  impressions = {},
+  upvotesToday = {},
+}: {
+  projects: ShowcaseProject[];
+  unavailable: boolean;
+  impressions?: Record<string, number>;
+  upvotesToday?: Record<string, number>;
+}) {
   const shownProjects = projects.slice(0, 3);
 
   return (
@@ -64,6 +74,12 @@ export default function HomeLaunches({ projects, unavailable }: { projects: Show
                         <Tag className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
                         <span className="truncate">{tags.join(", ")}</span>
                       </span>
+                      {(impressions[project.id] ?? 0) > 0 && (
+                        <span className="font-mono tabular-nums">{impressions[project.id].toLocaleString("en-US")} impressions</span>
+                      )}
+                      {(upvotesToday[project.id] ?? 0) > 0 && (
+                        <span className="font-mono tabular-nums text-green-600 dark:text-green-400">▲ +{upvotesToday[project.id]} today</span>
+                      )}
                     </div>
                   </div>
                 </Link>

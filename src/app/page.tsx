@@ -3,6 +3,7 @@ import { Suspense } from "react";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import HomeContent from "@/components/home/HomeContent";
+import { HomePulse, type Pulse } from "@/components/home/HomePulse";
 import HomeLaunches from "@/components/home/HomeLaunches";
 import HomeCommunity from "@/components/home/HomeCommunity";
 import { rankedLaunches, selectedDiscussions } from "@/lib/home-community";
@@ -55,6 +56,8 @@ export default async function Home() {
     fetchApi<Thread[]>("/community/threads?limit=30"),
     fetchApi<MembersResponse>("/users?per_page=8"),
   ]);
+  // Live numbers and recent activity (the API caches this for a minute).
+  const pulse = await fetchApi<Pulse>("/stats/pulse", { revalidate: 60 });
 
   const threads = selectedDiscussions(threadsData ?? []);
 
@@ -74,7 +77,15 @@ export default async function Home() {
         <HomeContent items={items} orders={buildOrders(items, ranked)}
           members={membersData?.members ?? []}
           memberCount={membersData?.total ?? 0}
-          launches={<HomeLaunches projects={rankedLaunches(launchesData ?? [])} unavailable={launchesData === null} />}
+          launches={
+            <HomeLaunches
+              projects={rankedLaunches(launchesData ?? [])}
+              unavailable={launchesData === null}
+              impressions={pulse?.launch_impressions}
+              upvotesToday={pulse?.upvotes_today}
+            />
+          }
+          pulse={pulse ? <HomePulse pulse={pulse} /> : null}
           community={<Suspense fallback={<HomeCommunity threads={threads} replies={{}} unavailable={threadsData === null} />}>
             <CommunityPreview threads={threads} unavailable={threadsData === null} />
           </Suspense>}

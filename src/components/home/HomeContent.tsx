@@ -14,6 +14,7 @@ interface HomeContentProps {
   community: ReactNode;
   members: PublicProfile[];
   memberCount: number;
+  pulse?: ReactNode;
 }
 
 const BROWSE = [
@@ -40,7 +41,7 @@ const BROWSE = [
   },
 ];
 
-export default function HomeContent({ items, orders, launches, community, members, memberCount }: HomeContentProps) {
+export default function HomeContent({ items, orders, launches, community, members, memberCount, pulse }: HomeContentProps) {
   const count = (type: DirectoryItem["type"]) => items.filter((i) => i.type === type).length;
 
   return (
@@ -55,6 +56,7 @@ export default function HomeContent({ items, orders, launches, community, member
         </p>
         <HeroSearch />
         <HeroJoin members={members} total={memberCount} />
+        {pulse}
         <p className="mt-5 text-sm text-muted-foreground">
           Built something for Claude?{" "}
           <Link href="/submit" className="inline-flex items-center gap-1 text-foreground hover:underline hover:underline-offset-4">
