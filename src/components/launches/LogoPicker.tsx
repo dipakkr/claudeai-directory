@@ -18,7 +18,12 @@ export function LogoPicker({
   onBusyChange,
   onLink,
   link,
+  title,
+  subtitle,
 }: {
+  /** Shown beside the logo (e.g. the app's name and status). Defaults to "Logo". */
+  title?: React.ReactNode;
+  subtitle?: React.ReactNode;
   current: string;
   fallback: string;
   limits?: UploadConfig["limits"]["logo"];
@@ -77,22 +82,25 @@ export function LogoPicker({
             </span>
           )}
         </div>
-        <div>
-          <p className="text-[15px] text-foreground">Logo</p>
-          <p className="mt-0.5 text-[13px] text-muted-foreground">Square image, at least 256×256 pixels. PNG, JPG or WEBP.</p>
+        <div className="min-w-0">
+          <p className="truncate text-[22px] font-semibold tracking-tight text-foreground">{title ?? "Logo"}</p>
+          {subtitle && <div className="mt-0.5 text-[14px] text-muted-foreground">{subtitle}</div>}
         </div>
       </div>
 
       {limits ? (
         <>
-          <button
-            type="button"
-            onClick={() => input.current?.click()}
-            disabled={progress !== null}
-            className="mt-4 inline-flex h-10 items-center rounded-[10px] bg-foreground/[0.08] px-4 text-sm font-medium text-foreground transition-colors hover:bg-foreground/[0.12] disabled:opacity-60"
-          >
-            {shown ? "Select a new image" : "Select an image"}
-          </button>
+          <div className="mt-4 flex flex-wrap items-center gap-3">
+            <button
+              type="button"
+              onClick={() => input.current?.click()}
+              disabled={progress !== null}
+              className="inline-flex h-10 items-center rounded-[10px] bg-foreground/[0.08] px-4 text-sm font-medium text-foreground transition-colors hover:bg-foreground/[0.12] disabled:opacity-60"
+            >
+              {shown ? "Change logo" : "Select a logo"}
+            </button>
+            <span className="text-xs text-muted-foreground">Square, at least 256×256. PNG, JPG or WEBP.</span>
+          </div>
           <input
             ref={input}
             type="file"

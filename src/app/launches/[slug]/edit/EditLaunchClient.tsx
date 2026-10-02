@@ -233,6 +233,20 @@ function EditForm({ app }: { app: ShowcaseProject }) {
         {tab === "about" && (
           <>
             <LogoPicker
+              title={title || app.title}
+              subtitle={
+                <span className="flex flex-wrap items-center gap-x-2">
+                  <span>{app.badge_verified || app.paid_listing ? "Live" : app.status === "rejected" ? "Not approved" : "Waiting for badge"}</span>
+                  {(app.badge_verified || app.paid_listing) && (
+                    <>
+                      <span aria-hidden>·</span>
+                      <Link href={`/launches/${app.id}`} className="hover:text-foreground hover:underline">View launch</Link>
+                      <span aria-hidden>·</span>
+                      <Link href={`/launches/${app.id}/analytics`} className="hover:text-foreground hover:underline">Analytics</Link>
+                    </>
+                  )}
+                </span>
+              }
               current={logoUrl}
               fallback={title.trim()[0]?.toUpperCase() || "?"}
               limits={uploads ? uploadConfig.limits.logo : undefined}
@@ -413,20 +427,7 @@ export default function EditLaunchClient({ slug }: { slug: string }) {
             Your launches
           </Link>
           <p className="mt-8 font-mono text-[11px] uppercase tracking-[0.16em] text-primary">Edit launch</p>
-          <h1 className="mt-3 font-sans text-3xl font-semibold tracking-tight text-foreground md:text-4xl">{app?.title ?? "Your launch"}</h1>
-          {app && (
-            <p className="mt-2 flex flex-wrap items-center gap-x-2 text-sm text-muted-foreground">
-              <span>{app.badge_verified || app.paid_listing ? "Live" : app.status === "rejected" ? "Not approved" : "Waiting for badge"}</span>
-              {(app.badge_verified || app.paid_listing) && (
-                <>
-                  <span aria-hidden>·</span>
-                  <Link href={`/launches/${app.id}`} className="hover:text-foreground hover:underline">View launch</Link>
-                  <span aria-hidden>·</span>
-                  <Link href={`/launches/${app.id}/analytics`} className="hover:text-foreground hover:underline">Analytics</Link>
-                </>
-              )}
-            </p>
-          )}
+          <h1 className="sr-only">Edit {app?.title ?? "your launch"}</h1>
           <div className="mt-8" />
 
           {isLoading || (isAuthenticated && appsLoading) ? (
