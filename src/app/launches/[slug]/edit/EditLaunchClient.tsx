@@ -37,18 +37,13 @@ function isHttpsUrl(value: string) {
   }
 }
 
-function Section({ n, title, hint, children }: { n: string; title: string; hint?: string; children: React.ReactNode }) {
-  return (
-    <section>
-      <div className="mb-6 flex flex-wrap items-baseline gap-x-3 gap-y-1 border-b border-border pb-3">
-        <span className="font-mono text-xs text-primary">{n}</span>
-        <h2 className="font-mono text-xs uppercase tracking-[0.14em] text-foreground">{title}</h2>
-        {hint && <span className="text-xs text-muted-foreground">{hint}</span>}
-      </div>
-      <div className="space-y-6">{children}</div>
-    </section>
-  );
-}
+type EditTab = "about" | "media" | "story" | "details";
+const EDIT_TABS: { id: EditTab; label: string }[] = [
+  { id: "about", label: "About" },
+  { id: "media", label: "Media" },
+  { id: "story", label: "Story" },
+  { id: "details", label: "Details" },
+];
 
 function Label({ text, htmlFor, hint }: { text: string; htmlFor: string; hint?: string }) {
   return (
@@ -148,6 +143,8 @@ function EditForm({ app }: { app: ShowcaseProject }) {
   const [pastedShots, setPastedShots] = useState("");
   const [logoUrlInput, setLogoUrlInput] = useState("");
   const [busy, setBusy] = useState({ logo: false, screenshot: false, video: false });
+  const [tab, setTab] = useState<EditTab>("about");
+  const [logoOpen, setLogoOpen] = useState(false);
   const uploading = Object.values(busy).some(Boolean);
 
   const gallery = useMemo(
@@ -195,97 +192,146 @@ function EditForm({ app }: { app: ShowcaseProject }) {
 
   return (
     <div>
-      <div className="space-y-12">
-        <Section n="01" title="The basics">
-          <div>
-            <Label text="Name" htmlFor="title" />
-            <input id="title" value={title} onChange={(e) => setTitle(e.target.value)} maxLength={80} className={inputClass} />
-          </div>
-          <div>
-            <Label text="One-line pitch" htmlFor="tagline" hint={`${tagline.length}/140`} />
-            <input id="tagline" value={tagline} onChange={(e) => setTagline(e.target.value)} maxLength={140} className={inputClass} />
-          </div>
-          <div>
-            <p className="mb-2 text-[14px] text-muted-foreground">Category</p>
-            <Chips options={CATEGORIES} value={[category]} onToggle={setCategory} />
-          </div>
-          <div>
-            <Label text="What does it do?" htmlFor="description" hint={`${description.length}/2000`} />
-            <textarea id="description" value={description} onChange={(e) => setDescription(e.target.value)} maxLength={2000} rows={6} className={textareaClass} />
-          </div>
-        </Section>
-
-        <Section n="02" title="Media" hint="The first screenshot is your cover.">
-          <div>
-            <p className="mb-2 text-[14px] text-muted-foreground">Logo</p>
-            <CurrentMedia urls={logo} onRemove={() => setLogo([])} square />
-            {uploads ? (
-              <div className={logo.length ? "mt-3" : ""}>
-                <MediaUpload
-                  kind="logo"
-                  max={1}
-                  limits={uploadConfig.limits.logo}
-                  label={logo.length ? "Replace logo" : "Upload logo"}
-                  hint="Square PNG, JPG or WEBP"
-                  onChange={setNewLogo}
-                  onBusyChange={(b) => setBusy((s) => ({ ...s, logo: b }))}
-                />
-              </div>
+      {/* Identity: logo, name and pitch, edited in place like the launch header. */}
+      <div className="flex items-start gap-5">
+        <div className="shrink-0">
+          <div className="relative flex h-20 w-20 items-center justify-center overflow-hidden rounded-[16px] border border-border bg-foreground/[0.06] text-2xl font-semibold text-muted-foreground">
+            {logoUrl ? (
+              // eslint-disable-next-line @next/next/no-img-element -- maker logo preview
+              <img src={logoUrl} alt="" className="h-full w-full object-cover" referrerPolicy="no-referrer" />
             ) : (
-              <input
-                value={logoUrlInput}
-                onChange={(e) => setLogoUrlInput(e.target.value)}
-                placeholder={logo.length ? "Paste a new logo URL to replace it" : "https://yourapp.com/logo.png"}
-                className={`${inputClass} ${logo.length ? "mt-3" : ""}`}
-              />
+              title.trim()[0]?.toUpperCase() || "?"
             )}
           </div>
+          <button type="button" onClick={() => setLogoOpen((v) => !v)} className="mt-2 w-20 text-center text-xs text-muted-foreground hover:text-foreground">
+            {logoOpen ? "Close" : logoUrl ? "Change logo" : "Add logo"}
+          </button>
+        </div>
+        <div className="min-w-0 flex-1 space-y-2 pt-1">
+          <input
+            aria-label="Name"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            maxLength={80}
+            placeholder="App name"
+            className="w-full rounded-[8px] border border-transparent bg-transparent px-2 py-1 -ml-2 font-sans text-[28px] font-semibold tracking-tight text-foreground placeholder:text-muted-foreground/50 hover:bg-foreground/[0.04] focus:border-[var(--cad-line-hover)] focus:bg-foreground/[0.06] focus:outline-none md:text-[32px]"
+          />
+          <input
+            aria-label="One-line pitch"
+            value={tagline}
+            onChange={(e) => setTagline(e.target.value)}
+            maxLength={140}
+            placeholder="One-line pitch"
+            className="w-full rounded-[8px] border border-transparent bg-transparent px-2 py-1 -ml-2 text-[16px] text-muted-foreground placeholder:text-muted-foreground/50 hover:bg-foreground/[0.04] focus:border-[var(--cad-line-hover)] focus:bg-foreground/[0.06] focus:text-foreground focus:outline-none"
+          />
+          <p className="text-xs text-muted-foreground/70">Click the name or pitch to edit. {tagline.length}/140</p>
+        </div>
+      </div>
 
-          <div>
-            <p className="mb-2 text-[14px] text-muted-foreground">Screenshots</p>
-            <CurrentMedia urls={shots} onRemove={(url) => setShots((list) => list.filter((u) => u !== url))} />
-            {uploads && (
-              <div className={shots.length ? "mt-3" : ""}>
-                <MediaUpload
-                  kind="screenshot"
-                  max={Math.max(0, 8 - shots.length)}
-                  limits={uploadConfig.limits.screenshot}
-                  label="Add screenshots"
-                  hint={`Up to ${8 - shots.length} more`}
-                  onChange={setNewShots}
-                  onBusyChange={(b) => setBusy((s) => ({ ...s, screenshot: b }))}
-                />
-              </div>
-            )}
-            <textarea
-              value={pastedShots}
-              onChange={(e) => setPastedShots(e.target.value)}
-              rows={2}
-              placeholder="Or paste image URLs, one per line"
-              className={`${textareaClass} mt-3`}
+      {logoOpen && (
+        <div className="mt-5 space-y-3 rounded-[12px] border border-border p-4">
+          <CurrentMedia urls={logo} onRemove={() => setLogo([])} square />
+          {uploads ? (
+            <MediaUpload
+              kind="logo"
+              max={1}
+              limits={uploadConfig.limits.logo}
+              label={logo.length ? "Replace logo" : "Upload logo"}
+              hint="Square PNG, JPG or WEBP"
+              onChange={setNewLogo}
+              onBusyChange={(b) => setBusy((s) => ({ ...s, logo: b }))}
             />
-          </div>
+          ) : (
+            <input
+              value={logoUrlInput}
+              onChange={(e) => setLogoUrlInput(e.target.value)}
+              placeholder={logo.length ? "Paste a new logo URL to replace it" : "https://yourapp.com/logo.png"}
+              className={inputClass}
+            />
+          )}
+        </div>
+      )}
 
-          <div>
-            <p className="mb-2 text-[14px] text-muted-foreground">Demo video</p>
-            <CurrentMedia urls={video} onRemove={() => setVideo([])} video />
-            {uploads && !video.length && (
-              <MediaUpload
-                kind="video"
-                max={1}
-                limits={uploadConfig.limits.video}
-                label="Upload a video"
-                hint="MP4 or WEBM, up to 50 MB"
-                onChange={setNewVideo}
-                onBusyChange={(b) => setBusy((s) => ({ ...s, video: b }))}
+      {/* Tabs for everything else; one save covers all of them. */}
+      <div role="tablist" aria-label="Launch details" className="mt-10 flex gap-6 overflow-x-auto border-b border-border">
+        {EDIT_TABS.map((t) => (
+          <button
+            key={t.id}
+            type="button"
+            role="tab"
+            aria-selected={tab === t.id}
+            onClick={() => setTab(t.id)}
+            className={`-mb-px whitespace-nowrap border-b-2 pb-3 text-sm transition-colors ${
+              tab === t.id ? "border-foreground font-medium text-foreground" : "border-transparent text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            {t.label}
+          </button>
+        ))}
+      </div>
+
+      <div className="mt-8 space-y-6" role="tabpanel">
+        {tab === "about" && (
+          <>
+            <div>
+              <p className="mb-2 text-[14px] text-muted-foreground">Category</p>
+              <Chips options={CATEGORIES} value={[category]} onToggle={setCategory} />
+            </div>
+            <div>
+              <Label text="What does it do?" htmlFor="description" hint={`${description.length}/2000`} />
+              <textarea id="description" value={description} onChange={(e) => setDescription(e.target.value)} maxLength={2000} rows={8} className={textareaClass} />
+            </div>
+          </>
+        )}
+
+        {tab === "media" && (
+          <>
+            <div>
+              <p className="mb-2 text-[14px] text-muted-foreground">Screenshots <span className="text-muted-foreground/70">· the first one is your cover</span></p>
+              <CurrentMedia urls={shots} onRemove={(url) => setShots((list) => list.filter((u) => u !== url))} />
+              {uploads && (
+                <div className={shots.length ? "mt-3" : ""}>
+                  <MediaUpload
+                    kind="screenshot"
+                    max={Math.max(0, 8 - shots.length)}
+                    limits={uploadConfig.limits.screenshot}
+                    label="Add screenshots"
+                    hint={`Up to ${8 - shots.length} more`}
+                    onChange={setNewShots}
+                    onBusyChange={(b) => setBusy((s) => ({ ...s, screenshot: b }))}
+                  />
+                </div>
+              )}
+              <textarea
+                value={pastedShots}
+                onChange={(e) => setPastedShots(e.target.value)}
+                rows={2}
+                placeholder="Or paste image URLs, one per line"
+                className={`${textareaClass} mt-3`}
               />
-            )}
-            <input value={youtube} onChange={(e) => setYoutube(e.target.value)} placeholder="Or a YouTube link" className={`${inputClass} mt-3`} />
-          </div>
-        </Section>
+            </div>
+            <div>
+              <p className="mb-2 text-[14px] text-muted-foreground">Demo video</p>
+              <CurrentMedia urls={video} onRemove={() => setVideo([])} video />
+              {uploads && !video.length && (
+                <MediaUpload
+                  kind="video"
+                  max={1}
+                  limits={uploadConfig.limits.video}
+                  label="Upload a video"
+                  hint="MP4 or WEBM, up to 50 MB"
+                  onChange={setNewVideo}
+                  onBusyChange={(b) => setBusy((s) => ({ ...s, video: b }))}
+                />
+              )}
+              <input value={youtube} onChange={(e) => setYoutube(e.target.value)} placeholder="Or a YouTube link" className={`${inputClass} mt-3`} />
+            </div>
+          </>
+        )}
 
-        <Section n="03" title="Tell the story" hint="Optional. Richer pages get more upvotes.">
-          <div className="space-y-6">
+        {tab === "story" && (
+          <>
+            <p className="text-sm text-muted-foreground">Optional. Pages that answer these get more upvotes.</p>
             {(
               [
                 ["audience", "Who is it for?"],
@@ -299,23 +345,23 @@ function EditForm({ app }: { app: ShowcaseProject }) {
                 <textarea id={key} rows={3} value={overview[key]} onChange={(e) => setOverview((o) => ({ ...o, [key]: e.target.value }))} className={textareaClass} />
               </div>
             ))}
-          </div>
-          <div>
-            <Label text="Use cases" htmlFor="use_cases" hint="One per line" />
-            <textarea id="use_cases" rows={3} value={useCases} onChange={(e) => setUseCases(e.target.value)} className={textareaClass} />
-          </div>
-        </Section>
+            <div>
+              <Label text="Use cases" htmlFor="use_cases" hint="One per line" />
+              <textarea id="use_cases" rows={3} value={useCases} onChange={(e) => setUseCases(e.target.value)} className={textareaClass} />
+            </div>
+          </>
+        )}
 
-        <Section n="04" title="Details" hint="Optional">
-          <div>
-            <p className="mb-2 text-[14px] text-muted-foreground">Platforms</p>
-            <Chips
-              options={PLATFORMS}
-              value={platforms}
-              onToggle={(p) => setPlatforms((list) => (list.includes(p) ? list.filter((x) => x !== p) : [...list, p]))}
-            />
-          </div>
-          <div className="space-y-6">
+        {tab === "details" && (
+          <>
+            <div>
+              <p className="mb-2 text-[14px] text-muted-foreground">Platforms</p>
+              <Chips
+                options={PLATFORMS}
+                value={platforms}
+                onToggle={(p) => setPlatforms((list) => (list.includes(p) ? list.filter((x) => x !== p) : [...list, p]))}
+              />
+            </div>
             <div>
               <Label text="Tech stack and tags" htmlFor="tags" hint="Comma separated" />
               <input id="tags" value={tags} onChange={(e) => setTags(e.target.value)} className={inputClass} />
@@ -324,12 +370,12 @@ function EditForm({ app }: { app: ShowcaseProject }) {
               <Label text="Source code" htmlFor="github" />
               <input id="github" value={githubUrl} onChange={(e) => setGithubUrl(e.target.value)} placeholder="https://github.com/you/app" className={inputClass} />
             </div>
-          </div>
-          <div>
-            <Label text="What feedback do you want?" htmlFor="feedback" />
-            <input id="feedback" value={feedback} onChange={(e) => setFeedback(e.target.value)} className={inputClass} />
-          </div>
-        </Section>
+            <div>
+              <Label text="What feedback do you want?" htmlFor="feedback" />
+              <input id="feedback" value={feedback} onChange={(e) => setFeedback(e.target.value)} className={inputClass} />
+            </div>
+          </>
+        )}
       </div>
 
       {/* Save bar stays in reach on a long form. */}
@@ -371,7 +417,7 @@ export default function EditLaunchClient({ slug }: { slug: string }) {
             Your launches
           </Link>
           <p className="mt-8 font-mono text-[11px] uppercase tracking-[0.16em] text-primary">Edit launch</p>
-          <h1 className="mt-3 font-sans text-3xl font-semibold tracking-tight text-foreground md:text-4xl">{app?.title ?? "Your launch"}</h1>
+          <h1 className="sr-only">Edit {app?.title ?? "your launch"}</h1>
           {app && (
             <p className="mt-2 flex flex-wrap items-center gap-x-2 text-sm text-muted-foreground">
               <span>{app.badge_verified || app.paid_listing ? "Live" : app.status === "rejected" ? "Not approved" : "Waiting for badge"}</span>
@@ -385,7 +431,7 @@ export default function EditLaunchClient({ slug }: { slug: string }) {
               )}
             </p>
           )}
-          <div className="mt-10" />
+          <div className="mt-8" />
 
           {isLoading || (isAuthenticated && appsLoading) ? (
             <p className="text-sm text-muted-foreground">Loading...</p>
