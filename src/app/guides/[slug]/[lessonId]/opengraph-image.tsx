@@ -126,7 +126,7 @@ export default async function Image({
               lineHeight: 1.55,
             }}
           >
-            {excerpt}…
+            {`${excerpt}…`}
           </div>
         )}
 
@@ -140,7 +140,7 @@ export default async function Image({
             color: "#334155",
           }}
         >
-          ClaudeAI Directory
+          Claude AI Directory
         </div>
       </div>
     ),

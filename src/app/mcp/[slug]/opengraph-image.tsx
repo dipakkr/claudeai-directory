@@ -46,7 +46,7 @@ export default async function Image({ params }: { params: Promise<{ slug: string
             MCP Server
           </div>
           {toolCount > 0 && (
-            <div style={{ color: "#64748b", fontSize: 16 }}>{toolCount} tools</div>
+            <div style={{ color: "#64748b", fontSize: 16 }}>{`${toolCount} tools`}</div>
           )}
         </div>
         <div style={{ fontSize: 56, fontWeight: 700, color: "#f8fafc", marginBottom: 16 }}>
@@ -56,10 +56,10 @@ export default async function Image({ params }: { params: Promise<{ slug: string
           {description}
         </div>
         {author && (
-          <div style={{ fontSize: 18, color: "#64748b", marginTop: 24 }}>by {author}</div>
+          <div style={{ fontSize: 18, color: "#64748b", marginTop: 24 }}>{`by ${author}`}</div>
         )}
         <div style={{ position: "absolute", bottom: 40, right: 60, fontSize: 18, color: "#475569" }}>
-          ClaudeAI Directory
+          Claude AI Directory
         </div>
       </div>
     ),

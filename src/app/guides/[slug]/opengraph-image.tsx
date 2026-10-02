@@ -143,7 +143,7 @@ export default async function Image({ params }: { params: Promise<{ slug: string
             color: "#475569",
           }}
         >
-          ClaudeAI Directory
+          Claude AI Directory
         </div>
       </div>
     ),
