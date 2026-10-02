@@ -110,6 +110,36 @@ export function useLaunchAutofill() {
   });
 }
 
+/** A full listing drafted from the app's website by the "Write with AI" helper. */
+export interface LaunchAiDraft {
+  name: string;
+  tagline: string;
+  description: string;
+  category: string | null;
+  platforms: string[];
+  tags: string[];
+  overview: { audience: string; problem: string; solution: string; unique: string };
+  use_cases: string[];
+  feedback_prompt: string;
+  maker_comment: string;
+}
+
+/** Whether "Write with AI" is configured on the server (hidden otherwise). */
+export function useAiDraftConfig() {
+  return useQuery({
+    queryKey: ["showcase", "ai-draft-config"],
+    queryFn: () => api.get<{ enabled: boolean }>("/showcase/ai-draft/config"),
+    staleTime: 10 * 60_000,
+    retry: false,
+  });
+}
+
+export function useLaunchAiDraft() {
+  return useMutation({
+    mutationFn: (url: string) => api.post<LaunchAiDraft>("/showcase/ai-draft", { url }),
+  });
+}
+
 export function useSubmitShowcaseProject() {
   const queryClient = useQueryClient();
   return useMutation({

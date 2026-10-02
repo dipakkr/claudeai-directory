@@ -47,7 +47,7 @@ export function LaunchStart({ initialUrl, onContinue, onManual }: { initialUrl: 
   );
 }
 
-const STEPS = ["fetching your website", "reading what it does", "writing a name and one-line pitch", "drafting a description", "looking for a preview image", "checking everything"];
+const STEPS = ["fetching your website", "reading what it does", "writing a name and one-line pitch", "drafting a description", "looking for a preview image", "drafting your first comment", "checking everything"];
 const SPINNER = ["⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"];
 
 /** Terminal-style progress while the site is read. Steps tick off; the last one waits for the real result. */

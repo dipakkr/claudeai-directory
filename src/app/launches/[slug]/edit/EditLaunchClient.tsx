@@ -10,10 +10,11 @@ import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { MediaUpload } from "@/components/launches/MediaUpload";
 import { LogoPicker } from "@/components/launches/LogoPicker";
+import { AiDraftBar } from "@/components/launches/AiDraftBar";
 import { ApiError } from "@/lib/api";
 import { useAuth } from "@/lib/auth";
 import { CATEGORIES, PLATFORMS } from "@/lib/launch-options";
-import { useMyShowcaseProjects, useUpdateLaunch, useUploadConfig } from "@/hooks/use-showcase";
+import { useMyShowcaseProjects, useUpdateLaunch, useUploadConfig, type LaunchAiDraft } from "@/hooks/use-showcase";
 import type { ShowcaseProject } from "@/types";
 import { SignInButton } from "@/components/auth/SignInDialog";
 
@@ -173,6 +174,43 @@ function EditForm({ app }: { app: ShowcaseProject }) {
   const logoUrl = newLogo[0] || (isHttpsUrl(logoUrlInput.trim()) ? logoUrlInput.trim() : "") || logo[0] || "";
   const videoUrl = newVideo[0] || video[0] || "";
 
+  // "Write with AI": fill the text fields from the draft, keeping what the draft leaves empty.
+  // The name stays (it is the maker's), and Undo puts every field back.
+  const applyDraft = (d: LaunchAiDraft) => {
+    const before = { tagline, description, category, platforms, tags, useCases, overview, feedback };
+    const keep = (next: string, prev: string) => next.trim() || prev;
+    setTagline((v) => keep(d.tagline, v));
+    setDescription((v) => keep(d.description, v));
+    if (d.category && CATEGORIES.includes(d.category)) setCategory(d.category);
+    if (d.platforms.length) setPlatforms(d.platforms);
+    if (d.tags.length) setTags(d.tags.join(", "));
+    if (d.use_cases.length) setUseCases(d.use_cases.join("\n"));
+    setOverview((o) => ({
+      audience: keep(d.overview.audience, o.audience),
+      problem: keep(d.overview.problem, o.problem),
+      solution: keep(d.overview.solution, o.solution),
+      unique: keep(d.overview.unique, o.unique),
+    }));
+    setFeedback((v) => keep(d.feedback_prompt, v));
+    setTab("about");
+    toast.success("Draft added to About, Story and Details. Review it, then save.", {
+      duration: 10000,
+      action: {
+        label: "Undo",
+        onClick: () => {
+          setTagline(before.tagline);
+          setDescription(before.description);
+          setCategory(before.category);
+          setPlatforms(before.platforms);
+          setTags(before.tags);
+          setUseCases(before.useCases);
+          setOverview(before.overview);
+          setFeedback(before.feedback);
+        },
+      },
+    });
+  };
+
   const save = () => {
     if (uploading) return toast.error("Wait for your uploads to finish");
     if (title.trim().length < 2 || description.trim().length < 10) {
@@ -211,6 +249,11 @@ function EditForm({ app }: { app: ShowcaseProject }) {
 
   return (
     <div>
+      {app.app_url && (
+        <div className="mb-8">
+          <AiDraftBar url={app.app_url} onDraft={applyDraft} surface="edit" />
+        </div>
+      )}
       {/* Tabs for everything else; one save covers all of them. */}
       <div role="tablist" aria-label="Launch details" className="flex gap-6 overflow-x-auto border-b border-border">
         {EDIT_TABS.map((t) => (

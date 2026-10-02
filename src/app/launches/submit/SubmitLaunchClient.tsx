@@ -29,6 +29,9 @@ import { useAuth } from "@/lib/auth";
 import { faviconFor } from "@/lib/directory";
 import {
   useLaunchAutofill,
+  useAiDraftConfig,
+  useLaunchAiDraft,
+  type LaunchAiDraft,
   useUploadConfig,
   useMyShowcaseProjects,
   useSubmitShowcaseProject,
@@ -692,6 +695,8 @@ export default function SubmitLaunchClient() {
   const { isAuthenticated, isLoading } = useAuth();
   const submit = useSubmitShowcaseProject();
   const autofill = useLaunchAutofill();
+  const aiDraft = useLaunchAiDraft();
+  const { data: aiConfig } = useAiDraftConfig();
   const { data: myApps } = useMyShowcaseProjects({ enabled: !isLoading && isAuthenticated });
 
   // Back from Stripe: the webhook puts the launch live a few seconds after payment.
@@ -746,6 +751,25 @@ export default function SubmitLaunchClient() {
       twitter: current.twitter || meta.twitter || "",
     }));
 
+  // The AI draft fills what is still empty (it runs alongside the meta-tag read).
+  const fillFromDraft = (d: LaunchAiDraft) =>
+    setForm((current) => ({
+      ...current,
+      title: current.title || d.name,
+      tagline: d.tagline || current.tagline,
+      description: d.description || current.description,
+      category: d.category && CATEGORIES.includes(d.category) ? d.category : current.category,
+      platforms: current.platforms.length ? current.platforms : d.platforms,
+      tags: current.tags || d.tags.join(", "),
+      use_cases: current.use_cases || d.use_cases.join("\n"),
+      audience: current.audience || d.overview.audience,
+      problem: current.problem || d.overview.problem,
+      solution: current.solution || d.overview.solution,
+      unique: current.unique || d.overview.unique,
+      feedback_prompt: current.feedback_prompt || d.feedback_prompt,
+      maker_comment: current.maker_comment || d.maker_comment,
+    }));
+
   // A starting point for the maker's first comment; they edit it before submitting.
   const draftMakerComment = () =>
     setForm((current) =>
@@ -768,11 +792,15 @@ export default function SubmitLaunchClient() {
     setStage("reading");
     track("launch_url_entered", {});
     const started = Date.now();
+    // With AI on, the same "reading" screen also drafts the whole listing (about 10 seconds).
+    const drafting = aiConfig?.enabled ? aiDraft.mutateAsync(url).catch(() => null) : Promise.resolve(null);
     try {
       fillFrom(await autofill.mutateAsync(url));
     } catch {
       // Reading is a convenience: on failure the form is simply filled in by hand.
     }
+    const draft = await drafting;
+    if (draft) fillFromDraft(draft);
     setFilledFrom(url);
     await new Promise((resolve) => window.setTimeout(resolve, Math.max(0, 3600 - (Date.now() - started))));
     draftMakerComment();

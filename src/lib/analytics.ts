@@ -23,6 +23,7 @@ export type ProductEvent =
   | "launch_upvoted"
   | "launch_upvote_gated"
   | "launch_url_entered"
+  | "launch_ai_draft_clicked" // "Write with AI" on the launch submit or edit form
   | "launch_submitted"
   | "user_profile_clicked" // any link to a member profile
   | "community_posted" // a new discussion or a reply
