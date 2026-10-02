@@ -78,6 +78,25 @@ function Chips({ options, value, onToggle }: { options: string[]; value: string[
   );
 }
 
+/** One saved screenshot in the grid, with a Cover label on the first. */
+function ShotTile({ url, cover, onRemove }: { url: string; cover: boolean; onRemove: () => void }) {
+  return (
+    <div className="relative aspect-[16/10] w-full overflow-hidden rounded-xl border border-border bg-background">
+      {/* eslint-disable-next-line @next/next/no-img-element -- saved screenshot */}
+      <img src={url} alt="" className="h-full w-full object-cover" referrerPolicy="no-referrer" />
+      {cover && <span className="absolute bottom-1.5 left-1.5 rounded-full bg-black/60 px-2 py-0.5 text-[10px] font-medium text-white">Cover</span>}
+      <button
+        type="button"
+        onClick={onRemove}
+        aria-label="Remove"
+        className="absolute right-1.5 top-1.5 flex h-6 w-6 items-center justify-center rounded-full bg-black/60 text-white hover:bg-black/80"
+      >
+        <X className="h-3.5 w-3.5" />
+      </button>
+    </div>
+  );
+}
+
 /** Existing media as removable tiles. */
 function CurrentMedia({ urls, onRemove, video, square }: { urls: string[]; onRemove: (url: string) => void; video?: boolean; square?: boolean }) {
   if (!urls.length) return null;
@@ -287,31 +306,46 @@ function EditForm({ app }: { app: ShowcaseProject }) {
         {tab === "media" && (
           <>
             <div>
-              <p className="mb-2 text-[14px] text-muted-foreground">Screenshots <span className="text-muted-foreground/70">· the first one is your cover</span></p>
-              <CurrentMedia urls={shots} onRemove={(url) => setShots((list) => list.filter((u) => u !== url))} />
-              {uploads && (
-                <div className={shots.length ? "mt-3" : ""}>
-                  <MediaUpload
-                    kind="screenshot"
-                    max={Math.max(0, 8 - shots.length)}
-                    limits={uploadConfig.limits.screenshot}
-                    label="Add screenshots"
-                    hint={`Up to ${8 - shots.length} more`}
-                    onChange={setNewShots}
-                    onBusyChange={(b) => setBusy((s) => ({ ...s, screenshot: b }))}
-                  />
-                </div>
+              <div className="mb-2 flex items-baseline justify-between gap-3">
+                <p className="text-[14px] text-muted-foreground">
+                  Screenshots <span className="text-muted-foreground/70">· the first one is your cover</span>
+                </p>
+                <span className="text-xs text-muted-foreground/70">{gallery.length}/8</span>
+              </div>
+              {uploads ? (
+                // Saved screenshots, new uploads and the "+" tile share one grid.
+                <MediaUpload
+                  kind="screenshot"
+                  max={Math.max(0, 8 - shots.length)}
+                  limits={uploadConfig.limits.screenshot}
+                  label="Screenshots"
+                  hint=""
+                  bare
+                  leadingCount={shots.length}
+                  leading={shots.map((url, i) => (
+                    <ShotTile key={url} url={url} cover={i === 0} onRemove={() => setShots((list) => list.filter((u) => u !== url))} />
+                  ))}
+                  onChange={setNewShots}
+                  onBusyChange={(b) => setBusy((s) => ({ ...s, screenshot: b }))}
+                />
+              ) : (
+                <CurrentMedia urls={shots} onRemove={(url) => setShots((list) => list.filter((u) => u !== url))} />
               )}
-              <textarea
-                value={pastedShots}
-                onChange={(e) => setPastedShots(e.target.value)}
-                rows={2}
-                placeholder="Or paste image URLs, one per line"
-                className={`${textareaClass} mt-3`}
-              />
+              <details className="mt-3 text-sm">
+                <summary className="cursor-pointer text-muted-foreground hover:text-foreground">Paste image links instead</summary>
+                <textarea
+                  value={pastedShots}
+                  onChange={(e) => setPastedShots(e.target.value)}
+                  rows={2}
+                  placeholder="https://yourapp.com/screenshot.png (one per line)"
+                  className={`${textareaClass} mt-2`}
+                />
+              </details>
             </div>
             <div>
-              <p className="mb-2 text-[14px] text-muted-foreground">Demo video</p>
+              <p className="mb-2 text-[14px] text-muted-foreground">
+                Demo video <span className="text-muted-foreground/70">· MP4 or WEBM up to 50 MB, or a YouTube link</span>
+              </p>
               <CurrentMedia urls={video} onRemove={() => setVideo([])} video />
               {uploads && !video.length && (
                 <MediaUpload
@@ -320,6 +354,7 @@ function EditForm({ app }: { app: ShowcaseProject }) {
                   limits={uploadConfig.limits.video}
                   label="Upload a video"
                   hint="MP4 or WEBM, up to 50 MB"
+                  bare
                   onChange={setNewVideo}
                   onBusyChange={(b) => setBusy((s) => ({ ...s, video: b }))}
                 />

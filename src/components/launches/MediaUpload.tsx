@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
+import { Plus } from "lucide-react";
 import { ImagePlus, Loader2, RotateCcw, Video, X } from "lucide-react";
 
 import type { UploadConfig, UploadKind } from "@/hooks/use-showcase";
@@ -25,6 +26,12 @@ interface MediaUploadProps {
   onBusyChange: (busy: boolean) => void;
   label: string;
   hint: string;
+  /** Tiles shown before the new uploads in the same grid (e.g. already-saved screenshots). */
+  leading?: ReactNode;
+  /** Number of leading tiles, so the "+" tile knows it isn't the first. */
+  leadingCount?: number;
+  /** Hide the label/hint row (when the page shows its own). */
+  bare?: boolean;
 }
 
 const EXT_LABEL: Record<string, string> = {
@@ -39,7 +46,7 @@ function sizeLabel(bytes: number) {
   return `${Math.round(bytes / (1024 * 1024))} MB`;
 }
 
-export function MediaUpload({ kind, max, limits, onChange, onBusyChange, label, hint }: MediaUploadProps) {
+export function MediaUpload({ kind, max, limits, onChange, onBusyChange, label, hint, leading, leadingCount = 0, bare = false }: MediaUploadProps) {
   const [items, setItems] = useState<Item[]>([]);
   const [dragging, setDragging] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
@@ -112,16 +119,19 @@ export function MediaUpload({ kind, max, limits, onChange, onBusyChange, label, 
   };
 
   const canAdd = items.length < max;
-  const tileSize = square ? "h-24 w-24" : isVideo ? "aspect-video w-full sm:w-72" : "aspect-[16/10] w-full";
+  const tileSize = square ? "h-24 w-24" : isVideo ? "aspect-video w-full sm:w-56" : "aspect-[16/10] w-full";
 
   return (
     <div className="space-y-2">
-      <div className="flex items-baseline justify-between gap-3">
-        <p className="text-sm font-medium text-foreground">{label}</p>
-        <p className="text-xs text-muted-foreground">{hint}</p>
-      </div>
+      {!bare && (
+        <div className="flex items-baseline justify-between gap-3">
+          <p className="text-sm font-medium text-foreground">{label}</p>
+          <p className="text-xs text-muted-foreground">{hint}</p>
+        </div>
+      )}
 
       <div className={square || isVideo ? "flex flex-wrap gap-3" : "grid grid-cols-2 gap-3 sm:grid-cols-3"}>
+        {leading}
         {items.map((item) => (
           <div key={item.id} className={`relative overflow-hidden rounded-xl border border-border bg-background ${tileSize}`}>
             {isVideo ? (
@@ -185,8 +195,17 @@ export function MediaUpload({ kind, max, limits, onChange, onBusyChange, label, 
               dragging ? "border-primary bg-primary/5 text-foreground" : "border-border bg-card"
             }`}
           >
-            {isVideo ? <Video className="h-5 w-5" /> : <ImagePlus className="h-5 w-5" />}
-            <span>{square ? "Upload" : items.length ? "Add more" : "Upload or drop"}</span>
+            {items.length + leadingCount > 0 && !square && !isVideo ? (
+              <>
+                <Plus className="h-5 w-5" />
+                <span>Add</span>
+              </>
+            ) : (
+              <>
+                {isVideo ? <Video className="h-5 w-5" /> : <ImagePlus className="h-5 w-5" />}
+                <span>{square ? "Upload" : "Upload or drop"}</span>
+              </>
+            )}
           </button>
         )}
       </div>
