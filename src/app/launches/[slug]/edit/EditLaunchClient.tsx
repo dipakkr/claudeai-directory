@@ -9,6 +9,7 @@ import { toast } from "sonner";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { MediaUpload } from "@/components/launches/MediaUpload";
+import { LogoPicker } from "@/components/launches/LogoPicker";
 import { ApiError } from "@/lib/api";
 import { useAuth } from "@/lib/auth";
 import { CATEGORIES, PLATFORMS } from "@/lib/launch-options";
@@ -153,7 +154,7 @@ function EditForm({ app }: { app: ShowcaseProject }) {
   const [feedback, setFeedback] = useState(app.feedback_prompt ?? "");
 
   // Media: what is already saved, plus new uploads and pasted links.
-  const [logo, setLogo] = useState<string[]>(app.logo_url ? [app.logo_url] : []);
+  const [logo] = useState<string[]>(app.logo_url ? [app.logo_url] : []);
   const [shots, setShots] = useState<string[]>(app.gallery_images?.length ? app.gallery_images : app.images ?? []);
   const [video, setVideo] = useState<string[]>(app.video_url ? [app.video_url] : []);
   const [newLogo, setNewLogo] = useState<string[]>([]);
@@ -163,7 +164,6 @@ function EditForm({ app }: { app: ShowcaseProject }) {
   const [logoUrlInput, setLogoUrlInput] = useState("");
   const [busy, setBusy] = useState({ logo: false, screenshot: false, video: false });
   const [tab, setTab] = useState<EditTab>("about");
-  const [logoOpen, setLogoOpen] = useState(false);
   const uploading = Object.values(busy).some(Boolean);
 
   const gallery = useMemo(
@@ -211,68 +211,8 @@ function EditForm({ app }: { app: ShowcaseProject }) {
 
   return (
     <div>
-      {/* Identity: logo, name and pitch, edited in place like the launch header. */}
-      <div className="flex items-start gap-5">
-        <div className="shrink-0">
-          <div className="relative flex h-20 w-20 items-center justify-center overflow-hidden rounded-[16px] border border-border bg-foreground/[0.06] text-2xl font-semibold text-muted-foreground">
-            {logoUrl ? (
-              // eslint-disable-next-line @next/next/no-img-element -- maker logo preview
-              <img src={logoUrl} alt="" className="h-full w-full object-cover" referrerPolicy="no-referrer" />
-            ) : (
-              title.trim()[0]?.toUpperCase() || "?"
-            )}
-          </div>
-          <button type="button" onClick={() => setLogoOpen((v) => !v)} className="mt-2 w-20 text-center text-xs text-muted-foreground hover:text-foreground">
-            {logoOpen ? "Close" : logoUrl ? "Change logo" : "Add logo"}
-          </button>
-        </div>
-        <div className="min-w-0 flex-1 space-y-2 pt-1">
-          <input
-            aria-label="Name"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            maxLength={80}
-            placeholder="App name"
-            className="w-full rounded-[8px] border border-transparent bg-transparent px-2 py-1 -ml-2 font-sans text-[28px] font-semibold tracking-tight text-foreground placeholder:text-muted-foreground/50 hover:bg-foreground/[0.04] focus:border-[var(--cad-line-hover)] focus:bg-foreground/[0.06] focus:outline-none md:text-[32px]"
-          />
-          <input
-            aria-label="One-line pitch"
-            value={tagline}
-            onChange={(e) => setTagline(e.target.value)}
-            maxLength={140}
-            placeholder="One-line pitch"
-            className="w-full rounded-[8px] border border-transparent bg-transparent px-2 py-1 -ml-2 text-[16px] text-muted-foreground placeholder:text-muted-foreground/50 hover:bg-foreground/[0.04] focus:border-[var(--cad-line-hover)] focus:bg-foreground/[0.06] focus:text-foreground focus:outline-none"
-          />
-          <p className="text-xs text-muted-foreground/70">Click the name or pitch to edit. {tagline.length}/140</p>
-        </div>
-      </div>
-
-      {logoOpen && (
-        <div className="mt-5 space-y-3 rounded-[12px] border border-border p-4">
-          <CurrentMedia urls={logo} onRemove={() => setLogo([])} square />
-          {uploads ? (
-            <MediaUpload
-              kind="logo"
-              max={1}
-              limits={uploadConfig.limits.logo}
-              label={logo.length ? "Replace logo" : "Upload logo"}
-              hint="Square PNG, JPG or WEBP"
-              onChange={setNewLogo}
-              onBusyChange={(b) => setBusy((s) => ({ ...s, logo: b }))}
-            />
-          ) : (
-            <input
-              value={logoUrlInput}
-              onChange={(e) => setLogoUrlInput(e.target.value)}
-              placeholder={logo.length ? "Paste a new logo URL to replace it" : "https://yourapp.com/logo.png"}
-              className={inputClass}
-            />
-          )}
-        </div>
-      )}
-
       {/* Tabs for everything else; one save covers all of them. */}
-      <div role="tablist" aria-label="Launch details" className="mt-10 flex gap-6 overflow-x-auto border-b border-border">
+      <div role="tablist" aria-label="Launch details" className="flex gap-6 overflow-x-auto border-b border-border">
         {EDIT_TABS.map((t) => (
           <button
             key={t.id}
@@ -292,6 +232,27 @@ function EditForm({ app }: { app: ShowcaseProject }) {
       <div className="mt-8 space-y-6" role="tabpanel">
         {tab === "about" && (
           <>
+            <LogoPicker
+              current={logoUrl}
+              fallback={title.trim()[0]?.toUpperCase() || "?"}
+              limits={uploads ? uploadConfig.limits.logo : undefined}
+              onUploaded={(url) => setNewLogo([url])}
+              onBusyChange={(b) => setBusy((s) => ({ ...s, logo: b }))}
+              link={logoUrlInput}
+              onLink={setLogoUrlInput}
+            />
+            <div>
+              <Label text="Name" htmlFor="title" />
+              <input id="title" value={title} onChange={(e) => setTitle(e.target.value)} maxLength={80} className={inputClass} />
+            </div>
+            <div>
+              <Label text="One-line pitch" htmlFor="tagline" hint={`${tagline.length}/140`} />
+              <input id="tagline" value={tagline} onChange={(e) => setTagline(e.target.value)} maxLength={140} className={inputClass} />
+            </div>
+            <div>
+              <Label text="Website" htmlFor="website" hint="Can't be changed" />
+              <input id="website" value={app.app_url ?? ""} readOnly className={`${inputClass} cursor-not-allowed text-muted-foreground`} />
+            </div>
             <div>
               <p className="mb-2 text-[14px] text-muted-foreground">Category</p>
               <Chips options={CATEGORIES} value={[category]} onToggle={setCategory} />
@@ -452,7 +413,7 @@ export default function EditLaunchClient({ slug }: { slug: string }) {
             Your launches
           </Link>
           <p className="mt-8 font-mono text-[11px] uppercase tracking-[0.16em] text-primary">Edit launch</p>
-          <h1 className="sr-only">Edit {app?.title ?? "your launch"}</h1>
+          <h1 className="mt-3 font-sans text-3xl font-semibold tracking-tight text-foreground md:text-4xl">{app?.title ?? "Your launch"}</h1>
           {app && (
             <p className="mt-2 flex flex-wrap items-center gap-x-2 text-sm text-muted-foreground">
               <span>{app.badge_verified || app.paid_listing ? "Live" : app.status === "rejected" ? "Not approved" : "Waiting for badge"}</span>
