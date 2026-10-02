@@ -79,6 +79,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { track } from "@/lib/analytics";
+import { SPONSOR_MONTHLY_PRICE, openAdvertiseDialog } from "@/lib/advertise";
 import type { DirectoryItem, DirectoryType, SortKey } from "@/lib/directory";
 import { cn } from "@/lib/utils";
 
@@ -291,7 +292,18 @@ interface Collection {
 }
 
 /** "Collections" carousel: the biggest categories, with their best-known logos. Real data only. */
-function CollectionCarousel({ collections, noun, onExplore }: { collections: Collection[]; noun: string; onExplore: (category: string) => void }) {
+function CollectionCarousel({
+  collections,
+  noun,
+  onExplore,
+  advertise = false,
+}: {
+  collections: Collection[];
+  noun: string;
+  onExplore: (category: string) => void;
+  /** Show "Advertise your MCP" in the corner (the $249/mo sidebar slot). */
+  advertise?: boolean;
+}) {
   const [index, setIndex] = useState(0);
   if (collections.length === 0) return null;
   const current = collections[index % collections.length];
@@ -299,6 +311,20 @@ function CollectionCarousel({ collections, noun, onExplore }: { collections: Col
   return (
     <div className="mt-10">
       <div className={cn("relative overflow-hidden rounded-[11px] border border-border bg-gradient-to-b px-6 pb-7 pt-7 text-center", BANDS[index % BANDS.length])}>
+        {advertise && (
+          <button
+            type="button"
+            onClick={() => {
+              track("ad_slot_clicked", { slot: "collection" });
+              openAdvertiseDialog(undefined, "sidebar");
+            }}
+            className="absolute right-3 top-3 hidden items-center gap-1.5 rounded-full border border-foreground/15 bg-background/40 px-3 py-1.5 text-[12px] text-foreground/85 backdrop-blur transition-colors hover:bg-background/70 hover:text-foreground sm:inline-flex"
+          >
+            <Megaphone className="h-3.5 w-3.5" />
+            Advertise your MCP
+            <span className="text-foreground/55">· ${SPONSOR_MONTHLY_PRICE}/mo</span>
+          </button>
+        )}
         <p className="text-[12px] uppercase tracking-[0.08em] text-foreground/60">Collection · {current.count} {noun}</p>
         <h2 className="mt-1.5 font-sans text-[20px] font-normal text-foreground">
           {`Top ${categoryLabel(current.category).toLowerCase()} ${noun}`}
@@ -649,7 +675,7 @@ export default function DiscoverListing({
         </>
       ) : (
         <>
-          <CollectionCarousel collections={collections} noun={noun} onExplore={openCategory} />
+          <CollectionCarousel collections={collections} noun={noun} onExplore={openCategory} advertise={type === "mcp"} />
           {home.map((section) => (
             <Section
               key={section.title}
