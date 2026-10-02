@@ -301,9 +301,9 @@ function CollectionCarousel({ collections, noun, onExplore }: { collections: Col
       <div className={cn("relative overflow-hidden rounded-[11px] border border-border bg-gradient-to-b px-6 pb-7 pt-7 text-center", BANDS[index % BANDS.length])}>
         <p className="text-[12px] uppercase tracking-[0.08em] text-foreground/60">Collection · {current.count} {noun}</p>
         <h2 className="mt-1.5 font-sans text-[20px] font-normal text-foreground">
-          {noun.charAt(0).toUpperCase() + noun.slice(1)} for {categoryLabel(current.category).toLowerCase()}
+          {`Top ${categoryLabel(current.category).toLowerCase()} ${noun}`}
         </h2>
-        <p className="mt-1 text-[14px] text-foreground/75">The most-used {noun} in {categoryLabel(current.category).toLowerCase()}.</p>
+        <p className="mt-1 text-[14px] text-foreground/75">{`Top-ranked ${noun} for ${categoryLabel(current.category).toLowerCase()} work.`}</p>
         <div className="mx-auto mt-5 flex max-w-[640px] flex-wrap items-end justify-center gap-3">
           {current.items.map((item, i) => (
             <Link
@@ -390,7 +390,8 @@ export default function DiscoverListing({
   // MCP created_at values are bulk-import dates, so "Newest" means nothing there.
   const sorts: SortKey[] = type === "mcp" ? ["trending", "top"] : ["trending", "top", "new"];
   const tab = TYPE_TABS.find((t) => t.type === type);
-  const noun = tab?.noun ?? "resources";
+  // Plugins have no tab here but still need their own name ("Top database plugins", not "Resources for database").
+  const noun = tab?.noun ?? (type === "plugin" ? "plugins" : "resources");
 
   // Shareable, non-indexed filtered views.
   useEffect(() => {
