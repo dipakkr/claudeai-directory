@@ -45,10 +45,20 @@ export function compactNumber(n: number): string {
   return String(n);
 }
 
+/**
+ * MCP endpoints often live on hosts like mcp.stripe.com or bindings.mcp.cloudflare.com, which have
+ * no favicon (so a generic globe shows). Drop everything up to and including the "mcp" label.
+ */
+export function brandHost(hostname: string): string {
+  const labels = hostname.toLowerCase().split(".");
+  const i = labels.findIndex((label, idx) => idx < labels.length - 2 && /(^|-)mcp($|-)/.test(label));
+  return i >= 0 ? labels.slice(i + 1).join(".") : hostname;
+}
+
 export function faviconFor(url?: string | null, size = 64): string | null {
   if (!url) return null;
   try {
-    return `https://www.google.com/s2/favicons?domain=${new URL(url).hostname}&sz=${size}`;
+    return `https://www.google.com/s2/favicons?domain=${brandHost(new URL(url).hostname)}&sz=${size}`;
   } catch {
     return null;
   }
