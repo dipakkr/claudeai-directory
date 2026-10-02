@@ -301,7 +301,7 @@ function CollectionCarousel({
   collections: Collection[];
   noun: string;
   onExplore: (category: string) => void;
-  /** Show "Advertise your MCP" in the corner (the $249/mo sidebar slot). */
+  /** Show "Feature your MCP" in the corner (the $249/mo sidebar slot). */
   advertise?: boolean;
 }) {
   const [index, setIndex] = useState(0);
@@ -320,8 +320,8 @@ function CollectionCarousel({
             }}
             className="absolute right-3 top-3 hidden items-center gap-1.5 rounded-full border border-foreground/15 bg-background/40 px-3 py-1.5 text-[12px] text-foreground/85 backdrop-blur transition-colors hover:bg-background/70 hover:text-foreground sm:inline-flex"
           >
-            <Megaphone className="h-3.5 w-3.5" />
-            Advertise your MCP
+            <Sparkles className="h-3.5 w-3.5" />
+            Feature your MCP
             <span className="text-foreground/55">· ${SPONSOR_MONTHLY_PRICE}/mo</span>
           </button>
         )}
