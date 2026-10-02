@@ -6,7 +6,8 @@ import HomeContent from "@/components/home/HomeContent";
 import { HomePulse, type Pulse } from "@/components/home/HomePulse";
 import HomeLaunches from "@/components/home/HomeLaunches";
 import HomeCommunity from "@/components/home/HomeCommunity";
-import { rankedLaunches, selectedDiscussions } from "@/lib/home-community";
+import HomeMcpLaunches from "@/components/home/HomeMcpLaunches";
+import { isMcpLaunch, rankedLaunches, selectedDiscussions } from "@/lib/home-community";
 import { reviewedAgents } from "@/data/resource-guides";
 import { OrganizationSchema, WebSiteSchema } from "@/components/seo/JsonLd";
 import { fetchApi } from "@/lib/api-server";
@@ -59,6 +60,8 @@ export default async function Home() {
   // Live numbers and recent activity (the API caches this for a minute).
   const pulse = await fetchApi<Pulse>("/stats/pulse", { revalidate: 60 });
 
+  const launches = rankedLaunches(launchesData ?? []);
+  const mcpLaunches = launches.filter(isMcpLaunch);
   const threads = selectedDiscussions(threadsData ?? []);
 
   const items = [
@@ -79,12 +82,13 @@ export default async function Home() {
           memberCount={membersData?.total ?? 0}
           launches={
             <HomeLaunches
-              projects={rankedLaunches(launchesData ?? [])}
+              projects={launches}
               unavailable={launchesData === null}
               impressions={pulse?.launch_impressions}
               upvotesToday={pulse?.upvotes_today}
             />
           }
+          mcpLaunches={{ count: mcpLaunches.length, content: <HomeMcpLaunches projects={mcpLaunches} /> }}
           pulse={pulse ? <HomePulse pulse={pulse} /> : null}
           community={<Suspense fallback={<HomeCommunity threads={threads} replies={{}} unavailable={threadsData === null} />}>
             <CommunityPreview threads={threads} unavailable={threadsData === null} />

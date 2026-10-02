@@ -15,6 +15,8 @@ interface HomeContentProps {
   members: PublicProfile[];
   memberCount: number;
   pulse?: ReactNode;
+  /** The "MCP launches" tab next to Trending / Top / New. */
+  mcpLaunches?: { count: number; content: ReactNode };
 }
 
 const BROWSE = [
@@ -41,7 +43,7 @@ const BROWSE = [
   },
 ];
 
-export default function HomeContent({ items, orders, launches, community, members, memberCount, pulse }: HomeContentProps) {
+export default function HomeContent({ items, orders, launches, community, members, memberCount, pulse, mcpLaunches }: HomeContentProps) {
   const count = (type: DirectoryItem["type"]) => items.filter((i) => i.type === type).length;
 
   return (
@@ -65,7 +67,9 @@ export default function HomeContent({ items, orders, launches, community, member
       </section>
 
       <section className="mx-auto max-w-[840px] px-4 md:px-8">
-        <DirectoryList items={items} orders={orders} showTypeFilter hideSearch feedId="trending" pageSize={8} />
+        <DirectoryList items={items} orders={orders} showTypeFilter hideSearch feedId="trending" pageSize={8}
+          extraTab={mcpLaunches ? { label: "MCP launches", count: mcpLaunches.count, content: mcpLaunches.content } : undefined}
+        />
       </section>
 
       {/* Then what people are building with Claude. */}

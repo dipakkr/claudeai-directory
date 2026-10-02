@@ -30,6 +30,9 @@ export function rankedLaunches(projects: ShowcaseProject[], now = Date.now()): S
     .sort((a, b) => Number(b.promoted) - Number(a.promoted) || (b.upvotes ?? 0) - (a.upvotes ?? 0));
 }
 
+/** Launches that are MCP servers: categorised as one, or named "... MCP". */
+export const isMcpLaunch = (p: ShowcaseProject) => /\bmcp\b/i.test(p.category ?? "") || /\bmcp\b/i.test(p.title);
+
 export function selectedDiscussions(threads: Thread[]): Thread[] {
   return threads.filter(thread => thread.author_username && thread.body.trim().length >= 40 && /\b(claude|mcp|anthropic)\b/i.test(`${thread.title ?? ""} ${thread.body} ${thread.tags.join(" ")}`))
     .sort((a, b) => Date.parse(b.created_at) - Date.parse(a.created_at)).slice(0, 8);

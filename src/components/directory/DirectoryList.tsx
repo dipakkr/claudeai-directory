@@ -28,6 +28,8 @@ interface DirectoryListProps {
   /** Anchor id for the feed, e.g. "trending" for the homepage "Explore Trending" link. */
   feedId?: string;
   emptyMessage?: string;
+  /** One more tab after Trending / Top / New with its own content (homepage: "MCP launches"). */
+  extraTab?: { label: string; count?: number; content: React.ReactNode };
 }
 
 const SORTS: { key: SortKey; label: string }[] = [
@@ -60,11 +62,13 @@ export default function DirectoryList({
   syncUrl = false,
   feedId,
   emptyMessage = "Nothing here yet.",
+  extraTab,
 }: DirectoryListProps) {
   const [query, setQuery] = useState(initialQuery);
   const [category, setCategory] = useState(initialCategory === "All" ? "" : initialCategory);
   const [typeFilter, setTypeFilter] = useState<TypeFilter>("all");
-  const [sort, setSort] = useState<SortKey>("trending");
+  const [sort, setSort] = useState<SortKey | "extra">("trending");
+  const extraActive = Boolean(extraTab) && sort === "extra";
   const [visible, setVisible] = useState(pageSize);
   const searchRef = useRef<HTMLInputElement>(null);
 
@@ -103,7 +107,7 @@ export default function DirectoryList({
   const ordered = useMemo(() => {
     if (!orders) return items;
     const byKey = new Map(items.map((i) => [i.key, i]));
-    return orders[sort].map((k) => byKey.get(k)).filter((i): i is DirectoryItem => Boolean(i));
+    return orders[sort === "extra" ? "trending" : sort].map((k) => byKey.get(k)).filter((i): i is DirectoryItem => Boolean(i));
   }, [items, orders, sort]);
 
   const counts = useMemo(() => {
@@ -201,11 +205,25 @@ export default function DirectoryList({
                     {s.label}
                   </button>
                 ))}
+                {extraTab && (
+                  <button
+                    type="button"
+                    role="tab"
+                    aria-selected={extraActive}
+                    onClick={() => setSort("extra")}
+                    className={`-mb-px inline-flex items-center gap-1.5 border-b pb-3 text-sm transition-colors ${
+                      extraActive ? "border-foreground text-foreground" : "border-transparent text-muted-foreground hover:text-foreground"
+                    }`}
+                  >
+                    {extraTab.label}
+                    {extraTab.count ? <span className="font-mono text-[10.5px] opacity-70">{extraTab.count}</span> : null}
+                  </button>
+                )}
               </div>
             ) : (
               <span />
             )}
-            {showTypes && (
+            {showTypes && !extraActive && (
               <div aria-label="Filter by type" className="flex flex-wrap gap-1.5 pb-2.5">
                 {[{ type: "all" as TypeFilter, label: "All" }, ...typeChips.map((t) => ({ type: t.type as TypeFilter, label: t.label }))].map(
                   (t) => (
@@ -228,7 +246,9 @@ export default function DirectoryList({
           </div>
         )}
 
-        {shown.length > 0 ? (
+        {extraActive ? (
+          extraTab?.content
+        ) : shown.length > 0 ? (
           <ol className={orders || showTypes ? "" : "border-t border-border"}>
             {shown.map((item, index) => (
               <DirectoryRow key={item.key} item={item} rank={index + 1} showType={showTypes && typeFilter === "all"} />
@@ -240,7 +260,7 @@ export default function DirectoryList({
           </div>
         )}
 
-        {filtered.length > visible && (
+        {!extraActive && filtered.length > visible && (
           <div className="mt-8 flex justify-center">
             <button
               type="button"
