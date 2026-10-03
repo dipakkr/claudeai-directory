@@ -11,8 +11,9 @@ import { countryOptions, PROFESSIONS } from "@/lib/profile-options";
 import type { User } from "@/types";
 import { PanelHeader } from "./Panels";
 
+// Same filled fields as the launch submit and edit forms.
 const inputClass =
-  "h-10 w-full rounded-lg border border-border bg-background px-3 text-sm text-foreground placeholder:text-muted-foreground/70 focus:border-primary/60 focus:outline-none";
+  "h-10 w-full rounded-[8px] border border-transparent bg-foreground/[0.06] px-3 text-[14px] text-foreground placeholder:text-muted-foreground/60 transition-colors focus:border-[var(--cad-line-hover)] focus:outline-none";
 
 type Availability = "idle" | "checking" | "available" | "taken" | "invalid";
 
@@ -37,14 +38,15 @@ function withHttps(value: string) {
   return /^https?:\/\//i.test(trimmed) ? trimmed.replace(/^http:/i, "https:") : `https://${trimmed}`;
 }
 
-function Row({ label, hint, children }: { label: string; hint?: string; children: React.ReactNode }) {
+/** Label above the field, hint on the right: the launch forms' layout. */
+function Field({ label, htmlFor, hint, children }: { label: string; htmlFor?: string; hint?: React.ReactNode; children: React.ReactNode }) {
   return (
-    <div className="grid gap-2 border-b border-border px-5 py-5 last:border-b-0 sm:grid-cols-[200px_minmax(0,1fr)] sm:gap-6">
-      <div>
-        <p className="text-sm font-medium text-foreground">{label}</p>
-        {hint && <p className="mt-0.5 text-xs text-muted-foreground">{hint}</p>}
-      </div>
-      <div className="min-w-0">{children}</div>
+    <div>
+      <label htmlFor={htmlFor} className="mb-2 flex items-baseline justify-between gap-3 text-[14px] text-muted-foreground">
+        {label}
+        {hint && <span className="text-xs">{hint}</span>}
+      </label>
+      {children}
     </div>
   );
 }
@@ -119,12 +121,13 @@ export function SettingsPanel({ user }: { user: User }) {
   };
 
   return (
-    <section>
+    <section className="max-w-[680px]">
       <PanelHeader title="Profile and settings" description="This is what builders see on your public profile." />
-      <div className="overflow-hidden rounded-2xl border border-border bg-card">
-        <Row label="Username" hint="Your profile lives at /u/username">
+      <div className="space-y-6">
+        <Field label="Username" htmlFor="username" hint="claudeai.directory/u/username">
           <div className="relative">
             <input
+              id="username"
               value={form.username}
               onChange={(e) => {
                 const value = e.target.value.toLowerCase().replace(/[^a-z0-9_-]/g, "");
@@ -133,7 +136,6 @@ export function SettingsPanel({ user }: { user: User }) {
               }}
               maxLength={30}
               className={`${inputClass} pr-9`}
-              aria-label="Username"
             />
             <span className="absolute right-3 top-1/2 -translate-y-1/2">
               {availability === "checking" && <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />}
@@ -142,33 +144,32 @@ export function SettingsPanel({ user }: { user: User }) {
             </span>
           </div>
           {availability === "taken" && <p className="mt-1.5 text-xs text-destructive">That username is taken.</p>}
-          {availability === "invalid" && (
-            <p className="mt-1.5 text-xs text-destructive">3 to 30 characters: letters, numbers, hyphens and underscores.</p>
-          )}
-        </Row>
+          {availability === "invalid" && <p className="mt-1.5 text-xs text-destructive">3 to 30 characters: letters, numbers, hyphens and underscores.</p>}
+        </Field>
 
-        <Row label="One-line intro" hint="Shown on your profile and posts">
-          <input value={form.bio} onChange={(e) => set("bio", e.target.value)} maxLength={160} aria-label="One-line intro" className={inputClass} />
-          <p className="mt-1.5 text-right text-xs text-muted-foreground">{form.bio.length}/160</p>
-        </Row>
+        <Field label="One-line intro" htmlFor="bio" hint={`${form.bio.length}/160`}>
+          <input id="bio" value={form.bio} onChange={(e) => set("bio", e.target.value)} maxLength={160} placeholder="What you build, in a line" className={inputClass} />
+        </Field>
 
-        <Row label="Role">
+        <Field label="Role">
           <div className="flex flex-wrap gap-2">
-            {PROFESSIONS.map((item) => (
-              <button
-                key={item}
-                type="button"
-                aria-pressed={form.profession === item}
-                onClick={() => set("profession", item)}
-                className={`h-8 rounded-full border px-3 text-xs font-medium transition-colors ${
-                  form.profession === item
-                    ? "border-foreground bg-foreground text-background"
-                    : "border-border bg-background text-muted-foreground hover:text-foreground"
-                }`}
-              >
-                {item}
-              </button>
-            ))}
+            {PROFESSIONS.map((item) => {
+              const active = form.profession === item;
+              return (
+                <button
+                  key={item}
+                  type="button"
+                  aria-pressed={active}
+                  onClick={() => set("profession", active ? "" : item)}
+                  className={`inline-flex h-8 items-center gap-1 rounded-full border px-3 text-xs font-medium transition-colors ${
+                    active ? "border-foreground bg-foreground text-background" : "border-border bg-card text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  {active && <Check className="h-3 w-3" />}
+                  {item}
+                </button>
+              );
+            })}
           </div>
           {form.profession === "Other" && (
             <input
@@ -180,10 +181,10 @@ export function SettingsPanel({ user }: { user: User }) {
               className={`${inputClass} mt-3`}
             />
           )}
-        </Row>
+        </Field>
 
-        <Row label="Country">
-          <select value={form.country} onChange={(e) => set("country", e.target.value)} aria-label="Country" className={inputClass}>
+        <Field label="Country" htmlFor="country">
+          <select id="country" value={form.country} onChange={(e) => set("country", e.target.value)} className={inputClass}>
             <option value="">Prefer not to say</option>
             {countries.map(({ code, name }) => (
               <option key={code} value={code}>
@@ -191,48 +192,57 @@ export function SettingsPanel({ user }: { user: User }) {
               </option>
             ))}
           </select>
-        </Row>
+        </Field>
 
-        <Row label="Links" hint="Optional">
-          <div className="grid gap-2 sm:grid-cols-2">
-            <input value={form.twitter} onChange={(e) => set("twitter", e.target.value)} placeholder="X handle" aria-label="X handle" className={inputClass} />
-            <input value={form.github} onChange={(e) => set("github", e.target.value)} placeholder="GitHub username" aria-label="GitHub username" className={inputClass} />
-            <input value={form.linkedin} onChange={(e) => set("linkedin", e.target.value)} placeholder="linkedin.com/in/you" aria-label="LinkedIn profile URL" className={inputClass} />
-            <input value={form.website} onChange={(e) => set("website", e.target.value)} placeholder="yourwebsite.com" aria-label="Website" className={inputClass} />
-          </div>
-        </Row>
+        <div className="grid gap-4 sm:grid-cols-2">
+          <Field label="X" htmlFor="twitter">
+            <input id="twitter" value={form.twitter} onChange={(e) => set("twitter", e.target.value)} placeholder="handle" className={inputClass} />
+          </Field>
+          <Field label="GitHub" htmlFor="github">
+            <input id="github" value={form.github} onChange={(e) => set("github", e.target.value)} placeholder="username" className={inputClass} />
+          </Field>
+          <Field label="LinkedIn" htmlFor="linkedin">
+            <input id="linkedin" value={form.linkedin} onChange={(e) => set("linkedin", e.target.value)} placeholder="linkedin.com/in/you" className={inputClass} />
+          </Field>
+          <Field label="Website" htmlFor="website">
+            <input id="website" value={form.website} onChange={(e) => set("website", e.target.value)} placeholder="yourwebsite.com" className={inputClass} />
+          </Field>
+        </div>
 
-        <Row label="Email" hint={user.email}>
-          <label className="flex items-center justify-between gap-4">
-            <span className="text-sm text-muted-foreground">Email me when someone replies to my discussions</span>
+        <Field label="Email" hint={user.email}>
+          <label className="flex items-center justify-between gap-4 rounded-[8px] bg-foreground/[0.06] px-3 py-2.5">
+            <span className="text-[14px] text-foreground">Email me when someone replies to my posts</span>
             <Switch checked={form.email_notifications} onCheckedChange={(value) => set("email_notifications", value)} />
           </label>
-        </Row>
+        </Field>
       </div>
 
-      <div className="sticky bottom-4 mt-4 flex justify-end gap-2">
-        {dirty && (
+      {/* Same save bar as the edit launch page. */}
+      <div className="sticky bottom-0 z-10 -mx-4 mt-10 border-t border-border bg-background/95 px-4 py-3 backdrop-blur md:mx-0 md:px-0" style={{ paddingBottom: "max(0.75rem, env(safe-area-inset-bottom, 0px))" }}>
+        <div className="flex items-center justify-end gap-3">
+          {dirty && (
+            <button
+              type="button"
+              onClick={() => {
+                setForm(initialForm(user));
+                setAvailability("idle");
+              }}
+              disabled={saving}
+              className="text-sm text-muted-foreground hover:text-foreground"
+            >
+              Discard
+            </button>
+          )}
           <button
             type="button"
-            onClick={() => {
-              setForm(initialForm(user));
-              setAvailability("idle");
-            }}
-            disabled={saving}
-            className="h-10 rounded-full border border-border bg-card px-4 text-sm font-medium text-foreground"
+            onClick={save}
+            disabled={!dirty || saving || blocked}
+            className="inline-flex h-10 items-center justify-center gap-2 rounded-full bg-primary px-5 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90 disabled:opacity-50"
           >
-            Discard
+            {saving && <Loader2 className="h-4 w-4 animate-spin" />}
+            Save changes
           </button>
-        )}
-        <button
-          type="button"
-          onClick={save}
-          disabled={!dirty || saving || blocked}
-          className="inline-flex h-10 items-center gap-2 rounded-full bg-foreground px-5 text-sm font-medium text-background shadow-sm hover:bg-foreground/85 disabled:opacity-40"
-        >
-          {saving && <Loader2 className="h-4 w-4 animate-spin" />}
-          Save changes
-        </button>
+        </div>
       </div>
     </section>
   );
