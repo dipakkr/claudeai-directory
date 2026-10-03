@@ -393,6 +393,8 @@ export interface Thread {
   upvotes?: number;
   author_headline?: string | null;
   created_at: string;
+  /** Set when the author edited the post. */
+  edited_at?: string | null;
 }
 
 export interface Reply {

@@ -9,13 +9,24 @@ import { useSignIn } from "@/components/auth/SignInDialog";
 import { api } from "@/lib/api";
 import { useAuth } from "@/lib/auth";
 
-/** ⋯ menu on a post: delete your own, report anyone else's. */
-export function PostMenu({ postId, authorUsername, onDeleted }: { postId: string; authorUsername?: string; onDeleted?: () => void }) {
+/** ⋯ menu on a post: edit or delete your own (admins too), report anyone else's. */
+export function PostMenu({
+  postId,
+  authorUsername,
+  onDeleted,
+  onEdit,
+}: {
+  postId: string;
+  authorUsername?: string;
+  onDeleted?: () => void;
+  /** Shown to the author when the page can edit in place. */
+  onEdit?: () => void;
+}) {
   const { user } = useAuth();
   const { requireAuth } = useSignIn();
   const queryClient = useQueryClient();
   const [confirming, setConfirming] = useState(false);
-  const own = Boolean(user?.username && user.username === authorUsername);
+  const own = Boolean(user?.username && user.username === authorUsername) || user?.role === "admin";
 
   const remove = async () => {
     if (!confirming) {
@@ -46,6 +57,7 @@ export function PostMenu({ postId, authorUsername, onDeleted }: { postId: string
         <MoreHorizontal className="h-4 w-4" />
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-44">
+        {own && onEdit && <DropdownMenuItem onSelect={onEdit}>Edit post</DropdownMenuItem>}
         {own ? (
           <DropdownMenuItem
             onSelect={(event) => {

@@ -20,6 +20,7 @@ import type { PublicProfile, Reply, Thread } from "@/types";
 import { postTitle } from "@/lib/feed";
 import { LinkPreviewCard } from "@/components/feed/LinkPreviewCard";
 import { PostMenu } from "@/components/feed/PostMenu";
+import { EditPostForm } from "@/components/feed/EditPostForm";
 import { useRouter } from "next/navigation";
 
 function timeAgo(dateStr: string): string {
@@ -157,19 +158,21 @@ function Byline({
   username,
   headline,
   created,
+  edited,
   small,
 }: {
   author: string;
   username?: string;
   headline?: string | null;
   created: string;
+  edited?: boolean;
   small?: boolean;
 }) {
   return (
     <div className={`flex flex-wrap items-baseline gap-x-1.5 ${small ? "text-[13px]" : "text-sm"}`}>
       <AuthorName author={author} username={username} className="font-semibold text-foreground" />
       {headline && <span className="text-muted-foreground">{headline}</span>}
-      <span className="text-xs text-muted-foreground/80">· {timeAgo(created)}</span>
+      <span className="text-xs text-muted-foreground/80">· {timeAgo(created)}{edited ? " · edited" : ""}</span>
     </div>
   );
 }
@@ -257,6 +260,7 @@ export default function ThreadDetail({
   const upvote = useCommunityUpvote(id);
   const createReply = useCreateReply(id);
   const router = useRouter();
+  const [editing, setEditing] = useState(false);
   const votes: VoteContext = {
     voted: new Set(myVotes ?? []),
     onVote: async (type, targetId) =>
@@ -300,7 +304,7 @@ export default function ThreadDetail({
 
                 <div className="mt-6 flex items-center gap-3">
                   <AuthorAvatar src={thread.author_avatar} author={thread.author} className="h-10 w-10 text-sm" />
-                  <Byline author={thread.author} username={thread.author_username} headline={thread.author_headline || role} created={thread.created_at} />
+                  <Byline author={thread.author} username={thread.author_username} headline={thread.author_headline || role} created={thread.created_at} edited={Boolean(thread.edited_at)} />
                   <span
                     className="ml-auto inline-flex shrink-0 items-center gap-1.5 rounded-full border border-border bg-card px-3 py-1 text-sm text-foreground"
                     title="Times this post was opened"
@@ -309,9 +313,13 @@ export default function ThreadDetail({
                     <span className="font-medium tabular-nums">{(thread.views ?? 0).toLocaleString()}</span>
                     <span className="text-muted-foreground">{thread.views === 1 ? "view" : "views"}</span>
                   </span>
-                  <PostMenu postId={thread.id} authorUsername={thread.author_username} onDeleted={() => router.push("/feed")} />
+                  <PostMenu postId={thread.id} authorUsername={thread.author_username} onDeleted={() => router.push("/feed")} onEdit={() => setEditing(true)} />
                 </div>
 
+                {editing ? (
+                  <EditPostForm thread={thread} onDone={() => setEditing(false)} />
+                ) : (
+                <>
                 {thread.title ? (
                   <h1 className="mt-4 text-balance font-sans text-[1.75rem] font-bold leading-tight tracking-tight text-foreground md:text-[2rem]">
                     {thread.title}
@@ -338,6 +346,8 @@ export default function ThreadDetail({
                   <div className="mt-5 max-w-[72ch]">
                     <LinkPreviewCard url={thread.link_url} preview={thread.link_preview} />
                   </div>
+                )}
+                </>
                 )}
 
                 <div className="mt-6 flex flex-wrap items-center gap-2 border-y border-border py-4">
