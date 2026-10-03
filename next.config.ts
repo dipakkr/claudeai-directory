@@ -26,6 +26,10 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [
       ...courseLessonRedirects,
+      // Junk URLs (stray symbols, "undefined", old index pages) go home. Real unknown pages stay 404.
+      { source: "/:junk([^a-zA-Z0-9]+)", destination: "/", permanent: true },
+      { source: "/:junk(%2[0-9A-Fa-f].*|%3[A-Fa-f].*|%5[B-Fb-f].*|%7[B-Eb-e].*)", destination: "/", permanent: true },
+      { source: "/:junk(undefined|null|index\\.html|index\\.php|index|home|default\\.aspx)", destination: "/", permanent: true },
       // One submit flow for launches.
       { source: "/showcase/submit", destination: "/launches/submit", permanent: true },
       // The forum merged into the feed: posts keep their ids.
