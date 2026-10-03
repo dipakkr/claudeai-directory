@@ -156,6 +156,32 @@ function Chart({ title, aside, children }: { title: string; aside?: React.ReactN
   );
 }
 
+/** Public, read-only OpenPanel dashboard for the site: real-time visitors, pages and sources. */
+const LIVE_ANALYTICS_URL = "https://analytics.tooljunction.io/share/overview/iwlGOl";
+
+function LiveAnalytics() {
+  return (
+    <section id="live" className="mt-12 scroll-mt-24">
+      <SectionLabel aside="Public dashboard, updates in real time">Live traffic</SectionLabel>
+      <div className="mt-4 overflow-hidden rounded-[6px] border border-border bg-card">
+        <iframe
+          src={LIVE_ANALYTICS_URL}
+          title="Live traffic for Claude AI Directory"
+          loading="lazy"
+          referrerPolicy="no-referrer"
+          className="block h-[720px] w-full md:h-[900px]"
+        />
+      </div>
+      <p className="mt-2 text-xs text-muted-foreground">
+        Nothing hidden: this is the same analytics dashboard we use, shared read-only.{" "}
+        <a href={LIVE_ANALYTICS_URL} target="_blank" rel="noopener noreferrer" className="text-foreground underline-offset-4 hover:underline">
+          Open it full screen
+        </a>
+      </p>
+    </section>
+  );
+}
+
 export default async function StatsPage() {
   const data = await fetchApi<OpenStats>("/stats/open", { revalidate: 600 });
 
@@ -178,7 +204,13 @@ export default async function StatsPage() {
             <Link href="/?advertise=1" className="inline-flex h-10 items-center rounded-[6px] border border-border px-4 text-sm font-medium text-foreground hover:bg-card">
               Advertise to Claude builders
             </Link>
+            <a href="#live" className="inline-flex h-10 items-center gap-2 rounded-[6px] border border-border px-4 text-sm font-medium text-foreground hover:bg-card">
+              <span className="h-2 w-2 animate-pulse rounded-full bg-green-500" aria-hidden="true" />
+              Live traffic
+            </a>
           </div>
+
+          <LiveAnalytics />
 
           {!data ? (
             <p className="mt-12 rounded-[6px] border border-dashed border-border p-8 text-center text-sm text-muted-foreground">Stats are temporarily unavailable. Try again in a minute.</p>
