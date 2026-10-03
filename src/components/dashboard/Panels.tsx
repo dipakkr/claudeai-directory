@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Bell, Bookmark, MessageSquare, Package, Rocket } from "lucide-react";
+import { ArrowRight, Bell, Bookmark, MessageSquare, Package, Rocket } from "lucide-react";
 import type { ReactNode } from "react";
 import { useQuery } from "@tanstack/react-query";
 
@@ -140,16 +140,17 @@ export function LaunchRows({ apps, loading }: { apps: ShowcaseProject[]; loading
               <Link href={`/launches/${app.id}/edit`} className="text-muted-foreground hover:text-foreground">Edit</Link>
               {live && <Link href={`/launches/${app.id}/analytics`} className="text-muted-foreground hover:text-foreground">Analytics</Link>}
               {live ? (
-                <Link href={`/launches/${app.id}`} className="inline-flex h-8 items-center rounded-full border border-border px-3.5 text-foreground hover:border-[var(--cad-line-hover)]">
+                <Link href={`/launches/${app.id}`} className="inline-flex h-8 items-center rounded-[8px] border border-border px-3 text-[13px] text-foreground hover:border-[var(--cad-line-hover)]">
                   View
                 </Link>
               ) : !rejected ? (
                 // The options (badge or one-time listing) are explained on the next page.
                 <Link
                   href={`/launches/submit?finish=${encodeURIComponent(app.id)}`}
-                  className="inline-flex h-8 items-center rounded-full bg-primary px-3.5 font-medium text-primary-foreground hover:opacity-90"
+                  className="inline-flex h-8 items-center gap-1 rounded-[8px] border border-primary/40 px-3 text-[13px] font-medium text-primary transition-colors hover:bg-primary/10"
                 >
                   Complete listing
+                  <ArrowRight className="h-3.5 w-3.5" />
                 </Link>
               ) : null}
             </div>
