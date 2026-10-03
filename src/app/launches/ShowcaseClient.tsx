@@ -279,35 +279,15 @@ export default function ShowcaseClient({
             </Link>
           </div>
 
-          {/* Free listing: the real badge on a "your site" stage, then three steps and the CTA. */}
-          <div className="mt-6 grid overflow-hidden rounded-[12px] border border-primary/25 bg-[linear-gradient(135deg,hsl(var(--primary)/0.08),transparent_60%)] sm:grid-cols-[240px_minmax(0,1fr)]">
-            <div className="relative flex flex-col items-center justify-center gap-2 border-b border-primary/15 bg-[radial-gradient(hsl(var(--foreground)/0.09)_1px,transparent_1px)] [background-size:14px_14px] px-6 py-5 sm:border-b-0 sm:border-r">
-              {/* eslint-disable-next-line @next/next/no-img-element -- our own SVG badge (the generic slug renders the same artwork) */}
-              <img src="/badge/your-app?theme=dark" alt="Listed on Claude AI Directory badge" width={176} height={43} className="h-[43px] w-[176px] drop-shadow-[0_8px_24px_rgba(0,0,0,0.45)]" />
-              <span className="font-mono text-[10.5px] text-muted-foreground">on yoursite.com</span>
-            </div>
-            <div className="flex flex-col gap-3 px-5 py-4 sm:flex-row sm:items-center sm:gap-6">
-              <div className="min-w-0 flex-1">
-                <p className="font-mono text-[10.5px] uppercase tracking-[0.16em] text-primary">Free listing</p>
-                <p className="mt-1 font-sans text-[15px] font-medium text-foreground">Launch for free and get a dofollow backlink</p>
-                <ol className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 text-[12.5px] text-muted-foreground">
-                  {["Submit your app", "Add the badge", "Go live"].map((step, i) => (
-                    <li key={step} className="inline-flex items-center gap-1.5">
-                      {i > 0 && <span aria-hidden className="text-muted-foreground/50">→</span>}
-                      <span className="flex h-4 w-4 items-center justify-center rounded-full bg-primary/15 font-mono text-[10px] text-primary">{i + 1}</span>
-                      {step}
-                    </li>
-                  ))}
-                </ol>
-              </div>
-              <Link
-                href="/launches/submit"
-                className="inline-flex h-9 shrink-0 items-center justify-center gap-1.5 self-start rounded-[8px] bg-primary px-4 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90 sm:self-auto"
-              >
-                Launch your app
-                <ArrowRight className="h-3.5 w-3.5" />
-              </Link>
-            </div>
+          {/* Free listing: the real badge and one line. */}
+          <div className="mt-6 flex flex-col gap-3 rounded-[10px] border border-border px-4 py-3 sm:flex-row sm:items-center sm:gap-4">
+            {/* eslint-disable-next-line @next/next/no-img-element -- our own SVG badge (the generic slug renders the same artwork) */}
+            <img src="/badge/your-app?theme=dark" alt="Listed on Claude AI Directory badge" width={156} height={38} className="h-[38px] w-[156px] shrink-0" />
+            <p className="min-w-0 flex-1 text-[13.5px] text-muted-foreground">Launch for free. Add the badge to your site and get a dofollow backlink.</p>
+            <Link href="/launches/submit" className="inline-flex shrink-0 items-center gap-1 text-sm font-medium text-primary hover:underline">
+              Launch your app
+              <ArrowRight className="h-3.5 w-3.5" />
+            </Link>
           </div>
 
           <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
