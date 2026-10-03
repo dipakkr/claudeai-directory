@@ -693,7 +693,7 @@ function ShareStep({ app, onAnother }: { app: ShowcaseProject; onAnother: () => 
 /* ---------- page ---------- */
 
 export default function SubmitLaunchClient() {
-  const { isAuthenticated, isLoading } = useAuth();
+  const { isAuthenticated, isLoading, user } = useAuth();
   const submit = useSubmitShowcaseProject();
   const autofill = useLaunchAutofill();
   const aiDraft = useLaunchAiDraft();
@@ -771,6 +771,15 @@ export default function SubmitLaunchClient() {
       maker_comment: current.maker_comment || d.maker_comment,
     }));
 
+  // Same shape as the AI draft, with the maker's name and role from their profile.
+  const makerTemplate = (title: string, tagline: string) => {
+    const first = user?.name && !user.name.includes("@") ? user.name.trim().split(/\s+/)[0] : user?.username;
+    const role = user?.profession === "Other" ? user?.profession_detail : user?.profession;
+    const hello = first ? `Hi everyone, I'm ${first}${role ? `, a ${role},` : ""} and I built ${title || "this"}.` : `Hi everyone, I built ${title || "this"}.`;
+    const what = tagline ? `- ${tagline.replace(/[.!]*$/, "")}\n- ...` : "- ...\n- ...";
+    return `${hello}\n\n**Why I built it**\n...\n\n**What it does**\n${what}\n\n**I'd love your feedback on**\n...`;
+  };
+
   // A starting point for the maker's first comment; they edit it before submitting.
   const draftMakerComment = () =>
     setForm((current) =>
@@ -778,7 +787,7 @@ export default function SubmitLaunchClient() {
         ? current
         : {
             ...current,
-            maker_comment: `Hey everyone, I'm the maker of ${current.title || "this app"}.${current.tagline ? ` ${current.tagline.replace(/[.!]*$/, ".")}` : ""}\n\nI built it because ...\n\nI'd love your feedback on ...`,
+            maker_comment: makerTemplate(current.title, current.tagline),
           },
     );
 
@@ -836,7 +845,8 @@ export default function SubmitLaunchClient() {
       toast.error("Name and description are required");
       return;
     }
-    if (form.maker_comment.trim().length < 20 || /because \.\.\.|feedback on \.\.\./.test(form.maker_comment)) {
+    // "..." left on its own line (or as a bullet) means a template part wasn't filled in.
+    if (form.maker_comment.trim().length < 20 || /because \.\.\.|feedback on \.\.\.|(^|\n)\s*(- )?\.\.\.\s*($|\n)/.test(form.maker_comment)) {
       toast.error("Finish your first comment: replace the ... parts with your own words");
       document.getElementById("maker_comment")?.focus();
       return;
