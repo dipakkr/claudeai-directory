@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import Link from "next/link";
+import { launchTheme } from "@/lib/launch-theme";
 import { notFound, permanentRedirect } from "next/navigation";
 import {
   ArrowLeft,
@@ -208,10 +209,18 @@ export default async function LaunchDetailPage({
   const secondaryButton =
     "inline-flex h-10 items-center gap-2 rounded-full border border-border bg-card px-4 text-sm text-foreground transition-colors hover:border-[var(--cad-line-hover)]";
 
+  // The launch's colour (same as its share card), as a soft band behind the header.
+  const theme = launchTheme(project.id);
+
   return (
-    <div className="min-h-screen bg-background">
+    <div className="relative min-h-screen bg-background">
       <Header />
-      <main className="mx-auto max-w-[820px] px-4 pb-20 pt-8 md:px-8 md:pt-10">
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 top-0 -z-0 hidden h-[420px] opacity-70 dark:block"
+        style={{ background: `linear-gradient(180deg, ${theme.bottom} 0%, ${theme.top}99 45%, transparent 100%)` }}
+      />
+      <main className="relative mx-auto max-w-[820px] px-4 pb-20 pt-8 md:px-8 md:pt-10">
         <Link
           href="/launches"
           aria-label="Back to app launches"
@@ -228,7 +237,7 @@ export default async function LaunchDetailPage({
               <FaviconBox
                 src={logo}
                 name={project.title}
-                className="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-[12px] border border-border bg-card text-xl font-semibold text-muted-foreground md:h-[72px] md:w-[72px]"
+                className="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-[12px] border border-white/10 bg-black/20 text-xl font-semibold text-muted-foreground md:h-[72px] md:w-[72px]"
               />
               <div className="min-w-0 flex-1">
                 <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1">

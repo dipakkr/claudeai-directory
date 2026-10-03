@@ -3,13 +3,11 @@
 import { Fragment } from "react";
 import Link from "next/link";
 import { ArrowRight, Megaphone } from "lucide-react";
-import { LaunchLogo, TodayDelta } from "@/components/launches/LaunchListRow";
+import { LaunchLineRow } from "@/components/launches/LaunchListRow";
 import { UpvotePill } from "@/components/launches/UpvotePill";
 import { SPONSOR_MONTHLY_PRICE, openAdvertiseDialog } from "@/lib/advertise";
 import { track } from "@/lib/analytics";
 import type { ShowcaseProject } from "@/types";
-
-const pitch = (p: ShowcaseProject) => p.tagline?.trim() || p.description.trim();
 
 /** Sponsored rows sit inside the list, DevHunt-style: after the 3rd launch, then every 8. */
 const sponsorAfter = (index: number, total: number) => index === Math.min(2, total - 1) || (index > 2 && (index - 2) % 8 === 0);
@@ -67,32 +65,14 @@ export default function HomeMcpLaunches({
             const today = upvotesToday[project.id] ?? 0;
             return (
               <Fragment key={project.id}>
-                <li data-launch-impression={project.id} data-surface="home_mcp_tab">
-                  <Link
-                    href={`/launches/${encodeURIComponent(project.id)}`}
-                    className="group -mx-3 flex items-center gap-4 rounded-[8px] px-3 py-3.5 transition-colors hover:bg-foreground/[0.05]"
-                  >
-                    <span className={`hidden w-6 shrink-0 font-mono text-[13px] tabular-nums sm:block ${index < 3 ? "text-primary" : "text-muted-foreground"}`}>
-                      {index + 1}
-                    </span>
-                    <span className="[&>span]:h-10 [&>span]:w-10">
-                      <LaunchLogo project={project} />
-                    </span>
-                    <span className="flex min-w-0 flex-1 items-center gap-2">
-                      <span className="min-w-0 truncate text-[15px]">
-                        <span className="text-foreground transition-colors group-hover:text-primary">{project.title}</span>
-                        <span className="text-muted-foreground"> · {pitch(project)}</span>
-                      </span>
-                      {project.promoted && (
-                        <span className="shrink-0 rounded-[4px] border border-primary/40 px-1.5 py-px font-mono text-[10px] uppercase tracking-[0.1em] text-primary">
-                          Promoted
-                        </span>
-                      )}
-                    </span>
-                    <TodayDelta upvotes={today} views={viewsToday[project.id]} className="hidden shrink-0 sm:inline-flex" />
-                    <UpvotePill count={project.upvotes ?? 0} />
-                  </Link>
-                </li>
+                <LaunchLineRow
+                  project={project}
+                  rank={index + 1}
+                  surface="home_mcp_tab"
+                  upvotesToday={today}
+                  viewsToday={viewsToday[project.id]}
+                  right={<UpvotePill count={project.upvotes ?? 0} />}
+                />
                 {sponsorAfter(index, shown.length) && <SponsorRow />}
               </Fragment>
             );

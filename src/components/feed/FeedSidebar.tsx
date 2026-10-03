@@ -1,9 +1,9 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { UpvotePill } from "@/components/launches/UpvotePill";
+import { LaunchLogo } from "@/components/launches/LaunchListRow";
 
 import { DiscussionAvatar } from "@/components/discussion/Discussion";
-import { faviconFor } from "@/lib/directory";
 import type { PublicProfile, ShowcaseProject } from "@/types";
 
 function Card({ title, href, linkLabel, children }: { title: string; href: string; linkLabel: string; children: React.ReactNode }) {
@@ -21,18 +21,6 @@ function Card({ title, href, linkLabel, children }: { title: string; href: strin
   );
 }
 
-function LaunchLogo({ project }: { project: ShowcaseProject }) {
-  const src = project.logo_url || faviconFor(project.app_url || project.demo_url);
-  return src ? (
-    // eslint-disable-next-line @next/next/no-img-element -- remote maker logo
-    <img src={src} alt="" loading="lazy" className="h-9 w-9 shrink-0 rounded-[4px] border border-border bg-background object-contain p-1" />
-  ) : (
-    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[4px] border border-border bg-background text-sm font-medium text-muted-foreground">
-      {project.title[0]?.toUpperCase()}
-    </span>
-  );
-}
-
 /** Right column of /feed: live launches and members, so the page always has something to explore. */
 export function FeedSidebar({ launches, members, memberTotal }: { launches: ShowcaseProject[]; members: PublicProfile[]; memberTotal: number }) {
   const named = members.filter((m) => m.name || m.username).slice(0, 2);
@@ -46,7 +34,7 @@ export function FeedSidebar({ launches, members, memberTotal }: { launches: Show
             {launches.map((project) => (
               <li key={project.id}>
                 <Link href={`/launches/${project.id}`} data-launch-impression={project.id} data-surface="feed_sidebar" className="group flex items-center gap-3 rounded-[4px] px-2 py-2 transition-colors hover:bg-background">
-                  <LaunchLogo project={project} />
+                  <LaunchLogo project={project} size="row" />
                   <span className="min-w-0 flex-1">
                     <span className="block truncate text-sm font-medium text-foreground group-hover:text-primary">{project.title}</span>
                     <span className="block truncate text-xs text-muted-foreground">{project.tagline || project.category}</span>

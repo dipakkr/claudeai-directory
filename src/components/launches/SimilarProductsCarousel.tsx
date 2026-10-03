@@ -1,5 +1,4 @@
-import Link from "next/link";
-import { LaunchCompactRow } from "./LaunchListRow";
+import { LaunchLineRow } from "./LaunchListRow";
 import { UpvotePill } from "./UpvotePill";
 import type { ShowcaseProject } from "@/types";
 import { LaunchSection } from "./LaunchSection";
@@ -38,18 +37,14 @@ export function SimilarProductsCarousel({
 
   return (
     <LaunchSection title="Related launches">
-      <ol className="divide-y divide-border">
+      <ol className="divide-y divide-border/70">
         {similar.map((project, index) => (
-          <LaunchCompactRow
+          <LaunchLineRow
             key={project.id}
             project={project}
             rank={index + 1}
             surface="similar"
-            right={
-              <Link href={`/launches/${project.id}`} aria-label={`Upvote ${project.title}`} className="shrink-0">
-                <UpvotePill count={project.upvotes ?? 0} />
-              </Link>
-            }
+            right={<UpvotePill count={project.upvotes ?? 0} />}
           />
         ))}
       </ol>

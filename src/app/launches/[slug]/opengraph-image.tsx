@@ -4,6 +4,7 @@ import { join } from "path";
 
 import { fetchApi } from "@/lib/api-server";
 import { faviconFor } from "@/lib/directory";
+import { launchTheme } from "@/lib/launch-theme";
 import type { ShowcaseProject } from "@/types";
 
 /**
@@ -18,16 +19,6 @@ export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
 
-/** Five looks, from the directory's collection banners plus the site's own coral. Picked from the
- * slug, so a launch always gets the same one. [top, bottom, accent] */
-const THEMES: [string, string, string][] = [
-  ["#1d2b25", "#34594a", "#8FD3B0"], // green
-  ["#1c2433", "#2f4a6b", "#93B8E8"], // blue
-  ["#2b2119", "#5a3d2a", "#E9B48A"], // warm
-  ["#241d2e", "#46365e", "#C3A9EE"], // purple
-  ["#14120B", "#3a2318", "#D97757"], // coral
-];
-const themeFor = (slug: string) => THEMES[[...slug].reduce((h, c) => (h * 31 + c.charCodeAt(0)) >>> 0, 7) % THEMES.length];
 const INK = "#F0EFEC";
 
 const clip = (s: string, n: number) => (s.length > n ? `${s.slice(0, n - 1).trimEnd()}…` : s);
@@ -59,7 +50,7 @@ export default async function Image({ params }: { params: Promise<{ slug: string
   const title = clip(project?.title?.trim() || "A new launch", 34);
   const logo = project ? await logoData(project) : null;
 
-  const [top, bottom, accent] = themeFor(slug);
+  const { top, bottom, accent } = launchTheme(slug);
 
   return new ImageResponse(
     (
