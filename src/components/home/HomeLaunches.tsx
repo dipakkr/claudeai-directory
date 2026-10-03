@@ -18,7 +18,7 @@ export default function HomeLaunches({
   const shownProjects = projects.slice(0, 5);
 
   return (
-    <section id="launches" aria-labelledby="launches-heading" className="mx-auto max-w-[840px] scroll-mt-24 px-4 md:px-8">
+    <section id="launches" aria-labelledby="launches-heading" className="mx-auto max-w-[1000px] scroll-mt-24 px-4 md:px-8">
       {/* DevHunt-style: quiet label with a rule, then plain rows. */}
       <div className="flex items-center gap-3">
         <h2 id="launches-heading" className="shrink-0 font-mono text-[11px] font-medium uppercase tracking-[0.16em] text-foreground">

@@ -66,7 +66,7 @@ export default function HomeContent({ items, orders, launches, community, member
         </p>
       </section>
 
-      <section className="mx-auto max-w-[840px] px-4 md:px-8">
+      <section className="mx-auto max-w-[1000px] px-4 md:px-8">
         <DirectoryList items={items} orders={orders} showTypeFilter hideSearch feedId="trending" pageSize={25}
           extraTab={mcpLaunches ? { label: "MCP launches", count: mcpLaunches.count, content: mcpLaunches.content } : undefined}
         />
@@ -77,11 +77,11 @@ export default function HomeContent({ items, orders, launches, community, member
 
       {community}
 
-      <section className="mx-auto mt-10 max-w-[840px] px-4 md:px-8">
+      <section className="mx-auto mt-10 max-w-[1000px] px-4 md:px-8">
         <RecentlyViewed />
       </section>
 
-      <section className="mx-auto mt-20 max-w-[840px] px-4 md:px-8">
+      <section className="mx-auto mt-20 max-w-[1000px] px-4 md:px-8">
         <div className="grid gap-3 sm:grid-cols-3">
           {BROWSE.map(({ type, href, title, body, Icon }) => (
             <Link
@@ -100,7 +100,7 @@ export default function HomeContent({ items, orders, launches, community, member
         </div>
       </section>
 
-      <section className="mx-auto mt-16 max-w-[840px] px-4 md:px-8">
+      <section className="mx-auto mt-16 max-w-[1000px] px-4 md:px-8">
         <div className="flex flex-col items-start gap-5 rounded-xl border border-border bg-card/40 p-6 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <p className="text-[15px] text-foreground">Built something for Claude?</p>

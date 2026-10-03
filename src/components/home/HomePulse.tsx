@@ -94,7 +94,7 @@ export function HomePulse({ pulse }: { pulse: Pulse }) {
   const s = pulse.stats;
   const e = events[index];
   return (
-    <div className="mx-auto mt-8 max-w-[760px] overflow-hidden rounded-[10px] border border-border">
+    <div className="mx-auto mt-8 max-w-[880px] overflow-hidden rounded-[10px] border border-border">
       <div className="grid grid-cols-2 gap-px bg-border sm:grid-cols-4">
         {/* Show that people are here and active: who visits, what they open, what gets launched. */}
         <Stat label="visitors_24h" value={s.visitors_24h ?? 0} delta={s.live_now ? `${s.live_now} online now` : undefined} />

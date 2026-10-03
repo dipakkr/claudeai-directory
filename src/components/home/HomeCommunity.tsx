@@ -33,7 +33,7 @@ export default function HomeCommunity({ threads, replies, unavailable }: { threa
     { id: "unanswered", label: "Needs a reply", items: threads.filter(t => t.replies === 0) },
   ];
   return (
-    <section id="community" aria-labelledby="community-heading" className="mx-auto mt-16 max-w-[840px] scroll-mt-24 px-4 md:px-8">
+    <section id="community" aria-labelledby="community-heading" className="mx-auto mt-16 max-w-[1000px] scroll-mt-24 px-4 md:px-8">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <h2 id="community-heading" className="text-2xl text-foreground">Questions from the community</h2>
         <Link href="/feed" className="inline-flex items-center gap-2 py-2 text-sm text-foreground underline underline-offset-4">Open the feed <ArrowRight className="h-4 w-4" /></Link>

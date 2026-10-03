@@ -265,7 +265,7 @@ export default function ShowcaseClient({
             <div>
               <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-primary">Launches</p>
               <h1 className="mt-3 max-w-[18ch] font-sans text-3xl font-semibold tracking-tight text-foreground md:text-[40px] md:leading-[1.1]">
-                Apps built with Claude, upvoted by builders
+                Apps built with Claude, supported by builders
               </h1>
               <p className="mt-3 text-[15px] text-muted-foreground">Try them, meet the makers and upvote your favorites.</p>
             </div>
