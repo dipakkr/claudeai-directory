@@ -71,13 +71,14 @@ export default async function Image({ params }: { params: Promise<{ slug: string
         </div>
 
         <div style={{ display: "flex", alignItems: "center", marginTop: 70 }}>
-          <div style={{ display: "flex", width: 132, height: 132, borderRadius: 30, background: "#1F1C15", border: `2px solid ${LINE}`, alignItems: "center", justifyContent: "center", overflow: "hidden", marginRight: 36, flexShrink: 0 }}>
-            {logo ? (
-              <img src={logo} width={132} height={132} alt="" style={{ objectFit: "cover" }} />
-            ) : (
+          {/* The logo on its own (no frame); only the letter fallback gets a tile. */}
+          {logo ? (
+            <img src={logo} width={132} height={132} alt="" style={{ objectFit: "contain", borderRadius: 28, marginRight: 36, flexShrink: 0 }} />
+          ) : (
+            <div style={{ display: "flex", width: 132, height: 132, borderRadius: 28, background: "#1F1C15", alignItems: "center", justifyContent: "center", marginRight: 36, flexShrink: 0 }}>
               <span style={{ fontSize: 64, fontWeight: 700, color: ACCENT }}>{title.charAt(0).toUpperCase()}</span>
-            )}
-          </div>
+            </div>
+          )}
           <div style={{ display: "flex", flexDirection: "column", minWidth: 0, maxWidth: 840 }}>
             <span style={{ fontSize: 72, fontWeight: 700, letterSpacing: "-0.03em", lineHeight: 1.05 }}>{title}</span>
             {tagline && <span style={{ fontSize: 30, color: MUTED, marginTop: 14, lineHeight: 1.3 }}>{tagline}</span>}
