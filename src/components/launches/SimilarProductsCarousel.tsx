@@ -1,5 +1,5 @@
 import { LaunchLineRow } from "./LaunchListRow";
-import { UpvotePill } from "./UpvotePill";
+import { LaunchVoteButton } from "./LaunchVoteButton";
 import type { ShowcaseProject } from "@/types";
 import { LaunchSection } from "./LaunchSection";
 
@@ -47,7 +47,7 @@ export function SimilarProductsCarousel({
             rank={index + 1}
             surface="similar"
             upvotesToday={upvotesToday[project.id]}
-            right={<UpvotePill count={project.upvotes ?? 0} />}
+            right={<LaunchVoteButton project={project} placement="related" />}
           />
         ))}
       </ol>

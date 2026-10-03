@@ -1,18 +1,16 @@
 import Link from "next/link";
+import { LaunchVoteButton } from "@/components/launches/LaunchVoteButton";
 import { ArrowRight, Rocket } from "lucide-react";
 import { LaunchListRow } from "@/components/launches/LaunchListRow";
-import { UpvotePill } from "@/components/launches/UpvotePill";
 import type { ShowcaseProject } from "@/types";
 
 export default function HomeLaunches({
   projects,
   unavailable,
-  impressions = {},
   upvotesToday = {},
 }: {
   projects: ShowcaseProject[];
   unavailable: boolean;
-  impressions?: Record<string, number>;
   upvotesToday?: Record<string, number>;
 }) {
   // Every live launch, so each maker gets homepage traffic (ranked: promoted, then upvotes).
@@ -36,14 +34,9 @@ export default function HomeLaunches({
             key={project.id}
             project={project}
             rank={index + 1}
-            impressions={impressions[project.id]}
             upvotesToday={upvotesToday[project.id]}
             surface="home"
-            right={
-              <Link href={`/launches/${encodeURIComponent(project.id)}`} aria-label={`Upvote ${project.title}`} className="shrink-0">
-                <UpvotePill count={project.upvotes ?? 0} highlight={index === 0 && (project.upvotes ?? 0) > 0} />
-              </Link>
-            }
+            right={<LaunchVoteButton project={project} placement="home_built_with_claude" />}
           />
         ))}
       </ol>

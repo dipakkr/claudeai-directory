@@ -124,11 +124,8 @@ export function LaunchLineRow({
   upvotesToday?: number;
 }) {
   return (
-    <li data-launch-impression={project.id} data-surface={surface}>
-      <Link
-        href={`/launches/${encodeURIComponent(project.id)}`}
-        className="group -mx-3 flex items-center gap-4 rounded-[8px] px-3 py-3.5 transition-colors hover:bg-foreground/[0.05]"
-      >
+    <li data-launch-impression={project.id} data-surface={surface} className="group -mx-3 flex items-center gap-4 rounded-[8px] px-3 py-3.5 transition-colors hover:bg-foreground/[0.05]">
+      <Link href={`/launches/${encodeURIComponent(project.id)}`} className="flex min-w-0 flex-1 items-center gap-4">
         <span className={`hidden w-6 shrink-0 font-mono text-[13px] tabular-nums sm:block ${rank <= 3 ? "text-primary" : "text-muted-foreground"}`}>{rank}</span>
         <LaunchLogo project={project} size="row" />
         <span className="flex min-w-0 flex-1 items-center gap-2">
@@ -141,8 +138,8 @@ export function LaunchLineRow({
           )}
         </span>
         <TodayDelta upvotes={upvotesToday} className="hidden shrink-0 sm:inline-flex" />
-        {right}
       </Link>
+      {right}
     </li>
   );
 }

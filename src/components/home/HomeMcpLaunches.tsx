@@ -1,10 +1,10 @@
 "use client";
 
+import { LaunchVoteButton } from "@/components/launches/LaunchVoteButton";
 import { Fragment } from "react";
 import Link from "next/link";
 import { ArrowRight, Megaphone } from "lucide-react";
 import { LaunchLineRow } from "@/components/launches/LaunchListRow";
-import { UpvotePill } from "@/components/launches/UpvotePill";
 import { SPONSOR_LAUNCH_PRICE, openAdvertiseDialog } from "@/lib/advertise";
 import { track } from "@/lib/analytics";
 import type { ShowcaseProject } from "@/types";
@@ -68,7 +68,7 @@ export default function HomeMcpLaunches({
                   rank={index + 1}
                   surface="home_mcp_tab"
                   upvotesToday={today}
-                  right={<UpvotePill count={project.upvotes ?? 0} />}
+                  right={<LaunchVoteButton project={project} placement="home_mcp_tab" />}
                 />
                 {sponsorAfter(index, shown.length) && <SponsorRow />}
               </Fragment>

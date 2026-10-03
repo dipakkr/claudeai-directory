@@ -1,8 +1,8 @@
 import Link from "next/link";
+import { LaunchVoteButton } from "@/components/launches/LaunchVoteButton";
 import { ArrowRight } from "lucide-react";
 
 import { LaunchLineRow } from "@/components/launches/LaunchListRow";
-import { UpvotePill } from "@/components/launches/UpvotePill";
 import type { ShowcaseProject } from "@/types";
 
 /**
@@ -30,7 +30,7 @@ export default function McpLaunchesSection({ launches, upvotesToday = {} }: { la
             rank={index + 1}
             surface="mcp_page"
             upvotesToday={upvotesToday[project.id]}
-            right={<UpvotePill count={project.upvotes ?? 0} />}
+            right={<LaunchVoteButton project={project} placement="mcp_page" />}
           />
         ))}
       </ol>

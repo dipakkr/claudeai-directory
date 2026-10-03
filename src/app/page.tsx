@@ -84,7 +84,6 @@ export default async function Home() {
             <HomeLaunches
               projects={launches}
               unavailable={launchesData === null}
-              impressions={pulse?.launch_impressions}
               upvotesToday={pulse?.upvotes_today}
             />
           }
