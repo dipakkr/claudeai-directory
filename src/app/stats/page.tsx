@@ -194,8 +194,8 @@ export default async function StatsPage() {
         <div className="mx-auto max-w-[920px] px-4 pb-20 pt-8 md:px-8">
           <PageBreadcrumb items={[{ label: "Stats" }]} />
           <p className="mt-6 font-mono text-[11px] uppercase tracking-[0.16em] text-primary">Open stats</p>
-          <h1 className="mt-2 text-[clamp(30px,4.5vw,44px)] font-semibold leading-tight tracking-tight text-foreground">Claude AI Directory in numbers</h1>
-          <p className="mt-3 max-w-[64ch] text-[15px] leading-7 text-muted-foreground">
+          <h1 className="mt-3 font-sans text-3xl font-semibold tracking-tight text-foreground md:text-[40px] md:leading-[1.1]">Claude AI Directory in numbers</h1>
+          <p className="mt-3 max-w-[64ch] text-[15px] leading-6 text-muted-foreground">
             Live numbers from our own first-party counters for the last 30 days, refreshed every 10 minutes. Visits are counted without cookies, and bots
             and automated browsers are skipped.
           </p>
