@@ -735,3 +735,35 @@ body:has([role="dialog"][data-state="open"], [role="alertdialog"][data-state="op
     animation: none;
   }
 }
+
+/* Homepage pulse card: an ambient glow drifting across the whole card, and a light sweep
+   over it each time a new activity line arrives. Overlays only, so the content never moves. */
+@keyframes pulse-glow-drift {
+  0% { transform: translateX(-35%) translateY(-10%); }
+  50% { transform: translateX(35%) translateY(10%); }
+  100% { transform: translateX(-35%) translateY(-10%); }
+}
+@keyframes pulse-sweep {
+  from { transform: translateX(-100%); opacity: 0; }
+  20% { opacity: 1; }
+  to { transform: translateX(100%); opacity: 0; }
+}
+@keyframes pulse-row-flash {
+  from { background-color: hsl(var(--primary) / 0.14); }
+  to { background-color: transparent; }
+}
+.pulse-glow {
+  background: radial-gradient(45% 130% at 50% 50%, hsl(var(--primary) / 0.24), transparent 70%);
+  animation: pulse-glow-drift 10s ease-in-out infinite;
+}
+.pulse-sweep {
+  background: linear-gradient(100deg, transparent 20%, hsl(var(--primary) / 0.2) 50%, transparent 80%);
+  animation: pulse-sweep 1.4s ease-out forwards;
+}
+.pulse-row-flash {
+  animation: pulse-row-flash 1.6s ease-out forwards;
+}
+@media (prefers-reduced-motion: reduce) {
+  .pulse-glow, .pulse-sweep, .pulse-row-flash { animation: none; }
+  .pulse-sweep { display: none; }
+}

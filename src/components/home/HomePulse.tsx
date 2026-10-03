@@ -94,7 +94,10 @@ export function HomePulse({ pulse }: { pulse: Pulse }) {
   const s = pulse.stats;
   const e = events[index];
   return (
-    <div className="mx-auto mt-8 max-w-[880px] overflow-hidden rounded-[10px] border border-border">
+    <div className="relative isolate mx-auto mt-8 max-w-[880px] overflow-hidden rounded-[10px] border border-border">
+      {/* Motion over the whole card: a slow drifting glow, and a sweep on each new activity line. */}
+      <span aria-hidden className="pulse-glow pointer-events-none absolute -inset-y-6 inset-x-0 z-10" />
+      {e && <span key={`sweep-${index}`} aria-hidden className="pulse-sweep pointer-events-none absolute inset-0 z-10" />}
       <div className="grid grid-cols-2 gap-px bg-border sm:grid-cols-4">
         {/* Show that people are here and active: who visits, what they open, what gets launched. */}
         <Stat label="visitors_24h" value={s.visitors_24h ?? 0} delta={s.live_now ? `${s.live_now} online now` : undefined} />
@@ -103,9 +106,10 @@ export function HomePulse({ pulse }: { pulse: Pulse }) {
         <Stat label="install_actions" value={s.installs.total} delta={s.installs.today ? `+${s.installs.today} today` : undefined} />
       </div>
       {e && (
-        <div className="flex items-center gap-2 border-t border-border bg-card px-4 py-2.5 text-left font-mono text-[12.5px]" aria-live="polite">
-          <span className="text-primary">&gt;</span>
-          <Link key={index} href={e.href} className="min-w-0 flex-1 truncate text-muted-foreground animate-fade-in hover:text-foreground">
+        <div className="relative flex items-center gap-2 border-t border-border bg-card px-4 py-2.5 text-left font-mono text-[12.5px]" aria-live="polite">
+          <span key={`flash-${index}`} aria-hidden className="pulse-row-flash pointer-events-none absolute inset-0" />
+          <span className="relative text-primary">&gt;</span>
+          <Link key={index} href={e.href} className="relative z-20 min-w-0 flex-1 truncate text-muted-foreground animate-fade-in hover:text-foreground">
             <span className="text-foreground">{whoWithPlace(e)}</span> {VERB[e.type]}
             {e.what && <span className="text-primary"> {clean(e.what)}</span>}
             <span className="text-muted-foreground/60"> · {ago(e.at, now)}</span>
