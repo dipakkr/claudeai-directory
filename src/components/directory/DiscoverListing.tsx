@@ -80,6 +80,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { track } from "@/lib/analytics";
 import { openAdvertiseDialog } from "@/lib/advertise";
+import { DirectoryRow } from "@/components/directory/DirectoryList";
 import type { DirectoryItem, DirectoryType, SortKey } from "@/lib/directory";
 import { cn } from "@/lib/utils";
 
@@ -715,9 +716,12 @@ export default function DiscoverListing({
               </button>
             </div>
           ) : (
-            <div className="mt-4">
-              <CardGrid items={shown} />
-            </div>
+            // One per row, same as the homepage list.
+            <ol className="mt-4 border-t border-border/70">
+              {shown.map((item, index) => (
+                <DirectoryRow key={item.key} item={item} rank={index + 1} showType={false} />
+              ))}
+            </ol>
           )}
           {filtered.length > shown.length && (
             <div className="mt-8 text-center">

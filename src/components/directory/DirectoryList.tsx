@@ -304,7 +304,8 @@ function Chip({
   );
 }
 
-function DirectoryRow({ item, rank, showType }: { item: DirectoryItem; rank: number; showType: boolean }) {
+/** One ranked row: the same list look everywhere (homepage feed, category and "Show all" lists). */
+export function DirectoryRow({ item, rank, showType }: { item: DirectoryItem; rank: number; showType: boolean }) {
   const chip = DIRECTORY_TYPES.find((t) => t.type === item.type)?.chip;
   const MetricIcon = item.metric?.icon ? metricIcons[item.metric.icon] : null;
   const targetId = item.key.split(":").slice(1).join(":") || item.key;
