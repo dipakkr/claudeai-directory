@@ -268,11 +268,6 @@ function Body({ data }: { data: OpenStats }) {
         </div>
       </div>
 
-      <div className="mt-12">
-        <Chart title="Unique visitors per day" aside={since ? undefined : "Counter started today"}>
-          <Bars rows={rows} value={(r) => r.visitors} from={since} />
-        </Chart>
-      </div>
 
       <div className="mt-12 grid gap-12 md:grid-cols-2">
         <Chart title="Listing and launch views" aside={`${fmt(s.listing_views.range)} in ${data.days} days`}>
