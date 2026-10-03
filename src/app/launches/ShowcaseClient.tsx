@@ -3,13 +3,8 @@
 import { Fragment, useMemo, useState } from "react";
 import { TOPICS, topicSlug } from "@/lib/launch-options";
 import Link from "next/link";
-import { useQueryClient } from "@tanstack/react-query";
-import { toast } from "sonner";
-import { useLaunchVisited } from "@/components/launches/UpvoteBox";
-import { UpvoteCount } from "@/components/feed/UpvoteMotion";
-import { UpTriangle, upvotePillClass } from "@/components/launches/UpvotePill";
 import { LaunchListRow } from "@/components/launches/LaunchListRow";
-import { markLaunchVisited } from "@/lib/launch-visits";
+import { LaunchVoteButton } from "@/components/launches/LaunchVoteButton";
 import {
   Megaphone,
   ArrowRight,
@@ -21,10 +16,8 @@ import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
 import { rankedLaunches } from "@/lib/home-community";
-import { useSignIn } from "@/components/auth/SignInDialog";
-import { useAuth } from "@/lib/auth";
 import { SPONSOR_LAUNCH_PRICE, openAdvertiseDialog } from "@/lib/advertise";
-import { myLaunchUpvotesQuery, useMyLaunchUpvotes, useShowcaseProjects, useUpvoteShowcase } from "@/hooks/use-showcase";
+import { useShowcaseProjects } from "@/hooks/use-showcase";
 import type { ShowcaseProject } from "@/types";
 import { track } from "@/lib/analytics";
 
@@ -68,97 +61,13 @@ function projectKey(project: ShowcaseProject) {
   ].join("|");
 }
 
-function VoteButton({
-  project,
-  authenticated,
-  pending,
-  voted,
-  onVote,
-}: {
-  project: ShowcaseProject;
-  authenticated: boolean;
-  pending: boolean;
-  voted: boolean;
-  onVote: () => void;
-}) {
-  const website = project.app_url || project.demo_url;
-  const visited = useLaunchVisited(project.id);
-  // Only people who opened the website can upvote; removing a vote is always allowed.
-  const locked = Boolean(website) && !visited && !voted;
-  const [bump, setBump] = useState(0);
-  const [shake, setShake] = useState(0);
-
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault();
-    event.stopPropagation();
-    if (locked && website) {
-      setShake((n) => n + 1);
-      track("launch_upvote_gated", { slug: project.id });
-      toast(`Try ${project.title} before you upvote`, {
-        id: `gate-${project.id}`,
-        description: "Upvotes come from people who opened the product.",
-        action: {
-          label: "Visit website",
-          onClick: () => {
-            window.open(website, "_blank", "noopener,noreferrer");
-            markLaunchVisited(project.id);
-          },
-        },
-      });
-      return;
-    }
-    setBump((n) => n + 1);
-    onVote();
-  };
-
-  return (
-    <button
-      key={`shake-${shake}`}
-      type="button"
-      onClick={handleClick}
-      disabled={pending}
-      aria-pressed={voted}
-      aria-label={voted ? `Remove upvote from ${project.title}` : `Upvote ${project.title}`}
-      title={!authenticated ? "Sign in to upvote" : voted ? "You upvoted this. Click to undo." : locked ? "Try the product first" : "Upvote this launch"}
-      className={`relative cursor-pointer active:scale-95 ${upvotePillClass(voted)} ${locked && shake ? "upvote-shake" : ""} disabled:opacity-70`}
-    >
-      {voted && bump > 0 && (
-        <span key={`float-${bump}`} aria-hidden className="upvote-float pointer-events-none absolute -top-1 left-1/2 text-[11px] font-bold text-primary">
-          +1
-        </span>
-      )}
-      <span className="relative inline-flex">
-        {voted && bump > 0 && <span key={`ring-${bump}`} aria-hidden className="upvote-ring absolute inset-[-6px] rounded-full bg-primary/40" />}
-        <span key={`arrow-${bump}`} className={`inline-flex ${bump > 0 ? "upvote-pop" : ""} ${voted ? "text-primary" : "text-muted-foreground"}`}>
-          <UpTriangle className="h-2.5 w-3" />
-        </span>
-      </span>
-      <UpvoteCount count={project.upvotes ?? 0} bump={bump} up={voted} />
-    </button>
-  );
-}
-
-function LaunchRow({
-  project,
-  rank,
-  onVote,
-  authenticated,
-  pending,
-  voted,
-}: {
-  project: ShowcaseProject;
-  rank: number;
-  onVote: (project: ShowcaseProject) => void;
-  authenticated: boolean;
-  pending: boolean;
-  voted: boolean;
-}) {
+function LaunchRow({ project, rank }: { project: ShowcaseProject; rank: number }) {
   return (
     <LaunchListRow
       project={project}
       rank={rank}
       surface="launches_list"
-      right={<VoteButton project={project} authenticated={authenticated} pending={pending} voted={voted} onVote={() => onVote(project)} />}
+      right={<LaunchVoteButton project={project} placement="launches_list" />}
     />
   );
 }
@@ -195,12 +104,6 @@ export default function ShowcaseClient({
   /** From ?topic= (shareable topic view). */
   initialTopic?: string;
 }) {
-  const queryClient = useQueryClient();
-  const { requireAuth } = useSignIn();
-  const { isAuthenticated } = useAuth();
-  const upvote = useUpvoteShowcase();
-  const { data: myUpvotes } = useMyLaunchUpvotes(isAuthenticated);
-  const votedSlugs = useMemo(() => new Set(myUpvotes ?? []), [myUpvotes]);
   const [activeFilter, setActiveFilter] = useState<LaunchFilter>("all");
   const [topic, setTopic] = useState(initialTopic);
   const pickTopic = (next: string) => {
@@ -260,21 +163,6 @@ export default function ShowcaseClient({
     });
   }, [activeFilter, listedProjects, query, topic]);
 
-  const handleVote = (project: ShowcaseProject) =>
-    void requireAuth(`upvote ${project.title}`, async ({ resumed }) => {
-      // Just signed in: the upvote is a toggle, so don't undo an earlier one.
-      if (resumed && (await queryClient.fetchQuery(myLaunchUpvotesQuery)).includes(project.id)) {
-        toast.success(`You already upvoted ${project.title}`);
-        return;
-      }
-      upvote.mutate(project.id, {
-        onSuccess: (updated) => {
-          if (updated.voted !== false) track("launch_upvoted", { slug: project.id, placement: "launches_list" });
-          toast.success(updated.voted === false ? "Upvote removed" : `Upvoted ${project.title}`);
-        },
-        onError: () => toast.error("Could not save your upvote"),
-      });
-    });
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
@@ -366,14 +254,7 @@ export default function ShowcaseClient({
             {visibleProjects.length > 0 ? (
               visibleProjects.map((project, index) => (
                 <Fragment key={project.id}>
-                  <LaunchRow
-                    project={project}
-                    rank={index + 1}
-                    authenticated={isAuthenticated}
-                    pending={upvote.isPending && upvote.variables === project.id}
-                    voted={votedSlugs.has(project.id)}
-                    onVote={handleVote}
-                  />
+                  <LaunchRow project={project} rank={index + 1} />
                   {index === Math.min(2, visibleProjects.length - 1) ? (
                     <li className="border-b border-border py-3">
                       <SponsoredLaunchSlot />
