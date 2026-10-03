@@ -54,12 +54,12 @@ function SectionLabel({ title, action }: { title: string; action?: ReactNode }) 
   );
 }
 
-function Stat({ label, value, sub, href }: { label: string; value: number | string; sub?: string; href: string }) {
+/** A number and a plain label, no box. */
+function Stat({ label, value, href }: { label: string; value: number; href: string }) {
   return (
-    <Link href={href} className="bg-card px-4 py-3.5 transition-colors hover:bg-background">
-      <p className="font-mono text-[11px] text-muted-foreground">{label}</p>
-      <p className="mt-1 font-mono text-[20px] font-medium tabular-nums text-foreground">{typeof value === "number" ? value.toLocaleString("en-US") : value}</p>
-      {sub && <p className="mt-0.5 truncate text-[11px] text-muted-foreground">{sub}</p>}
+    <Link href={href} className="group">
+      <span className="block font-sans text-[26px] font-semibold tabular-nums leading-none text-foreground">{value.toLocaleString("en-US")}</span>
+      <span className="mt-1.5 block text-[13px] text-muted-foreground group-hover:text-foreground">{label}</span>
     </Link>
   );
 }
@@ -241,11 +241,13 @@ export default function DashboardClient() {
                 {s && (s.launches.live > 0 || s.submissions.published > 0) && (
                 <section>
                   <SectionLabel title="Your numbers" />
-                  <div className="grid grid-cols-2 gap-px overflow-hidden rounded-[10px] border border-border bg-border sm:grid-cols-4">
-                    <Stat label="live_launches" value={s?.launches.live ?? "-"} sub={s?.launches.pending ? `${s.launches.pending} ${s.launches.pending === 1 ? "draft" : "drafts"}` : undefined} href="/dashboard?tab=launches" />
-                    <Stat label="upvotes" value={s?.launches.upvotes ?? "-"} sub="on live launches" href="/dashboard?tab=launches" />
-                    <Stat label="launch_views" value={s?.launches.views ?? "-"} sub="all time" href="/dashboard?tab=launches" />
-                    <Stat label="resources" value={s?.submissions.published ?? "-"} sub={s?.submissions.pending ? `${s.submissions.pending} in review` : "published"} href="/dashboard?tab=submissions" />
+                  <div className="flex flex-wrap gap-x-12 gap-y-5 pt-1">
+                    <Stat label={s.launches.live === 1 ? "live launch" : "live launches"} value={s.launches.live} href="/dashboard?tab=launches" />
+                    <Stat label={s.launches.upvotes === 1 ? "upvote" : "upvotes"} value={s.launches.upvotes} href="/dashboard?tab=launches" />
+                    <Stat label={s.launches.views === 1 ? "launch view" : "launch views"} value={s.launches.views ?? 0} href="/dashboard?tab=launches" />
+                    {s.submissions.published > 0 && (
+                      <Stat label={s.submissions.published === 1 ? "resource" : "resources"} value={s.submissions.published} href="/dashboard?tab=submissions" />
+                    )}
                   </div>
                 </section>
                 )}

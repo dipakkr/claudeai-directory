@@ -105,7 +105,7 @@ export function LaunchRows({ apps, loading }: { apps: ShowcaseProject[]; loading
       />
     );
   }
-  const num = (n?: number) => (n ?? 0).toLocaleString("en-US");
+  const plural = (n: number | undefined, word: string) => `${(n ?? 0).toLocaleString("en-US")} ${n === 1 ? word : `${word}s`}`;
   return (
     <ul className={listClass}>
       {apps.map((app) => {
@@ -127,36 +127,38 @@ export function LaunchRows({ apps, loading }: { apps: ShowcaseProject[]; loading
                 <Link href={live ? `/launches/${app.id}` : `/launches/${app.id}/edit`} className="truncate font-sans text-[15px] font-medium text-foreground hover:underline">
                   {app.title}
                 </Link>
-                {live ? <StatusPill tone="live">Live</StatusPill> : rejected ? <StatusPill tone="bad">Not approved</StatusPill> : <StatusPill tone="wait">Draft</StatusPill>}
-                {/* The website link's SEO status: dofollow is earned with the badge. */}
-                {live && (hasDofollow(app) ? <StatusPill tone="live">Dofollow</StatusPill> : <StatusPill tone="muted">Nofollow</StatusPill>)}
+                {/* Live is the normal state; only flag the ones that are not. */}
+                {rejected ? <StatusPill tone="bad">Not approved</StatusPill> : !live && <StatusPill tone="wait">Draft</StatusPill>}
               </div>
-              <p className="mt-1 truncate font-mono text-[12px] tabular-nums text-muted-foreground">
-                {live
-                  ? `${num(app.upvotes)} upvotes · ${num(metrics?.[app.id]?.impressions)} impressions · ${num(app.views)} views · ${num(metrics?.[app.id]?.clicks)} clicks`
-                  : rejected
-                    ? "Edit it and resubmit, or contact us"
-                    : "Complete the listing to make it public"}
+              <p className="mt-1 truncate text-[13px] tabular-nums text-muted-foreground">
+                {live ? (
+                  <>
+                    {plural(app.upvotes, "upvote")} · {plural(app.views, "view")} · {plural(metrics?.[app.id]?.clicks, "click")}
+                    {/* The website link is nofollow until the badge is on the maker's site. */}
+                    {!hasDofollow(app) && (
+                      <>
+                        {" · "}
+                        <Link
+                          href={`/launches/submit?finish=${encodeURIComponent(app.id)}`}
+                          title="Add our badge to your site to make your link dofollow"
+                          className="text-primary hover:underline"
+                        >
+                          Get a dofollow link
+                        </Link>
+                      </>
+                    )}
+                  </>
+                ) : rejected ? (
+                  "Edit it and resubmit, or contact us"
+                ) : (
+                  "Complete the listing to make it public"
+                )}
               </p>
             </div>
             <div className="flex w-full items-center gap-4 pl-14 text-sm sm:w-auto sm:pl-0">
               {(live || rejected) && <Link href={`/launches/${app.id}/edit`} className="text-muted-foreground hover:text-foreground">Edit</Link>}
               {live && <Link href={`/launches/${app.id}/analytics`} className="text-muted-foreground hover:text-foreground">Analytics</Link>}
-              {live && !hasDofollow(app) && (
-                <Link
-                  href={`/launches/submit?finish=${encodeURIComponent(app.id)}`}
-                  title="Add our badge to your site to make your link dofollow"
-                  className="inline-flex items-center gap-1 font-medium text-primary hover:underline"
-                >
-                  Get dofollow
-                  <ArrowRight className="h-3.5 w-3.5" />
-                </Link>
-              )}
-              {live ? (
-                <Link href={`/launches/${app.id}`} className="inline-flex h-8 items-center rounded-[8px] border border-border px-3 text-[13px] text-foreground hover:border-[var(--cad-line-hover)]">
-                  View
-                </Link>
-              ) : !rejected ? (
+              {!live && !rejected && (
                 // Opens the draft; its "Complete listing" button then offers the badge or publishing without it.
                 <Link
                   href={`/launches/${encodeURIComponent(app.id)}/edit`}
@@ -165,7 +167,7 @@ export function LaunchRows({ apps, loading }: { apps: ShowcaseProject[]; loading
                   Complete listing
                   <ArrowRight className="h-3.5 w-3.5" />
                 </Link>
-              ) : null}
+              )}
             </div>
           </li>
         );

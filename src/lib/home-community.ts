@@ -1,3 +1,4 @@
+import { hasDofollow } from "@/lib/launch-options";
 import type { ShowcaseProject, Thread } from "@/types";
 
 // Only member submissions are launch proof; legacy seeded demos are not.
@@ -27,7 +28,13 @@ export function rankedLaunches(projects: ShowcaseProject[], now = Date.now()): S
   const promoted = (p: ShowcaseProject) => Boolean(p.featured_until && Date.parse(p.featured_until) > now);
   return publicLaunches(projects)
     .map((p) => ({ ...p, promoted: promoted(p) }))
-    .sort((a, b) => Number(b.promoted) - Number(a.promoted) || (b.upvotes ?? 0) - (a.upvotes ?? 0));
+    // Promoted first, then launches with our badge (dofollow), then the rest; upvotes within each group.
+    .sort(
+      (a, b) =>
+        Number(b.promoted) - Number(a.promoted) ||
+        Number(hasDofollow(b)) - Number(hasDofollow(a)) ||
+        (b.upvotes ?? 0) - (a.upvotes ?? 0),
+    );
 }
 
 /** Launches that are MCP servers: categorised as one, or named "... MCP". */
