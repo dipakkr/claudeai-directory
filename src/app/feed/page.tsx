@@ -150,7 +150,7 @@ export default async function FeedPage({ searchParams }: { searchParams: Promise
             </div>
           </div>
 
-          <FeedSidebar launches={rankedLaunches(showcase ?? []).slice(0, 4)} members={membersData?.members ?? []} memberTotal={membersData?.total ?? 0} />
+          <FeedSidebar launches={rankedLaunches(showcase ?? []).slice(0, 6)} members={membersData?.members ?? []} memberTotal={membersData?.total ?? 0} />
         </div>
       </main>
       <Footer />
