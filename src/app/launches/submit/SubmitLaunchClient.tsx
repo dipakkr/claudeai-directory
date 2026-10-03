@@ -372,7 +372,7 @@ function BadgeStep({
   const [publishing, setPublishing] = useState(false);
   // Already live without the badge: the only thing left is upgrading the link to dofollow.
   const live = isLaunchLive(app);
-  const [mode, setMode] = useState<"badge" | "publish">("badge");
+  const [mode, setMode] = useState<"badge" | "paid" | "free">("badge");
 
   // Free either way: without the badge it goes live now with a nofollow link.
   const publishNow = () => {
@@ -415,8 +415,43 @@ function BadgeStep({
     );
   };
 
-  const card = (active: boolean) =>
-    `flex flex-col rounded-[12px] border p-5 text-left transition-colors ${active ? "border-primary bg-primary/[0.05]" : "border-border hover:border-[var(--cad-line-hover)]"}`;
+  // One offer at a time; the other two are text links under it.
+  const [paying, setPaying] = useState(false);
+  const payNow = () => {
+    setPaying(true);
+    api
+      .post<{ url: string }>("/sponsors/launch-listing", { slug: app.id })
+      .then(({ url }) => {
+        window.location.href = url;
+      })
+      .catch((error) => {
+        setPaying(false);
+        toast.error(errorDetail(error, "Could not start checkout. Try again in a minute."));
+      });
+  };
+
+  const OFFERS = {
+    badge: {
+      title: "Add our badge",
+      price: "Free",
+      perks: ["Dofollow link to your site", "Listed with badge launches, ranked by upvotes", "Live as soon as we find the badge"],
+    },
+    paid: {
+      title: "Skip the badge",
+      price: "$19 one time",
+      perks: ["Dofollow link to your site", "Listed with badge launches, ranked by upvotes", live ? "Upgraded right after payment" : "Live right after payment", "No badge on your site"],
+    },
+    free: {
+      title: "List without badge",
+      price: "Free",
+      perks: ["Live right away", "Nofollow link: passes no SEO value", "Listed below every launch with a badge or paid listing"],
+    },
+  } as const;
+  const offer = OFFERS[mode];
+  const others = (["badge", "paid", "free"] as const).filter((m) => m !== mode && !(m === "free" && live));
+  const otherLabel = { badge: "Add our badge instead (free, dofollow)", paid: "Don't want a badge on your site? Pay $19 instead", free: "List free without the badge (nofollow, listed below)" };
+  const primaryBtn =
+    "inline-flex h-12 w-full items-center justify-center gap-2 rounded-[12px] bg-primary text-[15px] font-medium text-primary-foreground transition-opacity hover:opacity-90 disabled:opacity-60";
 
   return (
     <div className="mx-auto max-w-[640px]">
@@ -426,42 +461,39 @@ function BadgeStep({
       </h2>
       {live && (
         <p className="mt-2 text-[14px] leading-6 text-muted-foreground">
-          {app.title} is live, but without our badge its link is nofollow and it is listed below launches that have the badge. Add the badge to your site or GitHub README to get a dofollow link and be ranked with those launches by upvotes.
+          {app.title} is live, but without our badge its link is nofollow and it is listed below launches that have the badge.
         </p>
       )}
 
-      {/* Two free options; the badge earns a dofollow link. Live launches only see the badge. */}
-      {!live && (
-        <div className="mt-6 grid gap-3 sm:grid-cols-2">
-          <button type="button" onClick={() => setMode("badge")} aria-pressed={mode === "badge"} className={card(mode === "badge")}>
-            <span className="flex items-baseline justify-between gap-2">
-              <span className="text-[15px] font-medium text-foreground">Add our badge</span>
-              <span className="font-mono text-[12px] text-green-600 dark:text-green-400">Dofollow</span>
-            </span>
-            <span className="mt-1.5 text-[13.5px] leading-5 text-muted-foreground">Put a small badge on your site or README. Live once we see it.</span>
-          </button>
-          <button type="button" onClick={() => setMode("publish")} aria-pressed={mode === "publish"} className={card(mode === "publish")}>
-            <span className="flex items-baseline justify-between gap-2">
-              <span className="text-[15px] font-medium text-foreground">Publish without badge</span>
-              <span className="font-mono text-[12px] text-muted-foreground">Nofollow</span>
-            </span>
-            <span className="mt-1.5 text-[13.5px] leading-5 text-muted-foreground">Live right away. Add the badge later for a dofollow link.</span>
-          </button>
+      <div className="mt-6 rounded-[14px] border border-border p-5 sm:p-6">
+        <div className="flex items-baseline justify-between gap-3">
+          <h3 className="font-sans text-[17px] font-medium text-foreground">{offer.title}</h3>
+          <span className="font-sans text-[20px] font-semibold text-foreground">{offer.price}</span>
         </div>
-      )}
+        <ul className="mt-3 space-y-1.5">
+          {offer.perks.map((perk) => (
+            <li key={perk} className="flex items-start gap-2 text-[13.5px] leading-5 text-muted-foreground">
+              <Check className={`mt-0.5 h-3.5 w-3.5 shrink-0 ${mode === "free" ? "text-muted-foreground" : "text-primary"}`} />
+              {perk}
+            </li>
+          ))}
+        </ul>
 
-      {mode === "publish" && !live ? (
+      {mode === "paid" ? (
         <div className="mt-6">
-          <button
-            type="button"
-            onClick={publishNow}
-            disabled={publishing}
-            className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-[12px] bg-primary text-[15px] font-medium text-primary-foreground transition-opacity hover:opacity-90 disabled:opacity-60"
-          >
-            {publishing ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
-            {publishing ? "Publishing..." : "Publish now"}
+          <button type="button" onClick={payNow} disabled={paying} className={primaryBtn}>
+            {paying ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
+            {paying ? "Opening checkout..." : live ? "Pay $19 for a dofollow link" : "Pay $19 and go live"}
           </button>
-          <p className="mt-2 text-center text-xs text-muted-foreground">Free. Your website link is nofollow until you add the badge.</p>
+          <p className="mt-2 text-center text-xs text-muted-foreground">Secure payment by Stripe. One time, no subscription.</p>
+        </div>
+      ) : mode === "free" ? (
+        <div className="mt-6">
+          <button type="button" onClick={publishNow} disabled={publishing} className={primaryBtn}>
+            {publishing ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
+            {publishing ? "Publishing..." : "Publish with a nofollow link"}
+          </button>
+          <p className="mt-2 text-center text-xs text-muted-foreground">You can add the badge or pay later to get a dofollow link.</p>
         </div>
       ) : (
         <div className="mt-6 space-y-5">
@@ -540,6 +572,16 @@ function BadgeStep({
           </button>
         </div>
       )}
+      </div>
+
+      {/* The other offers, as plain links. */}
+      <div className="mt-5 flex flex-col items-center gap-2 text-[13.5px]">
+        {others.map((m) => (
+          <button key={m} type="button" onClick={() => setMode(m)} className="text-muted-foreground underline-offset-[3px] hover:text-foreground hover:underline">
+            {otherLabel[m]}
+          </button>
+        ))}
+      </div>
 
     </div>
   );
@@ -600,7 +642,11 @@ function ShareStep({ app, onAnother }: { app: ShowcaseProject; onAnother: () => 
 
 /* ---------- page ---------- */
 
-export default function SubmitLaunchClient({ finishSlug, guide }: { finishSlug?: string; guide?: React.ReactNode } = {}) {
+export default function SubmitLaunchClient({
+  finishSlug,
+  paidSlug,
+  guide,
+}: { finishSlug?: string; paidSlug?: string; guide?: React.ReactNode } = {}) {
   const { isAuthenticated, isLoading, user } = useAuth();
   const submit = useSubmitShowcaseProject();
   const autofill = useLaunchAutofill();
@@ -850,6 +896,16 @@ export default function SubmitLaunchClient({ finishSlug, guide }: { finishSlug?:
             <ArrowLeft className="h-3.5 w-3.5" />
             App launches
           </Link>
+          {/* Back from Stripe: the webhook makes it live a few seconds later. */}
+          {paidSlug && (
+            <div className="mt-5 flex flex-col gap-2 rounded-[10px] border border-success/30 bg-success/10 px-4 py-3 text-[14px] sm:flex-row sm:items-center sm:justify-between">
+              <span className="text-foreground">Payment received. Your launch gets its dofollow link in a few seconds.</span>
+              <Link href={`/launches/${encodeURIComponent(paidSlug)}`} className="inline-flex shrink-0 items-center gap-1 font-medium text-primary hover:underline">
+                View your launch
+                <ArrowRight className="h-3.5 w-3.5" />
+              </Link>
+            </div>
+          )}
           {!isAuthenticated && (
             <>
               <h1 className="mt-5 font-sans text-3xl font-semibold tracking-tight text-foreground md:text-[40px] md:leading-[1.1]">Launch your app built with Claude</h1>

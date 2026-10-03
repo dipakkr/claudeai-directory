@@ -36,6 +36,7 @@ import {
 import { trackAttrs } from "@/lib/track-attrs";
 import { ViewTracker } from "@/components/tracking/ViewTracker";
 import { MakerPhoto } from "@/components/launches/MakerPhoto";
+import { OwnerNofollowNotice } from "@/components/launches/OwnerNofollowNotice";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.claudeai.directory";
 
@@ -289,6 +290,7 @@ export default async function LaunchDetailPage({
             <div className="mt-4">
               <UpvoteSummary slug={project.id} initialCount={upvotes} />
             </div>
+            {!hasDofollow(project) && <OwnerNofollowNotice slug={project.id} authorId={project.author_id} />}
           </header>
 
           <ViewTracker type="launch" id={project.id} />
