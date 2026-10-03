@@ -13,7 +13,7 @@ import type { ShowcaseProject } from "@/types";
  */
 
 export const runtime = "nodejs";
-export const alt = "Launched on Claude AI Directory";
+export const alt = "I just launched on Claude AI Directory";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -60,33 +60,36 @@ export default async function Image({ params }: { params: Promise<{ slug: string
         {/* soft coral glow, like the homepage card */}
         <div style={{ position: "absolute", right: -160, top: -160, width: 620, height: 620, borderRadius: 310, background: "radial-gradient(circle, rgba(217,119,87,0.22), rgba(217,119,87,0) 70%)", display: "flex" }} />
 
+        {/* Top: small brand, and the logo top-right so the headline gets the space. */}
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
           <div style={{ display: "flex", alignItems: "center" }}>
-            <img src={mark} width={40} height={40} alt="" style={{ marginRight: 14 }} />
-            <span style={{ fontSize: 24, fontWeight: 600 }}>Claude AI Directory</span>
+            <img src={mark} width={36} height={36} alt="" style={{ marginRight: 12 }} />
+            <span style={{ fontSize: 22, fontWeight: 600, color: MUTED }}>Claude AI Directory</span>
           </div>
-          <span style={{ display: "flex", fontSize: 20, color: ACCENT, fontFamily: "monospace", letterSpacing: "0.14em", border: `2px solid rgba(217,119,87,0.45)`, borderRadius: 999, padding: "8px 18px" }}>
-            NEW LAUNCH
-          </span>
-        </div>
-
-        <div style={{ display: "flex", alignItems: "center", marginTop: 70 }}>
-          {/* The logo on its own (no frame); only the letter fallback gets a tile. */}
           {logo ? (
-            <img src={logo} width={132} height={132} alt="" style={{ objectFit: "contain", borderRadius: 28, marginRight: 36, flexShrink: 0 }} />
+            <img src={logo} width={104} height={104} alt="" style={{ objectFit: "contain", borderRadius: 24 }} />
           ) : (
-            <div style={{ display: "flex", width: 132, height: 132, borderRadius: 28, background: "#1F1C15", alignItems: "center", justifyContent: "center", marginRight: 36, flexShrink: 0 }}>
-              <span style={{ fontSize: 64, fontWeight: 700, color: ACCENT }}>{title.charAt(0).toUpperCase()}</span>
+            <div style={{ display: "flex", width: 104, height: 104, borderRadius: 24, background: "#1F1C15", alignItems: "center", justifyContent: "center" }}>
+              <span style={{ fontSize: 52, fontWeight: 700, color: ACCENT }}>{title.charAt(0).toUpperCase()}</span>
             </div>
           )}
-          <div style={{ display: "flex", flexDirection: "column", minWidth: 0, maxWidth: 840 }}>
-            <span style={{ fontSize: 72, fontWeight: 700, letterSpacing: "-0.03em", lineHeight: 1.05 }}>{title}</span>
-            {tagline && <span style={{ fontSize: 30, color: MUTED, marginTop: 14, lineHeight: 1.3 }}>{tagline}</span>}
-          </div>
         </div>
 
-        <div style={{ display: "flex", alignItems: "center", marginTop: "auto", borderTop: `1px solid ${LINE}`, paddingTop: 26, fontFamily: "monospace", fontSize: 22, color: MUTED }}>
-          <span style={{ display: "flex", color: INK }}>{`Launched on Claude AI Directory`}</span>
+        {/* The maker's announcement, in their voice. */}
+        <div style={{ display: "flex", flexDirection: "column", marginTop: 6 }}>
+          <span style={{ fontSize: 40, color: MUTED, letterSpacing: "-0.01em" }}>I just launched</span>
+          <span style={{ fontSize: title.length > 20 ? 76 : 92, fontWeight: 700, letterSpacing: "-0.035em", lineHeight: 1.02, marginTop: 6, maxWidth: 1000 }}>{title}</span>
+          <div style={{ display: "flex", fontSize: 40, marginTop: 10, letterSpacing: "-0.01em" }}>
+            <span style={{ color: MUTED, marginRight: 12 }}>on</span>
+            <span style={{ color: ACCENT, fontWeight: 600 }}>Claude AI Directory</span>
+          </div>
+          {tagline && <span style={{ fontSize: 26, color: MUTED, marginTop: 22, lineHeight: 1.35, maxWidth: 980 }}>{tagline}</span>}
+        </div>
+
+        {/* Footer: where to go, and the live count. */}
+        <div style={{ display: "flex", alignItems: "center", marginTop: "auto", borderTop: `1px solid ${LINE}`, paddingTop: 24, fontFamily: "monospace", fontSize: 22, color: MUTED }}>
+          <span style={{ display: "flex", color: INK, marginRight: 14 }}>Upvote it</span>
+          <span style={{ display: "flex" }}>{`claudeai.directory/launches/${clip(slug, 28)}`}</span>
           <span style={{ display: "flex", alignItems: "center", marginLeft: "auto", color: ACCENT, fontSize: 26, fontWeight: 700 }}>
             {/* drawn, not a glyph: the default OG font has no ▲ */}
             <svg width="22" height="18" viewBox="0 0 12 10" style={{ marginRight: 10 }}>
