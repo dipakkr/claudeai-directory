@@ -264,6 +264,61 @@ function CardGrid({ items }: { items: DirectoryItem[] }) {
   );
 }
 
+/** Compact two-column rows, used for category sections so a long page has some rhythm. */
+function RowList({ items }: { items: DirectoryItem[] }) {
+  return (
+    <ul className="grid gap-x-8 sm:grid-cols-2">
+      {items.map((item) => (
+        <li key={item.key} className="border-b border-border/70">
+          <Link href={item.href} className="group -mx-2 flex items-center gap-3 rounded-[8px] px-2 py-3 transition-colors hover:bg-[var(--cad-surface)]">
+            <Tile item={item} size={36} />
+            <span className="min-w-0 flex-1">
+              <span className="flex items-center gap-1.5">
+                <span className="truncate text-[14px] font-medium text-foreground">{item.name}</span>
+                {item.verified && <BadgeCheck className="h-3.5 w-3.5 shrink-0 text-muted-foreground" aria-label="Official" />}
+              </span>
+              <span className="block truncate text-[13px] text-[var(--cad-desc)]">{item.description}</span>
+            </span>
+            {metricText(item) && <span className="hidden shrink-0 font-mono text-[11.5px] text-muted-foreground sm:inline">{metricText(item)}</span>}
+          </Link>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+/** Every category with its count: crawlable links that open the filtered list in place. */
+function CategoryTiles({ categories, type, noun, onOpen }: { categories: [string, number][]; type: DirectoryType; noun: string; onOpen: (cat: string) => void }) {
+  return (
+    <section className="mt-14">
+      <div className="mb-4 flex items-end justify-between gap-4">
+        <h2 className="font-sans text-[22px] font-normal leading-tight text-foreground">Browse by category</h2>
+      </div>
+      <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4">
+        {categories.map(([cat, count]) => (
+          <a
+            key={cat}
+            href={`?category=${encodeURIComponent(cat)}`}
+            onClick={(e) => {
+              e.preventDefault();
+              onOpen(cat);
+            }}
+            className="group flex items-center gap-3 rounded-[10px] border border-border px-3.5 py-3 transition-colors hover:border-[var(--cad-line-hover)] hover:bg-[var(--cad-surface)]"
+          >
+            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[8px] bg-foreground/[0.06] text-muted-foreground group-hover:text-foreground">
+              <CategoryGlyph category={cat} type={type} className="h-4 w-4" />
+            </span>
+            <span className="min-w-0">
+              <span className="block truncate text-[14px] text-foreground">{categoryLabel(cat)}</span>
+              <span className="block font-mono text-[11px] text-muted-foreground">{`${count} ${count === 1 ? noun.replace(/s$/, "") : noun}`}</span>
+            </span>
+          </a>
+        ))}
+      </div>
+    </section>
+  );
+}
+
 function Section({ title, action, children }: { title: string; action?: ReactNode; children: ReactNode }) {
   return (
     <section className="mt-14">
@@ -488,17 +543,18 @@ export default function DiscoverListing({
     };
     const fallback = items.map((i) => i.key);
     const topKeys = orders?.top ?? fallback;
-    const sections: { title: string; items: DirectoryItem[]; sort?: SortKey; category?: string }[] = [
+    const sections: { title: string; items: DirectoryItem[]; sort?: SortKey; category?: string; compact?: boolean }[] = [
       { title: `Top ${noun}`, items: take(topKeys, 9), sort: "top" },
       { title: "Trending", items: take(orders?.trending ?? fallback, 6), sort: "trending" },
+      { title: "New", items: take(orders?.new, 6), sort: "new" },
     ];
-    if (type !== "mcp") sections.push({ title: "New", items: take(orders?.new, 6), sort: "new" });
-    for (const [cat] of categories.slice(0, 4)) {
-      const inCat = topKeys.filter((k) => byKey.get(k)?.category === cat);
-      sections.push({ title: categoryLabel(cat), items: take(inCat, 6), category: cat });
+    // Then every category with enough entries, each showing its own best (repeats from above are fine).
+    for (const [cat, count] of categories.filter(([, n]) => n >= 3).slice(0, 12)) {
+      const inCat = topKeys.map((k) => byKey.get(k)).filter((i): i is DirectoryItem => Boolean(i) && i!.category === cat);
+      sections.push({ title: `${categoryLabel(cat)} ${noun}`, items: inCat.slice(0, count > 6 ? 6 : count), category: cat, compact: true });
     }
     return sections.filter((s) => s.items.length >= 3 || (s.sort === "top" && s.items.length > 0));
-  }, [items, orders, type, noun, categories]);
+  }, [items, orders, noun, categories]);
 
   // Carousel: the biggest categories with at least 4 items, logos first.
   const collections = useMemo<Collection[]>(() => {
@@ -680,13 +736,14 @@ export default function DiscoverListing({
         <>
           <CollectionCarousel collections={collections} noun={noun} onExplore={openCategory} advertise={type === "mcp"} />
           {afterCollections}
+          {categories.length > 3 && <CategoryTiles categories={categories.filter(([c, n]) => c && n >= 2)} type={type} noun={noun} onOpen={openCategory} />}
           {home.map((section) => (
             <Section
               key={section.title}
               title={section.title}
               action={showAllButton(() => (section.category ? openCategory(section.category) : openList(section.sort ?? "trending")))}
             >
-              <CardGrid items={section.items} />
+              {section.compact ? <RowList items={section.items} /> : <CardGrid items={section.items} />}
             </Section>
           ))}
         </>
