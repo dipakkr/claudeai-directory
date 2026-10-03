@@ -596,7 +596,7 @@ function ShareStep({ app, onAnother }: { app: ShowcaseProject; onAnother: () => 
 
 /* ---------- page ---------- */
 
-export default function SubmitLaunchClient({ finishSlug }: { finishSlug?: string } = {}) {
+export default function SubmitLaunchClient({ finishSlug, guide }: { finishSlug?: string; guide?: React.ReactNode } = {}) {
   const { isAuthenticated, isLoading, user } = useAuth();
   const submit = useSubmitShowcaseProject();
   const autofill = useLaunchAutofill();
@@ -829,7 +829,6 @@ export default function SubmitLaunchClient({ finishSlug }: { finishSlug?: string
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  if (isLoading) return null;
   // Opened from the dashboard with ?finish=<slug>: show that launch's "go live" step until they start over.
   const finishApp =
     !activeApp && finishSlug && !finishDismissed ? apps.find((a) => a.id === finishSlug && !isLaunchLive(a)) : undefined;
@@ -849,9 +848,10 @@ export default function SubmitLaunchClient({ finishSlug }: { finishSlug?: string
           </Link>
           {!isAuthenticated && (
             <>
-              <h1 className="mt-5 text-3xl font-semibold text-foreground md:text-4xl">Launch your app</h1>
-              <p className="mt-2 max-w-[60ch] text-base leading-7 text-muted-foreground">
-                Get a public page for what you built with Claude, collect upvotes and feedback from builders. It takes about a minute.
+              <h1 className="mt-5 font-sans text-3xl font-semibold tracking-tight text-foreground md:text-[40px] md:leading-[1.1]">Launch your app built with Claude</h1>
+              <p className="mt-3 max-w-[62ch] text-[15px] leading-6 text-muted-foreground">
+                Submit your app, MCP server, skill or agent for free. Get a launch page, upvotes and feedback from builders, a post on the
+                community feed and a dofollow backlink. It takes about a minute.
               </p>
               <div className="mt-6 max-w-[760px]">
                 <DofollowBanner cta={false} />
@@ -859,16 +859,11 @@ export default function SubmitLaunchClient({ finishSlug }: { finishSlug?: string
             </>
           )}
 
-          {!isAuthenticated ? (
-            <div className="mt-8 max-w-[560px] rounded-lg border border-border bg-card p-6">
-              <ol className="space-y-3 text-sm text-muted-foreground">
-                <li><span className="font-medium text-foreground">1. Details.</span> Paste your URL, we fill in the rest.</li>
-                <li><span className="font-medium text-foreground">2. Badge.</span> Add a small badge to your site and verify.</li>
-                <li><span className="font-medium text-foreground">3. Share.</span> Your page goes live and ranks by upvotes.</li>
-              </ol>
+          {isLoading ? null : !isAuthenticated ? (
+            <div className="mt-8">
               <SignInButton
                 reason="launch your app"
-                className="mt-6 inline-flex h-11 cursor-pointer items-center gap-2 rounded-full bg-foreground px-5 text-sm font-medium text-background hover:bg-foreground/85"
+                className="inline-flex h-11 cursor-pointer items-center gap-2 rounded-full bg-primary px-5 text-sm font-medium text-primary-foreground hover:opacity-90"
               >
                 Sign in to launch
                 <ArrowRight className="h-4 w-4" />
@@ -1088,6 +1083,8 @@ export default function SubmitLaunchClient({ finishSlug }: { finishSlug?: string
               </div>
             </>
           )}
+          {/* Crawlable guide: shown before sign-in and on the start screen, not while filling the form. */}
+          {guide && (isLoading || !isAuthenticated || (shownStep === 0 && stage === "url")) && guide}
         </div>
       </main>
       <Footer />
