@@ -66,11 +66,11 @@ export function LogoPicker({
   return (
     <div>
       <div className="flex items-center gap-5">
-        <div className="relative flex h-24 w-24 shrink-0 items-center justify-center rounded-full border border-dashed border-border p-2">
-          <div className="flex h-full w-full items-center justify-center overflow-hidden rounded-[18px] bg-foreground/[0.06] text-2xl font-semibold text-muted-foreground">
+        <div className={`relative flex h-20 w-20 shrink-0 items-center justify-center overflow-hidden rounded-full ${shown ? "" : "border border-dashed border-border"}`}>
+          <div className="flex h-full w-full items-center justify-center overflow-hidden rounded-full text-2xl font-semibold text-muted-foreground">
             {shown ? (
               // eslint-disable-next-line @next/next/no-img-element -- logo preview
-              <img src={shown} alt="" className="h-full w-full object-cover" referrerPolicy="no-referrer" />
+              <img src={shown} alt="" className="h-full w-full object-contain" referrerPolicy="no-referrer" />
             ) : (
               fallback
             )}

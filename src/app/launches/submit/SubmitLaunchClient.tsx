@@ -46,7 +46,7 @@ type Media = { logo: string[]; screenshot: string[]; video: string[] };
 
 const SITE_URL = "https://www.claudeai.directory";
 
-import { CATEGORIES } from "@/lib/launch-options";
+import { CATEGORIES, TOPICS } from "@/lib/launch-options";
 import { SignInButton } from "@/components/auth/SignInDialog";
 import { track } from "@/lib/analytics";
 
@@ -59,6 +59,7 @@ const EMPTY_FORM = {
   title: "",
   tagline: "",
   category: "Web app",
+  topic: "",
   description: "",
   audience: "",
   problem: "",
@@ -760,6 +761,7 @@ export default function SubmitLaunchClient() {
       tagline: d.tagline || current.tagline,
       description: d.description || current.description,
       category: d.category && CATEGORIES.includes(d.category) ? d.category : current.category,
+      topic: current.topic || (d.topic && TOPICS.includes(d.topic) ? d.topic : ""),
       platforms: current.platforms.length ? current.platforms : d.platforms,
       tags: current.tags || d.tags.join(", "),
       use_cases: current.use_cases || d.use_cases.join("\n"),
@@ -872,6 +874,7 @@ export default function SubmitLaunchClient() {
         badge_page_url: appUrl,
         github_url: form.github_url.trim() || undefined,
         category: form.category,
+        topic: form.topic || undefined,
         tech_stack: splitList(form.tags),
         skills_used: [],
         use_cases: splitList(form.use_cases, /\n/),
@@ -1053,7 +1056,8 @@ export default function SubmitLaunchClient() {
 
                         <div className="space-y-1.5">
                           <p className="text-sm font-medium text-foreground">Category</p>
-                          <ChipGroup label="Category" options={CATEGORIES} value={[form.category]} onToggle={(option) => set("category", option)} />
+                          <ChipGroup label="Type" options={CATEGORIES} value={[form.category]} onToggle={(option) => set("category", option)} />
+                          <ChipGroup label="Topic" options={TOPICS} value={form.topic ? [form.topic] : []} onToggle={(option) => set("topic", form.topic === option ? "" : option)} />
                         </div>
 
                         <Field label="What does it do?" htmlFor="description" required hint={`${form.description.length}/2000`}>

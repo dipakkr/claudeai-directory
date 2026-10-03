@@ -13,7 +13,7 @@ import { LogoPicker } from "@/components/launches/LogoPicker";
 import { AiDraftBar } from "@/components/launches/AiDraftBar";
 import { ApiError } from "@/lib/api";
 import { useAuth } from "@/lib/auth";
-import { CATEGORIES, PLATFORMS } from "@/lib/launch-options";
+import { CATEGORIES, PLATFORMS, TOPICS } from "@/lib/launch-options";
 import { useMyShowcaseProjects, useUpdateLaunch, useUploadConfig, type LaunchAiDraft } from "@/hooks/use-showcase";
 import type { ShowcaseProject } from "@/types";
 import { SignInButton } from "@/components/auth/SignInDialog";
@@ -141,6 +141,7 @@ function EditForm({ app }: { app: ShowcaseProject }) {
   const [tagline, setTagline] = useState(app.tagline ?? "");
   const [description, setDescription] = useState(app.description ?? "");
   const [category, setCategory] = useState(app.category || CATEGORIES[0]);
+  const [topic, setTopic] = useState(app.topic || "");
   const [platforms, setPlatforms] = useState<string[]>(app.platforms ?? []);
   const [tags, setTags] = useState((app.tech_stack ?? []).join(", "));
   const [useCases, setUseCases] = useState((app.use_cases ?? []).join("\n"));
@@ -177,11 +178,12 @@ function EditForm({ app }: { app: ShowcaseProject }) {
   // "Write with AI": fill the text fields from the draft, keeping what the draft leaves empty.
   // The name stays (it is the maker's), and Undo puts every field back.
   const applyDraft = (d: LaunchAiDraft) => {
-    const before = { tagline, description, category, platforms, tags, useCases, overview, feedback };
+    const before = { tagline, description, category, topic, platforms, tags, useCases, overview, feedback };
     const keep = (next: string, prev: string) => next.trim() || prev;
     setTagline((v) => keep(d.tagline, v));
     setDescription((v) => keep(d.description, v));
     if (d.category && CATEGORIES.includes(d.category)) setCategory(d.category);
+    if (d.topic && TOPICS.includes(d.topic)) setTopic(d.topic);
     if (d.platforms.length) setPlatforms(d.platforms);
     if (d.tags.length) setTags(d.tags.join(", "));
     if (d.use_cases.length) setUseCases(d.use_cases.join("\n"));
@@ -201,6 +203,7 @@ function EditForm({ app }: { app: ShowcaseProject }) {
           setTagline(before.tagline);
           setDescription(before.description);
           setCategory(before.category);
+          setTopic(before.topic);
           setPlatforms(before.platforms);
           setTags(before.tags);
           setUseCases(before.useCases);
@@ -223,6 +226,7 @@ function EditForm({ app }: { app: ShowcaseProject }) {
         tagline: tagline.trim(),
         description: description.trim(),
         category,
+        topic: topic || null,
         platforms,
         tech_stack: tags.split(",").map((t) => t.trim()).filter(Boolean),
         use_cases: lines(useCases),
@@ -311,8 +315,12 @@ function EditForm({ app }: { app: ShowcaseProject }) {
               <input id="website" value={app.app_url ?? ""} readOnly className={`${inputClass} cursor-not-allowed text-muted-foreground`} />
             </div>
             <div>
-              <p className="mb-2 text-[14px] text-muted-foreground">Category</p>
+              <p className="mb-2 text-[14px] text-muted-foreground">Type</p>
               <Chips options={CATEGORIES} value={[category]} onToggle={setCategory} />
+            </div>
+            <div>
+              <p className="mb-2 text-[14px] text-muted-foreground">Topic</p>
+              <Chips options={TOPICS} value={topic ? [topic] : []} onToggle={(t) => setTopic((cur) => (cur === t ? "" : t))} />
             </div>
             <div>
               <Label text="What does it do?" htmlFor="description" hint={`${description.length}/2000`} />

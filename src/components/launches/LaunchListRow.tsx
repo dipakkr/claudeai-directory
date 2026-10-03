@@ -58,7 +58,7 @@ export function LaunchListRow({
   surface: string;
 }) {
   const maker = project.author_name || project.author_username;
-  const meta = [impressions > 0 ? `${impressions.toLocaleString("en-US")} impressions` : null, launchCategory(project)].filter(Boolean) as string[];
+  const meta = [impressions > 0 ? `${impressions.toLocaleString("en-US")} impressions` : null, launchCategory(project), project.topic].filter(Boolean) as string[];
   return (
     <li data-launch-impression={project.id} data-surface={surface} className="border-b border-border last:border-b-0">
       <div className="-mx-3 flex items-center gap-4 rounded-[8px] px-3 py-5 transition-colors hover:bg-foreground/[0.05]">

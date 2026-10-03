@@ -1,6 +1,7 @@
 "use client";
 
 import { Fragment, useMemo, useState } from "react";
+import { TOPICS, topicSlug } from "@/lib/launch-options";
 import Link from "next/link";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
@@ -189,8 +190,11 @@ function SponsoredLaunchSlot() {
 
 export default function ShowcaseClient({
   initialData,
+  initialTopic = "",
 }: {
   initialData: ShowcaseProject[];
+  /** From ?topic= (shareable topic view). */
+  initialTopic?: string;
 }) {
   const queryClient = useQueryClient();
   const { requireAuth } = useSignIn();
@@ -199,6 +203,15 @@ export default function ShowcaseClient({
   const { data: myUpvotes } = useMyLaunchUpvotes(isAuthenticated);
   const votedSlugs = useMemo(() => new Set(myUpvotes ?? []), [myUpvotes]);
   const [activeFilter, setActiveFilter] = useState<LaunchFilter>("all");
+  const [topic, setTopic] = useState(initialTopic);
+  const pickTopic = (next: string) => {
+    setTopic(next);
+    const params = new URLSearchParams(window.location.search);
+    if (next) params.set("topic", topicSlug(next));
+    else params.delete("topic");
+    const qs = params.toString();
+    window.history.replaceState(null, "", `${window.location.pathname}${qs ? `?${qs}` : ""}`);
+  };
   const [query, setQuery] = useState("");
 
   const { data: projects } = useShowcaseProjects(undefined, { initialData });
@@ -221,6 +234,12 @@ export default function ShowcaseClient({
     [listedProjects],
   );
 
+  const topics = useMemo(
+    () =>
+      TOPICS.map((name) => ({ name, count: listedProjects.filter((p) => p.topic === name).length })).filter((t) => t.count > 0),
+    [listedProjects],
+  );
+
   const visibleProjects = useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase();
     return listedProjects.filter((project) => {
@@ -236,10 +255,11 @@ export default function ShowcaseClient({
         .toLowerCase();
 
       if (!matchesFilter(project, activeFilter)) return false;
+      if (topic && project.topic !== topic) return false;
       if (normalizedQuery && !haystack.includes(normalizedQuery)) return false;
       return true;
     });
-  }, [activeFilter, listedProjects, query]);
+  }, [activeFilter, listedProjects, query, topic]);
 
   const handleVote = (project: ShowcaseProject) =>
     void requireAuth(`upvote ${project.title}`, async ({ resumed }) => {
@@ -320,6 +340,27 @@ export default function ShowcaseClient({
               </div>
             )}
           </div>
+
+          {/* What launches are for: only topics that have launches. */}
+          {topics.length > 0 && (
+            <div className="mt-3 flex flex-wrap items-center gap-x-1 gap-y-1.5" role="group" aria-label="Filter by topic">
+              <span className="mr-1 font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground">Topic</span>
+              {topics.map(({ name, count }) => (
+                <button
+                  key={name}
+                  type="button"
+                  aria-pressed={topic === name}
+                  onClick={() => pickTopic(topic === name ? "" : name)}
+                  className={`rounded-[6px] px-2 py-1 text-[12.5px] transition-colors ${
+                    topic === name ? "bg-primary/15 text-primary" : "text-muted-foreground hover:bg-foreground/[0.06] hover:text-foreground"
+                  }`}
+                >
+                  {name}
+                  <span className="ml-1 font-mono text-[10.5px] opacity-60">{count}</span>
+                </button>
+              ))}
+            </div>
+          )}
 
           <div className="mt-8 flex items-center gap-3">
             <h2 className="shrink-0 font-mono text-[11px] uppercase tracking-[0.16em] text-foreground">All launches</h2>

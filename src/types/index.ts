@@ -233,6 +233,8 @@ export interface ShowcaseProject {
   demo_url?: string;
   github_url?: string;
   category?: string;
+  /** What it is for, from TOPICS. */
+  topic?: string | null;
   tech_stack: string[];
   skills_used: string[];
   use_cases?: string[];
