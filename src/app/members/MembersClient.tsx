@@ -130,10 +130,10 @@ export default function MembersClient({ initialData }: { initialData: MembersRes
           </div>
           {isPreview && !isAuthLoading && (
             <SignInButton
-              reason="see all members"
-              className="inline-flex h-10 shrink-0 cursor-pointer items-center self-start rounded-full border border-border px-4 text-sm text-foreground transition-colors hover:border-[var(--cad-line-hover)]"
+              reason="join the community"
+              className="inline-flex h-10 shrink-0 cursor-pointer items-center self-start rounded-full bg-primary px-5 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90"
             >
-              Sign in to see all members
+              Join the community
             </SignInButton>
           )}
         </div>

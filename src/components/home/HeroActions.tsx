@@ -1,9 +1,8 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { ArrowRight, Search } from "lucide-react";
 
-import { useSignIn } from "@/components/auth/SignInDialog";
 import { useCommandMenu } from "@/components/layout/CommandMenu";
 import { useAuth } from "@/lib/auth";
 import { compactNumber } from "@/lib/directory";
@@ -27,24 +26,18 @@ export function HeroSearch() {
   );
 }
 
-/** Member avatars as a join prompt: sign in when signed out, the community when signed in. */
+/** Member avatars linking to /members, where signed-out visitors can join. */
 export function HeroJoin({ members, total }: { members: PublicProfile[]; total: number }) {
   const { isAuthenticated } = useAuth();
-  const { openSignIn } = useSignIn();
-  const router = useRouter();
   const preview = members.slice(0, 8);
   if (preview.length === 0) return null;
 
   // Product decision: show "1k+" until the real count passes it.
   const builders = total >= 1000 ? `${compactNumber(total)}+` : "1k+";
-  const label = isAuthenticated ? "Ask the community" : `Join ${builders} builders`;
+  const label = isAuthenticated ? "Meet the builders" : `Join ${builders} builders`;
 
   return (
-    <button
-      type="button"
-      onClick={() => (isAuthenticated ? router.push("/feed") : openSignIn("join the community"))}
-      className="group mx-auto mt-7 flex w-fit max-w-full cursor-pointer items-center justify-center"
-    >
+    <Link href="/members" className="group mx-auto mt-7 flex w-fit max-w-full cursor-pointer items-center justify-center">
       <span className="flex -space-x-2">
         {preview.map((member) => {
           const name = member.name || member.username;
@@ -68,6 +61,6 @@ export function HeroJoin({ members, total }: { members: PublicProfile[]; total: 
         {label}
         <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
       </span>
-    </button>
+    </Link>
   );
 }
