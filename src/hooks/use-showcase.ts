@@ -57,6 +57,8 @@ export interface ShowcaseSubmission {
   title: string;
   /** Required: posted as the maker's first comment on the launch page. */
   maker_comment: string;
+  /** Post the launch to the community feed when it goes live. Defaults to true on the server. */
+  share_to_feed?: boolean;
   tagline?: string;
   description: string;
   app_url: string;

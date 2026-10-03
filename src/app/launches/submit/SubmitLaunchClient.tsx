@@ -75,6 +75,7 @@ const EMPTY_FORM = {
   linkedin: "",
   feedback_prompt: "",
   maker_comment: "",
+  share_to_feed: true,
 };
 
 type Form = typeof EMPTY_FORM;
@@ -866,6 +867,7 @@ export default function SubmitLaunchClient() {
         use_cases: splitList(form.use_cases, /\n/),
         feedback_prompt: form.feedback_prompt.trim() || undefined,
         maker_comment: form.maker_comment.trim(),
+        share_to_feed: form.share_to_feed,
         gallery_images: [...media.screenshot, ...splitList(form.images, /\s*\n\s*/).filter(isValidUrl)].slice(0, 8),
         logo_url: media.logo[0],
         video_url: media.video[0],
@@ -1103,6 +1105,20 @@ export default function SubmitLaunchClient() {
                               className={textareaClass}
                             />
                           </Field>
+                          <label className="mt-4 flex cursor-pointer items-start gap-3 text-sm">
+                            <input
+                              type="checkbox"
+                              checked={form.share_to_feed}
+                              onChange={(e) => set("share_to_feed", e.target.checked)}
+                              className="mt-0.5 h-4 w-4 shrink-0 accent-primary"
+                            />
+                            <span>
+                              <span className="text-foreground">Also post it to the community feed</span>
+                              <span className="block text-xs leading-5 text-muted-foreground">
+                                When your launch goes live, this comment is shared on the feed with a link to your launch page. More people see it.
+                              </span>
+                            </span>
+                          </label>
                         </FormSection>
                       </div>
 
