@@ -15,7 +15,8 @@ export default function HomeLaunches({
   impressions?: Record<string, number>;
   upvotesToday?: Record<string, number>;
 }) {
-  const shownProjects = projects.slice(0, 5);
+  // Every live launch, so each maker gets homepage traffic (ranked: promoted, then upvotes).
+  const shownProjects = projects;
 
   return (
     <section id="launches" aria-labelledby="launches-heading" className="mx-auto max-w-[1000px] scroll-mt-24 px-4 md:px-8">
@@ -23,6 +24,7 @@ export default function HomeLaunches({
       <div className="flex items-center gap-3">
         <h2 id="launches-heading" className="shrink-0 font-mono text-[11px] font-medium uppercase tracking-[0.16em] text-foreground">
           Built with Claude
+          {projects.length > 0 && <span className="ml-2 text-muted-foreground">{projects.length}</span>}
         </h2>
         <span className="h-px flex-1 bg-border" aria-hidden="true" />
         <span className="shrink-0 text-xs text-muted-foreground">Upvote your favorite</span>
