@@ -97,15 +97,14 @@ function ProfileNudge({ user }: { user: User }) {
   return (
     <Link
       href="/dashboard?tab=settings"
-      className="group flex items-center gap-4 rounded-[10px] border border-border bg-card px-4 py-3 transition-colors hover:border-[var(--cad-line-hover)]"
+      className="group flex items-center gap-3 text-[13px] text-muted-foreground transition-colors hover:text-foreground"
     >
-      <span className="relative h-1.5 w-20 shrink-0 overflow-hidden rounded-full bg-border">
+      <span className="relative h-1 w-12 shrink-0 overflow-hidden rounded-full bg-border">
         <span className="absolute inset-y-0 left-0 rounded-full bg-primary" style={{ width: `${percent}%` }} />
       </span>
-      <span className="min-w-0 flex-1 truncate text-sm text-muted-foreground">
-        <span className="text-foreground">Profile {percent}% done.</span> Add your {missing.join(", ")}.
+      <span className="min-w-0 truncate">
+        Profile {percent}% done. Add your {missing.join(", ")}.
       </span>
-      <ArrowRight className="h-3.5 w-3.5 shrink-0 text-muted-foreground transition-colors group-hover:text-foreground" />
     </Link>
   );
 }
@@ -162,9 +161,6 @@ export default function DashboardClient() {
   const country = countryName(user.country);
 
   const attention = [
-    ...(s && s.launches.pending
-      ? [{ key: "badge", text: `${s.launches.pending} ${s.launches.pending === 1 ? "launch is a draft" : "launches are drafts"}`, href: "/dashboard?tab=launches", cta: "Complete listing" }]
-      : []),
     ...(s && s.submissions.rejected
       ? [{ key: "rejected", text: `${s.submissions.rejected} ${s.submissions.rejected === 1 ? "submission needs" : "submissions need"} changes`, href: "/dashboard?tab=submissions", cta: "See notes" }]
       : []),
@@ -242,6 +238,7 @@ export default function DashboardClient() {
               <div className="space-y-10">
                 <Attention items={attention} />
 
+                {s && (s.launches.live > 0 || s.submissions.published > 0) && (
                 <section>
                   <SectionLabel title="Your numbers" />
                   <div className="grid grid-cols-2 gap-px overflow-hidden rounded-[10px] border border-border bg-border sm:grid-cols-4">
@@ -251,6 +248,7 @@ export default function DashboardClient() {
                     <Stat label="resources" value={s?.submissions.published ?? "-"} sub={s?.submissions.pending ? `${s.submissions.pending} in review` : "published"} href="/dashboard?tab=submissions" />
                   </div>
                 </section>
+                )}
 
                 <section>
                   <SectionLabel
@@ -266,24 +264,18 @@ export default function DashboardClient() {
                   <LaunchRows apps={(launches.data ?? []).slice(0, 3)} loading={launches.isLoading} />
                 </section>
 
-                <section>
-                  <SectionLabel title="Share something" />
-                  <div className="grid gap-2 sm:grid-cols-3">
+                {/* Quiet footer: what else you can do, and the profile reminder. */}
+                <div className="space-y-3 border-t border-border pt-6">
+                  <p className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm">
                     {QUICK_ACTIONS.map(({ href, icon: Icon, label }) => (
-                      <Link
-                        key={href}
-                        href={href}
-                        className="group flex items-center gap-2.5 rounded-[10px] border border-border px-4 py-3 text-sm text-foreground transition-colors hover:border-[var(--cad-line-hover)]"
-                      >
-                        <Icon className="h-4 w-4 text-primary" />
-                        <span className="flex-1">{label}</span>
-                        <ArrowRight className="h-3.5 w-3.5 text-muted-foreground transition-colors group-hover:text-foreground" />
+                      <Link key={href} href={href} className="inline-flex items-center gap-1.5 text-muted-foreground transition-colors hover:text-foreground">
+                        <Icon className="h-3.5 w-3.5 text-primary" />
+                        {label}
                       </Link>
                     ))}
-                  </div>
-                </section>
-
-                <ProfileNudge user={user} />
+                  </p>
+                  <ProfileNudge user={user} />
+                </div>
               </div>
             )}
 
