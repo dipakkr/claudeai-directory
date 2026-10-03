@@ -36,13 +36,14 @@ interface OpenStats {
   days: number;
   tracking_since: string | null;
   summary: {
-    visitors: { range: number };
-    page_views: { range: number };
-    listing_views: { range: number; all_time: number };
-    installs: { range: number; all_time: number };
-    members: { range: number; all_time: number };
-    launches: { range: number; all_time: number };
-    posts: { range: number; all_time: number };
+    /** `prev` is the same-length window before this one; `source` says where visitors come from. */
+    visitors: { range: number; prev?: number; source?: string };
+    page_views: { range: number; prev?: number; source?: string };
+    listing_views: { range: number; prev?: number; all_time: number };
+    installs: { range: number; prev?: number; all_time: number };
+    members: { range: number; prev?: number; all_time: number };
+    launches: { range: number; prev?: number; all_time: number };
+    posts: { range: number; prev?: number; all_time: number };
     subscribers: { all_time: number };
     resources: { skills: number; mcp: number; agents: number; plugins: number };
   };
@@ -71,10 +72,30 @@ function SectionLabel({ children, aside }: { children: React.ReactNode; aside?: 
   );
 }
 
-function Stat({ label, value, sub }: { label: string; value: string; sub?: string }) {
+/** "▲ 32%" green / "▼ 12%" red against the previous period; "new" when there was nothing before. */
+function Change({ now, prev }: { now: number; prev?: number }) {
+  if (prev === undefined) return null;
+  if (prev === 0) return now > 0 ? <span className="rounded-[4px] bg-green-500/10 px-1.5 py-0.5 font-mono text-[11px] text-green-600 dark:text-green-400">new</span> : null;
+  const pct = Math.round(((now - prev) / prev) * 100);
+  if (pct === 0) return <span className="font-mono text-[11px] text-muted-foreground">0%</span>;
+  const up = pct > 0;
+  return (
+    <span
+      className={`rounded-[4px] px-1.5 py-0.5 font-mono text-[11px] tabular-nums ${up ? "bg-green-500/10 text-green-600 dark:text-green-400" : "bg-red-500/10 text-red-600 dark:text-red-400"}`}
+      title={`${prev.toLocaleString("en-US")} in the previous period`}
+    >
+      {up ? "▲" : "▼"} {Math.abs(pct) > 999 ? "999+" : Math.abs(pct)}%
+    </span>
+  );
+}
+
+function Stat({ label, value, sub, now, prev }: { label: string; value: string; sub?: string; now?: number; prev?: number }) {
   return (
     <div className="bg-card p-4">
-      <p className="font-mono text-[11px] text-muted-foreground">{label}</p>
+      <div className="flex items-center justify-between gap-2">
+        <p className="font-mono text-[11px] text-muted-foreground">{label}</p>
+        {now !== undefined && <Change now={now} prev={prev} />}
+      </div>
       <p className="mt-1.5 text-[22px] font-semibold tabular-nums leading-none text-foreground">{value}</p>
       {sub && <p className="mt-1.5 font-mono text-[11px] text-muted-foreground">{sub}</p>}
     </div>
@@ -250,6 +271,9 @@ function RangeSwitch({ days }: { days: number }) {
 function Body({ data }: { data: OpenStats }) {
   const { summary: s, rows, tracking_since: since } = data;
   const counting = since ? `counted since ${shortDate(since)}` : "counting starts today";
+  // OpenPanel numbers exist from day one; our own counter only from `since`.
+  const hasTraffic = s.visitors.source === "openpanel" || Boolean(since);
+  const prevLabel = (prev?: number) => (prev !== undefined ? `${fmt(prev)} previous ${data.days} days` : counting);
   const listings = s.resources.skills + s.resources.mcp + s.resources.agents + s.resources.plugins;
 
   return (
@@ -257,13 +281,13 @@ function Body({ data }: { data: OpenStats }) {
       <div className="mt-12">
         <SectionLabel aside={<RangeSwitch days={data.days} />}>In numbers</SectionLabel>
         <div className="mt-4 grid grid-cols-2 gap-px overflow-hidden rounded-[6px] border border-border bg-border md:grid-cols-4">
-          <Stat label="visitors" value={since ? fmt(s.visitors.range) : "-"} sub={counting} />
-          <Stat label="page_views" value={since ? fmt(s.page_views.range) : "-"} sub={counting} />
-          <Stat label="listing_views" value={fmt(s.listing_views.range)} sub={`${fmt(s.listing_views.all_time)} all time`} />
-          <Stat label="install_actions" value={fmt(s.installs.range)} sub={`${fmt(s.installs.all_time)} all time`} />
-          <Stat label="new_members" value={`+${fmt(s.members.range)}`} sub={`${fmt(s.members.all_time)} all time`} />
-          <Stat label="apps_launched" value={fmt(s.launches.range)} sub={`${fmt(s.launches.all_time)} all time`} />
-          <Stat label="posts_and_comments" value={fmt(s.posts.range)} sub={`${fmt(s.posts.all_time)} all time`} />
+          <Stat label="visitors" value={hasTraffic ? fmt(s.visitors.range) : "-"} sub={hasTraffic ? prevLabel(s.visitors.prev) : counting} now={hasTraffic ? s.visitors.range : undefined} prev={s.visitors.prev} />
+          <Stat label="page_views" value={hasTraffic ? fmt(s.page_views.range) : "-"} sub={hasTraffic ? prevLabel(s.page_views.prev) : counting} now={hasTraffic ? s.page_views.range : undefined} prev={s.page_views.prev} />
+          <Stat label="listing_views" value={fmt(s.listing_views.range)} sub={`${fmt(s.listing_views.all_time)} all time`} now={s.listing_views.range} prev={s.listing_views.prev} />
+          <Stat label="install_actions" value={fmt(s.installs.range)} sub={`${fmt(s.installs.all_time)} all time`} now={s.installs.range} prev={s.installs.prev} />
+          <Stat label="new_members" value={`+${fmt(s.members.range)}`} sub={`${fmt(s.members.all_time)} all time`} now={s.members.range} prev={s.members.prev} />
+          <Stat label="apps_launched" value={fmt(s.launches.range)} sub={`${fmt(s.launches.all_time)} all time`} now={s.launches.range} prev={s.launches.prev} />
+          <Stat label="posts_and_comments" value={fmt(s.posts.range)} sub={`${fmt(s.posts.all_time)} all time`} now={s.posts.range} prev={s.posts.prev} />
           <Stat label="listings" value={fmt(listings)} sub={`${s.resources.mcp} MCP · ${s.resources.plugins} plugins`} />
         </div>
       </div>
