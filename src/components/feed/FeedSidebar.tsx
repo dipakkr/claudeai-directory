@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, Rocket } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { UpvotePill } from "@/components/launches/UpvotePill";
 
 import { DiscussionAvatar } from "@/components/discussion/Discussion";
@@ -83,18 +83,6 @@ export function FeedSidebar({ launches, members, memberTotal }: { launches: Show
           </div>
         </Card>
       )}
-
-      <section className="rounded-[6px] border border-border bg-card p-4">
-        <h2 className="font-sans text-sm font-semibold text-foreground">Built something with Claude?</h2>
-        <p className="mt-1 text-[13px] leading-5 text-muted-foreground">Launch it for upvotes, feedback and a backlink.</p>
-        <Link
-          href="/launches/submit"
-          className="mt-3 inline-flex h-8 w-full items-center justify-center gap-1.5 rounded-full bg-primary text-[13px] font-medium text-primary-foreground transition-opacity hover:opacity-90"
-        >
-          <Rocket className="h-3.5 w-3.5" />
-          Launch your app
-        </Link>
-      </section>
 
       <p className="px-1 text-[12px] leading-5 text-muted-foreground/70">
         Be specific, show your work rather than just a link, and skip repeated self-promotion.
