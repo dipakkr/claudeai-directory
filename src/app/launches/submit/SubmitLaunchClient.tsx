@@ -695,7 +695,7 @@ function ShareStep({ app, onAnother }: { app: ShowcaseProject; onAnother: () => 
 
 /* ---------- page ---------- */
 
-export default function SubmitLaunchClient() {
+export default function SubmitLaunchClient({ finishSlug }: { finishSlug?: string } = {}) {
   const { isAuthenticated, isLoading, user } = useAuth();
   const submit = useSubmitShowcaseProject();
   const autofill = useLaunchAutofill();
@@ -725,6 +725,7 @@ export default function SubmitLaunchClient() {
 
   const [form, setForm] = useState<Form>(EMPTY_FORM);
   const [step, setStep] = useState<Step>(0);
+  const [finishDismissed, setFinishDismissed] = useState(false);
   // Step 0 has three stages: the website, reading it, then reviewing the filled-in form.
   const [stage, setStage] = useState<"url" | "reading" | "form">("url");
   const [activeApp, setActiveApp] = useState<ShowcaseProject | null>(null);
@@ -909,6 +910,7 @@ export default function SubmitLaunchClient() {
   };
 
   const startOver = () => {
+    setFinishDismissed(true);
     setForm(EMPTY_FORM);
     setMedia({ logo: [], screenshot: [], video: [] });
     setUploading({ logo: false, screenshot: false, video: false });
@@ -926,8 +928,13 @@ export default function SubmitLaunchClient() {
   };
 
   if (isLoading) return null;
+  // Opened from the dashboard with ?finish=<slug>: show that launch's "go live" step until they start over.
+  const finishApp =
+    !activeApp && finishSlug && !finishDismissed ? apps.find((a) => a.id === finishSlug && !a.badge_verified && a.status !== "listed") : undefined;
+  const shownApp = activeApp ?? finishApp ?? null;
+  const shownStep: Step = activeApp ? step : finishApp ? 1 : step;
   // The details step is a single quiet column, like DevHunt; badge and share keep the stepper and side panel.
-  const focused = isAuthenticated && step === 0;
+  const focused = isAuthenticated && shownStep === 0;
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
@@ -969,15 +976,15 @@ export default function SubmitLaunchClient() {
             <>
               {!focused && (
                 <div className="mt-8">
-                  <Stepper step={step} />
+                  <Stepper step={shownStep} />
                 </div>
               )}
 
-              <div className={focused || step === 1 ? "mt-10" : "mt-6 grid gap-8 lg:grid-cols-[minmax(0,1fr)_320px] lg:items-start"}>
+              <div className={focused || shownStep === 1 ? "mt-10" : "mt-6 grid gap-8 lg:grid-cols-[minmax(0,1fr)_320px] lg:items-start"}>
                 <div className="min-w-0">
-                  {step === 1 && activeApp ? (
+                  {shownStep === 1 && shownApp ? (
                     <BadgeStep
-                      app={activeApp}
+                      app={shownApp}
                       onBack={startOver}
                       onVerified={(updated) => {
                         setActiveApp(updated);
@@ -1156,7 +1163,7 @@ export default function SubmitLaunchClient() {
                   )}
                 </div>
 
-                {!focused && step !== 1 && <aside className="space-y-4 lg:sticky lg:top-24">
+                {!focused && shownStep !== 1 && <aside className="space-y-4 lg:sticky lg:top-24">
                   {step === 0 && stage === "form" && <LivePreview form={form} media={media} />}
                   <MyLaunches apps={apps} onContinue={continueApp} />
                 </aside>}

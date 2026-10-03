@@ -14,6 +14,8 @@ export const metadata: Metadata = {
   },
 };
 
-export default function SubmitLaunchPage() {
-  return <SubmitLaunchClient />;
+export default async function SubmitLaunchPage({ searchParams }: { searchParams: Promise<{ finish?: string }> }) {
+  // ?finish=<slug>: open straight on the "go live" step for a saved launch (from the dashboard).
+  const { finish } = await searchParams;
+  return <SubmitLaunchClient finishSlug={finish} />;
 }

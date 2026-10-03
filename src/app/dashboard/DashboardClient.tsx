@@ -163,7 +163,7 @@ export default function DashboardClient() {
 
   const attention = [
     ...(s && s.launches.pending
-      ? [{ key: "badge", text: `${s.launches.pending} ${s.launches.pending === 1 ? "launch is" : "launches are"} waiting for the badge`, href: "/launches/submit", cta: "Add badge" }]
+      ? [{ key: "badge", text: `${s.launches.pending} ${s.launches.pending === 1 ? "launch isn't" : "launches aren't"} live yet: pay $29 or add the free badge`, href: "/dashboard?tab=launches", cta: "Finish" }]
       : []),
     ...(s && s.submissions.rejected
       ? [{ key: "rejected", text: `${s.submissions.rejected} ${s.submissions.rejected === 1 ? "submission needs" : "submissions need"} changes`, href: "/dashboard?tab=submissions", cta: "See notes" }]
@@ -245,7 +245,7 @@ export default function DashboardClient() {
                 <section>
                   <SectionLabel title="Your numbers" />
                   <div className="grid grid-cols-2 gap-px overflow-hidden rounded-[10px] border border-border bg-border sm:grid-cols-4">
-                    <Stat label="live_launches" value={s?.launches.live ?? "-"} sub={s?.launches.pending ? `${s.launches.pending} waiting for badge` : undefined} href="/dashboard?tab=launches" />
+                    <Stat label="live_launches" value={s?.launches.live ?? "-"} sub={s?.launches.pending ? `${s.launches.pending} not live yet` : undefined} href="/dashboard?tab=launches" />
                     <Stat label="upvotes" value={s?.launches.upvotes ?? "-"} sub="on live launches" href="/dashboard?tab=launches" />
                     <Stat label="launch_views" value={s?.launches.views ?? "-"} sub="all time" href="/dashboard?tab=launches" />
                     <Stat label="resources" value={s?.submissions.published ?? "-"} sub={s?.submissions.pending ? `${s.submissions.pending} in review` : "published"} href="/dashboard?tab=submissions" />

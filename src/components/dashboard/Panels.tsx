@@ -3,7 +3,10 @@
 import Link from "next/link";
 import { Bell, Bookmark, MessageSquare, Package, Rocket } from "lucide-react";
 import type { ReactNode } from "react";
+import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { Loader2 } from "lucide-react";
+import { toast } from "sonner";
 
 import { api } from "@/lib/api";
 
@@ -84,6 +87,46 @@ const listClass = "divide-y divide-border overflow-hidden rounded-[10px] border 
 
 /* ---------- launches ---------- */
 
+/** Pay the one-time listing fee: straight to Stripe checkout, back to the launch when paid. */
+function GoLiveButton({ slug }: { slug: string }) {
+  const [busy, setBusy] = useState(false);
+  const { data: config } = useQuery({
+    queryKey: ["sponsors", "config"],
+    queryFn: () => api.get<{ enabled: boolean; listing?: number }>("/sponsors/config"),
+    staleTime: 5 * 60_000,
+    retry: false,
+  });
+  const price = config?.enabled && config.listing ? config.listing / 100 : null;
+  if (price === null) {
+    // Checkout off: the finish page explains the badge route.
+    return (
+      <Link href={`/launches/submit?finish=${encodeURIComponent(slug)}`} className="inline-flex h-8 items-center rounded-full bg-primary px-3.5 font-medium text-primary-foreground hover:opacity-90">
+        Go live
+      </Link>
+    );
+  }
+  return (
+    <button
+      type="button"
+      disabled={busy}
+      onClick={() => {
+        setBusy(true);
+        api
+          .post<{ url: string }>("/sponsors/launch-listing", { slug })
+          .then(({ url }) => window.location.assign(url))
+          .catch(() => {
+            setBusy(false);
+            toast.error("Could not start checkout. Try again in a minute.");
+          });
+      }}
+      className="inline-flex h-8 items-center gap-1.5 rounded-full bg-primary px-3.5 font-medium text-primary-foreground hover:opacity-90 disabled:opacity-60"
+    >
+      {busy && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
+      Go live for ${price}
+    </button>
+  );
+}
+
 /** One row per launch: logo, name and status, the numbers, then what to do next. */
 export function LaunchRows({ apps, loading }: { apps: ShowcaseProject[]; loading: boolean }) {
   // All-time impressions and website clicks per launch.
@@ -126,14 +169,14 @@ export function LaunchRows({ apps, loading }: { apps: ShowcaseProject[]; loading
                 <Link href={live ? `/launches/${app.id}` : `/launches/${app.id}/edit`} className="truncate font-sans text-[15px] font-medium text-foreground hover:underline">
                   {app.title}
                 </Link>
-                {live ? <StatusPill tone="live">Live</StatusPill> : rejected ? <StatusPill tone="bad">Not approved</StatusPill> : <StatusPill tone="wait">Waiting for badge</StatusPill>}
+                {live ? <StatusPill tone="live">Live</StatusPill> : rejected ? <StatusPill tone="bad">Not approved</StatusPill> : <StatusPill tone="wait">Not live yet</StatusPill>}
               </div>
               <p className="mt-1 truncate font-mono text-[12px] tabular-nums text-muted-foreground">
                 {live
                   ? `${num(app.upvotes)} upvotes · ${num(metrics?.[app.id]?.impressions)} impressions · ${num(app.views)} views · ${num(metrics?.[app.id]?.clicks)} clicks`
                   : rejected
                     ? "Edit it and resubmit, or contact us"
-                    : "Add the badge to your site to go live"}
+                    : "Go live with a one-time $29 listing, or free with our badge"}
               </p>
             </div>
             <div className="flex w-full items-center gap-4 pl-14 text-sm sm:w-auto sm:pl-0">
@@ -144,9 +187,16 @@ export function LaunchRows({ apps, loading }: { apps: ShowcaseProject[]; loading
                   View
                 </Link>
               ) : !rejected ? (
-                <Link href="/launches/submit" className="inline-flex h-8 items-center rounded-full bg-primary px-3.5 font-medium text-primary-foreground hover:opacity-90">
-                  Add badge
-                </Link>
+                // The two ways to finish a launch, side by side.
+                <>
+                  <Link
+                    href={`/launches/submit?finish=${encodeURIComponent(app.id)}`}
+                    className="inline-flex h-8 items-center rounded-full border border-border px-3.5 text-foreground hover:border-[var(--cad-line-hover)]"
+                  >
+                    Free with badge
+                  </Link>
+                  <GoLiveButton slug={app.id} />
+                </>
               ) : null}
             </div>
           </li>
@@ -161,7 +211,7 @@ export function LaunchesPanel({ apps, loading }: { apps: ShowcaseProject[]; load
     <section>
       <PanelHeader
         title="Your launches"
-        description="They go public once the badge is on your site, or right away with a featured launch."
+        description="Each launch goes live one of two ways: a one-time $29 listing, or free by adding our badge to your site."
         action={apps.length > 0 ? <PrimaryAction href="/launches/submit"><Rocket className="h-4 w-4" />Launch an app</PrimaryAction> : undefined}
       />
       <LaunchRows apps={apps} loading={loading} />
