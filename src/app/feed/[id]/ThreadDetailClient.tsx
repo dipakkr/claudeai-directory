@@ -23,6 +23,12 @@ import { PostMenu } from "@/components/feed/PostMenu";
 import { EditPostForm } from "@/components/feed/EditPostForm";
 import { useRouter } from "next/navigation";
 
+/** "/launches/slug" when the post links to one of our launch pages. */
+function launchPath(url: string): string | null {
+  const m = url.match(/^https?:\/\/(?:www\.)?claudeai\.directory(\/launches\/[a-z0-9-]+)\/?$/i);
+  return m ? m[1] : null;
+}
+
 function timeAgo(dateStr: string): string {
   const now = Date.now();
   const then = new Date(dateStr).getTime();
@@ -344,6 +350,15 @@ export default function ThreadDetail({
 
                 {thread.link_url && (
                   <div className="mt-5 max-w-[72ch]">
+                    {/* Launch posts: a plain text link to the launch page, not only the card. */}
+                    {launchPath(thread.link_url) && (
+                      <p className="mb-3 text-[15px] text-muted-foreground">
+                        Launch page:{" "}
+                        <Link href={launchPath(thread.link_url)!} className="text-primary underline underline-offset-[3px] hover:opacity-80">
+                          claudeai.directory{launchPath(thread.link_url)}
+                        </Link>
+                      </p>
+                    )}
                     <LinkPreviewCard url={thread.link_url} preview={thread.link_preview} />
                   </div>
                 )}
