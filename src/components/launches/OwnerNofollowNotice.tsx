@@ -18,8 +18,8 @@ export function OwnerNofollowNotice({ slug, authorId }: { slug: string; authorId
             Your link is <span className="font-mono text-primary">nofollow</span>
           </p>
           <p className="mt-1 text-[13.5px] leading-6 text-muted-foreground">
-            It passes no SEO value to your site, and your launch is listed below launches with a dofollow link. Add our badge to your
-            site for free, or pay $19 once instead.
+            It passes no SEO value to your site, and your launch is listed below launches with a dofollow link. Pay $19 once, or add our
+            badge to your site for free.
           </p>
         </div>
         <Link

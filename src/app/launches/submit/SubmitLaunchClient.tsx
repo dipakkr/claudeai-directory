@@ -372,7 +372,7 @@ function BadgeStep({
   const [publishing, setPublishing] = useState(false);
   // Already live without the badge: the only thing left is upgrading the link to dofollow.
   const live = isLaunchLive(app);
-  const [mode, setMode] = useState<"badge" | "paid" | "free">("badge");
+  const [mode, setMode] = useState<"badge" | "paid" | "free">("paid");
 
   // Free either way: without the badge it goes live now with a nofollow link.
   const publishNow = () => {
@@ -437,7 +437,7 @@ function BadgeStep({
       perks: ["Dofollow link to your site", "Listed with badge launches, ranked by upvotes", "Live as soon as we find the badge"],
     },
     paid: {
-      title: "Skip the badge",
+      title: "Launch now",
       price: "$19 one time",
       perks: ["Dofollow link to your site", "Listed with badge launches, ranked by upvotes", live ? "Upgraded right after payment" : "Live right after payment", "No badge on your site"],
     },
@@ -448,8 +448,8 @@ function BadgeStep({
     },
   } as const;
   const offer = OFFERS[mode];
-  const others = (["badge", "paid", "free"] as const).filter((m) => m !== mode && !(m === "free" && live));
-  const otherLabel = { badge: "Add our badge instead (free, dofollow)", paid: "Don't want a badge on your site? Pay $19 instead", free: "List free without the badge (nofollow, listed below)" };
+  const others = (["paid", "badge", "free"] as const).filter((m) => m !== mode && !(m === "free" && live));
+  const otherLabel = { badge: "Don't want to pay? Add our badge and go live free", paid: "Pay $19 instead (no badge on your site)", free: "List free without the badge (nofollow, listed below)" };
   const primaryBtn =
     "inline-flex h-12 w-full items-center justify-center gap-2 rounded-[12px] bg-primary text-[15px] font-medium text-primary-foreground transition-opacity hover:opacity-90 disabled:opacity-60";
 
