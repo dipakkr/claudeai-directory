@@ -333,7 +333,7 @@ function MyLaunches({
             <div className="min-w-0 flex-1">
               <p className="truncate text-sm font-medium text-foreground">{app.title}</p>
               <p className={`text-xs ${app.badge_verified ? "text-success" : "text-muted-foreground"}`}>
-                {app.badge_verified ? "Live" : app.status === "rejected" ? "Not approved" : "Waiting for badge"}
+                {app.badge_verified || app.paid_listing ? "Live" : app.status === "rejected" ? "Not approved" : "Draft"}
               </p>
             </div>
             <Link href={`/launches/${app.id}/edit`} className="text-xs text-muted-foreground hover:text-foreground">
