@@ -255,16 +255,6 @@ export function ResourceCard({ item }: { item: DirectoryItem }) {
   );
 }
 
-function CardGrid({ items }: { items: DirectoryItem[] }) {
-  return (
-    <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-      {items.map((item) => (
-        <ResourceCard key={item.key} item={item} />
-      ))}
-    </div>
-  );
-}
-
 /** Compact two-column rows, used for category sections so a long page has some rhythm. */
 function RowList({ items }: { items: DirectoryItem[] }) {
   return (
@@ -746,7 +736,16 @@ export default function DiscoverListing({
               title={section.title}
               action={showAllButton(() => (section.category ? openCategory(section.category) : openList(section.sort ?? "trending")))}
             >
-              {section.compact ? <RowList items={section.items} /> : <CardGrid items={section.items} />}
+              {section.compact ? (
+                <RowList items={section.items} />
+              ) : (
+                // Top / Trending / New: ranked rows, same as every other list on the site.
+                <ol className="border-t border-border/70">
+                  {section.items.map((item, index) => (
+                    <DirectoryRow key={item.key} item={item} rank={index + 1} showType={false} />
+                  ))}
+                </ol>
+              )}
             </Section>
           ))}
         </>
