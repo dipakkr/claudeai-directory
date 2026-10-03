@@ -2,8 +2,38 @@ import { ExternalLink } from "lucide-react";
 import type { LinkPreview } from "@/types";
 
 /** The link shared in a post: preview card when we have one, else the bare link. */
+/** "/launches/{slug}" when the link points at one of our launch pages, else null. */
+function launchPath(href: string): string | null {
+  try {
+    const u = new URL(href);
+    const m = u.pathname.match(/^\/launches\/([a-z0-9-]+)\/?$/i);
+    return m && /(^|\.)claudeai\.directory$|^localhost$/.test(u.hostname) && m[1] !== "submit" ? `/launches/${m[1]}` : null;
+  } catch {
+    return null;
+  }
+}
+
 export function LinkPreviewCard({ url, preview }: { url: string; preview?: LinkPreview | null }) {
   const href = preview?.url || url;
+  const launch = launchPath(href);
+  if (launch) {
+    // Our own launch: the generated "launched on Claude AI Directory" card, large, as an internal link.
+    return (
+      <a href={launch} className="group block overflow-hidden rounded-[6px] border border-border bg-card transition-colors hover:border-[var(--cad-line-hover)]">
+        {/* eslint-disable-next-line @next/next/no-img-element -- our own generated launch card */}
+        <img src={`${launch}/opengraph-image`} alt={preview?.title ? `${preview.title} launched on Claude AI Directory` : "Launch card"} width={1200} height={630} loading="lazy" className="aspect-[1200/630] w-full object-cover" />
+        {preview?.title && (
+          <span className="flex items-center justify-between gap-3 border-t border-border px-4 py-2.5 text-sm">
+            <span className="min-w-0 truncate">
+              <span className="font-medium text-foreground group-hover:underline">{preview.title}</span>
+              {preview.description && <span className="text-muted-foreground"> · {preview.description}</span>}
+            </span>
+            <span className="shrink-0 text-xs text-primary">View launch →</span>
+          </span>
+        )}
+      </a>
+    );
+  }
   let host = preview?.site || "";
   try {
     host ||= new URL(href).hostname.replace(/^www\./, "");
