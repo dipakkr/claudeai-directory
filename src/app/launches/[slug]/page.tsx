@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { isLaunchLive } from "@/lib/launch-options";
+import { hasDofollow } from "@/lib/launch-options";
 import type { ReactNode } from "react";
 import Link from "next/link";
 import { launchTheme } from "@/lib/launch-theme";
@@ -183,9 +183,8 @@ export default async function LaunchDetailPage({
   const appUrl = project.app_url || project.demo_url;
   // Verified badge = the maker links back to us, so the website link is dofollow.
   // Paid-only listings are paid links, so they are marked sponsored (Google's rule for paid links).
-  // Live launches (badge verified or the one-time $29 listing) get a dofollow link to the maker's site.
-  // Note: Google asks for rel="sponsored" on paid links; switch the paid case back if that becomes a concern.
-  const websiteRel = isLaunchLive(project) ? "noopener noreferrer" : "nofollow noopener noreferrer";
+  // Dofollow is earned with the badge; launches published without it (or approved by hand) stay nofollow.
+  const websiteRel = hasDofollow(project) ? "noopener noreferrer" : "nofollow noopener noreferrer";
   const listedDate = formatDate(project.listed_at || project.created_at);
   const useCases = splitUseCases(project.use_cases);
   const publisherHost = hostFromUrl(appUrl);

@@ -2,7 +2,6 @@
 
 import { DofollowBanner } from "../DofollowBanner";
 import { useEffect, useMemo, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { toast } from "sonner";
 import {
@@ -12,7 +11,6 @@ import {
   Copy,
   ExternalLink,
   Linkedin,
-  CreditCard,
   Loader2,
   Sparkles,
 } from "lucide-react";
@@ -41,7 +39,7 @@ type Media = { logo: string[]; screenshot: string[]; video: string[] };
 
 const SITE_URL = "https://www.claudeai.directory";
 
-import { CATEGORIES, TOPICS, isLaunchLive } from "@/lib/launch-options";
+import { CATEGORIES, TOPICS, hasDofollow, isLaunchLive } from "@/lib/launch-options";
 import { TopicSelect } from "@/components/launches/TopicSelect";
 import { SignInButton } from "@/components/auth/SignInDialog";
 import { track } from "@/lib/analytics";
@@ -371,25 +369,23 @@ function BadgeStep({
   const [option, setOption] = useState<BadgeOption>(BADGE_OPTIONS[0]);
   const [format, setFormat] = useState<"html" | "markdown">("html");
   const snippet = badgeSnippet(app, option, format);
-  const [paying, setPaying] = useState(false);
-  const [mode, setMode] = useState<"badge" | "pay">("badge");
-  // The $29 option only shows when online checkout is set up on the server.
-  const { data: checkout } = useQuery({
-    queryKey: ["sponsors", "config"],
-    queryFn: () => api.get<{ enabled: boolean; listing?: number; listing_feature_days?: number }>("/sponsors/config"),
-    staleTime: 5 * 60_000,
-    retry: false,
-  });
-  const listingPrice = checkout?.enabled && checkout.listing ? checkout.listing / 100 : null;
+  const [publishing, setPublishing] = useState(false);
+  // Already live without the badge: the only thing left is upgrading the link to dofollow.
+  const live = isLaunchLive(app);
+  const [mode, setMode] = useState<"badge" | "publish">("badge");
 
-  const payToList = () => {
-    setPaying(true);
+  // Free either way: without the badge it goes live now with a nofollow link.
+  const publishNow = () => {
+    setPublishing(true);
     api
-      .post<{ url: string }>("/sponsors/launch-listing", { slug: app.id })
-      .then(({ url }) => window.location.assign(url))
+      .post<ShowcaseProject>(`/showcase/${encodeURIComponent(app.id)}/publish`)
+      .then((updated) => {
+        toast.success(`${updated.title} is live`);
+        onVerified(updated);
+      })
       .catch((error) => {
-        setPaying(false);
-        toast.error(errorDetail(error, "Could not start checkout. Try again in a minute."));
+        setPublishing(false);
+        toast.error(errorDetail(error, "Could not publish. Try again in a minute."));
       });
   };
 
@@ -424,41 +420,48 @@ function BadgeStep({
 
   return (
     <div className="mx-auto max-w-[640px]">
-      <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-primary">Complete listing · {app.title}</p>
-      <h2 className="mt-3 font-sans text-[28px] font-semibold tracking-tight text-foreground">Choose how to go live</h2>
+      <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-primary">{live ? "Dofollow link" : "Complete listing"} · {app.title}</p>
+      <h2 className="mt-3 font-sans text-[28px] font-semibold tracking-tight text-foreground">
+        {live ? "Get a dofollow link to your site" : "Choose how to go live"}
+      </h2>
+      {live && (
+        <p className="mt-2 text-[14px] leading-6 text-muted-foreground">
+          {app.title} is live with a nofollow link. Add our badge to your site or README and the link becomes dofollow.
+        </p>
+      )}
 
-      {/* Two options, nothing else. */}
-      <div className={`mt-6 grid gap-3 ${listingPrice !== null ? "sm:grid-cols-2" : ""}`}>
-        <button type="button" onClick={() => setMode("badge")} aria-pressed={mode === "badge"} className={card(mode === "badge")}>
-          <span className="flex items-baseline justify-between gap-2">
-            <span className="text-[15px] font-medium text-foreground">Add our badge</span>
-            <span className="font-mono text-[13px] text-muted-foreground">Free</span>
-          </span>
-          <span className="mt-1.5 text-[13.5px] leading-5 text-muted-foreground">Put a small badge on your site or README. Live once we see it.</span>
-        </button>
-        {listingPrice !== null && (
-          <button type="button" onClick={() => setMode("pay")} aria-pressed={mode === "pay"} className={card(mode === "pay")}>
+      {/* Two free options; the badge earns a dofollow link. Live launches only see the badge. */}
+      {!live && (
+        <div className="mt-6 grid gap-3 sm:grid-cols-2">
+          <button type="button" onClick={() => setMode("badge")} aria-pressed={mode === "badge"} className={card(mode === "badge")}>
             <span className="flex items-baseline justify-between gap-2">
-              <span className="text-[15px] font-medium text-foreground">One-time listing</span>
-              <span className="font-mono text-[13px] text-foreground">${listingPrice}</span>
+              <span className="text-[15px] font-medium text-foreground">Add our badge</span>
+              <span className="font-mono text-[12px] text-green-600 dark:text-green-400">Dofollow</span>
             </span>
-            <span className="mt-1.5 text-[13.5px] leading-5 text-muted-foreground">Instant live · Dofollow link · One-time payment</span>
+            <span className="mt-1.5 text-[13.5px] leading-5 text-muted-foreground">Put a small badge on your site or README. Live once we see it.</span>
           </button>
-        )}
-      </div>
+          <button type="button" onClick={() => setMode("publish")} aria-pressed={mode === "publish"} className={card(mode === "publish")}>
+            <span className="flex items-baseline justify-between gap-2">
+              <span className="text-[15px] font-medium text-foreground">Publish without badge</span>
+              <span className="font-mono text-[12px] text-muted-foreground">Nofollow</span>
+            </span>
+            <span className="mt-1.5 text-[13.5px] leading-5 text-muted-foreground">Live right away. Add the badge later for a dofollow link.</span>
+          </button>
+        </div>
+      )}
 
-      {mode === "pay" && listingPrice !== null ? (
+      {mode === "publish" && !live ? (
         <div className="mt-6">
           <button
             type="button"
-            onClick={payToList}
-            disabled={paying}
+            onClick={publishNow}
+            disabled={publishing}
             className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-[12px] bg-primary text-[15px] font-medium text-primary-foreground transition-opacity hover:opacity-90 disabled:opacity-60"
           >
-            {paying ? <Loader2 className="h-4 w-4 animate-spin" /> : <CreditCard className="h-4 w-4" />}
-            {paying ? "Opening checkout..." : `Pay $${listingPrice} and go live`}
+            {publishing ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
+            {publishing ? "Publishing..." : "Publish now"}
           </button>
-          <p className="mt-2 text-center text-xs text-muted-foreground">Secure checkout by Stripe. No subscription.</p>
+          <p className="mt-2 text-center text-xs text-muted-foreground">Free. Your website link is nofollow until you add the badge.</p>
         </div>
       ) : (
         <div className="mt-6 space-y-5">
@@ -523,17 +526,17 @@ function BadgeStep({
             className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-[12px] bg-primary text-[15px] font-medium text-primary-foreground transition-opacity hover:opacity-90 disabled:opacity-60"
           >
             {verify.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
-            {verify.isPending ? "Checking your page..." : "Verify and go live"}
+            {verify.isPending ? "Checking your page..." : live ? "Verify badge" : "Verify and go live"}
           </button>
         </div>
       )}
 
-      {/* With the badge open, offer the paid route in one line. */}
-      {listingPrice !== null && mode === "badge" && (
+      {/* With the badge open, offer publishing without it in one line. */}
+      {!live && mode === "badge" && (
         <p className="mt-6 text-center text-[13px] text-muted-foreground">
           Don&apos;t want a badge on your site?{" "}
-          <button type="button" onClick={payToList} disabled={paying} className="font-medium text-primary hover:underline disabled:opacity-60">
-            {paying ? "Opening checkout..." : `Pay $${listingPrice} and go live now →`}
+          <button type="button" onClick={publishNow} disabled={publishing} className="font-medium text-primary hover:underline disabled:opacity-60">
+            {publishing ? "Publishing..." : "Publish now with a nofollow link →"}
           </button>
         </p>
       )}
@@ -831,7 +834,7 @@ export default function SubmitLaunchClient({ finishSlug, guide }: { finishSlug?:
 
   // Opened from the dashboard with ?finish=<slug>: show that launch's "go live" step until they start over.
   const finishApp =
-    !activeApp && finishSlug && !finishDismissed ? apps.find((a) => a.id === finishSlug && !isLaunchLive(a)) : undefined;
+    !activeApp && finishSlug && !finishDismissed ? apps.find((a) => a.id === finishSlug && a.status !== "rejected" && !hasDofollow(a)) : undefined;
   const shownApp = activeApp ?? finishApp ?? null;
   const shownStep: Step = activeApp ? step : finishApp ? 1 : step;
   // The details step is a single quiet column, like DevHunt; badge and share keep the stepper and side panel.

@@ -19,11 +19,14 @@ export const TOPICS = [
 ];
 
 /**
- * A launch is live (public) once it is listed: through the badge, the one-time listing or admin
+ * A launch is live (public) once it is listed: through the badge, publishing without it, or admin
  * approval. Same rule as the public launch list; anything else (not rejected) is a draft.
  */
 export const isLaunchLive = (p: { status?: string; badge_verified?: boolean; paid_listing?: boolean }) =>
   p.status === "listed" || Boolean(p.badge_verified) || Boolean(p.paid_listing);
+
+/** The website link is dofollow only once the maker's badge is verified (legacy paid listings kept theirs). */
+export const hasDofollow = (p: { badge_verified?: boolean; paid_listing?: boolean }) => Boolean(p.badge_verified) || Boolean(p.paid_listing);
 
 /** A launch can have up to this many topics. */
 export const MAX_TOPICS = 3;

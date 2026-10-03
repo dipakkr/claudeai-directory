@@ -15,7 +15,7 @@ const SITE = "https://www.claudeai.directory";
 
 const STEPS = [
   { title: "Paste your website", body: "We read the page and fill in the name, pitch, description, topics and a first comment. You review everything." },
-  { title: "Complete the listing", body: "Add our small badge to your site or README for free, or pay $29 once to go live right away." },
+  { title: "Complete the listing", body: "Add our small badge to your site or README for a dofollow link, or publish right away without it." },
   { title: "Go live and share", body: "Your launch page goes up, posts to the community feed and gets a share image built for X and LinkedIn." },
 ];
 
@@ -23,7 +23,7 @@ const GETS = [
   ["A launch page", "Upvotes, comments and your first comment as the maker, with a share image for social posts."],
   ["Placement where people browse", "Built with Claude on the homepage, the launches page and, for MCP servers, the MCP page."],
   ["A post on the community feed", "Your launch is shared on the feed with a link to your page when it goes live."],
-  ["A dofollow backlink", "Every live launch links to your site with a followed link."],
+  ["A backlink to your site", "Dofollow when our badge is on your site, nofollow without it. You can add the badge any time."],
   ["Launch analytics", "Impressions, page views and clicks to your website, day by day."],
 ] as const;
 
@@ -37,9 +37,9 @@ const KINDS = [
 ];
 
 export const LAUNCH_FAQ: { q: string; a: string }[] = [
-  { q: "Is launching on Claude AI Directory free?", a: "Yes. Add our badge to your site or GitHub README and your launch goes live for free. If you would rather not add a badge, a one-time $29 listing puts it live right away." },
-  { q: "Do I get a backlink?", a: "Yes. Every live launch links to your website with a dofollow link, whether it went live with the badge or the one-time listing." },
-  { q: "How long does it take?", a: "About a minute. Paste your website, review what we filled in, then complete the listing. Badge launches go live as soon as we find the badge on your page." },
+  { q: "Is launching on Claude AI Directory free?", a: "Yes, completely. Add our badge to your site or GitHub README, or publish without it. Both are free." },
+  { q: "Do I get a backlink?", a: "Yes. With our badge on your site the link to your website is dofollow. Without the badge it is nofollow, and adding the badge later upgrades it." },
+  { q: "How long does it take?", a: "About a minute. Paste your website, review what we filled in, then publish. With the badge, your launch goes live as soon as we find it on your page." },
   { q: "What can I launch?", a: "Anything you built with or for Claude: web apps, MCP servers, Claude Skills, agents, Claude Code plugins and workflows." },
   { q: "Can I launch an MCP server?", a: "Yes. MCP launches appear in the MCP launches list on the homepage and in Launched by makers on the MCP servers page." },
   { q: "Can I edit my launch later?", a: "Yes. Everything except the website address can be changed from your dashboard, including the logo, screenshots, description and topics." },

@@ -220,7 +220,7 @@ function EditForm({ app }: { app: ShowcaseProject }) {
   // A pitch and a real description mean the maker (or the AI draft) already wrote it.
   const alreadyFilled = Boolean(app.tagline?.trim()) && (app.description?.trim().length ?? 0) >= 120;
 
-  // Drafts: "Complete listing" saves, then shows the two ways to go live (badge or one-time listing).
+  // Drafts: "Complete listing" saves, then shows the two ways to go live (badge or publish without it).
   const save = (completeAfter = false) => {
     if (uploading) return toast.error("Wait for your uploads to finish");
     if (title.trim().length < 2 || description.trim().length < 10) {

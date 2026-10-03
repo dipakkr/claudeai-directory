@@ -1,6 +1,6 @@
 "use client";
 
-import { isLaunchLive } from "@/lib/launch-options";
+import { hasDofollow, isLaunchLive } from "@/lib/launch-options";
 import Link from "next/link";
 import { ArrowRight, Bell, Bookmark, MessageSquare, Package, Rocket } from "lucide-react";
 import type { ReactNode } from "react";
@@ -128,6 +128,8 @@ export function LaunchRows({ apps, loading }: { apps: ShowcaseProject[]; loading
                   {app.title}
                 </Link>
                 {live ? <StatusPill tone="live">Live</StatusPill> : rejected ? <StatusPill tone="bad">Not approved</StatusPill> : <StatusPill tone="wait">Draft</StatusPill>}
+                {/* The website link's SEO status: dofollow is earned with the badge. */}
+                {live && (hasDofollow(app) ? <StatusPill tone="live">Dofollow</StatusPill> : <StatusPill tone="muted">Nofollow</StatusPill>)}
               </div>
               <p className="mt-1 truncate font-mono text-[12px] tabular-nums text-muted-foreground">
                 {live
@@ -140,12 +142,22 @@ export function LaunchRows({ apps, loading }: { apps: ShowcaseProject[]; loading
             <div className="flex w-full items-center gap-4 pl-14 text-sm sm:w-auto sm:pl-0">
               {(live || rejected) && <Link href={`/launches/${app.id}/edit`} className="text-muted-foreground hover:text-foreground">Edit</Link>}
               {live && <Link href={`/launches/${app.id}/analytics`} className="text-muted-foreground hover:text-foreground">Analytics</Link>}
+              {live && !hasDofollow(app) && (
+                <Link
+                  href={`/launches/submit?finish=${encodeURIComponent(app.id)}`}
+                  title="Add our badge to your site to make your link dofollow"
+                  className="inline-flex items-center gap-1 font-medium text-primary hover:underline"
+                >
+                  Get dofollow
+                  <ArrowRight className="h-3.5 w-3.5" />
+                </Link>
+              )}
               {live ? (
                 <Link href={`/launches/${app.id}`} className="inline-flex h-8 items-center rounded-[8px] border border-border px-3 text-[13px] text-foreground hover:border-[var(--cad-line-hover)]">
                   View
                 </Link>
               ) : !rejected ? (
-                // Opens the draft; its "Complete listing" button then offers the badge or the one-time listing.
+                // Opens the draft; its "Complete listing" button then offers the badge or publishing without it.
                 <Link
                   href={`/launches/${encodeURIComponent(app.id)}/edit`}
                   className="inline-flex h-8 items-center gap-1 rounded-[8px] border border-primary/40 px-3 text-[13px] font-medium text-primary transition-colors hover:bg-primary/10"
@@ -167,7 +179,7 @@ export function LaunchesPanel({ apps, loading }: { apps: ShowcaseProject[]; load
     <section>
       <PanelHeader
         title="Your launches"
-        description="Drafts go public once you complete the listing."
+        description="Drafts go public once you complete the listing. Add our badge to your site for a dofollow link."
         action={apps.length > 0 ? <PrimaryAction href="/launches/submit"><Rocket className="h-4 w-4" />Launch an app</PrimaryAction> : undefined}
       />
       <LaunchRows apps={apps} loading={loading} />
