@@ -21,7 +21,13 @@ export const contentType = "image/png";
 
 const INK = "#F0EFEC";
 
-const clip = (s: string, n: number) => (s.length > n ? `${s.slice(0, n - 1).trimEnd()}…` : s);
+/** Shorten to n characters at a word boundary. */
+const clip = (s: string, n: number) => {
+  if (s.length <= n) return s;
+  const cut = s.slice(0, n - 1);
+  const space = cut.lastIndexOf(" ");
+  return `${(space > n * 0.6 ? cut.slice(0, space) : cut).replace(/[\s,.;:]+$/, "")}…`;
+};
 
 /** The app's logo as a data URI, or null. Satori can't draw WEBP/SVG and a failed remote image
  * would crash the render, so fetch it here (short timeout) and keep only PNG/JPEG/GIF. */
@@ -42,15 +48,43 @@ async function logoData(project: ShowcaseProject): Promise<string | null> {
   return null;
 }
 
+/** Inter from Google Fonts (TTF, which Satori reads), cached per weight. Falls back to the built-in font. */
+const fontCache = new Map<number, Promise<ArrayBuffer | null>>();
+function inter(weight: number): Promise<ArrayBuffer | null> {
+  if (!fontCache.has(weight)) {
+    fontCache.set(
+      weight,
+      (async () => {
+        try {
+          const css = await fetch(`https://fonts.googleapis.com/css2?family=Inter:wght@${weight}`, { signal: AbortSignal.timeout(3000) }).then((r) => r.text());
+          const url = css.match(/src: url\((.+?)\) format\('truetype'\)/)?.[1];
+          return url ? await fetch(url, { signal: AbortSignal.timeout(3000) }).then((r) => r.arrayBuffer()) : null;
+        } catch {
+          return null;
+        }
+      })(),
+    );
+  }
+  return fontCache.get(weight)!;
+}
+
 export default async function Image({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const project = await fetchApi<ShowcaseProject>(`/showcase/${slug}`, { revalidate: 600 });
+  const [project, medium, bold] = await Promise.all([
+    fetchApi<ShowcaseProject>(`/showcase/${slug}`, { revalidate: 600 }),
+    inter(500),
+    inter(700),
+  ]);
   const mark = `data:image/png;base64,${readFileSync(join(process.cwd(), "public/logo-mark-256.png")).toString("base64")}`;
 
-  const title = clip(project?.title?.trim() || "A new launch", 34);
+  const title = clip(project?.title?.trim() || "A new launch", 30);
+  const tagline = clip((project?.tagline || "").trim().replace(/\s+[—–]\s+/g, ": "), 64);
   const logo = project ? await logoData(project) : null;
-
-  const { top, bottom, accent } = launchTheme(slug);
+  const { bottom, accent } = launchTheme(slug);
+  const fonts = [
+    ...(medium ? [{ name: "Inter", data: medium, weight: 500 as const, style: "normal" as const }] : []),
+    ...(bold ? [{ name: "Inter", data: bold, weight: 700 as const, style: "normal" as const }] : []),
+  ];
 
   return new ImageResponse(
     (
@@ -61,33 +95,51 @@ export default async function Image({ params }: { params: Promise<{ slug: string
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          background: `linear-gradient(180deg, ${top} 0%, ${bottom} 100%)`,
+          justifyContent: "center",
+          background: "#14120B",
+          backgroundImage: `radial-gradient(circle at 20% 0%, ${bottom}cc 0%, transparent 55%), radial-gradient(circle at 85% 100%, ${bottom}99 0%, transparent 50%)`,
           color: INK,
-          padding: "70px 64px 48px",
-          fontFamily: "system-ui, sans-serif",
+          fontFamily: fonts.length ? "Inter" : "system-ui, sans-serif",
+          position: "relative",
         }}
       >
-        {/* Centered like the collection banners: logo, "I just launched", the name. */}
-        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", flex: 1 }}>
+        {/* fine dot grid */}
+        <div style={{ position: "absolute", inset: 0, display: "flex", backgroundImage: "radial-gradient(rgba(255,255,255,0.07) 1.2px, transparent 1.2px)", backgroundSize: "26px 26px" }} />
+
+        {/* The card: logo, then the announcement. */}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            width: 980,
+            padding: "56px 60px",
+            borderRadius: 36,
+            background: "rgba(20,18,11,0.72)",
+            border: "1px solid rgba(255,255,255,0.10)",
+            boxShadow: "0 30px 80px rgba(0,0,0,0.45)",
+          }}
+        >
           {logo ? (
-            <img src={logo} width={136} height={136} alt="" style={{ objectFit: "contain", borderRadius: 30 }} />
+            <img src={logo} width={150} height={150} alt="" style={{ objectFit: "contain", borderRadius: 34, marginRight: 52, flexShrink: 0 }} />
           ) : (
-            <div style={{ display: "flex", width: 136, height: 136, borderRadius: 30, background: "rgba(0,0,0,0.25)", alignItems: "center", justifyContent: "center", boxShadow: "0 18px 40px rgba(0,0,0,0.35)" }}>
-              <span style={{ fontSize: 68, fontWeight: 700, color: accent }}>{title.charAt(0).toUpperCase()}</span>
+            <div style={{ display: "flex", width: 150, height: 150, borderRadius: 34, background: `${bottom}`, alignItems: "center", justifyContent: "center", marginRight: 52, flexShrink: 0 }}>
+              <span style={{ fontSize: 72, fontWeight: 700, color: accent }}>{title.charAt(0).toUpperCase()}</span>
             </div>
           )}
-          <span style={{ fontSize: 34, color: accent, marginTop: 44, letterSpacing: "0.01em" }}>I just launched</span>
-          <span style={{ fontSize: title.length > 20 ? 82 : 100, fontWeight: 700, letterSpacing: "-0.035em", lineHeight: 1.05, marginTop: 6, textAlign: "center", maxWidth: 1060 }}>
-            {title}
-          </span>
+          <div style={{ display: "flex", flexDirection: "column", minWidth: 0, flex: 1 }}>
+            <span style={{ fontSize: 22, fontWeight: 500, color: accent, letterSpacing: "0.18em" }}>I JUST LAUNCHED</span>
+            <span style={{ fontSize: title.length > 18 ? 62 : 76, fontWeight: 700, letterSpacing: "-0.035em", lineHeight: 1.04, marginTop: 12 }}>{title}</span>
+            {tagline && <span style={{ fontSize: 28, fontWeight: 500, color: "rgba(240,239,236,0.62)", marginTop: 16, lineHeight: 1.3 }}>{tagline}</span>}
+          </div>
         </div>
 
-        <div style={{ display: "flex", alignItems: "center", background: "rgba(0,0,0,0.28)", border: "1px solid rgba(255,255,255,0.10)", borderRadius: 999, padding: "10px 22px 10px 12px" }}>
-          <img src={mark} width={30} height={30} alt="" style={{ marginRight: 12 }} />
-          <span style={{ fontSize: 23, color: "rgba(240,239,236,0.85)" }}>{`on Claude AI Directory`}</span>
+        {/* signature */}
+        <div style={{ position: "absolute", bottom: 40, display: "flex", alignItems: "center" }}>
+          <img src={mark} width={28} height={28} alt="" style={{ marginRight: 12 }} />
+          <span style={{ fontSize: 22, fontWeight: 500, color: "rgba(240,239,236,0.75)" }}>{`Claude AI Directory`}</span>
         </div>
       </div>
     ),
-    { ...size },
+    { ...size, fonts: fonts.length ? fonts : undefined },
   );
 }
