@@ -426,7 +426,7 @@ function BadgeStep({
       </h2>
       {live && (
         <p className="mt-2 text-[14px] leading-6 text-muted-foreground">
-          {app.title} is already live. Add our badge to your site or GitHub README to get a dofollow link and move up with the other badge launches.
+          {app.title} is live, but without our badge its link is nofollow and it is listed below launches that have the badge. Add the badge to your site or GitHub README to get a dofollow link and be ranked with those launches by upvotes.
         </p>
       )}
 
