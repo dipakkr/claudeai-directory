@@ -164,12 +164,14 @@ function LiveAnalytics() {
     <section id="live" className="mt-12 scroll-mt-24">
       <SectionLabel aside="Public dashboard, updates in real time">Live traffic</SectionLabel>
       <div className="mt-4 overflow-hidden rounded-[6px] border border-border bg-card">
+        {/* Cross-origin, so its header (OpenPanel's own nav links) can't be styled away:
+            shift the frame up by the header's height (68px) and let the box clip it. */}
         <iframe
           src={LIVE_ANALYTICS_URL}
           title="Live traffic for Claude AI Directory"
           loading="lazy"
           referrerPolicy="no-referrer"
-          className="block h-[720px] w-full md:h-[900px]"
+          className="-mt-[68px] block h-[788px] w-full md:h-[968px]"
         />
       </div>
       <p className="mt-2 text-xs text-muted-foreground">
