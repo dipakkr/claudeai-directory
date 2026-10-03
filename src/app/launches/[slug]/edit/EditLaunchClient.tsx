@@ -20,9 +20,9 @@ import { SignInButton } from "@/components/auth/SignInDialog";
 
 // Same filled, full-width fields as the submit form.
 const inputClass =
-  "h-12 w-full rounded-[10px] border border-transparent bg-foreground/[0.06] px-4 text-[15px] text-foreground placeholder:text-muted-foreground/60 transition-colors focus:border-[var(--cad-line-hover)] focus:outline-none";
+  "h-10 w-full rounded-[8px] border border-transparent bg-foreground/[0.06] px-3 text-[14px] text-foreground placeholder:text-muted-foreground/60 transition-colors focus:border-[var(--cad-line-hover)] focus:outline-none";
 const textareaClass =
-  "w-full rounded-[10px] border border-transparent bg-foreground/[0.06] px-4 py-3 text-[15px] leading-6 text-foreground placeholder:text-muted-foreground/60 transition-colors focus:border-[var(--cad-line-hover)] focus:outline-none";
+  "w-full rounded-[8px] border border-transparent bg-foreground/[0.06] px-3 py-2 text-[14px] leading-6 text-foreground placeholder:text-muted-foreground/60 transition-colors focus:border-[var(--cad-line-hover)] focus:outline-none";
 
 function lines(value: string) {
   return value
