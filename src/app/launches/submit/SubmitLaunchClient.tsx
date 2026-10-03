@@ -515,6 +515,9 @@ function BadgeStep({
               </button>
             </div>
           </div>
+          <p className="text-[13px] leading-5 text-muted-foreground">
+            Paste the code on your site or README and publish it. Then enter that page below and we&apos;ll check it.
+          </p>
           <Field label="Page with the badge" htmlFor="badge_page">
             <input
               id="badge_page"
@@ -538,15 +541,6 @@ function BadgeStep({
         </div>
       )}
 
-      {/* With the badge open, offer publishing without it in one line. */}
-      {!live && mode === "badge" && (
-        <p className="mt-6 text-center text-[13px] text-muted-foreground">
-          Don&apos;t want a badge on your site?{" "}
-          <button type="button" onClick={publishNow} disabled={publishing} className="font-medium text-primary hover:underline disabled:opacity-60">
-            {publishing ? "Publishing..." : "Publish now with a nofollow link →"}
-          </button>
-        </p>
-      )}
     </div>
   );
 }
