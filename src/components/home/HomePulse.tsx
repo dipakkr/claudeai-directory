@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { Info } from "lucide-react";
 
 export interface PulseEvent {
   type: "joined" | "launched" | "posted" | "upvoted" | "installed" | "viewed" | "browsing" | "copied";
@@ -98,6 +99,15 @@ export function HomePulse({ pulse }: { pulse: Pulse }) {
       {/* Motion over the whole card: a slow drifting glow, and a sweep on each new activity line. */}
       <span aria-hidden className="pulse-glow pointer-events-none absolute -inset-y-6 inset-x-0 z-10" />
       {e && <span key={`sweep-${index}`} aria-hidden className="pulse-sweep pointer-events-none absolute inset-0 z-10" />}
+      {/* Where these numbers come from: the open stats page. */}
+      <Link
+        href="/stats"
+        title="Open stats: where these numbers come from"
+        aria-label="Open stats"
+        className="absolute right-2.5 top-2.5 z-30 inline-flex h-7 w-7 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-foreground/[0.08] hover:text-foreground"
+      >
+        <Info className="h-4 w-4" />
+      </Link>
       <div className="grid grid-cols-2 gap-px bg-border sm:grid-cols-4">
         {/* Show that people are here and active: who visits, what they open, what gets launched. */}
         <Stat label="visitors_24h" value={s.visitors_24h ?? 0} delta={s.live_now ? `${s.live_now} online now` : undefined} />
