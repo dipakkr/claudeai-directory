@@ -217,8 +217,8 @@ function EditForm({ app }: { app: ShowcaseProject }) {
   };
 
   const live = isLaunchLive(app);
-  const alreadyFilled =
-    Boolean(app.tagline?.trim()) && (app.description?.trim().length ?? 0) >= 150 && Object.values(app.overview ?? {}).some((v) => Boolean(v?.trim()));
+  // A pitch and a real description mean the maker (or the AI draft) already wrote it.
+  const alreadyFilled = Boolean(app.tagline?.trim()) && (app.description?.trim().length ?? 0) >= 120;
 
   // Drafts: "Complete listing" saves, then shows the two ways to go live (badge or one-time listing).
   const save = (completeAfter = false) => {
