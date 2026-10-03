@@ -1,3 +1,4 @@
+import { ldJson } from "@/lib/jsonld";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
@@ -197,7 +198,7 @@ function jsonLd() {
       ],
     },
   ];
-  return JSON.stringify(data).replace(/</g, "\\u003c");
+  return ldJson(data);
 }
 
 export default function TimelinePage() {

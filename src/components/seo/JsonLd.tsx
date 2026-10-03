@@ -1,9 +1,10 @@
+import { ldJson } from "@/lib/jsonld";
 export function JsonLd({ data }: { data: Record<string, unknown> }) {
   return (
     <script
       type="application/ld+json"
       // Escape "<" so user-written text can't close the script tag.
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(data).replace(/</g, "\\u003c") }}
+      dangerouslySetInnerHTML={{ __html: ldJson(data) }}
     />
   );
 }
