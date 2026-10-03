@@ -443,9 +443,7 @@ function EditForm({ app }: { app: ShowcaseProject }) {
       {/* Save bar stays in reach on a long form. */}
       <div className="sticky bottom-0 z-10 -mx-4 mt-12 border-t border-border bg-background/95 px-4 py-3 backdrop-blur md:-mx-8 md:px-8" style={{ paddingBottom: "max(0.75rem, env(safe-area-inset-bottom, 0px))" }}>
         <div className="flex items-center gap-3">
-          <p className="min-w-0 flex-1 truncate text-xs text-muted-foreground">
-            The app URL stays {app.app_url?.replace(/^https?:\/\//, "")}. Everything else can change.
-          </p>
+          <span className="flex-1" />
           <Link href={app.badge_verified ? `/launches/${app.id}` : "/dashboard?tab=launches"} className="shrink-0 text-sm text-muted-foreground hover:text-foreground">
             Cancel
           </Link>
