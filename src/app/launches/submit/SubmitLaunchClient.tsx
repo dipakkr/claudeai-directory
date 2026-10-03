@@ -528,24 +528,13 @@ function BadgeStep({
         </div>
       )}
 
-      {/* The other route, one line under whichever is open. */}
-      {listingPrice !== null && (
+      {/* With the badge open, offer the paid route in one line. */}
+      {listingPrice !== null && mode === "badge" && (
         <p className="mt-6 text-center text-[13px] text-muted-foreground">
-          {mode === "badge" ? (
-            <>
-              Don&apos;t want a badge on your site?{" "}
-              <button type="button" onClick={payToList} disabled={paying} className="font-medium text-primary hover:underline disabled:opacity-60">
-                {paying ? "Opening checkout..." : `Pay $${listingPrice} and go live now →`}
-              </button>
-            </>
-          ) : (
-            <>
-              Prefer free?{" "}
-              <button type="button" onClick={() => setMode("badge")} className="font-medium text-primary hover:underline">
-                Add our badge instead →
-              </button>
-            </>
-          )}
+          Don&apos;t want a badge on your site?{" "}
+          <button type="button" onClick={payToList} disabled={paying} className="font-medium text-primary hover:underline disabled:opacity-60">
+            {paying ? "Opening checkout..." : `Pay $${listingPrice} and go live now →`}
+          </button>
         </p>
       )}
     </div>
