@@ -217,6 +217,8 @@ function EditForm({ app }: { app: ShowcaseProject }) {
   };
 
   const live = Boolean(app.badge_verified || app.paid_listing);
+  const alreadyFilled =
+    Boolean(app.tagline?.trim()) && (app.description?.trim().length ?? 0) >= 150 && Object.values(app.overview ?? {}).some((v) => Boolean(v?.trim()));
 
   // Drafts: "Complete listing" saves, then shows the two ways to go live (badge or one-time listing).
   const save = (completeAfter = false) => {
@@ -268,7 +270,8 @@ function EditForm({ app }: { app: ShowcaseProject }) {
 
   return (
     <div>
-      {app.app_url && (
+      {/* Offer AI only while the listing is thin; an AI-filled draft already has all of this. */}
+      {app.app_url && !alreadyFilled && (
         <div className="mb-8">
           <AiDraftBar url={app.app_url} onDraft={applyDraft} surface="edit" />
         </div>
@@ -526,8 +529,21 @@ export default function EditLaunchClient({ slug }: { slug: string }) {
             <ArrowLeft className="h-3.5 w-3.5" />
             Your launches
           </Link>
-          <p className="mt-8 font-mono text-[11px] uppercase tracking-[0.16em] text-primary">Edit launch</p>
-          <h1 className="sr-only">Edit {app?.title ?? "your launch"}</h1>
+          {app && !(app.badge_verified || app.paid_listing) ? (
+            // A draft: this is the review step before completing the listing.
+            <>
+              <p className="mt-8 font-mono text-[11px] uppercase tracking-[0.16em] text-primary">Review your launch</p>
+              <h1 className="mt-2 font-sans text-[26px] font-semibold tracking-tight text-foreground">{app.title}</h1>
+              <p className="mt-3 rounded-lg border border-green-500/30 bg-green-500/[0.06] px-3.5 py-2.5 font-mono text-xs text-green-600 dark:text-green-400">
+                ✓ Saved as a draft. Check everything, then complete the listing.
+              </p>
+            </>
+          ) : (
+            <>
+              <p className="mt-8 font-mono text-[11px] uppercase tracking-[0.16em] text-primary">Edit launch</p>
+              <h1 className="sr-only">Edit {app?.title ?? "your launch"}</h1>
+            </>
+          )}
           <div className="mt-8" />
 
           {isLoading || (isAuthenticated && appsLoading) ? (
