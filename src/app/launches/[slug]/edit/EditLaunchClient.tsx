@@ -284,7 +284,7 @@ function EditForm({ app }: { app: ShowcaseProject }) {
               title={title || app.title}
               subtitle={
                 <span className="flex flex-wrap items-center gap-x-2">
-                  <span>{app.badge_verified || app.paid_listing ? "Live" : app.status === "rejected" ? "Not approved" : "Waiting for badge"}</span>
+                  <span>{app.badge_verified || app.paid_listing ? "Live" : app.status === "rejected" ? "Not approved" : "Draft"}</span>
                   {(app.badge_verified || app.paid_listing) && (
                     <>
                       <span aria-hidden>·</span>
