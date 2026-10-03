@@ -13,7 +13,6 @@ import { markLaunchVisited } from "@/lib/launch-visits";
 import {
   Megaphone,
   ArrowRight,
-  Plus,
   Rocket,
   Search,
 } from "lucide-react";
@@ -290,13 +289,6 @@ export default function ShowcaseClient({
               </h1>
               <p className="mt-3 text-[15px] text-muted-foreground">Try them, meet the makers and upvote your favorites.</p>
             </div>
-            <Link
-              href="/launches/submit"
-              className="inline-flex h-10 shrink-0 items-center gap-1.5 self-start rounded-full bg-foreground px-4 text-sm font-medium text-background transition-colors hover:bg-foreground/85 sm:self-auto"
-            >
-              <Plus className="h-4 w-4" />
-              Launch your app
-            </Link>
           </div>
 
           {/* Free listing: the real badge and one line. */}
