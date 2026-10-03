@@ -496,7 +496,14 @@ function BadgeStep({
                 ))}
               </div>
             </div>
-            <div className="relative mt-3">
+            {/* The badge points at the maker's own launch page, which is also what verification checks for. */}
+            <p className="mt-3 text-[12.5px] text-muted-foreground">
+              Links to your launch page:{" "}
+              <a href={listingUrl(app)} target="_blank" rel="noopener noreferrer" className="font-mono text-foreground hover:underline">
+                {listingUrl(app).replace(/^https:\/\/www\./, "")}
+              </a>
+            </p>
+            <div className="relative mt-2">
               <pre className="whitespace-pre-wrap break-all rounded-[10px] bg-foreground/[0.06] p-3 pr-24 font-mono text-[11.5px] leading-5 text-muted-foreground">{snippet}</pre>
               <button
                 type="button"
