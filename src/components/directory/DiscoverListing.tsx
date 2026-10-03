@@ -536,15 +536,16 @@ export default function DiscoverListing({
     const sections: { title: string; items: DirectoryItem[]; sort?: SortKey; category?: string; compact?: boolean }[] = [
       { title: `Top ${noun}`, items: take(topKeys, 9), sort: "top" },
       { title: "Trending", items: take(orders?.trending ?? fallback, 6), sort: "trending" },
-      { title: "New", items: take(orders?.new, 6), sort: "new" },
     ];
+    // Same reason as the sort tabs: MCP import dates make "New" meaningless.
+    if (type !== "mcp") sections.push({ title: "New", items: take(orders?.new, 6), sort: "new" });
     // Then every category with enough entries, each showing its own best (repeats from above are fine).
     for (const [cat, count] of categories.filter(([, n]) => n >= 3).slice(0, 12)) {
       const inCat = topKeys.map((k) => byKey.get(k)).filter((i): i is DirectoryItem => Boolean(i) && i!.category === cat);
       sections.push({ title: `${categoryLabel(cat)} ${noun}`, items: inCat.slice(0, count > 6 ? 6 : count), category: cat, compact: true });
     }
     return sections.filter((s) => s.items.length >= 3 || (s.sort === "top" && s.items.length > 0));
-  }, [items, orders, noun, categories]);
+  }, [items, orders, noun, categories, type]);
 
   // Carousel: the biggest categories with at least 4 items, logos first.
   const collections = useMemo<Collection[]>(() => {
