@@ -65,15 +65,25 @@ function Upvote({ post, voted: initialVoted }: { post: Thread; voted: boolean })
     });
 
   return (
+    // Same split pill as launch upvotes: "▲ Upvote | 4", coral once voted.
     <button
       type="button"
       onClick={() => void click()}
       aria-pressed={voted}
-      className={`${action} active:scale-95 ${voted ? "bg-primary/10 text-primary hover:bg-primary/15 hover:text-primary" : ""}`}
+      aria-label={`${voted ? "Remove upvote" : "Upvote"}, ${count} ${count === 1 ? "upvote" : "upvotes"}`}
+      className={`mr-1 inline-flex h-8 items-stretch overflow-hidden rounded-[8px] border text-[13px] font-medium transition-[color,background-color,border-color,transform] duration-150 active:scale-95 ${
+        voted
+          ? "border-primary/60 bg-primary/10 text-primary"
+          : "border-border text-foreground hover:border-[var(--cad-line-hover)] hover:bg-[var(--cad-control)]"
+      }`}
     >
-      <UpvoteIcon voted={voted} bump={bump} />
-      {voted ? "Upvoted" : "Upvote"}
-      {count > 0 && <UpvoteCount count={count} bump={bump} up={wentUp} />}
+      <span className="inline-flex items-center gap-1.5 px-2.5">
+        <UpvoteIcon voted={voted} bump={bump} className={`h-4 w-4 ${voted ? "" : "text-muted-foreground"}`} />
+        {voted ? "Upvoted" : "Upvote"}
+      </span>
+      <span className={`inline-flex min-w-[2.25rem] items-center justify-center border-l px-2 font-mono text-[12.5px] ${voted ? "border-primary/40" : "border-border"}`}>
+        <UpvoteCount count={count} bump={bump} up={wentUp} />
+      </span>
     </button>
   );
 }
@@ -222,12 +232,6 @@ export function PostCard({ post, voted, onDeleted }: { post: Thread; voted: bool
           )}
         </div>
 
-        {post.link_url && (
-          <div className="mt-3">
-            <LinkPreviewCard url={post.link_url} preview={post.link_preview} />
-          </div>
-        )}
-
         {post.tags?.length > 0 && (
           <div className="mt-3 flex flex-wrap gap-1.5">
             {post.tags.map((tag) => (
@@ -235,6 +239,12 @@ export function PostCard({ post, voted, onDeleted }: { post: Thread; voted: bool
                 {tag}
               </span>
             ))}
+          </div>
+        )}
+
+        {post.link_url && (
+          <div className="mt-3">
+            <LinkPreviewCard url={post.link_url} preview={post.link_preview} />
           </div>
         )}
       </div>

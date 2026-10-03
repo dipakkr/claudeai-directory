@@ -324,12 +324,6 @@ export default function ThreadDetail({
                   <UserMarkdown>{formatPlainPost(thread.body)}</UserMarkdown>
                 </div>
 
-                {thread.link_url && (
-                  <div className="mt-5 max-w-[72ch]">
-                    <LinkPreviewCard url={thread.link_url} preview={thread.link_preview} />
-                  </div>
-                )}
-
                 {thread.tags && thread.tags.length > 0 && (
                   <div className="mt-6 flex flex-wrap gap-1.5">
                     {thread.tags.map((tag) => (
@@ -337,6 +331,12 @@ export default function ThreadDetail({
                         {tag}
                       </span>
                     ))}
+                  </div>
+                )}
+
+                {thread.link_url && (
+                  <div className="mt-5 max-w-[72ch]">
+                    <LinkPreviewCard url={thread.link_url} preview={thread.link_preview} />
                   </div>
                 )}
 
