@@ -18,6 +18,9 @@ export const TOPICS = [
   "Other",
 ];
 
+/** A launch can have up to this many topics. */
+export const MAX_TOPICS = 3;
+
 /** "Marketing & SEO" -> "marketing-seo", for ?topic= links. */
 export const topicSlug = (topic: string) => topic.toLowerCase().replace(/&/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 

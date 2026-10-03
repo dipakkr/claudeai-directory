@@ -65,7 +65,7 @@ export interface ShowcaseSubmission {
   demo_url?: string;
   github_url?: string;
   category?: string;
-  topic?: string;
+  topics?: string[];
   built_with_claude?: string;
   tech_stack: string[];
   skills_used: string[];
@@ -120,7 +120,7 @@ export interface LaunchAiDraft {
   tagline: string;
   description: string;
   category: string | null;
-  topic: string | null;
+  topics: string[];
   platforms: string[];
   tags: string[];
   overview: { audience: string; problem: string; solution: string; unique: string };
@@ -186,7 +186,7 @@ export function useLaunchVoters(slug: string) {
 export type LaunchUpdate = Partial<
   Pick<
     ShowcaseProject,
-    | "title" | "tagline" | "description" | "category" | "topic" | "built_with_claude" | "tech_stack" | "use_cases" | "platforms" | "overview"
+    | "title" | "tagline" | "description" | "category" | "topics" | "built_with_claude" | "tech_stack" | "use_cases" | "platforms" | "overview"
     | "gallery_images" | "demo_video_url" | "github_url" | "feedback_prompt" | "creator_socials"
   >
 > & { logo_url?: string; video_url?: string };

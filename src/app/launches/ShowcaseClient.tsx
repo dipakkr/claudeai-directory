@@ -236,7 +236,7 @@ export default function ShowcaseClient({
 
   const topics = useMemo(
     () =>
-      TOPICS.map((name) => ({ name, count: listedProjects.filter((p) => p.topic === name).length })).filter((t) => t.count > 0),
+      TOPICS.map((name) => ({ name, count: listedProjects.filter((p) => p.topics?.includes(name)).length })).filter((t) => t.count > 0),
     [listedProjects],
   );
 
@@ -255,7 +255,7 @@ export default function ShowcaseClient({
         .toLowerCase();
 
       if (!matchesFilter(project, activeFilter)) return false;
-      if (topic && project.topic !== topic) return false;
+      if (topic && !project.topics?.includes(topic)) return false;
       if (normalizedQuery && !haystack.includes(normalizedQuery)) return false;
       return true;
     });

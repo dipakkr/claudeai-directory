@@ -55,7 +55,7 @@ const EMPTY_FORM = {
   title: "",
   tagline: "",
   category: "Web app",
-  topic: "",
+  topics: [] as string[],
   description: "",
   audience: "",
   problem: "",
@@ -361,11 +361,9 @@ function MyLaunches({
 function BadgeStep({
   app,
   onVerified,
-  onBack,
 }: {
   app: ShowcaseProject;
   onVerified: (app: ShowcaseProject) => void;
-  onBack: () => void;
 }) {
   const verify = useVerifyShowcaseBadge();
   const [badgePage, setBadgePage] = useState(app.badge_page_url || app.app_url || "");
@@ -530,12 +528,26 @@ function BadgeStep({
         </div>
       )}
 
-      <p className="mt-8 text-center text-xs text-muted-foreground">
-        Not ready? It stays saved as a draft.{" "}
-        <button type="button" onClick={onBack} className="underline underline-offset-4 hover:text-foreground">
-          Launch another app
-        </button>
-      </p>
+      {/* The other route, one line under whichever is open. */}
+      {listingPrice !== null && (
+        <p className="mt-6 text-center text-[13px] text-muted-foreground">
+          {mode === "badge" ? (
+            <>
+              Don&apos;t want a badge on your site?{" "}
+              <button type="button" onClick={payToList} disabled={paying} className="font-medium text-primary hover:underline disabled:opacity-60">
+                {paying ? "Opening checkout..." : `Pay $${listingPrice} and go live now →`}
+              </button>
+            </>
+          ) : (
+            <>
+              Prefer free?{" "}
+              <button type="button" onClick={() => setMode("badge")} className="font-medium text-primary hover:underline">
+                Add our badge instead →
+              </button>
+            </>
+          )}
+        </p>
+      )}
     </div>
   );
 }
@@ -664,7 +676,7 @@ export default function SubmitLaunchClient({ finishSlug }: { finishSlug?: string
       tagline: d.tagline || current.tagline,
       description: d.description || current.description,
       category: d.category && CATEGORIES.includes(d.category) ? d.category : current.category,
-      topic: current.topic || (d.topic && TOPICS.includes(d.topic) ? d.topic : ""),
+      topics: current.topics.length ? current.topics : (d.topics ?? []).filter((t) => TOPICS.includes(t)),
       platforms: current.platforms.length ? current.platforms : d.platforms,
       tags: current.tags || d.tags.join(", "),
       use_cases: current.use_cases || d.use_cases.join("\n"),
@@ -777,7 +789,7 @@ export default function SubmitLaunchClient({ finishSlug }: { finishSlug?: string
         badge_page_url: appUrl,
         github_url: form.github_url.trim() || undefined,
         category: form.category,
-        topic: form.topic || undefined,
+        topics: form.topics,
         tech_stack: splitList(form.tags),
         skills_used: [],
         use_cases: splitList(form.use_cases, /\n/),
@@ -886,7 +898,6 @@ export default function SubmitLaunchClient({ finishSlug }: { finishSlug?: string
                   {shownStep === 1 && shownApp ? (
                     <BadgeStep
                       app={shownApp}
-                      onBack={startOver}
                       onVerified={(updated) => {
                         setActiveApp(updated);
                         setStep(2);
@@ -969,8 +980,8 @@ export default function SubmitLaunchClient({ finishSlug }: { finishSlug?: string
                           <ChipGroup label="Type" options={CATEGORIES} value={[form.category]} onToggle={(option) => set("category", option)} />
                         </div>
                         <div className="space-y-1.5">
-                          <label htmlFor="topic" className="text-sm font-medium text-foreground">Topic</label>
-                          <TopicSelect id="topic" value={form.topic} onChange={(t) => set("topic", t)} />
+                          <label htmlFor="topics" className="text-sm font-medium text-foreground">Topics <span className="font-normal text-muted-foreground">· up to 3</span></label>
+                          <TopicSelect id="topics" value={form.topics} onChange={(t) => set("topics", t)} />
                         </div>
 
                         <Field label="What does it do?" htmlFor="description" required hint={`${form.description.length}/2000`}>

@@ -277,7 +277,7 @@ export default async function LaunchDetailPage({
 
             {/* One quiet meta line */}
             <p className="mt-4 flex flex-wrap items-center gap-x-2 gap-y-1 font-mono text-[12px] text-muted-foreground">
-              {[project.category, project.topic, (project.views ?? 0) > 0 ? `${(project.views ?? 0).toLocaleString()} ${project.views === 1 ? "view" : "views"}` : null, listedDate ? `launched ${listedDate}` : null]
+              {[project.category, ...(project.topics ?? []), (project.views ?? 0) > 0 ? `${(project.views ?? 0).toLocaleString()} ${project.views === 1 ? "view" : "views"}` : null, listedDate ? `launched ${listedDate}` : null]
                 .filter(Boolean)
                 .map((item, i) => (
                   <span key={i} className="inline-flex items-center gap-2">

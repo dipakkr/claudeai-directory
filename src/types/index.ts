@@ -234,7 +234,7 @@ export interface ShowcaseProject {
   github_url?: string;
   category?: string;
   /** What it is for, from TOPICS. */
-  topic?: string | null;
+  topics?: string[];
   /** Optional: how the maker used Claude to build it. Markdown. */
   built_with_claude?: string | null;
   tech_stack: string[];

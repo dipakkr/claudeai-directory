@@ -142,7 +142,7 @@ function EditForm({ app }: { app: ShowcaseProject }) {
   const [tagline, setTagline] = useState(app.tagline ?? "");
   const [description, setDescription] = useState(app.description ?? "");
   const [category, setCategory] = useState(app.category || CATEGORIES[0]);
-  const [topic, setTopic] = useState(app.topic || "");
+  const [topics, setTopics] = useState<string[]>(app.topics ?? []);
   const [platforms, setPlatforms] = useState<string[]>(app.platforms ?? []);
   const [tags, setTags] = useState((app.tech_stack ?? []).join(", "));
   const [useCases, setUseCases] = useState((app.use_cases ?? []).join("\n"));
@@ -180,12 +180,12 @@ function EditForm({ app }: { app: ShowcaseProject }) {
   // "Write with AI": fill the text fields from the draft, keeping what the draft leaves empty.
   // The name stays (it is the maker's), and Undo puts every field back.
   const applyDraft = (d: LaunchAiDraft) => {
-    const before = { tagline, description, category, topic, platforms, tags, useCases, overview, feedback };
+    const before = { tagline, description, category, topics, platforms, tags, useCases, overview, feedback };
     const keep = (next: string, prev: string) => next.trim() || prev;
     setTagline((v) => keep(d.tagline, v));
     setDescription((v) => keep(d.description, v));
     if (d.category && CATEGORIES.includes(d.category)) setCategory(d.category);
-    if (d.topic && TOPICS.includes(d.topic)) setTopic(d.topic);
+    if (d.topics?.length) setTopics(d.topics.filter((t) => TOPICS.includes(t)));
     if (d.platforms.length) setPlatforms(d.platforms);
     if (d.tags.length) setTags(d.tags.join(", "));
     if (d.use_cases.length) setUseCases(d.use_cases.join("\n"));
@@ -205,7 +205,7 @@ function EditForm({ app }: { app: ShowcaseProject }) {
           setTagline(before.tagline);
           setDescription(before.description);
           setCategory(before.category);
-          setTopic(before.topic);
+          setTopics(before.topics);
           setPlatforms(before.platforms);
           setTags(before.tags);
           setUseCases(before.useCases);
@@ -233,7 +233,7 @@ function EditForm({ app }: { app: ShowcaseProject }) {
         tagline: tagline.trim(),
         description: description.trim(),
         category,
-        topic: topic || null,
+        topics,
         platforms,
         tech_stack: tags.split(",").map((t) => t.trim()).filter(Boolean),
         use_cases: lines(useCases),
@@ -337,8 +337,8 @@ function EditForm({ app }: { app: ShowcaseProject }) {
               <Chips options={CATEGORIES} value={[category]} onToggle={setCategory} />
             </div>
             <div>
-              <Label text="Topic" htmlFor="topic" hint="What it is for" />
-              <TopicSelect id="topic" value={topic} onChange={setTopic} />
+              <Label text="Topics" htmlFor="topics" hint="Up to 3" />
+              <TopicSelect id="topics" value={topics} onChange={setTopics} />
             </div>
             <div>
               <Label text="What does it do?" htmlFor="description" hint={`${description.length}/2000`} />
