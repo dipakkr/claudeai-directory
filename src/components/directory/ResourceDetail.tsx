@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 import Link from "next/link";
 import { ArrowUpRight, BadgeCheck } from "lucide-react";
 import { IconTile } from "@/components/directory/detail";
-import { ResourceCard } from "@/components/directory/DiscoverListing";
+import { DirectoryRow } from "@/components/directory/DirectoryList";
 import type { DirectoryItem } from "@/lib/directory";
 
 // Detail page modelled on claude.ai/directory: breadcrumb, a header band with
@@ -146,11 +146,12 @@ export function ResourceDetail({
         <div className="mx-auto w-full max-w-[1136px] px-4 pb-20 md:px-8">
           <div className="border-t border-border pt-10">
             <h2 className="mb-4 font-sans text-[17px] font-normal text-foreground">{relatedTitle ?? "Related"}</h2>
-            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-              {related.slice(0, 6).map((item) => (
-                <ResourceCard key={item.key} item={item} />
+            {/* Same rows as the listings, so related items read like the rest of the site. */}
+            <ol className="max-w-[880px]">
+              {related.slice(0, 6).map((item, i) => (
+                <DirectoryRow key={item.key} item={item} rank={i + 1} showType={false} />
               ))}
-            </div>
+            </ol>
           </div>
         </div>
       )}

@@ -32,6 +32,7 @@ import {
   type LaunchAutofill,
 } from "@/hooks/use-showcase";
 import { MediaUpload } from "@/components/launches/MediaUpload";
+import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
 import { FormSection, LaunchReading, LaunchStart } from "./LaunchStart";
 import type { ShowcaseProject } from "@/types";
 
@@ -373,6 +374,8 @@ function BadgeStep({
   // Already live without the badge: the only thing left is upgrading the link to dofollow.
   const live = isLaunchLive(app);
   const [mode, setMode] = useState<"badge" | "paid" | "free">("paid");
+  // Ask before checking: most failed checks are a badge that isn't on the page yet.
+  const [confirmOpen, setConfirmOpen] = useState(false);
 
   // Free either way: without the badge it goes live now with a nofollow link.
   const publishNow = () => {
@@ -402,6 +405,7 @@ function BadgeStep({
       toast.error("Enter the full URL of the page with the badge");
       return;
     }
+    setConfirmOpen(false);
     verify.mutate(
       { slug: app.id, badge_page_url: page },
       {
@@ -563,7 +567,13 @@ function BadgeStep({
           </Field>
           <button
             type="button"
-            onClick={handleVerify}
+            onClick={() => {
+              if (!isValidUrl(normalizeUrl(badgePage))) {
+                toast.error("Enter the full URL of the page with the badge");
+                return;
+              }
+              setConfirmOpen(true);
+            }}
             disabled={verify.isPending}
             className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-[12px] bg-primary text-[15px] font-medium text-primary-foreground transition-opacity hover:opacity-90 disabled:opacity-60"
           >
@@ -573,6 +583,41 @@ function BadgeStep({
         </div>
       )}
       </div>
+
+      <Dialog open={confirmOpen} onOpenChange={setConfirmOpen}>
+        <DialogContent className="max-w-[440px]">
+          <DialogTitle>Is the badge on your site?</DialogTitle>
+          <DialogDescription className="text-[14px] leading-6">
+            We&apos;ll look for it on <span className="break-all font-mono text-foreground">{normalizeUrl(badgePage)}</span>. It must link to{" "}
+            <span className="font-mono text-foreground">claudeai.directory/launches/{app.id}</span>, and the page with it must be published.
+          </DialogDescription>
+          <a
+            href={normalizeUrl(badgePage)}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex w-fit items-center gap-1.5 text-[13.5px] text-primary hover:underline"
+          >
+            Open the page to check
+            <ExternalLink className="h-3.5 w-3.5" />
+          </a>
+          <div className="mt-2 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
+            <button
+              type="button"
+              onClick={() => setConfirmOpen(false)}
+              className="inline-flex h-10 items-center justify-center rounded-[10px] border border-border px-4 text-sm text-foreground hover:border-[var(--cad-line-hover)]"
+            >
+              Not yet
+            </button>
+            <button
+              type="button"
+              onClick={handleVerify}
+              className="inline-flex h-10 items-center justify-center rounded-[10px] bg-primary px-4 text-sm font-medium text-primary-foreground hover:opacity-90"
+            >
+              Yes, it&apos;s added. Check now
+            </button>
+          </div>
+        </DialogContent>
+      </Dialog>
 
       {/* The other offers, as plain links. */}
       <div className="mt-5 flex flex-col items-center gap-2 text-[13.5px]">
@@ -653,6 +698,8 @@ export default function SubmitLaunchClient({
   const aiDraft = useLaunchAiDraft();
   const { data: aiConfig } = useAiDraftConfig();
   const { data: myApps } = useMyShowcaseProjects({ enabled: !isLoading && isAuthenticated });
+  // Opening a saved launch (?finish=): one loader until it is ready, not the intro and then the empty form.
+  const openingSaved = Boolean(finishSlug) && (isLoading || (isAuthenticated && myApps === undefined));
 
   // Back from Stripe: the webhook puts the launch live a few seconds after payment.
   useEffect(() => {
@@ -906,7 +953,7 @@ export default function SubmitLaunchClient({
               </Link>
             </div>
           )}
-          {!isAuthenticated && (
+          {!isAuthenticated && !openingSaved && (
             <>
               <h1 className="mt-5 font-sans text-3xl font-semibold tracking-tight text-foreground md:text-[40px] md:leading-[1.1]">Launch your app built with Claude</h1>
               <p className="mt-3 max-w-[62ch] text-[15px] leading-6 text-muted-foreground">
@@ -919,7 +966,11 @@ export default function SubmitLaunchClient({
             </>
           )}
 
-          {isLoading ? null : !isAuthenticated ? (
+          {openingSaved ? (
+            <div className="flex justify-center py-24" aria-label="Loading your launch">
+              <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+            </div>
+          ) : isLoading ? null : !isAuthenticated ? (
             <div className="mt-8">
               <SignInButton
                 reason="launch your app"
@@ -1144,7 +1195,7 @@ export default function SubmitLaunchClient({
             </>
           )}
           {/* Crawlable guide: shown before sign-in and on the start screen, not while filling the form. */}
-          {guide && (isLoading || !isAuthenticated || (shownStep === 0 && stage === "url")) && guide}
+          {guide && !openingSaved && (isLoading || !isAuthenticated || (shownStep === 0 && stage === "url")) && guide}
         </div>
       </main>
       <Footer />
