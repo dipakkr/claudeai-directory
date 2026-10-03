@@ -15,7 +15,7 @@ export function TweetUpvote({ id, initialCount }: { id: string; initialCount: nu
   const { isAuthenticated } = useAuth();
   const upvote = useUpvoteFeedItem();
   const { data: myVotes } = useMyTweetVotes(isAuthenticated);
-  // Server-confirmed state after a click; until then, derive it from my-votes.
+  // Local state after a click (optimistic, then the server's answer); until then, derive it from my-votes.
   const [confirmed, setConfirmed] = useState<{ voted: boolean; count: number } | null>(null);
 
   const voted = confirmed?.voted ?? Boolean(myVotes?.includes(id));
@@ -29,14 +29,20 @@ export function TweetUpvote({ id, initialCount }: { id: string; initialCount: nu
         toast.success("You already upvoted this");
         return;
       }
+      // Optimistic: flip now, settle with the server's count, undo on failure.
+      const before = { voted, count };
+      setConfirmed({ voted: !wasVoted, count: Math.max(0, count + (wasVoted ? -1 : 1)) });
       upvote.mutate(
         { type: "tweet", id },
         {
           onSuccess: (res) => {
             const nextVoted = res.voted ?? !wasVoted;
-            setConfirmed({ voted: nextVoted, count: res.upvotes ?? count + (nextVoted ? 1 : -1) });
+            setConfirmed({ voted: nextVoted, count: res.upvotes ?? before.count + (nextVoted ? 1 : -1) });
           },
-          onError: () => toast.error("Could not save your upvote"),
+          onError: () => {
+            setConfirmed(before);
+            toast.error("Could not save your upvote");
+          },
         },
       );
     });
@@ -45,7 +51,6 @@ export function TweetUpvote({ id, initialCount }: { id: string; initialCount: nu
     <button
       type="button"
       onClick={handleClick}
-      disabled={upvote.isPending}
       aria-pressed={voted}
       aria-label="Upvote this tweet"
       className={`cursor-pointer disabled:cursor-default inline-flex h-8 items-center gap-1.5 rounded-full border px-3 text-xs font-medium transition-colors disabled:opacity-70 ${

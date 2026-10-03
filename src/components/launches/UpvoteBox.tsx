@@ -73,7 +73,8 @@ export function UpvoteBox({ slug, title, initialCount, websiteUrl, websiteRel = 
       setBump((b) => b + 1);
       upvote.mutate(slug, {
         onSuccess: (project) => {
-          setOptimistic(null);
+          // Keep the server's answer; dropping back to the cached lists would flicker until they refetch.
+          setOptimistic({ voted: project.voted !== false, count: project.upvotes ?? Math.max(0, count + (next ? 1 : -1)) });
           if (project.voted !== false) track("launch_upvoted", { slug, placement: "launch_page" });
           if (project.voted === false) toast.success("Upvote removed");
         },

@@ -92,6 +92,8 @@ function AuthorName({
 
 interface VoteContext {
   voted: Set<string>;
+  /** Signed in: the button can flip right away; otherwise the sign-in dialog comes first. */
+  signedIn: boolean;
   onVote: (type: "thread" | "reply", id: string) => Promise<{ voted: boolean; upvotes: number } | null>;
 }
 
@@ -117,10 +119,18 @@ function VoteButton({
   const click = async () => {
     if (busy) return;
     setBusy(true);
+    const before = { voted, count: shown };
+    // Optimistic: flip and animate now, then settle with the server's count (or undo on failure).
+    if (ctx.signedIn) {
+      setState({ voted: !voted, count: Math.max(0, shown + (voted ? -1 : 1)) });
+      setBump((b) => b + 1);
+    }
     const result = await ctx.onVote(type, id);
     if (result) {
       setState({ voted: result.voted, count: result.upvotes });
-      setBump((b) => b + 1);
+      if (!ctx.signedIn) setBump((b) => b + 1);
+    } else if (ctx.signedIn) {
+      setState(before);
     }
     setBusy(false);
   };
@@ -269,6 +279,7 @@ export default function ThreadDetail({
   const [editing, setEditing] = useState(false);
   const votes: VoteContext = {
     voted: new Set(myVotes ?? []),
+    signedIn: isAuthenticated,
     onVote: async (type, targetId) =>
       (await requireAuth("upvote", async ({ resumed }) => {
         // Just signed in: the upvote is a toggle, so don't undo an earlier one.
