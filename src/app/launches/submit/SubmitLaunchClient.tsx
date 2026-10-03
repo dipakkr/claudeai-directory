@@ -448,8 +448,8 @@ function BadgeStep({
     },
   } as const;
   const offer = OFFERS[mode];
-  const others = (["paid", "badge", "free"] as const).filter((m) => m !== mode && !(m === "free" && live));
-  const otherLabel = { badge: "Don't want to pay? Add our badge and go live free", paid: "Pay $19 instead (no badge on your site)", free: "List free without the badge (nofollow, listed below)" };
+  const others = (["paid", "badge"] as const).filter((m) => m !== mode);
+  const otherLabel = { badge: "Don't want to pay? Add our badge and go live free", paid: "Pay $19 instead (no badge on your site)" };
   const primaryBtn =
     "inline-flex h-12 w-full items-center justify-center gap-2 rounded-[12px] bg-primary text-[15px] font-medium text-primary-foreground transition-opacity hover:opacity-90 disabled:opacity-60";
 
