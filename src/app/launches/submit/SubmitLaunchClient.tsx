@@ -442,7 +442,7 @@ function BadgeStep({
               <span className="text-[15px] font-medium text-foreground">One-time listing</span>
               <span className="font-mono text-[13px] text-foreground">${listingPrice}</span>
             </span>
-            <span className="mt-1.5 text-[13.5px] leading-5 text-muted-foreground">Live right away. One-time payment.</span>
+            <span className="mt-1.5 text-[13.5px] leading-5 text-muted-foreground">Instant live · Dofollow link · One-time payment</span>
           </button>
         )}
       </div>
