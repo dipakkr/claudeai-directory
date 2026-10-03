@@ -2,7 +2,7 @@
 
 import { hasDofollow, isLaunchLive } from "@/lib/launch-options";
 import Link from "next/link";
-import { ArrowRight, Bell, Bookmark, MessageSquare, Package, Rocket } from "lucide-react";
+import { ArrowRight, Bell, Bookmark, MessageSquare, Package, Pencil, Rocket } from "lucide-react";
 import type { ReactNode } from "react";
 import { useQuery } from "@tanstack/react-query";
 
@@ -134,19 +134,6 @@ export function LaunchRows({ apps, loading }: { apps: ShowcaseProject[]; loading
                 {live ? (
                   <>
                     {plural(app.upvotes, "upvote")} · {plural(app.views, "view")} · {plural(metrics?.[app.id]?.clicks, "click")}
-                    {/* The website link is nofollow until the badge is on the maker's site. */}
-                    {!hasDofollow(app) && (
-                      <>
-                        {" · "}
-                        <Link
-                          href={`/launches/submit?finish=${encodeURIComponent(app.id)}`}
-                          title="Add our badge to your site to make your link dofollow"
-                          className="text-primary hover:underline"
-                        >
-                          Get a dofollow link
-                        </Link>
-                      </>
-                    )}
                   </>
                 ) : rejected ? (
                   "Edit it and resubmit, or contact us"
@@ -156,7 +143,12 @@ export function LaunchRows({ apps, loading }: { apps: ShowcaseProject[]; loading
               </p>
             </div>
             <div className="flex w-full items-center gap-4 pl-14 text-sm sm:w-auto sm:pl-0">
-              {(live || rejected) && <Link href={`/launches/${app.id}/edit`} className="text-muted-foreground hover:text-foreground">Edit</Link>}
+              {(live || rejected) && (
+                <Link href={`/launches/${app.id}/edit`} className="inline-flex items-center gap-1.5 font-medium text-foreground hover:text-primary">
+                  <Pencil className="h-3.5 w-3.5" />
+                  Edit launch
+                </Link>
+              )}
               {live && <Link href={`/launches/${app.id}/analytics`} className="text-muted-foreground hover:text-foreground">Analytics</Link>}
               {!live && !rejected && (
                 // Opens the draft; its "Complete listing" button then offers the badge or publishing without it.
@@ -169,6 +161,22 @@ export function LaunchRows({ apps, loading }: { apps: ShowcaseProject[]; loading
                 </Link>
               )}
             </div>
+            {/* The website link is nofollow until our badge is on the maker's site; adding it is free. */}
+            {live && !hasDofollow(app) && (
+              <div className="flex w-full flex-col gap-2 rounded-[8px] border border-primary/25 bg-primary/[0.05] px-3 py-2.5 sm:ml-14 sm:w-[calc(100%-3.5rem)] sm:flex-row sm:items-center sm:gap-3">
+                <span className="w-fit shrink-0 rounded-[4px] border border-border bg-background px-1.5 py-px font-mono text-[11px] text-muted-foreground">nofollow</span>
+                <p className="min-w-0 flex-1 text-[13px] leading-5 text-muted-foreground">
+                  Your website link is nofollow and your launch is listed below launches with our badge. Add the badge to your site to get a dofollow link and rank with them. Free.
+                </p>
+                <Link
+                  href={`/launches/submit?finish=${encodeURIComponent(app.id)}`}
+                  className="inline-flex shrink-0 items-center gap-1 text-[13px] font-medium text-primary hover:underline"
+                >
+                  Get dofollow
+                  <ArrowRight className="h-3.5 w-3.5" />
+                </Link>
+              </div>
+            )}
           </li>
         );
       })}
