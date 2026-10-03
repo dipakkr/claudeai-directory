@@ -27,6 +27,7 @@ export function ResourceDetail({
   name,
   verified,
   tagline,
+  meta,
   action,
   facts,
   links = [],
@@ -42,6 +43,8 @@ export function ResourceDetail({
   name: string;
   verified?: boolean;
   tagline?: string | null;
+  /** Small line under the name, e.g. "Plugin · owner/repo". */
+  meta?: ReactNode;
   /** Primary action(s) on the right of the header band. */
   action?: ReactNode;
   facts: Fact[];
@@ -66,36 +69,38 @@ export function ResourceDetail({
         </nav>
       </div>
 
-      <div className="mt-6 bg-[var(--cad-band)]">
-        <div className="mx-auto flex w-full max-w-[1136px] flex-wrap items-center gap-4 px-4 py-8 md:px-8 md:py-10">
-          {iconSrc || !icon ? (
-            <span className="rounded-xl border border-border bg-[var(--cad-tile)] p-1">
-              <IconTile src={iconSrc} name={name} size={52} />
-            </span>
-          ) : (
-            <span className="flex h-[60px] w-[60px] shrink-0 items-center justify-center rounded-xl border border-border bg-[var(--cad-tile)] text-foreground/85 [&>svg]:h-6 [&>svg]:w-6">
-              {icon}
-            </span>
-          )}
-          <div className="min-w-0 flex-1">
-            <h1 className="text-[24px] font-light leading-tight text-foreground md:text-[28px]">
-              {name}
-              {verified && <BadgeCheck className="ml-2 inline h-[18px] w-[18px] -translate-y-0.5 text-muted-foreground" strokeWidth={1.5} aria-label="Official" />}
-            </h1>
-            {tagline && <p className="mt-1 max-w-[70ch] text-[13.5px] leading-relaxed text-[var(--cad-desc)]">{tagline}</p>}
-          </div>
-          {action && <div className="flex w-full shrink-0 items-center gap-2 sm:w-auto">{action}</div>}
+      {/* Roomy header: big logo, big name, a small meta line; the description opens the body. */}
+      <div className="mx-auto flex w-full max-w-[1136px] flex-wrap items-center gap-5 px-4 pt-8 md:gap-7 md:px-8 md:pt-10">
+        {iconSrc || !icon ? (
+          <span className="rounded-[20px] border border-border bg-[var(--cad-tile)] p-2">
+            <IconTile src={iconSrc} name={name} size={72} />
+          </span>
+        ) : (
+          <span className="flex h-[88px] w-[88px] shrink-0 items-center justify-center rounded-[20px] border border-border bg-[var(--cad-tile)] text-foreground/85 [&>svg]:h-9 [&>svg]:w-9">
+            {icon}
+          </span>
+        )}
+        <div className="min-w-0 flex-1">
+          <h1 className="text-[32px] font-normal leading-[1.1] tracking-tight text-foreground md:text-[44px]">
+            {name}
+            {verified && <BadgeCheck className="ml-2.5 inline h-6 w-6 -translate-y-1 text-muted-foreground" strokeWidth={1.5} aria-label="Official" />}
+          </h1>
+          {meta && <div className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 text-[14px] text-muted-foreground">{meta}</div>}
         </div>
+        {action && <div className="flex w-full shrink-0 items-center gap-2 sm:w-auto">{action}</div>}
       </div>
 
-      <div className="mx-auto grid w-full max-w-[1136px] gap-10 px-4 pb-14 pt-9 md:px-8 lg:grid-cols-[minmax(0,1fr)_260px] lg:gap-16">
-        <div className="min-w-0 space-y-9">{children}</div>
+      <div className="mx-auto mt-8 grid w-full max-w-[1136px] gap-10 border-t border-border px-4 pb-16 pt-10 md:px-8 lg:grid-cols-[minmax(0,1fr)_280px] lg:gap-16">
+        <div className="min-w-0 space-y-12">
+          {tagline && <p className="max-w-[68ch] text-[16px] leading-7 text-foreground/90">{tagline}</p>}
+          {children}
+        </div>
 
         {(shownFacts.length > 0 || shownLinks.length > 0) && (
-          <aside className="space-y-5 self-start">
+          <aside className="space-y-7 self-start">
             {shownFacts.map((f) => (
               <div key={f.label}>
-                <p className="text-[11px] uppercase tracking-[0.05em] text-muted-foreground">{f.label}</p>
+                <p className="text-[11.5px] uppercase tracking-[0.08em] text-muted-foreground">{f.label}</p>
                 {f.chips ? (
                   <div className="mt-1.5 flex flex-wrap gap-1.5">
                     {f.chips.map((c) => (
