@@ -11,6 +11,7 @@ import Footer from "@/components/layout/Footer";
 import { MediaUpload } from "@/components/launches/MediaUpload";
 import { LogoPicker } from "@/components/launches/LogoPicker";
 import { AiDraftBar } from "@/components/launches/AiDraftBar";
+import { TopicSelect } from "@/components/launches/TopicSelect";
 import { ApiError } from "@/lib/api";
 import { useAuth } from "@/lib/auth";
 import { CATEGORIES, PLATFORMS, TOPICS } from "@/lib/launch-options";
@@ -319,8 +320,8 @@ function EditForm({ app }: { app: ShowcaseProject }) {
               <Chips options={CATEGORIES} value={[category]} onToggle={setCategory} />
             </div>
             <div>
-              <p className="mb-2 text-[14px] text-muted-foreground">Topic</p>
-              <Chips options={TOPICS} value={topic ? [topic] : []} onToggle={(t) => setTopic((cur) => (cur === t ? "" : t))} />
+              <Label text="Topic" htmlFor="topic" hint="What it is for" />
+              <TopicSelect id="topic" value={topic} onChange={setTopic} />
             </div>
             <div>
               <Label text="What does it do?" htmlFor="description" hint={`${description.length}/2000`} />

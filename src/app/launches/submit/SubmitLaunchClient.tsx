@@ -47,6 +47,7 @@ type Media = { logo: string[]; screenshot: string[]; video: string[] };
 const SITE_URL = "https://www.claudeai.directory";
 
 import { CATEGORIES, TOPICS } from "@/lib/launch-options";
+import { TopicSelect } from "@/components/launches/TopicSelect";
 import { SignInButton } from "@/components/auth/SignInDialog";
 import { track } from "@/lib/analytics";
 
@@ -1056,9 +1057,12 @@ export default function SubmitLaunchClient() {
                         </div>
 
                         <div className="space-y-1.5">
-                          <p className="text-sm font-medium text-foreground">Category</p>
+                          <p className="text-sm font-medium text-foreground">Type</p>
                           <ChipGroup label="Type" options={CATEGORIES} value={[form.category]} onToggle={(option) => set("category", option)} />
-                          <ChipGroup label="Topic" options={TOPICS} value={form.topic ? [form.topic] : []} onToggle={(option) => set("topic", form.topic === option ? "" : option)} />
+                        </div>
+                        <div className="space-y-1.5">
+                          <label htmlFor="topic" className="text-sm font-medium text-foreground">Topic</label>
+                          <TopicSelect id="topic" value={form.topic} onChange={(t) => set("topic", t)} />
                         </div>
 
                         <Field label="What does it do?" htmlFor="description" required hint={`${form.description.length}/2000`}>
