@@ -310,7 +310,7 @@ function DirectoryRow({ item, rank, showType }: { item: DirectoryItem; rank: num
   const targetId = item.key.split(":").slice(1).join(":") || item.key;
 
   return (
-    <li className="grid grid-cols-[2rem_2.25rem_minmax(0,1fr)_auto_auto] items-center gap-3 border-b border-border/70 py-3.5 sm:grid-cols-[3rem_2.25rem_minmax(0,1fr)_auto_auto]">
+    <li className="-mx-3 grid grid-cols-[2rem_2.25rem_minmax(0,1fr)_auto_auto] items-center gap-3 rounded-[8px] border-b border-border/70 px-3 py-3.5 transition-colors hover:bg-foreground/[0.05] sm:grid-cols-[3rem_2.25rem_minmax(0,1fr)_auto_auto]">
       <span className={`font-mono text-[13px] ${rank <= 3 ? "text-primary" : "text-muted-foreground"}`}>{rank}</span>
       <Link
         href={item.href}

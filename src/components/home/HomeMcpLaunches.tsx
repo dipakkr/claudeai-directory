@@ -3,7 +3,7 @@
 import { Fragment } from "react";
 import Link from "next/link";
 import { ArrowRight, Megaphone } from "lucide-react";
-import { LaunchLogo } from "@/components/launches/LaunchListRow";
+import { LaunchLogo, TodayDelta } from "@/components/launches/LaunchListRow";
 import { UpvotePill } from "@/components/launches/UpvotePill";
 import { SPONSOR_MONTHLY_PRICE, openAdvertiseDialog } from "@/lib/advertise";
 import { track } from "@/lib/analytics";
@@ -50,10 +50,12 @@ function SponsorRow() {
 export default function HomeMcpLaunches({
   projects,
   upvotesToday = {},
+  viewsToday = {},
   limit = 25,
 }: {
   projects: ShowcaseProject[];
   upvotesToday?: Record<string, number>;
+  viewsToday?: Record<string, number>;
   limit?: number;
 }) {
   const shown = projects.slice(0, limit);
@@ -66,7 +68,10 @@ export default function HomeMcpLaunches({
             return (
               <Fragment key={project.id}>
                 <li data-launch-impression={project.id} data-surface="home_mcp_tab">
-                  <Link href={`/launches/${encodeURIComponent(project.id)}`} className="group flex items-center gap-4 py-3.5">
+                  <Link
+                    href={`/launches/${encodeURIComponent(project.id)}`}
+                    className="group -mx-3 flex items-center gap-4 rounded-[8px] px-3 py-3.5 transition-colors hover:bg-foreground/[0.05]"
+                  >
                     <span className={`hidden w-6 shrink-0 font-mono text-[13px] tabular-nums sm:block ${index < 3 ? "text-primary" : "text-muted-foreground"}`}>
                       {index + 1}
                     </span>
@@ -84,9 +89,7 @@ export default function HomeMcpLaunches({
                         </span>
                       )}
                     </span>
-                    {today > 0 && (
-                      <span className="hidden shrink-0 font-mono text-[12px] text-green-600 sm:inline dark:text-green-400">▲ +{today} today</span>
-                    )}
+                    <TodayDelta upvotes={today} views={viewsToday[project.id]} className="hidden shrink-0 sm:inline-flex" />
                     <UpvotePill count={project.upvotes ?? 0} />
                   </Link>
                 </li>

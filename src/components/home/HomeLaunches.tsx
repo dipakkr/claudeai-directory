@@ -9,11 +9,13 @@ export default function HomeLaunches({
   unavailable,
   impressions = {},
   upvotesToday = {},
+  viewsToday = {},
 }: {
   projects: ShowcaseProject[];
   unavailable: boolean;
   impressions?: Record<string, number>;
   upvotesToday?: Record<string, number>;
+  viewsToday?: Record<string, number>;
 }) {
   // Every live launch, so each maker gets homepage traffic (ranked: promoted, then upvotes).
   const shownProjects = projects;
@@ -38,6 +40,7 @@ export default function HomeLaunches({
             rank={index + 1}
             impressions={impressions[project.id]}
             upvotesToday={upvotesToday[project.id]}
+            viewsToday={viewsToday[project.id]}
             surface="home"
             right={
               <Link href={`/launches/${encodeURIComponent(project.id)}`} aria-label={`Upvote ${project.title}`} className="shrink-0">

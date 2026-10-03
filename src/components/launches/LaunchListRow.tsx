@@ -25,6 +25,18 @@ export function LaunchLogo({ project, size = "md" }: { project: ShowcaseProject;
   );
 }
 
+/** Green "today" activity for a launch row: new upvotes first, then page views in the last 24h. */
+export function TodayDelta({ upvotes = 0, views = 0, className = "" }: { upvotes?: number; views?: number; className?: string }) {
+  if (upvotes <= 0 && views <= 0) return null;
+  return (
+    <span className={`inline-flex items-center gap-2 font-mono text-[12px] text-green-600 dark:text-green-400 ${className}`}>
+      {upvotes > 0 && <span>▲ +{upvotes} today</span>}
+      {upvotes > 0 && views > 0 && <span aria-hidden className="text-muted-foreground/60">·</span>}
+      {views > 0 && <span title="Launch page views in the last 24 hours">+{views} {views === 1 ? "view" : "views"}</span>}
+    </span>
+  );
+}
+
 function Rank({ n }: { n: number }) {
   return <span className={`w-5 shrink-0 text-center font-mono text-sm tabular-nums ${n <= 3 ? "text-primary" : "text-muted-foreground"}`}>{n}</span>;
 }
@@ -35,6 +47,7 @@ export function LaunchListRow({
   rank,
   impressions = 0,
   upvotesToday = 0,
+  viewsToday = 0,
   right,
   surface,
 }: {
@@ -42,6 +55,7 @@ export function LaunchListRow({
   rank: number;
   impressions?: number;
   upvotesToday?: number;
+  viewsToday?: number;
   right: ReactNode;
   surface: string;
 }) {
@@ -49,7 +63,7 @@ export function LaunchListRow({
   const meta = [impressions > 0 ? `${impressions.toLocaleString("en-US")} impressions` : null, launchCategory(project)].filter(Boolean) as string[];
   return (
     <li data-launch-impression={project.id} data-surface={surface} className="border-b border-border last:border-b-0">
-      <div className="flex items-center gap-4 py-5">
+      <div className="-mx-3 flex items-center gap-4 rounded-[8px] px-3 py-5 transition-colors hover:bg-foreground/[0.05]">
         <Rank n={rank} />
         <Link href={`/launches/${encodeURIComponent(project.id)}`} className="group flex min-w-0 flex-1 items-center gap-4">
           <LaunchLogo project={project} />
@@ -69,10 +83,10 @@ export function LaunchListRow({
                   {item}
                 </span>
               ))}
-              {upvotesToday > 0 && (
+              {(upvotesToday > 0 || viewsToday > 0) && (
                 <span className="inline-flex items-center gap-2">
                   <span aria-hidden>·</span>
-                  <span className="text-green-600 dark:text-green-400">▲ +{upvotesToday} today</span>
+                  <TodayDelta upvotes={upvotesToday} views={viewsToday} />
                 </span>
               )}
             </p>

@@ -86,9 +86,10 @@ export default async function Home() {
               unavailable={launchesData === null}
               impressions={pulse?.launch_impressions}
               upvotesToday={pulse?.upvotes_today}
+              viewsToday={pulse?.views_24h}
             />
           }
-          mcpLaunches={{ count: mcpLaunches.length, content: <HomeMcpLaunches projects={mcpLaunches} upvotesToday={pulse?.upvotes_today} /> }}
+          mcpLaunches={{ count: mcpLaunches.length, content: <HomeMcpLaunches projects={mcpLaunches} upvotesToday={pulse?.upvotes_today} viewsToday={pulse?.views_24h} /> }}
           pulse={pulse ? <HomePulse pulse={pulse} /> : null}
           community={<Suspense fallback={<HomeCommunity threads={threads} replies={{}} unavailable={threadsData === null} />}>
             <CommunityPreview threads={threads} unavailable={threadsData === null} />
