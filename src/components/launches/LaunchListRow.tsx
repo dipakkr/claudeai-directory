@@ -61,7 +61,7 @@ export function LaunchListRow({
   const meta = [impressions > 0 ? `${impressions.toLocaleString("en-US")} impressions` : null, launchCategory(project), project.topics?.[0]].filter(Boolean) as string[];
   return (
     <li data-launch-impression={project.id} data-surface={surface} className="border-b border-border last:border-b-0">
-      <div className="-mx-3 flex items-center gap-4 rounded-[8px] px-3 py-5 transition-colors hover:bg-foreground/[0.05]">
+      <div className="-mx-3 flex items-center gap-4 rounded-[8px] px-3 py-4 transition-colors hover:bg-foreground/[0.05]">
         <Rank n={rank} />
         <Link href={`/launches/${encodeURIComponent(project.id)}`} className="group flex min-w-0 flex-1 items-center gap-4">
           <LaunchLogo project={project} />
@@ -74,30 +74,32 @@ export function LaunchListRow({
               )}
             </div>
             <p className="mt-1 line-clamp-1 text-[15px] leading-6 text-muted-foreground">{pitch(project)}</p>
-            <p className="mt-1 flex flex-wrap items-center gap-x-2 font-mono text-[12px] text-muted-foreground/80">
+            {/* One line: type · topic · today's upvotes · by maker (keeps rows short). */}
+            <p className="mt-1 flex min-w-0 flex-wrap items-center gap-x-2 gap-y-0.5 text-[12.5px] text-muted-foreground">
               {meta.map((item, i) => (
-                <span key={item} className="inline-flex items-center gap-2">
+                <span key={item} className="inline-flex items-center gap-2 font-mono text-[12px] text-muted-foreground/80">
                   {i > 0 && <span aria-hidden>·</span>}
                   {item}
                 </span>
               ))}
               {upvotesToday > 0 && (
                 <span className="inline-flex items-center gap-2">
-                  <span aria-hidden>·</span>
+                  <span aria-hidden className="text-muted-foreground/80">·</span>
                   <TodayDelta upvotes={upvotesToday} />
                 </span>
               )}
+              {maker && (
+                <span className="inline-flex min-w-0 items-center gap-1.5">
+                  <span aria-hidden className="text-muted-foreground/80">·</span>
+                  by
+                  {project.author_avatar && (
+                    // eslint-disable-next-line @next/next/no-img-element -- maker avatar
+                    <img src={project.author_avatar} alt="" className="h-4 w-4 rounded-full object-cover" referrerPolicy="no-referrer" />
+                  )}
+                  <span className="truncate text-foreground/90">{maker}</span>
+                </span>
+              )}
             </p>
-            {maker && (
-              <p className="mt-1.5 flex items-center gap-1.5 text-[13px] text-muted-foreground">
-                by
-                {project.author_avatar && (
-                  // eslint-disable-next-line @next/next/no-img-element -- maker avatar
-                  <img src={project.author_avatar} alt="" className="h-4 w-4 rounded-full object-cover" referrerPolicy="no-referrer" />
-                )}
-                <span className="text-foreground/90">{maker}</span>
-              </p>
-            )}
           </div>
         </Link>
         {right}
