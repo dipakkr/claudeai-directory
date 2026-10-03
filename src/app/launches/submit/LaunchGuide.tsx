@@ -37,7 +37,7 @@ const KINDS = [
 ];
 
 export const LAUNCH_FAQ: { q: string; a: string }[] = [
-  { q: "Is launching on Claude AI Directory free?", a: "Yes. Add our badge to your site or GitHub README and your launch goes live for free. If you would rather not add a badge, a one-time $29 listing puts it live right away and pins it to the top for 7 days." },
+  { q: "Is launching on Claude AI Directory free?", a: "Yes. Add our badge to your site or GitHub README and your launch goes live for free. If you would rather not add a badge, a one-time $29 listing puts it live right away." },
   { q: "Do I get a backlink?", a: "Yes. Every live launch links to your website with a dofollow link, whether it went live with the badge or the one-time listing." },
   { q: "How long does it take?", a: "About a minute. Paste your website, review what we filled in, then complete the listing. Badge launches go live as soon as we find the badge on your page." },
   { q: "What can I launch?", a: "Anything you built with or for Claude: web apps, MCP servers, Claude Skills, agents, Claude Code plugins and workflows." },

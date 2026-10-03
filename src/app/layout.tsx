@@ -10,6 +10,8 @@ import { VisitBeacon } from "@/components/tracking/VisitBeacon";
 import { ViewAsBanner } from "@/components/layout/ViewAsBanner";
 import { LaunchImpressions } from "@/components/tracking/LaunchImpressions";
 import { KeyClickTracker } from "@/components/tracking/KeyClickTracker";
+import { NavigationProgress } from "@/components/layout/NavigationProgress";
+import { Suspense } from "react";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -99,6 +101,10 @@ export default function RootLayout({
           <ExternalLinkTracker />
           <VisitBeacon />
           <LaunchImpressions />
+          {/* useSearchParams needs a Suspense boundary */}
+          <Suspense fallback={null}>
+            <NavigationProgress />
+          </Suspense>
           {children}
         </Providers>
 
