@@ -767,3 +767,9 @@ body:has([role="dialog"][data-state="open"], [role="alertdialog"][data-state="op
   .pulse-glow, .pulse-sweep, .pulse-row-flash { animation: none; }
   .pulse-sweep { display: none; }
 }
+
+/* "Write with AI" progress bar: fills most of the way while the draft is written. */
+@keyframes ai-draft-progress {
+  from { transform: scaleX(0.04); }
+  to { transform: scaleX(0.92); }
+}
