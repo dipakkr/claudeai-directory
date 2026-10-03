@@ -9,7 +9,7 @@ import { fetchApi } from "@/lib/api-server";
 
 const TITLE = "Open Stats: Claude AI Directory in Numbers";
 const DESCRIPTION =
-  "Live traffic, members, launches and install activity on Claude AI Directory for the last 30 days, from our own first-party counters.";
+  "Live traffic, members, launches and install activity on Claude AI Directory, from our own first-party counters.";
 
 export const metadata: Metadata = {
   title: { absolute: TITLE },
@@ -184,8 +184,10 @@ function LiveAnalytics() {
   );
 }
 
-export default async function StatsPage() {
-  const data = await fetchApi<OpenStats>("/stats/open", { revalidate: 600 });
+export default async function StatsPage({ searchParams }: { searchParams: Promise<{ range?: string }> }) {
+  // Last 7 days by default; ?range=30d for the month.
+  const days = (await searchParams).range === "30d" ? 30 : 7;
+  const data = await fetchApi<OpenStats>(`/stats/open?days=${days}`, { revalidate: 600 });
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
@@ -196,7 +198,7 @@ export default async function StatsPage() {
           <p className="mt-6 font-mono text-[11px] uppercase tracking-[0.16em] text-primary">Open stats</p>
           <h1 className="mt-3 font-sans text-3xl font-semibold tracking-tight text-foreground md:text-[40px] md:leading-[1.1]">Claude AI Directory in numbers</h1>
           <p className="mt-3 max-w-[64ch] text-[15px] leading-6 text-muted-foreground">
-            Live numbers from our own first-party counters for the last 30 days, refreshed every 10 minutes. Visits are counted without cookies, and bots
+            Live numbers from our own first-party counters, refreshed every 10 minutes. Visits are counted without cookies, and bots
             and automated browsers are skipped.
           </p>
           <div className="mt-6 flex flex-wrap gap-2">
@@ -226,6 +228,25 @@ export default async function StatsPage() {
   );
 }
 
+/** 7d / 30d: plain links, so each range is its own server-rendered view. */
+function RangeSwitch({ days }: { days: number }) {
+  return (
+    <span className="inline-flex items-center gap-0.5 rounded-[6px] bg-foreground/[0.06] p-0.5 font-mono text-[11px]">
+      {[7, 30].map((d) => (
+        <Link
+          key={d}
+          href={d === 7 ? "/stats" : "/stats?range=30d"}
+          scroll={false}
+          aria-current={days === d ? "true" : undefined}
+          className={`rounded-[4px] px-2 py-0.5 transition-colors ${days === d ? "bg-background text-foreground" : "text-muted-foreground hover:text-foreground"}`}
+        >
+          {d}d
+        </Link>
+      ))}
+    </span>
+  );
+}
+
 function Body({ data }: { data: OpenStats }) {
   const { summary: s, rows, tracking_since: since } = data;
   const counting = since ? `counted since ${shortDate(since)}` : "counting starts today";
@@ -234,7 +255,7 @@ function Body({ data }: { data: OpenStats }) {
   return (
     <>
       <div className="mt-12">
-        <SectionLabel aside={`Last ${data.days} days · all time`}>In numbers</SectionLabel>
+        <SectionLabel aside={<RangeSwitch days={data.days} />}>In numbers</SectionLabel>
         <div className="mt-4 grid grid-cols-2 gap-px overflow-hidden rounded-[6px] border border-border bg-border md:grid-cols-4">
           <Stat label="visitors" value={since ? fmt(s.visitors.range) : "-"} sub={counting} />
           <Stat label="page_views" value={since ? fmt(s.page_views.range) : "-"} sub={counting} />
@@ -254,23 +275,23 @@ function Body({ data }: { data: OpenStats }) {
       </div>
 
       <div className="mt-12 grid gap-12 md:grid-cols-2">
-        <Chart title="Listing and launch views" aside={`${fmt(s.listing_views.range)} in 30 days`}>
+        <Chart title="Listing and launch views" aside={`${fmt(s.listing_views.range)} in ${data.days} days`}>
           <Bars rows={rows} value={(r) => r.listing_views + r.launch_views} />
         </Chart>
-        <Chart title="Install actions per day" aside={`${fmt(s.installs.range)} in 30 days`}>
+        <Chart title="Install actions per day" aside={`${fmt(s.installs.range)} in ${data.days} days`}>
           <Bars rows={rows} value={(r) => r.installs} />
         </Chart>
-        <Chart title="Registered members" aside={`+${fmt(s.members.range)} in 30 days`}>
+        <Chart title="Registered members" aside={`+${fmt(s.members.range)} in ${data.days} days`}>
           <Area rows={rows} />
         </Chart>
-        <Chart title="Posts and comments per day" aside={`${fmt(s.posts.range)} in 30 days`}>
+        <Chart title="Posts and comments per day" aside={`${fmt(s.posts.range)} in ${data.days} days`}>
           <Bars rows={rows} value={(r) => r.posts} />
         </Chart>
       </div>
 
       <div className="mt-12 grid gap-12 md:grid-cols-2">
         <section>
-          <SectionLabel aside="share of visitors, 30 days">Countries</SectionLabel>
+          <SectionLabel aside={`share of visitors, ${data.days} days`}>Countries</SectionLabel>
           {data.countries.length ? (
             <ul className="mt-4 space-y-1">
               {data.countries.map((c) => (
