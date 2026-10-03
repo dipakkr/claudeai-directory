@@ -1,5 +1,6 @@
 "use client";
 
+import { Fragment } from "react";
 import Link from "next/link";
 import { ArrowRight, Megaphone } from "lucide-react";
 import { LaunchLogo } from "@/components/launches/LaunchListRow";
@@ -10,72 +11,95 @@ import type { ShowcaseProject } from "@/types";
 
 const pitch = (p: ShowcaseProject) => p.tagline?.trim() || p.description.trim();
 
-/**
- * The homepage "MCP launches" tab: an open sponsor row on top, then MCP servers launched
- * by members, ranked like every launch list (paid "Promoted" launches first, then upvotes).
- */
-export default function HomeMcpLaunches({ projects, limit = 25 }: { projects: ShowcaseProject[]; limit?: number }) {
-  const shown = projects.slice(0, limit);
+/** Sponsored rows sit inside the list, DevHunt-style: after the 3rd launch, then every 8. */
+const sponsorAfter = (index: number, total: number) => index === Math.min(2, total - 1) || (index > 2 && (index - 2) % 8 === 0);
+
+/** An open sponsor slot, styled like a launch row in an outlined box. Replaced by a real sponsor once one pays. */
+function SponsorRow() {
   return (
-    <div>
+    <li className="py-1.5">
       <button
         type="button"
         onClick={() => {
           track("ad_slot_clicked", { slot: "home_mcp_launches" });
           openAdvertiseDialog(undefined, "sidebar");
         }}
-        className="grid w-full grid-cols-[2rem_2.25rem_minmax(0,1fr)_auto] items-center gap-3 border-b border-border/70 bg-primary/[0.04] py-3.5 text-left transition-colors hover:bg-primary/[0.07] sm:grid-cols-[3rem_2.25rem_minmax(0,1fr)_auto]"
+        className="flex w-full items-center gap-4 rounded-[10px] border border-primary/40 bg-primary/[0.04] px-3 py-3 text-left transition-colors hover:border-primary/70 sm:-mx-3 sm:w-[calc(100%+1.5rem)]"
       >
-        <span className="font-mono text-[13px] text-primary">AD</span>
-        <span className="flex h-9 w-9 items-center justify-center rounded-md border border-dashed border-primary/40 text-primary">
+        <span className="hidden w-6 shrink-0 sm:block" aria-hidden="true" />
+        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[10px] border border-dashed border-primary/50 text-primary">
           <Megaphone className="h-4 w-4" aria-hidden="true" />
         </span>
-        <span className="min-w-0">
-          <span className="block truncate text-[15px] text-foreground">Your MCP here</span>
-          <span className="mt-0.5 block truncate text-[13px] text-muted-foreground">
-            Get in front of people looking for MCP servers. ${SPONSOR_MONTHLY_PRICE}/month.
-          </span>
+        <span className="min-w-0 flex-1 truncate text-[15px]">
+          <span className="text-foreground">Your MCP here</span>
+          <span className="text-muted-foreground"> · Reach people looking for MCP servers. ${SPONSOR_MONTHLY_PRICE}/mo</span>
         </span>
-        <span className="rounded border border-border px-1.5 py-px font-mono text-[10px] uppercase tracking-wide text-muted-foreground">
+        <span className="shrink-0 rounded-[6px] border border-border px-2 py-0.5 font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
           Sponsored
         </span>
       </button>
+    </li>
+  );
+}
 
+/**
+ * The homepage "MCP launches" tab, laid out like DevHunt's list: one line per launch
+ * ("Name · pitch"), today's upvotes, the upvote count, and sponsored rows in between.
+ * Ranked like every launch list (paid "Promoted" launches first, then upvotes).
+ */
+export default function HomeMcpLaunches({
+  projects,
+  upvotesToday = {},
+  limit = 25,
+}: {
+  projects: ShowcaseProject[];
+  upvotesToday?: Record<string, number>;
+  limit?: number;
+}) {
+  const shown = projects.slice(0, limit);
+  return (
+    <div>
       {shown.length > 0 ? (
-        <ol>
-          {shown.map((project, index) => (
-            <li
-              key={project.id}
-              data-launch-impression={project.id}
-              data-surface="home_mcp_tab"
-              className="border-b border-border/70"
-            >
-              <Link
-                href={`/launches/${encodeURIComponent(project.id)}`}
-                className="group grid grid-cols-[2rem_2.25rem_minmax(0,1fr)_auto] items-center gap-3 py-3.5 sm:grid-cols-[3rem_2.25rem_minmax(0,1fr)_auto]"
-              >
-                <span className={`font-mono text-[13px] ${index < 3 ? "text-primary" : "text-muted-foreground"}`}>{index + 1}</span>
-                <span className="[&>span]:h-9 [&>span]:w-9 [&>span]:rounded-md">
-                  <LaunchLogo project={project} />
-                </span>
-                <span className="min-w-0">
-                  <span className="flex items-center gap-2">
-                    <span className="truncate text-[15px] text-foreground transition-colors group-hover:text-primary">{project.title}</span>
-                    {project.promoted && (
-                      <span className="shrink-0 rounded border border-primary/40 px-1.5 py-px font-mono text-[10px] uppercase tracking-wide text-primary">
-                        Promoted
+        <ol className="divide-y divide-border/70">
+          {shown.map((project, index) => {
+            const today = upvotesToday[project.id] ?? 0;
+            return (
+              <Fragment key={project.id}>
+                <li data-launch-impression={project.id} data-surface="home_mcp_tab">
+                  <Link href={`/launches/${encodeURIComponent(project.id)}`} className="group flex items-center gap-4 py-3.5">
+                    <span className={`hidden w-6 shrink-0 font-mono text-[13px] tabular-nums sm:block ${index < 3 ? "text-primary" : "text-muted-foreground"}`}>
+                      {index + 1}
+                    </span>
+                    <span className="[&>span]:h-10 [&>span]:w-10">
+                      <LaunchLogo project={project} />
+                    </span>
+                    <span className="flex min-w-0 flex-1 items-center gap-2">
+                      <span className="min-w-0 truncate text-[15px]">
+                        <span className="text-foreground transition-colors group-hover:text-primary">{project.title}</span>
+                        <span className="text-muted-foreground"> · {pitch(project)}</span>
                       </span>
+                      {project.promoted && (
+                        <span className="shrink-0 rounded-[4px] border border-primary/40 px-1.5 py-px font-mono text-[10px] uppercase tracking-[0.1em] text-primary">
+                          Promoted
+                        </span>
+                      )}
+                    </span>
+                    {today > 0 && (
+                      <span className="hidden shrink-0 font-mono text-[12px] text-green-600 sm:inline dark:text-green-400">▲ +{today} today</span>
                     )}
-                  </span>
-                  <span className="mt-0.5 block truncate text-[13px] text-muted-foreground">{pitch(project)}</span>
-                </span>
-                <UpvotePill count={project.upvotes ?? 0} />
-              </Link>
-            </li>
-          ))}
+                    <UpvotePill count={project.upvotes ?? 0} />
+                  </Link>
+                </li>
+                {sponsorAfter(index, shown.length) && <SponsorRow />}
+              </Fragment>
+            );
+          })}
         </ol>
       ) : (
-        <p className="py-12 text-center text-sm text-muted-foreground">No MCP launches yet. Be the first.</p>
+        <ol>
+          <SponsorRow />
+          <li className="py-12 text-center text-sm text-muted-foreground">No MCP launches yet. Be the first.</li>
+        </ol>
       )}
 
       <div className="mt-6 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm">
