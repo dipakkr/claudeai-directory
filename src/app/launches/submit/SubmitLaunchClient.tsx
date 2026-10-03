@@ -1139,10 +1139,9 @@ export default function SubmitLaunchClient() {
                           className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-[12px] bg-primary text-[15px] font-medium text-primary-foreground transition-opacity hover:opacity-90 disabled:opacity-60"
                         >
                           {submit.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
-                          {submit.isPending ? "Saving..." : anyUploading ? "Uploading..." : "Continue to badge"}
-                          {!submit.isPending && <ArrowRight className="h-4 w-4" />}
+                          {submit.isPending ? "Submitting..." : anyUploading ? "Uploading..." : "Submit"}
                         </button>
-                        <p className="text-center text-xs text-muted-foreground">Nothing is public until the badge is verified. Add the story, video, platforms and links any time from Edit.</p>
+                        <p className="text-center font-mono text-xs text-muted-foreground">you can edit everything later</p>
                       </div>
                     </form>
                   )}
