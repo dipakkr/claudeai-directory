@@ -16,6 +16,8 @@ export interface Pulse {
   stats: {
     members: { total: number; today: number };
     visitors_24h?: number;
+    visitors_7d?: number;
+    views?: { week: number; today: number };
     launches: { total: number; week: number };
     listings: { total: number };
     installs: { total: number; today: number };
@@ -73,9 +75,10 @@ export function HomePulse({ pulse }: { pulse: Pulse }) {
   return (
     <div className="mx-auto mt-8 max-w-[760px] overflow-hidden rounded-[10px] border border-border">
       <div className="grid grid-cols-2 gap-px bg-border sm:grid-cols-4">
-        <Stat label="visitors_24h" value={s.visitors_24h ?? 0} />
+        {/* Show that people are here and active: who visits, what they open, what gets launched. */}
+        <Stat label="visitors_7d" value={s.visitors_7d ?? s.visitors_24h ?? 0} delta={s.visitors_24h ? `${s.visitors_24h} in 24h` : undefined} />
+        <Stat label="page_views_7d" value={s.views?.week ?? 0} delta={s.views?.today ? `+${s.views.today} in 24h` : undefined} />
         <Stat label="apps_launched" value={s.launches.total} delta={s.launches.week ? `+${s.launches.week} this week` : undefined} />
-        <Stat label="listings" value={s.listings.total} />
         <Stat label="install_actions" value={s.installs.total} delta={s.installs.today ? `+${s.installs.today} today` : undefined} />
       </div>
       {e && (
