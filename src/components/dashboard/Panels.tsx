@@ -166,7 +166,7 @@ export function LaunchRows({ apps, loading }: { apps: ShowcaseProject[]; loading
               <div className="flex w-full flex-col gap-2 rounded-[8px] border border-primary/25 bg-primary/[0.05] px-3 py-2.5 sm:ml-14 sm:w-[calc(100%-3.5rem)] sm:flex-row sm:items-center sm:gap-3">
                 <span className="w-fit shrink-0 rounded-[4px] border border-border bg-background px-1.5 py-px font-mono text-[11px] text-muted-foreground">nofollow</span>
                 <p className="min-w-0 flex-1 text-[13px] leading-5 text-muted-foreground">
-                  Your website link is nofollow and your launch is listed below launches with our badge. Add the badge to your site to get a dofollow link and rank with them. Free.
+                  Your link is nofollow, and launches with our badge rank above yours. Add the badge to your site to fix both. It&apos;s free.
                 </p>
                 <Link
                   href={`/launches/submit?finish=${encodeURIComponent(app.id)}`}
