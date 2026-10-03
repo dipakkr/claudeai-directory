@@ -73,6 +73,7 @@ const EMPTY_FORM = {
   feedback_prompt: "",
   maker_comment: "",
   share_to_feed: true,
+  built_with_claude: "",
 };
 
 type Form = typeof EMPTY_FORM;
@@ -784,6 +785,7 @@ export default function SubmitLaunchClient({ finishSlug }: { finishSlug?: string
         feedback_prompt: form.feedback_prompt.trim() || undefined,
         maker_comment: form.maker_comment.trim(),
         share_to_feed: form.share_to_feed,
+        built_with_claude: form.built_with_claude.trim() || undefined,
         gallery_images: [...media.screenshot, ...splitList(form.images, /\s*\n\s*/).filter(isValidUrl)].slice(0, 8),
         logo_url: media.logo[0],
         video_url: media.video[0],
@@ -1045,6 +1047,23 @@ export default function SubmitLaunchClient({ finishSlug }: { finishSlug?: string
                               </span>
                             </span>
                           </label>
+                        </FormSection>
+
+                        <FormSection n="04" title="How did you use Claude to build it?">
+                          <Field label="Optional" htmlFor="built_with_claude" hint={`${form.built_with_claude.length}/2000`}>
+                            <p className="text-xs leading-5 text-muted-foreground">
+                              Claude Code, the API, Skills, MCP servers, prompts that worked. Builders love this part.
+                            </p>
+                            <textarea
+                              id="built_with_claude"
+                              value={form.built_with_claude}
+                              onChange={(e) => set("built_with_claude", e.target.value)}
+                              maxLength={2000}
+                              rows={4}
+                              placeholder="e.g. Built the backend with Claude Code, used the Claude API for summaries, and an MCP server to read our docs."
+                              className={textareaClass}
+                            />
+                          </Field>
                         </FormSection>
                       </div>
 

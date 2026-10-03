@@ -235,6 +235,8 @@ export interface ShowcaseProject {
   category?: string;
   /** What it is for, from TOPICS. */
   topic?: string | null;
+  /** Optional: how the maker used Claude to build it. Markdown. */
+  built_with_claude?: string | null;
   tech_stack: string[];
   skills_used: string[];
   use_cases?: string[];

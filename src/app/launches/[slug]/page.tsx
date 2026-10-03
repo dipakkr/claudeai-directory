@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import Link from "next/link";
 import { launchTheme } from "@/lib/launch-theme";
+import UserMarkdown from "@/components/shared/UserMarkdown";
 import type { Pulse } from "@/components/home/HomePulse";
 import { notFound, permanentRedirect } from "next/navigation";
 import {
@@ -341,6 +342,14 @@ export default async function LaunchDetailPage({
                 </div>
               </LaunchSection>
             )}
+
+          {project.built_with_claude?.trim() && (
+            <LaunchSection id="built-with-claude" title="How it was built with Claude">
+              <div className="text-[15px] leading-7 text-foreground/85">
+                <UserMarkdown compact>{project.built_with_claude}</UserMarkdown>
+              </div>
+            </LaunchSection>
+          )}
 
           <GalleryCarousel images={galleryImages} title={project.title} />
 

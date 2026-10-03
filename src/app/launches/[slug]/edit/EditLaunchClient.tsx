@@ -155,6 +155,7 @@ function EditForm({ app }: { app: ShowcaseProject }) {
   const [githubUrl, setGithubUrl] = useState(app.github_url ?? "");
   const [youtube, setYoutube] = useState(app.demo_video_url ?? "");
   const [feedback, setFeedback] = useState(app.feedback_prompt ?? "");
+  const [builtWith, setBuiltWith] = useState(app.built_with_claude ?? "");
 
   // Media: what is already saved, plus new uploads and pasted links.
   const [logo] = useState<string[]>(app.logo_url ? [app.logo_url] : []);
@@ -238,6 +239,7 @@ function EditForm({ app }: { app: ShowcaseProject }) {
         github_url: githubUrl.trim(),
         demo_video_url: youtube.trim(),
         feedback_prompt: feedback.trim(),
+        built_with_claude: builtWith.trim(),
         gallery_images: gallery,
         logo_url: logoUrl,
         video_url: videoUrl,
@@ -422,6 +424,18 @@ function EditForm({ app }: { app: ShowcaseProject }) {
             <div>
               <Label text="Use cases" htmlFor="use_cases" hint="One per line" />
               <textarea id="use_cases" rows={3} value={useCases} onChange={(e) => setUseCases(e.target.value)} className={textareaClass} />
+            </div>
+            <div>
+              <Label text="How did you use Claude to build it?" htmlFor="built_with_claude" hint={`${builtWith.length}/2000`} />
+              <textarea
+                id="built_with_claude"
+                rows={4}
+                maxLength={2000}
+                value={builtWith}
+                onChange={(e) => setBuiltWith(e.target.value)}
+                placeholder="e.g. Built the backend with Claude Code, used the Claude API for summaries, and an MCP server to read our docs."
+                className={textareaClass}
+              />
             </div>
           </>
         )}
