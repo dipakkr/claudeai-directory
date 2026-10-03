@@ -5,7 +5,7 @@ import Link from "next/link";
 import { ArrowRight, Megaphone } from "lucide-react";
 import { LaunchLineRow } from "@/components/launches/LaunchListRow";
 import { UpvotePill } from "@/components/launches/UpvotePill";
-import { SPONSOR_MONTHLY_PRICE, openAdvertiseDialog } from "@/lib/advertise";
+import { SPONSOR_LAUNCH_PRICE, openAdvertiseDialog } from "@/lib/advertise";
 import { track } from "@/lib/analytics";
 import type { ShowcaseProject } from "@/types";
 
@@ -20,7 +20,7 @@ function SponsorRow() {
         type="button"
         onClick={() => {
           track("ad_slot_clicked", { slot: "home_mcp_launches" });
-          openAdvertiseDialog(undefined, "sidebar");
+          openAdvertiseDialog(undefined, "launch");
         }}
         className="flex w-full items-center gap-4 rounded-[10px] border border-primary/40 bg-primary/[0.04] px-3 py-3 text-left transition-colors hover:border-primary/70 sm:-mx-3 sm:w-[calc(100%+1.5rem)]"
       >
@@ -30,7 +30,7 @@ function SponsorRow() {
         </span>
         <span className="min-w-0 flex-1 truncate text-[15px]">
           <span className="text-foreground">Your MCP here</span>
-          <span className="text-muted-foreground"> · Reach people looking for MCP servers. ${SPONSOR_MONTHLY_PRICE}/mo</span>
+          <span className="text-muted-foreground"> · Reach people looking for MCP servers. ${SPONSOR_LAUNCH_PRICE}/mo</span>
         </span>
         <span className="shrink-0 rounded-[6px] border border-border px-2 py-0.5 font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
           Sponsored
