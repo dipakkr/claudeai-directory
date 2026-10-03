@@ -14,7 +14,7 @@ const pitch = (p: ShowcaseProject) => p.tagline?.trim() || p.description.trim();
  * The homepage "MCP launches" tab: an open sponsor row on top, then MCP servers launched
  * by members, ranked like every launch list (paid "Promoted" launches first, then upvotes).
  */
-export default function HomeMcpLaunches({ projects, limit = 8 }: { projects: ShowcaseProject[]; limit?: number }) {
+export default function HomeMcpLaunches({ projects, limit = 25 }: { projects: ShowcaseProject[]; limit?: number }) {
   const shown = projects.slice(0, limit);
   return (
     <div>

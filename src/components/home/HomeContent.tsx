@@ -67,7 +67,7 @@ export default function HomeContent({ items, orders, launches, community, member
       </section>
 
       <section className="mx-auto max-w-[840px] px-4 md:px-8">
-        <DirectoryList items={items} orders={orders} showTypeFilter hideSearch feedId="trending" pageSize={8}
+        <DirectoryList items={items} orders={orders} showTypeFilter hideSearch feedId="trending" pageSize={25}
           extraTab={mcpLaunches ? { label: "MCP launches", count: mcpLaunches.count, content: mcpLaunches.content } : undefined}
         />
       </section>
