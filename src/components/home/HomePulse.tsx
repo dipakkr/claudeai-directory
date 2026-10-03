@@ -4,8 +4,10 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 
 export interface PulseEvent {
-  type: "joined" | "launched" | "posted" | "upvoted" | "installed";
+  type: "joined" | "launched" | "posted" | "upvoted" | "installed" | "viewed" | "browsing" | "copied";
   who: string;
+  /** Where an anonymous visitor is, from the analytics (city may be missing). */
+  place?: { city: string | null; country: string | null } | null;
   what: string | null;
   href: string;
   at: string;
@@ -34,7 +36,25 @@ const VERB: Record<PulseEvent["type"], string> = {
   posted: "posted",
   upvoted: "upvoted",
   installed: "copied the install command for",
+  copied: "copied the install command for",
+  viewed: "opened",
+  browsing: "is browsing",
 };
+
+let countryNames: Intl.DisplayNames | null = null;
+/** "Someone in Toronto, Canada" / "Someone in Australia" / "Someone". */
+function whoWithPlace(e: PulseEvent) {
+  const { city, country } = e.place ?? {};
+  let name = country ?? "";
+  try {
+    countryNames ??= new Intl.DisplayNames(["en"], { type: "region" });
+    if (country) name = countryNames.of(country) ?? country;
+  } catch {
+    // Older browsers: keep the code.
+  }
+  const where = [city, name].filter(Boolean).join(", ");
+  return where ? `${e.who} in ${where}` : e.who;
+}
 
 const clean = (s: string) => s.replace(/\s+[—–]\s+/g, ": ");
 
@@ -86,7 +106,7 @@ export function HomePulse({ pulse }: { pulse: Pulse }) {
         <div className="flex items-center gap-2 border-t border-border bg-card px-4 py-2.5 text-left font-mono text-[12.5px]" aria-live="polite">
           <span className="text-primary">&gt;</span>
           <Link key={index} href={e.href} className="min-w-0 flex-1 truncate text-muted-foreground animate-fade-in hover:text-foreground">
-            <span className="text-foreground">{e.who}</span> {VERB[e.type]}
+            <span className="text-foreground">{whoWithPlace(e)}</span> {VERB[e.type]}
             {e.what && <span className="text-primary"> {clean(e.what)}</span>}
             <span className="text-muted-foreground/60"> · {ago(e.at, now)}</span>
           </Link>
