@@ -79,7 +79,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { track } from "@/lib/analytics";
-import { SPONSOR_MONTHLY_PRICE, openAdvertiseDialog } from "@/lib/advertise";
+import { openAdvertiseDialog } from "@/lib/advertise";
 import type { DirectoryItem, DirectoryType, SortKey } from "@/lib/directory";
 import { cn } from "@/lib/utils";
 
@@ -356,7 +356,7 @@ function CollectionCarousel({
   collections: Collection[];
   noun: string;
   onExplore: (category: string) => void;
-  /** Show "Get your MCP featured" in the corner (the $249/mo sidebar slot). */
+  /** Show "Get your MCP featured" in the corner (opens the sponsor dialog). */
   advertise?: boolean;
 }) {
   const [index, setIndex] = useState(0);
@@ -377,7 +377,6 @@ function CollectionCarousel({
           >
             <Sparkles className="h-3.5 w-3.5" />
             Get your MCP featured
-            <span className="text-foreground/55">· ${SPONSOR_MONTHLY_PRICE}/mo</span>
           </button>
         )}
         <p className="text-[12px] uppercase tracking-[0.08em] text-foreground/60">Collection · {current.count} {noun}</p>
