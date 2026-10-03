@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowUp, Bell, Bookmark, MessageSquare, Package, Rocket } from "lucide-react";
+import { Bell, Bookmark, MessageSquare, Package, Rocket } from "lucide-react";
 import type { ReactNode } from "react";
 import { useQuery } from "@tanstack/react-query";
 
@@ -28,7 +28,7 @@ export function PanelHeader({ title, description, action }: { title: string; des
   return (
     <div className="mb-5 flex flex-wrap items-end justify-between gap-3">
       <div>
-        <h2 className="text-xl font-semibold text-foreground">{title}</h2>
+        <h2 className="font-sans text-lg font-semibold tracking-tight text-foreground">{title}</h2>
         {description && <p className="mt-1 text-sm text-muted-foreground">{description}</p>}
       </div>
       {action}
@@ -59,7 +59,7 @@ export function EmptyState({
   action?: ReactNode;
 }) {
   return (
-    <div className="flex flex-col items-center rounded-2xl border border-dashed border-border px-6 py-14 text-center">
+    <div className="flex flex-col items-center rounded-[10px] border border-dashed border-border px-6 py-14 text-center">
       <span className="flex h-11 w-11 items-center justify-center rounded-full bg-primary/10 text-primary">
         <Icon className="h-5 w-5" />
       </span>
@@ -77,14 +77,15 @@ function StatusPill({ tone, children }: { tone: "live" | "wait" | "bad" | "muted
     bad: "border-destructive/30 bg-destructive/10 text-destructive",
     muted: "border-border text-muted-foreground",
   };
-  return <span className={`inline-flex rounded-full border px-2 py-0.5 text-[11px] font-medium ${tones[tone]}`}>{children}</span>;
+  return <span className={`inline-flex shrink-0 rounded-[4px] border px-1.5 py-px font-mono text-[10px] uppercase tracking-[0.08em] ${tones[tone]}`}>{children}</span>;
 }
 
-const listClass = "divide-y divide-border overflow-hidden rounded-2xl border border-border bg-card";
+const listClass = "divide-y divide-border overflow-hidden rounded-[10px] border border-border bg-card";
 
 /* ---------- launches ---------- */
 
-export function LaunchesPanel({ apps, loading }: { apps: ShowcaseProject[]; loading: boolean }) {
+/** One row per launch: logo, name and status, the numbers, then what to do next. */
+export function LaunchRows({ apps, loading }: { apps: ShowcaseProject[]; loading: boolean }) {
   // All-time impressions and website clicks per launch.
   const { data: metrics } = useQuery({
     queryKey: ["launch-metrics", "mine"],
@@ -92,83 +93,78 @@ export function LaunchesPanel({ apps, loading }: { apps: ShowcaseProject[]; load
     enabled: apps.length > 0,
     staleTime: 60_000,
   });
+  if (loading) return <SkeletonRows />;
+  if (apps.length === 0) {
+    return (
+      <EmptyState
+        icon={Rocket}
+        title="No launches yet"
+        body="Launch what you built with Claude to get a public page, upvotes and feedback from builders."
+        action={<PrimaryAction href="/launches/submit">Launch your first app</PrimaryAction>}
+      />
+    );
+  }
+  const num = (n?: number) => (n ?? 0).toLocaleString("en-US");
+  return (
+    <ul className={listClass}>
+      {apps.map((app) => {
+        const logo = app.logo_url || faviconFor(app.app_url || app.demo_url);
+        const rejected = app.status === "rejected";
+        const live = app.badge_verified || app.paid_listing;
+        return (
+          <li key={app.id} className="flex flex-wrap items-center gap-x-4 gap-y-3 px-4 py-4">
+            <span className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-[10px] border border-border bg-background text-sm font-semibold text-muted-foreground">
+              {logo ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={logo} alt="" className="h-full w-full object-cover" referrerPolicy="no-referrer" />
+              ) : (
+                app.title.slice(0, 1).toUpperCase()
+              )}
+            </span>
+            <div className="min-w-0 flex-1">
+              <div className="flex min-w-0 items-center gap-2">
+                <Link href={live ? `/launches/${app.id}` : `/launches/${app.id}/edit`} className="truncate font-sans text-[15px] font-medium text-foreground hover:underline">
+                  {app.title}
+                </Link>
+                {live ? <StatusPill tone="live">Live</StatusPill> : rejected ? <StatusPill tone="bad">Not approved</StatusPill> : <StatusPill tone="wait">Waiting for badge</StatusPill>}
+              </div>
+              <p className="mt-1 truncate font-mono text-[12px] tabular-nums text-muted-foreground">
+                {live
+                  ? `${num(app.upvotes)} upvotes · ${num(metrics?.[app.id]?.impressions)} impressions · ${num(app.views)} views · ${num(metrics?.[app.id]?.clicks)} clicks`
+                  : rejected
+                    ? "Edit it and resubmit, or contact us"
+                    : "Add the badge to your site to go live"}
+              </p>
+            </div>
+            <div className="flex w-full items-center gap-4 pl-14 text-sm sm:w-auto sm:pl-0">
+              <Link href={`/launches/${app.id}/edit`} className="text-muted-foreground hover:text-foreground">Edit</Link>
+              {live && <Link href={`/launches/${app.id}/analytics`} className="text-muted-foreground hover:text-foreground">Analytics</Link>}
+              {live ? (
+                <Link href={`/launches/${app.id}`} className="inline-flex h-8 items-center rounded-full border border-border px-3.5 text-foreground hover:border-[var(--cad-line-hover)]">
+                  View
+                </Link>
+              ) : !rejected ? (
+                <Link href="/launches/submit" className="inline-flex h-8 items-center rounded-full bg-primary px-3.5 font-medium text-primary-foreground hover:opacity-90">
+                  Add badge
+                </Link>
+              ) : null}
+            </div>
+          </li>
+        );
+      })}
+    </ul>
+  );
+}
+
+export function LaunchesPanel({ apps, loading }: { apps: ShowcaseProject[]; loading: boolean }) {
   return (
     <section>
       <PanelHeader
         title="Your launches"
-        description="Apps you launched. They go public once the badge is verified."
-        action={<PrimaryAction href="/launches/submit"><Rocket className="h-4 w-4" />Launch an app</PrimaryAction>}
+        description="They go public once the badge is on your site, or right away with a featured launch."
+        action={apps.length > 0 ? <PrimaryAction href="/launches/submit"><Rocket className="h-4 w-4" />Launch an app</PrimaryAction> : undefined}
       />
-      {loading ? (
-        <SkeletonRows />
-      ) : apps.length === 0 ? (
-        <EmptyState
-          icon={Rocket}
-          title="No launches yet"
-          body="Launch what you built with Claude to get a public page, upvotes and feedback from builders."
-          action={<PrimaryAction href="/launches/submit">Launch your first app</PrimaryAction>}
-        />
-      ) : (
-        <ul className={listClass}>
-          {apps.map((app) => {
-            const logo = app.logo_url || faviconFor(app.app_url || app.demo_url);
-            const rejected = app.status === "rejected";
-            return (
-              <li key={app.id} className="flex items-center gap-4 p-4">
-                <span className="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-border bg-background text-sm font-semibold text-muted-foreground">
-                  {logo ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img src={logo} alt="" className="h-full w-full object-cover" referrerPolicy="no-referrer" />
-                  ) : (
-                    app.title.slice(0, 1).toUpperCase()
-                  )}
-                </span>
-                <div className="min-w-0 flex-1">
-                  <div className="flex flex-wrap items-center gap-2">
-                    <p className="truncate text-sm font-semibold text-foreground">{app.title}</p>
-                    {app.badge_verified ? (
-                      <StatusPill tone="live">Live</StatusPill>
-                    ) : rejected ? (
-                      <StatusPill tone="bad">Not approved</StatusPill>
-                    ) : (
-                      <StatusPill tone="wait">Waiting for badge</StatusPill>
-                    )}
-                  </div>
-                  <p className="mt-0.5 truncate text-xs text-muted-foreground">
-                    {app.tagline || app.category || "Launch"} · {timeAgo(app.listed_at || app.created_at)}
-                  </p>
-                  <p className="mt-1 flex flex-wrap gap-x-3 text-xs tabular-nums text-muted-foreground">
-                    <span>{(metrics?.[app.id]?.impressions ?? 0).toLocaleString("en-US")} impressions</span>
-                    <span>{(app.views ?? 0).toLocaleString("en-US")} views</span>
-                    <span>{(metrics?.[app.id]?.clicks ?? 0).toLocaleString("en-US")} website clicks</span>
-                  </p>
-                </div>
-                {app.badge_verified && (
-                  <span className="hidden items-center gap-1 text-sm font-medium tabular-nums text-foreground sm:inline-flex" title="Upvotes">
-                    <ArrowUp className="h-3.5 w-3.5" />
-                    {app.upvotes ?? 0}
-                  </span>
-                )}
-                <Link href={`/launches/${app.id}/analytics`} className="shrink-0 text-sm text-muted-foreground hover:text-foreground">
-                  Analytics
-                </Link>
-                <Link href={`/launches/${app.id}/edit`} className="shrink-0 text-sm text-muted-foreground hover:text-foreground">
-                  Edit
-                </Link>
-                {app.badge_verified ? (
-                  <Link href={`/launches/${app.id}`} className="shrink-0 text-sm font-medium text-foreground hover:text-primary">
-                    View
-                  </Link>
-                ) : !rejected ? (
-                  <Link href="/launches/submit" className="shrink-0 rounded-full border border-border px-3 py-1 text-xs font-medium text-foreground hover:border-primary/50">
-                    Add badge
-                  </Link>
-                ) : null}
-              </li>
-            );
-          })}
-        </ul>
-      )}
+      <LaunchRows apps={apps} loading={loading} />
     </section>
   );
 }
@@ -302,7 +298,7 @@ export function SavedPanel({ items, loading }: { items: SavedItem[]; loading: bo
             <li key={item.id}>
               <Link
                 href={item.href}
-                className="flex h-full flex-col rounded-2xl border border-border bg-card p-4 transition-colors hover:border-[var(--cad-line-hover)]"
+                className="flex h-full flex-col rounded-[10px] border border-border bg-card p-4 transition-colors hover:border-[var(--cad-line-hover)]"
               >
                 <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground">{item.type_label}</span>
                 <span className="mt-1.5 text-sm font-semibold text-foreground">{item.title}</span>
@@ -378,7 +374,7 @@ export function SkeletonRows() {
   return (
     <div className="space-y-2">
       {[0, 1, 2].map((i) => (
-        <div key={i} className="h-16 animate-pulse rounded-2xl border border-border bg-card" />
+        <div key={i} className="h-16 animate-pulse rounded-[10px] border border-border bg-card" />
       ))}
     </div>
   );

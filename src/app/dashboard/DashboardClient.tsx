@@ -3,18 +3,7 @@
 import { useEffect } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import {
-  ArrowRight,
-  ArrowUp,
-  Bell,
-  Bookmark,
-  LayoutDashboard,
-  MessageSquare,
-  Package,
-  Rocket,
-  Settings,
-  Twitter,
-} from "lucide-react";
+import { ArrowRight, ArrowUpRight, MessageSquare, Package, Rocket } from "lucide-react";
 import type { ReactNode } from "react";
 
 import Header from "@/components/layout/Header";
@@ -22,10 +11,10 @@ import Footer from "@/components/layout/Footer";
 import {
   DiscussionsPanel,
   LaunchesPanel,
+  LaunchRows,
   NotificationsPanel,
   SavedPanel,
   SubmissionsPanel,
-  timeAgo,
 } from "@/components/dashboard/Panels";
 import { SettingsPanel } from "@/components/dashboard/SettingsPanel";
 import { useAuth } from "@/lib/auth";
@@ -36,13 +25,13 @@ import { useMarkNotificationsRead, useNotifications } from "@/hooks/use-notifica
 import type { User } from "@/types";
 
 const TABS = [
-  { id: "overview", label: "Overview", icon: LayoutDashboard },
-  { id: "launches", label: "Launches", icon: Rocket },
-  { id: "submissions", label: "Submissions", icon: Package },
-  { id: "discussions", label: "Posts", icon: MessageSquare },
-  { id: "saved", label: "Saved", icon: Bookmark },
-  { id: "notifications", label: "Notifications", icon: Bell },
-  { id: "settings", label: "Settings", icon: Settings },
+  { id: "overview", label: "Overview" },
+  { id: "launches", label: "Launches" },
+  { id: "submissions", label: "Resources" },
+  { id: "discussions", label: "Posts" },
+  { id: "saved", label: "Saved" },
+  { id: "notifications", label: "Notifications" },
+  { id: "settings", label: "Settings" },
 ] as const;
 
 type TabId = (typeof TABS)[number]["id"];
@@ -54,29 +43,23 @@ function roleLabel(user: User) {
 
 /* ---------- overview pieces ---------- */
 
-function StatTile({ label, value, sub, href }: { label: string; value: number | string; sub?: string; href: string }) {
+/** Quiet mono label with a rule, like the launch pages. */
+function SectionLabel({ title, action }: { title: string; action?: ReactNode }) {
   return (
-    <Link href={href} className="group rounded-2xl border border-border bg-card p-4 transition-colors hover:border-[var(--cad-line-hover)]">
-      <p className="text-xs text-muted-foreground">{label}</p>
-      <p className="mt-2 text-2xl font-semibold tabular-nums text-foreground">{value}</p>
-      {sub && <p className="mt-1 text-xs text-muted-foreground">{sub}</p>}
-    </Link>
+    <div className="mb-3 flex items-center gap-3">
+      <h2 className="shrink-0 font-mono text-[11px] font-medium uppercase tracking-[0.16em] text-foreground">{title}</h2>
+      <span className="h-px flex-1 bg-border" aria-hidden="true" />
+      {action}
+    </div>
   );
 }
 
-function ActionCard({ href, icon: Icon, title, body }: { href: string; icon: typeof Rocket; title: string; body: string }) {
+function Stat({ label, value, sub, href }: { label: string; value: number | string; sub?: string; href: string }) {
   return (
-    <Link href={href} className="group flex gap-3 rounded-2xl border border-border bg-card p-4 transition-colors hover:border-[var(--cad-line-hover)]">
-      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
-        <Icon className="h-4 w-4" />
-      </span>
-      <span className="min-w-0">
-        <span className="flex items-center gap-1 text-sm font-medium text-foreground">
-          {title}
-          <ArrowRight className="h-3.5 w-3.5 opacity-0 transition-opacity group-hover:opacity-100" />
-        </span>
-        <span className="mt-0.5 block text-xs leading-5 text-muted-foreground">{body}</span>
-      </span>
+    <Link href={href} className="bg-card px-4 py-3.5 transition-colors hover:bg-background">
+      <p className="font-mono text-[11px] text-muted-foreground">{label}</p>
+      <p className="mt-1 font-mono text-[20px] font-medium tabular-nums text-foreground">{typeof value === "number" ? value.toLocaleString("en-US") : value}</p>
+      {sub && <p className="mt-0.5 truncate text-[11px] text-muted-foreground">{sub}</p>}
     </Link>
   );
 }
@@ -84,55 +67,54 @@ function ActionCard({ href, icon: Icon, title, body }: { href: string; icon: typ
 function Attention({ items }: { items: { key: string; text: ReactNode; href: string; cta: string }[] }) {
   if (!items.length) return null;
   return (
-    <section className="rounded-2xl border border-primary/25 bg-primary/[0.06] p-4">
-      <p className="text-sm font-semibold text-foreground">Needs your attention</p>
-      <ul className="mt-2 divide-y divide-primary/15">
-        {items.map((item) => (
-          <li key={item.key} className="flex items-center justify-between gap-3 py-2.5 text-sm">
-            <span className="text-foreground/85">{item.text}</span>
-            <Link href={item.href} className="shrink-0 font-medium text-primary hover:underline">
-              {item.cta}
-            </Link>
-          </li>
-        ))}
-      </ul>
-    </section>
+    <ul className="divide-y divide-primary/15 rounded-[10px] border border-primary/25 bg-primary/[0.05]">
+      {items.map((item) => (
+        <li key={item.key} className="flex items-center gap-3 px-4 py-3 text-sm">
+          <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true" />
+          <span className="min-w-0 flex-1 text-foreground/90">{item.text}</span>
+          <Link href={item.href} className="inline-flex shrink-0 items-center gap-1 font-medium text-primary hover:underline">
+            {item.cta}
+            <ArrowRight className="h-3.5 w-3.5" />
+          </Link>
+        </li>
+      ))}
+    </ul>
   );
 }
 
-function ProfileStrength({ user }: { user: User }) {
+/** One line: what is missing from the profile, and a link to fix it. */
+function ProfileNudge({ user }: { user: User }) {
   const checks = [
-    { done: !!user.avatar, label: "Photo" },
-    { done: !!user.bio, label: "One-line intro" },
-    { done: !!user.profession, label: "Role" },
-    { done: !!user.country, label: "Country" },
-    { done: !!(user.twitter || user.github || user.linkedin || user.website), label: "A link" },
+    { done: !!user.avatar, label: "photo" },
+    { done: !!user.bio, label: "intro" },
+    { done: !!user.profession, label: "role" },
+    { done: !!user.country, label: "country" },
+    { done: !!(user.twitter || user.github || user.linkedin || user.website), label: "a link" },
   ];
-  const done = checks.filter((c) => c.done).length;
-  const percent = Math.round((done / checks.length) * 100);
-  if (percent === 100) return null;
+  const missing = checks.filter((c) => !c.done).map((c) => c.label);
+  if (!missing.length) return null;
+  const percent = Math.round(((checks.length - missing.length) / checks.length) * 100);
   return (
-    <section className="rounded-2xl border border-border bg-card p-4">
-      <div className="flex items-center justify-between">
-        <p className="text-sm font-semibold text-foreground">Complete your profile</p>
-        <span className="text-xs tabular-nums text-muted-foreground">{percent}%</span>
-      </div>
-      <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-border">
-        <div className="h-full rounded-full bg-primary" style={{ width: `${percent}%` }} />
-      </div>
-      <ul className="mt-3 flex flex-wrap gap-x-4 gap-y-1.5 text-xs">
-        {checks.map((c) => (
-          <li key={c.label} className={c.done ? "text-muted-foreground line-through" : "text-foreground"}>
-            {c.label}
-          </li>
-        ))}
-      </ul>
-      <Link href="/dashboard?tab=settings" className="mt-3 inline-block text-sm font-medium text-primary hover:underline">
-        Finish profile
-      </Link>
-    </section>
+    <Link
+      href="/dashboard?tab=settings"
+      className="group flex items-center gap-4 rounded-[10px] border border-border bg-card px-4 py-3 transition-colors hover:border-[var(--cad-line-hover)]"
+    >
+      <span className="relative h-1.5 w-20 shrink-0 overflow-hidden rounded-full bg-border">
+        <span className="absolute inset-y-0 left-0 rounded-full bg-primary" style={{ width: `${percent}%` }} />
+      </span>
+      <span className="min-w-0 flex-1 truncate text-sm text-muted-foreground">
+        <span className="text-foreground">Profile {percent}% done.</span> Add your {missing.join(", ")}.
+      </span>
+      <ArrowRight className="h-3.5 w-3.5 shrink-0 text-muted-foreground transition-colors group-hover:text-foreground" />
+    </Link>
   );
 }
+
+const QUICK_ACTIONS = [
+  { href: "/launches/submit", icon: Rocket, label: "Launch an app" },
+  { href: "/submit", icon: Package, label: "Submit a resource" },
+  { href: "/feed#compose", icon: MessageSquare, label: "Write a post" },
+] as const;
 
 /* ---------- page ---------- */
 
@@ -195,150 +177,132 @@ export default function DashboardClient() {
     <div className="flex min-h-screen flex-col bg-background">
       <Header />
       <main className="flex-1 pb-16">
-        <div className="mx-auto max-w-[1120px] px-4 pt-8 md:px-8 md:pt-10">
-          {/* Profile header */}
-          <header className="flex flex-wrap items-center gap-4 border-b border-border pb-6">
+        <div className="mx-auto max-w-[880px] px-4 pt-8 md:px-8 md:pt-12">
+          {/* Who you are, in one line. */}
+          <header className="flex items-center gap-4">
             {user.avatar ? (
               // eslint-disable-next-line @next/next/no-img-element
-              <img src={user.avatar} alt="" referrerPolicy="no-referrer" className="h-16 w-16 rounded-full border border-border object-cover" />
+              <img src={user.avatar} alt="" referrerPolicy="no-referrer" className="h-12 w-12 shrink-0 rounded-full border border-border object-cover" />
             ) : (
-              <span className="flex h-16 w-16 items-center justify-center rounded-full border border-border bg-card text-xl font-semibold text-muted-foreground">
+              <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-border bg-card text-lg font-semibold text-muted-foreground">
                 {displayName.slice(0, 1).toUpperCase()}
               </span>
             )}
             <div className="min-w-0 flex-1">
-              <h1 className="truncate text-2xl font-semibold text-foreground">{displayName}</h1>
-              <p className="mt-0.5 flex flex-wrap items-center gap-x-2 text-sm text-muted-foreground">
-                <span>@{user.username}</span>
-                {role && <span>· {role}</span>}
-                {country && <span>· {country}</span>}
-                <span>· Joined {new Date(user.created_at).toLocaleDateString("en-US", { month: "short", year: "numeric" })}</span>
+              <h1 className="truncate font-sans text-[22px] font-semibold tracking-tight text-foreground">{displayName}</h1>
+              <p className="truncate text-[13px] text-muted-foreground">
+                @{user.username}
+                {role && ` · ${role}`}
+                {country && ` · ${country}`}
               </p>
-              {user.bio && <p className="mt-1.5 truncate text-sm text-foreground/85">{user.bio}</p>}
             </div>
-            <div className="flex basis-full gap-2 sm:basis-auto">
-              <Link href={`/u/${user.username}`} className="inline-flex h-9 items-center rounded-full border border-border px-4 text-sm font-medium text-foreground hover:border-[var(--cad-line-hover)]">
-                View profile
-              </Link>
-              <Link href="/dashboard?tab=settings" className="inline-flex h-9 items-center rounded-full bg-foreground px-4 text-sm font-medium text-background hover:bg-foreground/85">
-                Edit profile
-              </Link>
-            </div>
+            <Link
+              href={`/u/${user.username}`}
+              className="inline-flex h-9 shrink-0 items-center gap-1 rounded-full border border-border px-4 text-sm text-foreground transition-colors hover:border-[var(--cad-line-hover)]"
+            >
+              Profile
+              <ArrowUpRight className="h-3.5 w-3.5 text-muted-foreground" />
+            </Link>
           </header>
 
-          <div className="mt-6 grid gap-8 lg:grid-cols-[210px_minmax(0,1fr)]">
-            {/* Section nav: sidebar on desktop, scrollable tabs on mobile */}
-            <nav aria-label="Dashboard sections" className="-mx-4 overflow-x-auto px-4 lg:mx-0 lg:overflow-visible lg:px-0">
-              <ul className="flex gap-1 lg:sticky lg:top-24 lg:flex-col">
-                {TABS.map(({ id, label, icon: Icon }) => {
-                  const active = tab === id;
-                  const count = counts[id];
-                  return (
-                    <li key={id} className="shrink-0">
-                      <Link
-                        href={id === "overview" ? "/dashboard" : `/dashboard?tab=${id}`}
-                        aria-current={active ? "page" : undefined}
-                        className={`flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm transition-colors ${
-                          active ? "bg-card font-medium text-foreground shadow-sm ring-1 ring-border" : "text-muted-foreground hover:bg-card/60 hover:text-foreground"
-                        }`}
-                      >
-                        <Icon className="h-4 w-4" />
-                        {label}
-                        {!!count && (
-                          <span
-                            className={`ml-auto rounded-full px-1.5 text-[11px] tabular-nums ${
-                              id === "notifications" ? "bg-primary text-primary-foreground" : "bg-border/70 text-muted-foreground"
-                            }`}
-                          >
-                            {count}
-                          </span>
-                        )}
-                      </Link>
-                    </li>
-                  );
-                })}
-              </ul>
-            </nav>
+          {/* Sections as tabs, same as the edit launch page. */}
+          <nav aria-label="Dashboard sections" className="-mx-4 mt-8 overflow-x-auto px-4 md:mx-0 md:px-0">
+            <ul className="flex gap-6 border-b border-border">
+              {TABS.map(({ id, label }) => {
+                const active = tab === id;
+                const count = counts[id];
+                return (
+                  <li key={id} className="shrink-0">
+                    <Link
+                      href={id === "overview" ? "/dashboard" : `/dashboard?tab=${id}`}
+                      aria-current={active ? "page" : undefined}
+                      className={`-mb-px inline-flex items-center gap-1.5 whitespace-nowrap border-b-2 pb-3 text-sm transition-colors ${
+                        active ? "border-foreground font-medium text-foreground" : "border-transparent text-muted-foreground hover:text-foreground"
+                      }`}
+                    >
+                      {label}
+                      {!!count && (
+                        <span
+                          className={`rounded-full px-1.5 font-mono text-[10.5px] tabular-nums ${
+                            id === "notifications" ? "bg-primary text-primary-foreground" : "text-muted-foreground"
+                          }`}
+                        >
+                          {count}
+                        </span>
+                      )}
+                    </Link>
+                  </li>
+                );
+              })}
+            </ul>
+          </nav>
 
-            <div className="min-w-0">
-              {tab === "overview" && (
-                <div className="space-y-6">
-                  <Attention items={attention} />
+          <div className="mt-8 min-w-0">
+            {tab === "overview" && (
+              <div className="space-y-10">
+                <Attention items={attention} />
 
-                  <section>
-                    <h2 className="mb-3 text-sm font-semibold text-foreground">Your activity</h2>
-                    <div className="grid grid-cols-2 gap-3 md:grid-cols-3">
-                      <StatTile label="Live launches" value={s?.launches.live ?? "-"} sub={s?.launches.pending ? `${s.launches.pending} waiting for badge` : undefined} href="/dashboard?tab=launches" />
-                      <StatTile label="Upvotes received" value={s?.launches.upvotes ?? "-"} sub="On your live launches" href="/dashboard?tab=launches" />
-                      <StatTile label="Launch views" value={s?.launches.views ?? "-"} sub="Visitors to your live launches" href="/dashboard?tab=launches" />
-                      <StatTile label="Resources published" value={s?.submissions.published ?? "-"} sub={s?.submissions.pending ? `${s.submissions.pending} in review` : undefined} href="/dashboard?tab=submissions" />
-                      <StatTile label="Posts" value={s?.discussions.threads ?? "-"} sub={s ? `${s.discussions.replies} comments written` : undefined} href="/dashboard?tab=discussions" />
-                      <StatTile label="Saved" value={s?.saved ?? "-"} href="/dashboard?tab=saved" />
-                      <StatTile label="Tweets added" value={s?.tweets_added ?? "-"} sub="To the community feed" href="/feed" />
-                    </div>
-                  </section>
+                <section>
+                  <SectionLabel title="Your numbers" />
+                  <div className="grid grid-cols-2 gap-px overflow-hidden rounded-[10px] border border-border bg-border sm:grid-cols-4">
+                    <Stat label="live_launches" value={s?.launches.live ?? "-"} sub={s?.launches.pending ? `${s.launches.pending} waiting for badge` : undefined} href="/dashboard?tab=launches" />
+                    <Stat label="upvotes" value={s?.launches.upvotes ?? "-"} sub="on live launches" href="/dashboard?tab=launches" />
+                    <Stat label="launch_views" value={s?.launches.views ?? "-"} sub="all time" href="/dashboard?tab=launches" />
+                    <Stat label="resources" value={s?.submissions.published ?? "-"} sub={s?.submissions.pending ? `${s.submissions.pending} in review` : "published"} href="/dashboard?tab=submissions" />
+                  </div>
+                </section>
 
-                  <ProfileStrength user={user} />
-
-                  <section>
-                    <h2 className="mb-3 text-sm font-semibold text-foreground">Share something</h2>
-                    <div className="grid gap-3 sm:grid-cols-2">
-                      <ActionCard href="/launches/submit" icon={Rocket} title="Launch an app" body="Get a public page, upvotes and feedback." />
-                      <ActionCard href="/submit" icon={Package} title="Submit a resource" body="Publish a Skill, Agent or MCP server from GitHub." />
-                      <ActionCard href="/feed#compose" icon={MessageSquare} title="Write a post" body="Share what you are building or ask a question." />
-                      <ActionCard href="/feed?tab=x" icon={Twitter} title="Add a tweet to the feed" body="Share a great post about Claude." />
-                    </div>
-                  </section>
-
-                  {s && s.discussions.recent.length > 0 && (
-                    <section>
-                      <div className="mb-3 flex items-center justify-between">
-                        <h2 className="text-sm font-semibold text-foreground">Your recent posts</h2>
-                        <Link href="/dashboard?tab=discussions" className="text-xs text-muted-foreground hover:text-foreground">
-                          See all
+                <section>
+                  <SectionLabel
+                    title="Your launches"
+                    action={
+                      (launches.data?.length ?? 0) > 3 ? (
+                        <Link href="/dashboard?tab=launches" className="shrink-0 text-xs text-muted-foreground hover:text-foreground">
+                          See all {launches.data?.length}
                         </Link>
-                      </div>
-                      <ul className="divide-y divide-border overflow-hidden rounded-2xl border border-border bg-card">
-                        {s.discussions.recent.slice(0, 3).map((thread) => (
-                          <li key={thread.id}>
-                            <Link href={`/feed/${thread.id}`} className="flex items-center gap-3 p-3.5 text-sm hover:bg-background/60">
-                              <span className="min-w-0 flex-1 truncate text-foreground">{thread.title}</span>
-                              <span className="shrink-0 text-xs text-muted-foreground">
-                                {thread.replies} {thread.replies === 1 ? "reply" : "replies"} · {timeAgo(thread.created_at)}
-                              </span>
-                            </Link>
-                          </li>
-                        ))}
-                      </ul>
-                    </section>
-                  )}
+                      ) : undefined
+                    }
+                  />
+                  <LaunchRows apps={(launches.data ?? []).slice(0, 3)} loading={launches.isLoading} />
+                </section>
 
-                  {s && s.launches.live > 0 && (
-                    <p className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                      <ArrowUp className="h-3 w-3" />
-                      Share your launch page to collect more upvotes.
-                    </p>
-                  )}
-                </div>
-              )}
+                <section>
+                  <SectionLabel title="Share something" />
+                  <div className="grid gap-2 sm:grid-cols-3">
+                    {QUICK_ACTIONS.map(({ href, icon: Icon, label }) => (
+                      <Link
+                        key={href}
+                        href={href}
+                        className="group flex items-center gap-2.5 rounded-[10px] border border-border px-4 py-3 text-sm text-foreground transition-colors hover:border-[var(--cad-line-hover)]"
+                      >
+                        <Icon className="h-4 w-4 text-primary" />
+                        <span className="flex-1">{label}</span>
+                        <ArrowRight className="h-3.5 w-3.5 text-muted-foreground transition-colors group-hover:text-foreground" />
+                      </Link>
+                    ))}
+                  </div>
+                </section>
 
-              {tab === "launches" && <LaunchesPanel apps={launches.data ?? []} loading={launches.isLoading} />}
-              {tab === "submissions" && <SubmissionsPanel items={submissions.data ?? []} loading={submissions.isLoading} />}
-              {tab === "discussions" && (
-                <DiscussionsPanel threads={s?.discussions.recent ?? []} replies={s?.discussions.replies ?? 0} loading={summary.isLoading} />
-              )}
-              {tab === "saved" && <SavedPanel items={saved.data?.items ?? []} loading={saved.isLoading} />}
-              {tab === "notifications" && (
-                <NotificationsPanel
-                  items={notifications.data?.notifications ?? []}
-                  unread={notifications.data?.unread ?? 0}
-                  loading={notifications.isLoading}
-                  onMarkAll={() => markRead.mutate(undefined)}
-                  marking={markRead.isPending}
-                />
-              )}
-              {tab === "settings" && <SettingsPanel key={user.username} user={user} />}
-            </div>
+                <ProfileNudge user={user} />
+              </div>
+            )}
+
+            {tab === "launches" && <LaunchesPanel apps={launches.data ?? []} loading={launches.isLoading} />}
+            {tab === "submissions" && <SubmissionsPanel items={submissions.data ?? []} loading={submissions.isLoading} />}
+            {tab === "discussions" && (
+              <DiscussionsPanel threads={s?.discussions.recent ?? []} replies={s?.discussions.replies ?? 0} loading={summary.isLoading} />
+            )}
+            {tab === "saved" && <SavedPanel items={saved.data?.items ?? []} loading={saved.isLoading} />}
+            {tab === "notifications" && (
+              <NotificationsPanel
+                items={notifications.data?.notifications ?? []}
+                unread={notifications.data?.unread ?? 0}
+                loading={notifications.isLoading}
+                onMarkAll={() => markRead.mutate(undefined)}
+                marking={markRead.isPending}
+              />
+            )}
+            {tab === "settings" && <SettingsPanel key={user.username} user={user} />}
           </div>
         </div>
       </main>
