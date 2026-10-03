@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import Link from "next/link";
 import { launchTheme } from "@/lib/launch-theme";
+import type { Pulse } from "@/components/home/HomePulse";
 import { notFound, permanentRedirect } from "next/navigation";
 import {
   ArrowLeft,
@@ -166,9 +167,11 @@ export default async function LaunchDetailPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const [project, allProjects] = await Promise.all([
+  const [project, allProjects, pulse] = await Promise.all([
     fetchApi<ShowcaseProject>(`/showcase/${slug}`),
     fetchApi<ShowcaseProject[]>(`/showcase?limit=100`),
+    // Today's upvotes and 24h views for the related rows (same cached data as the homepage).
+    fetchApi<Pick<Pulse, "upvotes_today" | "views_24h">>("/stats/pulse", { revalidate: 60 }),
   ]);
 
   if (!project) notFound();
@@ -450,7 +453,7 @@ export default async function LaunchDetailPage({
             </div>
 
             <div id="related" className="scroll-mt-32">
-              <SimilarProductsCarousel currentProject={project} projects={allProjects ?? []} />
+              <SimilarProductsCarousel currentProject={project} projects={allProjects ?? []} upvotesToday={pulse?.upvotes_today} viewsToday={pulse?.views_24h} />
             </div>
           </div>
         </article>
