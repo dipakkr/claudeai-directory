@@ -558,6 +558,7 @@ function BadgeStep({
                 {[
                   `Pinned to the top of the homepage and launches list for ${featureDays} days`,
                   "Live as soon as payment clears, no badge or code to add",
+                  "A dofollow link to your site",
                   "Same launch page with upvotes and comments",
                   "Your analytics: impressions, views and clicks",
                 ].map((item) => (
@@ -568,8 +569,8 @@ function BadgeStep({
                 ))}
               </ul>
               <p className="mt-5 border-t border-border pt-4 text-xs leading-5 text-muted-foreground">
-                Shown with a Promoted label while featured. Paid listings link to your site as sponsored; badge listings get a
-                dofollow link. Secure payment by Stripe, no subscription.
+                Shown with a Promoted label while featured. Includes a dofollow link to your site. Secure payment by Stripe, no
+                subscription.
               </p>
             </div>
           ) : null}
@@ -595,7 +596,7 @@ function LaunchBenefits() {
     { icon: Home, title: "On the homepage", body: "Live launches are listed in Built with Claude on the homepage, the launches page and the community feed sidebar, ranked by upvotes." },
     { icon: MessageSquare, title: "A launch page people can respond to", body: "Upvotes, comments and your first comment as the maker, so visitors can ask questions and give feedback." },
     { icon: BarChart3, title: "Your own analytics", body: "See impressions, page views and clicks to your website for your launch, day by day." },
-    { icon: Link2, title: "A dofollow backlink", body: "Launches with our badge link to your site with a dofollow link, which helps you rank in search." },
+    { icon: Link2, title: "A dofollow backlink", body: "Every live launch, free with the badge or the $29 listing, links to your site with a dofollow link." },
   ];
   return (
     <div>
