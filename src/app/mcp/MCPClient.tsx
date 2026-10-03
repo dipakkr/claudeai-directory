@@ -7,10 +7,13 @@ export default function MCPClient({
   initialData,
   initialParams,
   ranked,
+  launches,
 }: {
   initialData: MCPServer[];
   initialParams: { category?: string; search?: string };
   ranked: Orders;
+  /** "Launched by makers" section, rendered under the collection banner. */
+  launches?: React.ReactNode;
 }) {
   const items = initialData.map(mcpToItem);
   return (
@@ -22,6 +25,7 @@ export default function MCPClient({
       searchPlaceholder="Search MCP servers…"
       initialCategory={initialParams.category}
       initialQuery={initialParams.search}
+      afterCollections={launches}
       schema={
         <CollectionPageSchema
           name="MCP Servers"

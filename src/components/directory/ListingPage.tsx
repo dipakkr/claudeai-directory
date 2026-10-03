@@ -35,6 +35,8 @@ interface ListingPageProps {
   emptyMessage?: string;
   /** Explainer copy under the list (kept for search visibility). */
   children?: ReactNode;
+  /** Extra section on the browse view, right under the collection banner (e.g. MCP launches on /mcp). */
+  afterCollections?: ReactNode;
 }
 
 export default function ListingPage({
@@ -50,6 +52,7 @@ export default function ListingPage({
   schema,
   emptyMessage,
   children,
+  afterCollections,
 }: ListingPageProps) {
   return (
     <div className="min-h-screen bg-background">
@@ -68,6 +71,7 @@ export default function ListingPage({
             initialCategory={initialCategory}
             initialQuery={initialQuery}
             emptyMessage={emptyMessage}
+            afterCollections={afterCollections}
           />
         </Suspense>
 

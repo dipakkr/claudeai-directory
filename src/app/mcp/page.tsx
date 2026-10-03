@@ -2,7 +2,10 @@ import type { Metadata } from "next";
 import { fetchApi } from "@/lib/api-server";
 import { loadOrders } from "@/lib/server/rankings";
 import { listingRobots } from "@/lib/seo";
-import type { MCPServer } from "@/types";
+import type { MCPServer, ShowcaseProject } from "@/types";
+import type { Pulse } from "@/components/home/HomePulse";
+import McpLaunchesSection from "@/components/directory/McpLaunchesSection";
+import { isMcpLaunch, rankedLaunches } from "@/lib/home-community";
 import MCPClient from "./MCPClient";
 
 interface MCPServersListResponse {
@@ -25,10 +28,14 @@ export default async function MCPPage({
   const params = await searchParams;
   // Fetch the whole index; search and category filter client-side so the
   // ranked list, chips and counts stay consistent.
-  const [response, ranked] = await Promise.all([
+  const [response, ranked, showcase, pulse] = await Promise.all([
     fetchApi<MCPServersListResponse>("/mcp-servers?limit=200"),
     loadOrders("mcp"),
+    fetchApi<ShowcaseProject[]>("/showcase?limit=100"),
+    fetchApi<Pick<Pulse, "upvotes_today">>("/stats/pulse", { revalidate: 60 }),
   ]);
+  // Live MCP launches, ranked like every launch list.
+  const mcpLaunches = rankedLaunches(showcase ?? []).filter(isMcpLaunch);
   const initialData = response?.data ?? [];
 
   return (
@@ -36,6 +43,7 @@ export default async function MCPPage({
       initialData={initialData}
       initialParams={{ category: params.category, search: params.search }}
       ranked={ranked}
+      launches={<McpLaunchesSection launches={mcpLaunches} upvotesToday={pulse?.upvotes_today} />}
     />
   );
 }

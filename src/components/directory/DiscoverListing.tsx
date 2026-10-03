@@ -392,6 +392,7 @@ interface DiscoverListingProps {
   initialCategory?: string;
   initialQuery?: string;
   emptyMessage?: string;
+  afterCollections?: ReactNode;
 }
 
 export default function DiscoverListing({
@@ -404,6 +405,7 @@ export default function DiscoverListing({
   initialCategory = "",
   initialQuery = "",
   emptyMessage = "Nothing matches that yet.",
+  afterCollections,
 }: DiscoverListingProps) {
   const params = useSearchParams();
   const [query, setQuery] = useState(initialQuery);
@@ -676,6 +678,7 @@ export default function DiscoverListing({
       ) : (
         <>
           <CollectionCarousel collections={collections} noun={noun} onExplore={openCategory} advertise={type === "mcp"} />
+          {afterCollections}
           {home.map((section) => (
             <Section
               key={section.title}
