@@ -383,7 +383,6 @@ function BadgeStep({
     retry: false,
   });
   const listingPrice = checkout?.enabled && checkout.listing ? checkout.listing / 100 : null;
-  const featureDays = checkout?.listing_feature_days ?? 7;
 
   const payToList = () => {
     setPaying(true);
@@ -445,7 +444,7 @@ function BadgeStep({
               <span className="text-[15px] font-medium text-foreground">One-time listing</span>
               <span className="font-mono text-[13px] text-foreground">${listingPrice}</span>
             </span>
-            <span className="mt-1.5 text-[13.5px] leading-5 text-muted-foreground">Live right away, pinned to the top for {featureDays} days.</span>
+            <span className="mt-1.5 text-[13.5px] leading-5 text-muted-foreground">Live right away. One-time payment.</span>
           </button>
         )}
       </div>
