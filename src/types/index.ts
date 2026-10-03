@@ -78,6 +78,8 @@ export interface Plugin {
   github_url?: string | null;
   /** Counted from the plugin's files; absent when not checked. */
   contents?: { skills: number; agents: number; commands: number; hooks: boolean; mcp: boolean } | null;
+  /** What the plugin ships, read from its repo (detail endpoint only). */
+  components?: PluginComponents | null;
   /** The published marketplace.json entry it installs from. */
   marketplace: { name: string; source: string; plugin_name: string };
   works_in?: { claude_code?: boolean; cowork_url?: string | null };
@@ -373,6 +375,20 @@ export interface LinkPreview {
   description?: string;
   image?: string | null;
   site?: string;
+}
+
+export interface PluginPart {
+  name: string;
+  description: string;
+  url: string;
+}
+
+export interface PluginComponents {
+  skills: PluginPart[];
+  agents: PluginPart[];
+  commands: PluginPart[];
+  mcp_servers: { name: string; type: string; url?: string | null; command?: string | null }[];
+  hooks: boolean;
 }
 
 /** A feed post (formerly a forum thread). Quick posts have no title. */

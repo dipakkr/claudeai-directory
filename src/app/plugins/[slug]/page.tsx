@@ -4,10 +4,10 @@ import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { BreadcrumbSchema, SoftwareApplicationSchema } from "@/components/seo/JsonLd";
 import { fetchApi } from "@/lib/api-server";
-import { pluginToItem } from "@/lib/directory";
+import { agentToItem, mcpToItem, pluginToItem, skillToItem, type DirectoryItem } from "@/lib/directory";
 import { resolvePluginInstall, type InstallResolution } from "@/lib/install";
 import { resourceTitle } from "@/lib/seo";
-import type { MCPServer, Plugin } from "@/types";
+import type { Agent, MCPServer, Plugin, Skill } from "@/types";
 import PluginDetail from "./PluginDetail";
 
 const SITE_URL = "https://www.claudeai.directory";
@@ -37,10 +37,22 @@ export default async function PluginPage({ params }: { params: Promise<{ slug: s
   const plugin = await fetchApi<Plugin>(`/plugins/${slug}`);
   if (!plugin) notFound();
 
-  const [related, mcp] = await Promise.all([
+  // The product's wider footprint in the directory: MCP servers, skills and agents named after it.
+  const brand = (plugin.title || plugin.name).trim();
+  const q = encodeURIComponent(brand);
+  const [related, mcp, mcps, skills, agents] = await Promise.all([
     fetchApi<{ data: Plugin[] }>(`/plugins?category=${encodeURIComponent(plugin.category)}&limit=7`),
     fetchApi<MCPServer>(`/mcp-servers/${slug}`),
+    fetchApi<{ data: MCPServer[] }>(`/mcp-servers?search=${q}&limit=6`),
+    fetchApi<{ data: Skill[] }>(`/skills?search=${q}&limit=6`),
+    fetchApi<{ data: Agent[] }>(`/agents?search=${q}&limit=6`),
   ]);
+  const named = new RegExp(`\\b${brand.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\b`, "i");
+  const ecosystem: DirectoryItem[] = [
+    ...(mcps?.data ?? []).filter((s) => named.test(s.name)).map(mcpToItem),
+    ...(skills?.data ?? []).filter((s) => named.test(s.name)).map(skillToItem),
+    ...(agents?.data ?? []).filter((a) => named.test(a.name)).map(agentToItem),
+  ].slice(0, 8);
 
   const m = plugin.marketplace;
   // Cowork-only on Claude Marketplace and no Claude Code support stated: link to Cowork, no CLI command.
@@ -92,6 +104,7 @@ export default async function PluginPage({ params }: { params: Promise<{ slug: s
           plugin={plugin}
           resolution={resolution}
           related={(related?.data ?? []).filter((p) => p.id !== plugin.id).slice(0, 6).map(pluginToItem)}
+          ecosystem={ecosystem}
           mcpHref={mcp ? `/mcp/${mcp.slug || slug}` : null}
         />
       </main>
