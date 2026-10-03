@@ -22,15 +22,6 @@ export function LinkPreviewCard({ url, preview }: { url: string; preview?: LinkP
       <a href={launch} className="group block overflow-hidden rounded-[6px] border border-border bg-card transition-colors hover:border-[var(--cad-line-hover)]">
         {/* eslint-disable-next-line @next/next/no-img-element -- our own generated launch card */}
         <img src={`${launch}/opengraph-image`} alt={preview?.title ? `${preview.title} launched on Claude AI Directory` : "Launch card"} width={1200} height={630} loading="lazy" className="aspect-[1200/630] w-full object-cover" />
-        {preview?.title && (
-          <span className="flex items-center justify-between gap-3 border-t border-border px-4 py-2.5 text-sm">
-            <span className="min-w-0 truncate">
-              <span className="font-medium text-foreground group-hover:underline">{preview.title}</span>
-              {preview.description && <span className="text-muted-foreground"> · {preview.description}</span>}
-            </span>
-            <span className="shrink-0 text-xs text-primary">View launch →</span>
-          </span>
-        )}
       </a>
     );
   }

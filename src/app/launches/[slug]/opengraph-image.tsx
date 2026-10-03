@@ -51,9 +51,7 @@ export default async function Image({ params }: { params: Promise<{ slug: string
 
   const title = clip(project?.title?.trim() || "A new launch", 34);
   const tagline = clip((project?.tagline || project?.description || "").trim().replace(/\s+[—–]\s+/g, ": "), 110);
-  const category = project?.category?.trim() || "Claude app";
   const upvotes = project?.upvotes ?? 0;
-  const maker = project?.author_name || project?.author_username || "";
   const logo = project ? await logoData(project) : null;
 
   return new ImageResponse(
@@ -88,10 +86,6 @@ export default async function Image({ params }: { params: Promise<{ slug: string
 
         <div style={{ display: "flex", alignItems: "center", marginTop: "auto", borderTop: `1px solid ${LINE}`, paddingTop: 26, fontFamily: "monospace", fontSize: 22, color: MUTED }}>
           <span style={{ display: "flex", color: INK }}>{`Launched on Claude AI Directory`}</span>
-          <span style={{ display: "flex", margin: "0 16px" }}>·</span>
-          <span style={{ display: "flex" }}>{category}</span>
-          {maker && <span style={{ display: "flex", margin: "0 16px" }}>·</span>}
-          {maker && <span style={{ display: "flex" }}>{`by ${clip(maker, 24)}`}</span>}
           <span style={{ display: "flex", alignItems: "center", marginLeft: "auto", color: ACCENT, fontSize: 26, fontWeight: 700 }}>
             {/* drawn, not a glyph: the default OG font has no ▲ */}
             <svg width="22" height="18" viewBox="0 0 12 10" style={{ marginRight: 10 }}>
