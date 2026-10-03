@@ -1,5 +1,6 @@
 "use client";
 
+import { isLaunchLive } from "@/lib/launch-options";
 import Link from "next/link";
 import { ArrowRight, Bell, Bookmark, MessageSquare, Package, Rocket } from "lucide-react";
 import type { ReactNode } from "react";
@@ -110,7 +111,7 @@ export function LaunchRows({ apps, loading }: { apps: ShowcaseProject[]; loading
       {apps.map((app) => {
         const logo = app.logo_url || faviconFor(app.app_url || app.demo_url);
         const rejected = app.status === "rejected";
-        const live = app.badge_verified || app.paid_listing;
+        const live = isLaunchLive(app);
         return (
           <li key={app.id} className="flex flex-wrap items-center gap-x-4 gap-y-3 px-4 py-4">
             <span className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-[10px] border border-border bg-background text-sm font-semibold text-muted-foreground">

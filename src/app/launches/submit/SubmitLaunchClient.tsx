@@ -41,7 +41,7 @@ type Media = { logo: string[]; screenshot: string[]; video: string[] };
 
 const SITE_URL = "https://www.claudeai.directory";
 
-import { CATEGORIES, TOPICS } from "@/lib/launch-options";
+import { CATEGORIES, TOPICS, isLaunchLive } from "@/lib/launch-options";
 import { TopicSelect } from "@/components/launches/TopicSelect";
 import { SignInButton } from "@/components/auth/SignInDialog";
 import { track } from "@/lib/analytics";
@@ -328,14 +328,14 @@ function MyLaunches({
             <Logo url={app.app_url} logoUrl={app.logo_url} name={app.title} className="h-8 w-8 rounded-lg text-xs" />
             <div className="min-w-0 flex-1">
               <p className="truncate text-sm font-medium text-foreground">{app.title}</p>
-              <p className={`text-xs ${app.badge_verified ? "text-success" : "text-muted-foreground"}`}>
-                {app.badge_verified || app.paid_listing ? "Live" : app.status === "rejected" ? "Not approved" : "Draft"}
+              <p className={`text-xs ${isLaunchLive(app) ? "text-success" : "text-muted-foreground"}`}>
+                {isLaunchLive(app) ? "Live" : app.status === "rejected" ? "Not approved" : "Draft"}
               </p>
             </div>
             <Link href={`/launches/${app.id}/edit`} className="text-xs text-muted-foreground hover:text-foreground">
               Edit
             </Link>
-            {app.status === "rejected" ? null : app.badge_verified ? (
+            {app.status === "rejected" ? null : isLaunchLive(app) ? (
               <Link href={`/launches/${app.id}`} className="text-xs font-medium text-foreground hover:text-primary">
                 View
               </Link>
@@ -832,7 +832,7 @@ export default function SubmitLaunchClient({ finishSlug }: { finishSlug?: string
   if (isLoading) return null;
   // Opened from the dashboard with ?finish=<slug>: show that launch's "go live" step until they start over.
   const finishApp =
-    !activeApp && finishSlug && !finishDismissed ? apps.find((a) => a.id === finishSlug && !a.badge_verified && a.status !== "listed") : undefined;
+    !activeApp && finishSlug && !finishDismissed ? apps.find((a) => a.id === finishSlug && !isLaunchLive(a)) : undefined;
   const shownApp = activeApp ?? finishApp ?? null;
   const shownStep: Step = activeApp ? step : finishApp ? 1 : step;
   // The details step is a single quiet column, like DevHunt; badge and share keep the stepper and side panel.

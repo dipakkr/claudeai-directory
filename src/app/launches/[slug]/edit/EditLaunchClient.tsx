@@ -14,7 +14,7 @@ import { AiDraftBar } from "@/components/launches/AiDraftBar";
 import { TopicSelect } from "@/components/launches/TopicSelect";
 import { ApiError } from "@/lib/api";
 import { useAuth } from "@/lib/auth";
-import { CATEGORIES, PLATFORMS, TOPICS } from "@/lib/launch-options";
+import { CATEGORIES, PLATFORMS, TOPICS, isLaunchLive } from "@/lib/launch-options";
 import { useMyShowcaseProjects, useUpdateLaunch, useUploadConfig, type LaunchAiDraft } from "@/hooks/use-showcase";
 import type { ShowcaseProject } from "@/types";
 import { SignInButton } from "@/components/auth/SignInDialog";
@@ -216,7 +216,7 @@ function EditForm({ app }: { app: ShowcaseProject }) {
     });
   };
 
-  const live = Boolean(app.badge_verified || app.paid_listing);
+  const live = isLaunchLive(app);
   const alreadyFilled =
     Boolean(app.tagline?.trim()) && (app.description?.trim().length ?? 0) >= 150 && Object.values(app.overview ?? {}).some((v) => Boolean(v?.trim()));
 
@@ -301,8 +301,8 @@ function EditForm({ app }: { app: ShowcaseProject }) {
               title={title || app.title}
               subtitle={
                 <span className="flex flex-wrap items-center gap-x-2">
-                  <span>{app.badge_verified || app.paid_listing ? "Live" : app.status === "rejected" ? "Not approved" : "Draft"}</span>
-                  {(app.badge_verified || app.paid_listing) && (
+                  <span>{isLaunchLive(app) ? "Live" : app.status === "rejected" ? "Not approved" : "Draft"}</span>
+                  {isLaunchLive(app) && (
                     <>
                       <span aria-hidden>·</span>
                       <Link href={`/launches/${app.id}`} className="hover:text-foreground hover:underline">View launch</Link>
@@ -529,7 +529,7 @@ export default function EditLaunchClient({ slug }: { slug: string }) {
             <ArrowLeft className="h-3.5 w-3.5" />
             Your launches
           </Link>
-          {app && !(app.badge_verified || app.paid_listing) ? (
+          {app && !isLaunchLive(app) ? (
             // A draft: this is the review step before completing the listing.
             <>
               <p className="mt-8 font-mono text-[11px] uppercase tracking-[0.16em] text-primary">Review your launch</p>

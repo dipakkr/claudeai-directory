@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { isLaunchLive } from "@/lib/launch-options";
 import type { ReactNode } from "react";
 import Link from "next/link";
 import { launchTheme } from "@/lib/launch-theme";
@@ -184,7 +185,7 @@ export default async function LaunchDetailPage({
   // Paid-only listings are paid links, so they are marked sponsored (Google's rule for paid links).
   // Live launches (badge verified or the one-time $29 listing) get a dofollow link to the maker's site.
   // Note: Google asks for rel="sponsored" on paid links; switch the paid case back if that becomes a concern.
-  const websiteRel = project.badge_verified || project.paid_listing ? "noopener noreferrer" : "nofollow noopener noreferrer";
+  const websiteRel = isLaunchLive(project) ? "noopener noreferrer" : "nofollow noopener noreferrer";
   const listedDate = formatDate(project.listed_at || project.created_at);
   const useCases = splitUseCases(project.use_cases);
   const publisherHost = hostFromUrl(appUrl);
