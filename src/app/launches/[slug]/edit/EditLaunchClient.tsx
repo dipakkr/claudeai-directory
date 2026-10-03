@@ -248,8 +248,13 @@ function EditForm({ app }: { app: ShowcaseProject }) {
             router.push(`/launches/submit?finish=${encodeURIComponent(app.id)}`);
             return;
           }
-          toast.success(live ? "Launch updated" : "Draft saved");
-          router.push(live ? `/launches/${app.id}` : "/dashboard?tab=launches");
+          // Drafts stay on the editor after saving; live launches go back to their page.
+          if (!live) {
+            toast.success("Draft saved");
+            return;
+          }
+          toast.success("Launch updated");
+          router.push(`/launches/${app.id}`);
         },
         onError: (error) => {
           const detail = error instanceof ApiError ? (error.data as { detail?: unknown })?.detail : undefined;
