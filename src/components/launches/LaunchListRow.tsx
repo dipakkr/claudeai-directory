@@ -31,16 +31,10 @@ export function LaunchLogo({ project, size = "md" }: { project: ShowcaseProject;
   );
 }
 
-/** Green "today" activity for a launch row: new upvotes first, then page views in the last 24h. */
-export function TodayDelta({ upvotes = 0, views = 0, className = "" }: { upvotes?: number; views?: number; className?: string }) {
-  if (upvotes <= 0 && views <= 0) return null;
-  return (
-    <span className={`inline-flex items-center gap-2 font-mono text-[12px] text-green-600 dark:text-green-400 ${className}`}>
-      {upvotes > 0 && <span>▲ +{upvotes} today</span>}
-      {upvotes > 0 && views > 0 && <span aria-hidden className="text-muted-foreground/60">·</span>}
-      {views > 0 && <span title="Launch page views in the last 24 hours">+{views} {views === 1 ? "view" : "views"}</span>}
-    </span>
-  );
+/** Green "▲ +N today": upvotes the launch got today. Nothing when there are none. */
+export function TodayDelta({ upvotes = 0, className = "" }: { upvotes?: number; className?: string }) {
+  if (upvotes <= 0) return null;
+  return <span className={`inline-flex items-center font-mono text-[12px] text-green-600 dark:text-green-400 ${className}`}>▲ +{upvotes} today</span>;
 }
 
 function Rank({ n }: { n: number }) {
@@ -53,7 +47,6 @@ export function LaunchListRow({
   rank,
   impressions = 0,
   upvotesToday = 0,
-  viewsToday = 0,
   right,
   surface,
 }: {
@@ -61,7 +54,6 @@ export function LaunchListRow({
   rank: number;
   impressions?: number;
   upvotesToday?: number;
-  viewsToday?: number;
   right: ReactNode;
   surface: string;
 }) {
@@ -89,10 +81,10 @@ export function LaunchListRow({
                   {item}
                 </span>
               ))}
-              {(upvotesToday > 0 || viewsToday > 0) && (
+              {upvotesToday > 0 && (
                 <span className="inline-flex items-center gap-2">
                   <span aria-hidden>·</span>
-                  <TodayDelta upvotes={upvotesToday} views={viewsToday} />
+                  <TodayDelta upvotes={upvotesToday} />
                 </span>
               )}
             </p>
@@ -124,14 +116,12 @@ export function LaunchLineRow({
   surface,
   right,
   upvotesToday = 0,
-  viewsToday = 0,
 }: {
   project: ShowcaseProject;
   rank: number;
   surface: string;
   right: ReactNode;
   upvotesToday?: number;
-  viewsToday?: number;
 }) {
   return (
     <li data-launch-impression={project.id} data-surface={surface}>
@@ -150,7 +140,7 @@ export function LaunchLineRow({
             <span className="shrink-0 rounded-[4px] border border-primary/40 px-1.5 py-px font-mono text-[10px] uppercase tracking-[0.1em] text-primary">Promoted</span>
           )}
         </span>
-        <TodayDelta upvotes={upvotesToday} views={viewsToday} className="hidden shrink-0 sm:inline-flex" />
+        <TodayDelta upvotes={upvotesToday} className="hidden shrink-0 sm:inline-flex" />
         {right}
       </Link>
     </li>

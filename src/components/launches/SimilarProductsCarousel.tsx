@@ -7,14 +7,12 @@ interface SimilarProductsCarouselProps {
   currentProject: ShowcaseProject;
   projects: ShowcaseProject[];
   upvotesToday?: Record<string, number>;
-  viewsToday?: Record<string, number>;
 }
 
 export function SimilarProductsCarousel({
   currentProject,
   projects,
   upvotesToday = {},
-  viewsToday = {},
 }: SimilarProductsCarouselProps) {
   // Filter similar products: same category or overlapping tech stack.
   // Dedupe by title so near-identical listings (e.g. resubmissions) don't
@@ -49,7 +47,6 @@ export function SimilarProductsCarousel({
             rank={index + 1}
             surface="similar"
             upvotesToday={upvotesToday[project.id]}
-            viewsToday={viewsToday[project.id]}
             right={<UpvotePill count={project.upvotes ?? 0} />}
           />
         ))}

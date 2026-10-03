@@ -48,12 +48,10 @@ function SponsorRow() {
 export default function HomeMcpLaunches({
   projects,
   upvotesToday = {},
-  viewsToday = {},
   limit = 25,
 }: {
   projects: ShowcaseProject[];
   upvotesToday?: Record<string, number>;
-  viewsToday?: Record<string, number>;
   limit?: number;
 }) {
   const shown = projects.slice(0, limit);
@@ -70,7 +68,6 @@ export default function HomeMcpLaunches({
                   rank={index + 1}
                   surface="home_mcp_tab"
                   upvotesToday={today}
-                  viewsToday={viewsToday[project.id]}
                   right={<UpvotePill count={project.upvotes ?? 0} />}
                 />
                 {sponsorAfter(index, shown.length) && <SponsorRow />}

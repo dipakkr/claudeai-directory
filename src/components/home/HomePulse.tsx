@@ -28,8 +28,6 @@ export interface Pulse {
   events: PulseEvent[];
   upvotes_today: Record<string, number>;
   launch_impressions: Record<string, number>;
-  /** Launch page views in the last 24 hours, by launch id. */
-  views_24h?: Record<string, number>;
 }
 
 const VERB: Record<PulseEvent["type"], string> = {

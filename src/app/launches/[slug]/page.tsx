@@ -170,8 +170,8 @@ export default async function LaunchDetailPage({
   const [project, allProjects, pulse] = await Promise.all([
     fetchApi<ShowcaseProject>(`/showcase/${slug}`),
     fetchApi<ShowcaseProject[]>(`/showcase?limit=100`),
-    // Today's upvotes and 24h views for the related rows (same cached data as the homepage).
-    fetchApi<Pick<Pulse, "upvotes_today" | "views_24h">>("/stats/pulse", { revalidate: 60 }),
+    // Today's upvotes for the related rows (same cached data as the homepage).
+    fetchApi<Pick<Pulse, "upvotes_today">>("/stats/pulse", { revalidate: 60 }),
   ]);
 
   if (!project) notFound();
@@ -453,7 +453,7 @@ export default async function LaunchDetailPage({
             </div>
 
             <div id="related" className="scroll-mt-32">
-              <SimilarProductsCarousel currentProject={project} projects={allProjects ?? []} upvotesToday={pulse?.upvotes_today} viewsToday={pulse?.views_24h} />
+              <SimilarProductsCarousel currentProject={project} projects={allProjects ?? []} upvotesToday={pulse?.upvotes_today} />
             </div>
           </div>
         </article>
