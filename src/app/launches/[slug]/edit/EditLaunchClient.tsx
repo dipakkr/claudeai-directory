@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, Check, Loader2, X } from "lucide-react";
+import { ArrowLeft, ArrowRight, Check, Loader2, X } from "lucide-react";
 import { toast } from "sonner";
 
 import Header from "@/components/layout/Header";
@@ -215,7 +215,10 @@ function EditForm({ app }: { app: ShowcaseProject }) {
     });
   };
 
-  const save = () => {
+  const live = Boolean(app.badge_verified || app.paid_listing);
+
+  // Drafts: "Complete listing" saves, then shows the two ways to go live (badge or one-time listing).
+  const save = (completeAfter = false) => {
     if (uploading) return toast.error("Wait for your uploads to finish");
     if (title.trim().length < 2 || description.trim().length < 10) {
       return toast.error("Add a name and a description of at least 10 characters");
@@ -241,8 +244,12 @@ function EditForm({ app }: { app: ShowcaseProject }) {
       },
       {
         onSuccess: () => {
-          toast.success("Launch updated");
-          router.push(app.badge_verified ? `/launches/${app.id}` : "/dashboard?tab=launches");
+          if (completeAfter) {
+            router.push(`/launches/submit?finish=${encodeURIComponent(app.id)}`);
+            return;
+          }
+          toast.success(live ? "Launch updated" : "Draft saved");
+          router.push(live ? `/launches/${app.id}` : "/dashboard?tab=launches");
         },
         onError: (error) => {
           const detail = error instanceof ApiError ? (error.data as { detail?: unknown })?.detail : undefined;
@@ -442,21 +449,45 @@ function EditForm({ app }: { app: ShowcaseProject }) {
 
       {/* Save bar stays in reach on a long form. */}
       <div className="sticky bottom-0 z-10 -mx-4 mt-12 border-t border-border bg-background/95 px-4 py-3 backdrop-blur md:-mx-8 md:px-8" style={{ paddingBottom: "max(0.75rem, env(safe-area-inset-bottom, 0px))" }}>
-        <div className="flex items-center gap-3">
-          <span className="flex-1" />
-          <Link href={app.badge_verified ? `/launches/${app.id}` : "/dashboard?tab=launches"} className="shrink-0 text-sm text-muted-foreground hover:text-foreground">
-            Cancel
-          </Link>
-          <button
-            type="button"
-            onClick={save}
-            disabled={update.isPending || uploading}
-            className="inline-flex h-10 shrink-0 items-center justify-center gap-2 rounded-full bg-primary px-5 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90 disabled:opacity-50"
-          >
-            {update.isPending && <Loader2 className="h-4 w-4 animate-spin" />}
-            {uploading ? "Uploading..." : "Save changes"}
-          </button>
-        </div>
+        {live ? (
+          <div className="flex items-center gap-3">
+            <span className="flex-1" />
+            <Link href={`/launches/${app.id}`} className="shrink-0 text-sm text-muted-foreground hover:text-foreground">
+              Cancel
+            </Link>
+            <button
+              type="button"
+              onClick={() => save()}
+              disabled={update.isPending || uploading}
+              className="inline-flex h-10 shrink-0 items-center justify-center gap-2 rounded-full bg-primary px-5 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90 disabled:opacity-50"
+            >
+              {update.isPending && <Loader2 className="h-4 w-4 animate-spin" />}
+              {uploading ? "Uploading..." : "Save changes"}
+            </button>
+          </div>
+        ) : (
+          // A draft: one big step forward, saving quietly on the side.
+          <div className="flex items-center gap-4">
+            <button
+              type="button"
+              onClick={() => save(true)}
+              disabled={update.isPending || uploading}
+              className="inline-flex h-11 flex-1 items-center justify-center gap-2 rounded-[10px] bg-primary text-[15px] font-medium text-primary-foreground transition-opacity hover:opacity-90 disabled:opacity-60"
+            >
+              {update.isPending && <Loader2 className="h-4 w-4 animate-spin" />}
+              {uploading ? "Uploading..." : "Complete listing"}
+              {!update.isPending && !uploading && <ArrowRight className="h-4 w-4" />}
+            </button>
+            <button
+              type="button"
+              onClick={() => save()}
+              disabled={update.isPending || uploading}
+              className="shrink-0 text-sm text-muted-foreground hover:text-foreground disabled:opacity-50"
+            >
+              Save draft
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

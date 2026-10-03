@@ -137,16 +137,16 @@ export function LaunchRows({ apps, loading }: { apps: ShowcaseProject[]; loading
               </p>
             </div>
             <div className="flex w-full items-center gap-4 pl-14 text-sm sm:w-auto sm:pl-0">
-              <Link href={`/launches/${app.id}/edit`} className="text-muted-foreground hover:text-foreground">Edit</Link>
+              {(live || rejected) && <Link href={`/launches/${app.id}/edit`} className="text-muted-foreground hover:text-foreground">Edit</Link>}
               {live && <Link href={`/launches/${app.id}/analytics`} className="text-muted-foreground hover:text-foreground">Analytics</Link>}
               {live ? (
                 <Link href={`/launches/${app.id}`} className="inline-flex h-8 items-center rounded-[8px] border border-border px-3 text-[13px] text-foreground hover:border-[var(--cad-line-hover)]">
                   View
                 </Link>
               ) : !rejected ? (
-                // The options (badge or one-time listing) are explained on the next page.
+                // Opens the draft; its "Complete listing" button then offers the badge or the one-time listing.
                 <Link
-                  href={`/launches/submit?finish=${encodeURIComponent(app.id)}`}
+                  href={`/launches/${encodeURIComponent(app.id)}/edit`}
                   className="inline-flex h-8 items-center gap-1 rounded-[8px] border border-primary/40 px-3 text-[13px] font-medium text-primary transition-colors hover:bg-primary/10"
                 >
                   Complete listing
