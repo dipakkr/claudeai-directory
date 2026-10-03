@@ -187,7 +187,8 @@ export function agentToItem(a: Agent): DirectoryItem {
     iconUrl: null,
     category: a.category || "",
     tags: a.tags ?? [],
-    metric: stars > 0 ? { value: compactNumber(stars), label: "GitHub stars", icon: "star" } : null,
+    // Agents are files inside a repository, so this is the repo's star count, not the agent's.
+    metric: stars > 0 ? { value: compactNumber(stars), label: "repo stars", icon: "star" } : null,
     score: stars,
     createdAt: a.created_at,
   };

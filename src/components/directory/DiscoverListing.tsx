@@ -505,7 +505,8 @@ export default function DiscoverListing({
     const topKeys = orders?.top ?? items.map((i) => i.key);
     const byKey = new Map(items.map((i) => [i.key, i]));
     return categories
-      .filter(([, count]) => count >= 4)
+      // Small directories (agents) get collections from 3 items, larger ones from 4.
+      .filter(([, count]) => count >= (items.length < 60 ? 3 : 4))
       .slice(0, 4)
       .map(([cat, count]) => {
         const inCat = topKeys.map((k) => byKey.get(k)).filter((i): i is DirectoryItem => Boolean(i) && i!.category === cat);
