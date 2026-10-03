@@ -40,6 +40,9 @@ type Media = { logo: string[]; screenshot: string[]; video: string[] };
 
 const SITE_URL = "https://www.claudeai.directory";
 
+/** Real numbers only: site visitors (OpenPanel) and, once there is enough data, average launch impressions. */
+export type LaunchReach = { visitors_30d: number | null; avg_impressions_30d: number | null };
+
 import { CATEGORIES, TOPICS, hasDofollow, isLaunchLive } from "@/lib/launch-options";
 import { TopicSelect } from "@/components/launches/TopicSelect";
 import { SignInButton } from "@/components/auth/SignInDialog";
@@ -359,9 +362,11 @@ function MyLaunches({
 
 function BadgeStep({
   app,
+  reach,
   onVerified,
 }: {
   app: ShowcaseProject;
+  reach?: LaunchReach | null;
   onVerified: (app: ShowcaseProject) => void;
 }) {
   const verify = useVerifyShowcaseBadge();
@@ -482,6 +487,27 @@ function BadgeStep({
             </li>
           ))}
         </ul>
+
+        {/* Expected reach, from real data: never a made-up number. */}
+        {mode !== "free" && (reach?.visitors_30d || reach?.avg_impressions_30d) ? (
+          <p className="mt-4 rounded-[8px] bg-foreground/[0.04] px-3 py-2 text-[13px] leading-5 text-muted-foreground">
+            {reach.avg_impressions_30d ? (
+              <>
+                Launches average <span className="font-medium text-foreground">{reach.avg_impressions_30d.toLocaleString("en-US")} impressions</span> in their
+                first 30 days.{" "}
+              </>
+            ) : null}
+            {reach.visitors_30d ? (
+              <>
+                Listed on the homepage and launches page. The site had{" "}
+                <span className="font-medium text-foreground">{reach.visitors_30d.toLocaleString("en-US")} visitors</span> in the last 30 days.{" "}
+              </>
+            ) : null}
+            <Link href="/stats" className="text-primary hover:underline">
+              Open stats
+            </Link>
+          </p>
+        ) : null}
 
       {mode === "paid" ? (
         <div className="mt-6">
@@ -690,8 +716,9 @@ function ShareStep({ app, onAnother }: { app: ShowcaseProject; onAnother: () => 
 export default function SubmitLaunchClient({
   finishSlug,
   paidSlug,
+  reach,
   guide,
-}: { finishSlug?: string; paidSlug?: string; guide?: React.ReactNode } = {}) {
+}: { finishSlug?: string; paidSlug?: string; reach?: LaunchReach | null; guide?: React.ReactNode } = {}) {
   const { isAuthenticated, isLoading, user } = useAuth();
   const submit = useSubmitShowcaseProject();
   const autofill = useLaunchAutofill();
@@ -993,6 +1020,7 @@ export default function SubmitLaunchClient({
                   {shownStep === 1 && shownApp ? (
                     <BadgeStep
                       app={shownApp}
+                      reach={reach}
                       onVerified={(updated) => {
                         setActiveApp(updated);
                         setStep(2);
