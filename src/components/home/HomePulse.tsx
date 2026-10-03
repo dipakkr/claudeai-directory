@@ -102,11 +102,14 @@ export function HomePulse({ pulse }: { pulse: Pulse }) {
       {/* Where these numbers come from: the open stats page. */}
       <Link
         href="/stats"
-        title="Open stats: where these numbers come from"
-        aria-label="Open stats"
-        className="absolute right-2.5 top-2.5 z-30 inline-flex h-7 w-7 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-foreground/[0.08] hover:text-foreground"
+        aria-label="Open stats: where these numbers come from"
+        className="group absolute right-2.5 top-2.5 z-30 inline-flex h-7 items-center gap-1.5 rounded-full px-1.5 text-muted-foreground transition-colors hover:bg-foreground/[0.08] hover:text-foreground focus-visible:bg-foreground/[0.08]"
       >
-        <Info className="h-4 w-4" />
+        {/* Label slides in on hover / focus, so the icon says where it goes before the click. */}
+        <span className="max-w-0 overflow-hidden whitespace-nowrap font-mono text-[11px] opacity-0 transition-all duration-200 group-hover:max-w-[160px] group-hover:pl-1 group-hover:opacity-100 group-focus-visible:max-w-[160px] group-focus-visible:pl-1 group-focus-visible:opacity-100">
+          See open stats →
+        </span>
+        <Info className="h-4 w-4 shrink-0" />
       </Link>
       <div className="grid grid-cols-2 gap-px bg-border sm:grid-cols-4">
         {/* Show that people are here and active: who visits, what they open, what gets launched. */}
