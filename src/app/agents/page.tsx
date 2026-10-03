@@ -25,7 +25,7 @@ export default async function AgentsPage({ searchParams }: { searchParams: Listi
 
   return (
     <ListingPage
-      title="Agent Marketplace for Claude"
+      title="Claude Agents Marketplace"
       description="Specialized subagents for Claude Code: code review, testing, debugging, security, research and more."
       items={items}
       orders={buildOrders(items, ranked, false)}

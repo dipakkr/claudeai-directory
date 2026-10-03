@@ -16,7 +16,7 @@ export default function SkillsClient({
   const items = initialData.map(skillToItem);
   return (
     <ListingPage
-      title="Skills Marketplace for Claude"
+      title="Claude Skills Marketplace"
       description="Community-built Skills for coding, research, testing, productivity and more. Explore what is trending and install what you need."
       showCount={false}
       items={items}
