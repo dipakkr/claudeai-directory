@@ -4,7 +4,7 @@ import type { Thread } from "@/types";
 import { reviewedAgents } from "@/data/resource-guides";
 import { publicLaunches } from "@/lib/home-community";
 import type { ShowcaseProject } from "@/types";
-import { MIN_INDEXABLE_BODY } from "@/lib/plugin-parts";
+import { MIN_INDEXABLE_BODY, ownParts } from "@/lib/plugin-parts";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.claudeai.directory";
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api";
@@ -27,8 +27,21 @@ async function fetchSlugs(endpoint: string, slugField = "id"): Promise<string[]>
 }
 
 /** Pages for skills, agents and commands inside plugins, only those with enough of their own text to index. */
+async function fetchStandalone(endpoint: string): Promise<{ id: string; name?: string; github_url?: string | null }[]> {
+  try {
+    const res = await fetch(`${API_BASE}${endpoint}?limit=500`, { next: { revalidate: 3600 } });
+    if (!res.ok) return [];
+    const data = ((await res.json()).data ?? []) as { _id: string; name?: string; github_url?: string | null }[];
+    return data.map((d) => ({ id: String(d._id), name: d.name, github_url: d.github_url }));
+  } catch {
+    return [];
+  }
+}
+
 async function fetchPluginPartPaths(): Promise<string[]> {
   const kinds = ["skills", "agents", "commands"] as const;
+  const [skills, agents] = await Promise.all([fetchStandalone("/skills"), fetchStandalone("/agents")]);
+  const standalone = { skills, agents: [...agents, ...reviewedAgents], commands: [] };
   const lists = await Promise.all(
     kinds.map(async (kind) => {
       const paths: string[] = [];
@@ -37,8 +50,10 @@ async function fetchPluginPartPaths(): Promise<string[]> {
         for (let skip = 0; skip < 5000; skip += 800) {
           const res = await fetch(`${API_BASE}/plugins/parts?kind=${kind}&skip=${skip}&limit=800`, { next: { revalidate: 3600 } });
           if (!res.ok) break;
-          const parts = ((await res.json()).data ?? []) as { plugin_id: string; slug: string; body_len?: number }[];
-          for (const p of parts) if ((p.body_len ?? 0) >= MIN_INDEXABLE_BODY) paths.push(`/plugins/${p.plugin_id}/${kind}/${p.slug}`);
+          const parts = ((await res.json()).data ?? []) as { plugin_id: string; slug: string; name: string; url?: string; canonical?: string | null; body_len?: number }[];
+          for (const p of ownParts(parts, standalone[kind])) {
+            if ((p.body_len ?? 0) >= MIN_INDEXABLE_BODY) paths.push(`/plugins/${p.plugin_id}/${kind}/${p.slug}`);
+          }
           if (parts.length < 800) break;
         }
       } catch {

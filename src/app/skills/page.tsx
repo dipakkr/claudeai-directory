@@ -3,6 +3,7 @@ import { loadSkills } from "@/lib/server/skills";
 import { loadOrders } from "@/lib/server/rankings";
 import { loadPluginParts } from "@/lib/server/plugin-parts";
 import { partsToItems } from "@/lib/directory";
+import { ownParts } from "@/lib/plugin-parts";
 import { listingRobots } from "@/lib/seo";
 import SkillsClient from "./SkillsClient";
 
@@ -29,7 +30,7 @@ export default async function SkillsPage({
       initialData={initialData}
       initialParams={{ category: params.category, search: params.search }}
       ranked={ranked}
-      pluginSkills={partsToItems(parts)}
+      pluginSkills={partsToItems(ownParts(parts, initialData))}
     />
   );
 }

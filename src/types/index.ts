@@ -396,6 +396,8 @@ export interface PluginPartDoc extends PluginPart {
   /** The file's markdown after its frontmatter (detail endpoint only). */
   body?: string;
   body_len?: number;
+  /** Set when the same file is listed under another plugin: that page is the one to index. */
+  canonical?: string | null;
   plugin: { title: string; category: string; author: string; verified: boolean; installs: number };
   created_at: string;
 }

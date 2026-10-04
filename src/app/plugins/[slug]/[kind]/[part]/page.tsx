@@ -5,8 +5,10 @@ import Footer from "@/components/layout/Footer";
 import { BreadcrumbSchema, SoftwareApplicationSchema } from "@/components/seo/JsonLd";
 import { fetchApi } from "@/lib/api-server";
 import { pluginResolution } from "@/lib/plugin-install";
-import type { Plugin, PluginPartDoc, PluginPartKind } from "@/types";
-import { KIND_LABEL, MIN_INDEXABLE_BODY } from "@/lib/plugin-parts";
+import type { Agent, Plugin, PluginPartDoc, PluginPartKind } from "@/types";
+import { KIND_LABEL, MIN_INDEXABLE_BODY, standaloneTwin } from "@/lib/plugin-parts";
+import { loadSkills } from "@/lib/server/skills";
+import { reviewedAgents } from "@/data/resource-guides";
 import PartDetail from "./PartDetail";
 
 const SITE_URL = "https://www.claudeai.directory";
@@ -15,20 +17,32 @@ type Params = Promise<{ slug: string; kind: string; part: string }>;
 
 const isKind = (k: string): k is PluginPartKind => k === "skills" || k === "agents" || k === "commands";
 
+/** Standalone skills or agents listed on their own, to find the one that is this same file. */
+async function standaloneFor(kind: PluginPartKind) {
+  if (kind === "skills") return loadSkills().catch(() => []);
+  if (kind === "agents") return [...((await fetchApi<{ data: Agent[] }>("/agents?limit=200"))?.data ?? []), ...reviewedAgents];
+  return [];
+}
+
 async function load(params: Params) {
   const { slug, kind, part } = await params;
   if (!isKind(kind)) return null;
-  const [doc, plugin] = await Promise.all([
+  const [doc, plugin, standalone] = await Promise.all([
     fetchApi<PluginPartDoc>(`/plugins/${encodeURIComponent(slug)}/${kind}/${encodeURIComponent(part)}`),
     fetchApi<Plugin>(`/plugins/${encodeURIComponent(slug)}`),
+    standaloneFor(kind),
   ]);
-  return doc && plugin ? { doc, plugin, kind } : null;
+  if (!doc || !plugin) return null;
+  // The same file elsewhere (another plugin, or its own listing here) is the page to index.
+  const twin = standaloneTwin(doc, standalone);
+  const canonicalPath = doc.canonical || (twin ? `/${kind}/${twin.id}` : `/plugins/${plugin.id}/${kind}/${doc.slug}`);
+  return { doc, plugin, kind, canonicalPath };
 }
 
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const data = await load(params);
   if (!data) return { title: "Not Found" };
-  const { doc, plugin, kind } = data;
+  const { doc, plugin, kind, canonicalPath } = data;
   const pluginName = plugin.title || plugin.name;
   const label = KIND_LABEL[kind].one;
   const url = `${SITE_URL}/plugins/${plugin.id}/${kind}/${doc.slug}`;
@@ -41,7 +55,7 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   return {
     title: { absolute: title },
     description,
-    alternates: { canonical: url },
+    alternates: { canonical: `${SITE_URL}${canonicalPath}` },
     robots: (doc.body?.length ?? 0) < MIN_INDEXABLE_BODY ? { index: false, follow: true } : undefined,
     openGraph: { title, description, url, type: "website" },
     twitter: { card: "summary", title, description },
