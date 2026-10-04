@@ -228,7 +228,7 @@ export default async function StatsPage({ searchParams }: { searchParams: Promis
               Launch your app
             </Link>
             <Link href="/?advertise=1" className="inline-flex h-10 items-center rounded-[6px] border border-border px-4 text-sm font-medium text-foreground hover:bg-card">
-              Advertise to Claude builders
+              Advertise
             </Link>
             <a href="#live" className="inline-flex h-10 items-center gap-2 rounded-[6px] border border-border px-4 text-sm font-medium text-foreground hover:bg-card">
               <span className="h-2 w-2 animate-pulse rounded-full bg-green-500" aria-hidden="true" />
