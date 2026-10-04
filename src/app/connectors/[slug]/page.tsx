@@ -275,7 +275,6 @@ export default async function ConnectorGuidePage({ params }: { params: Promise<{
                 {bi === 0 && g.evidence.length > 0 && (
                   <div className="mt-8">
                     <h3 className="text-[18px] font-normal text-foreground">We tested it</h3>
-                    <p className={`mt-1 ${muted}`}>Real runs with {g.testedWith}. Screenshots are cropped, not edited.</p>
                     <div className="mt-4 space-y-6">
                       {g.evidence.map((e) => (
                         <figure key={e.src}>
@@ -289,9 +288,6 @@ export default async function ConnectorGuidePage({ params }: { params: Promise<{
                             className="w-full rounded-lg border border-border"
                           />
                           </a>
-                          <figcaption className="mt-2 text-[13px] text-muted-foreground">
-                            {inline(e.caption)} Captured {fmtDate(e.capturedOn)}.
-                          </figcaption>
                         </figure>
                       ))}
                     </div>

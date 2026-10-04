@@ -25,16 +25,12 @@ const obsidian: ConnectorGuide = {
       width: 1600,
       height: 597,
       alt: "Claude Code in a terminal listing 7 open tasks from an Obsidian test vault, grouped by note",
-      caption: "Claude Code started inside a test vault, asked to list open tasks. It found all 7 across 4 notes and skipped the one already checked off.",
-      capturedOn: CHECKED,
     },
     {
       src: "/connectors/obsidian/claude-code-priya.png",
       width: 1600,
       height: 414,
       alt: "Claude Code in a terminal finding the two notes that link to [[Priya]] and the open task owed to her",
-      caption: "Following backlinks: Claude Code found both notes linking to [[Priya]] and the one open task she's waiting on.",
-      capturedOn: CHECKED,
     },
   ],
   methods: [

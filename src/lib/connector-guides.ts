@@ -63,9 +63,6 @@ export interface Evidence {
   width: number;
   height: number;
   alt: string;
-  caption: string;
-  /** YYYY-MM-DD */
-  capturedOn: string;
 }
 
 /** A community comment on a guide, optionally reporting whether a method worked. */
