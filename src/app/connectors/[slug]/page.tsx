@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Fragment, type ReactNode } from "react";
@@ -15,9 +16,13 @@ import {
   guideTitle,
   isLive,
   publishGaps,
+  tallyReports,
+  type GuideReport,
   type Method,
 } from "@/lib/connector-guides";
 import { DEFAULT_OG_IMAGE } from "@/lib/seo";
+import { fetchApi } from "@/lib/api-server";
+import GuideDiscussion from "./GuideDiscussion";
 
 const SITE_URL = "https://www.claudeai.directory";
 const CONTACT = "claudeai.directory@gmail.com";
@@ -86,6 +91,9 @@ export default async function ConnectorGuidePage({ params }: { params: Promise<{
     .map((s) => connectorGuides.find((x) => x.slug === s))
     .filter((x): x is NonNullable<typeof x> => !!x && isLive(x));
   const listed = g.methods.filter((m) => m.mcpSlug);
+  // Community reports are part of the page's content, so render them on the server.
+  const reports = (await fetchApi<GuideReport[]>(`/connector-guides/${g.slug}/replies`, { revalidate: 60 })) ?? [];
+  const tally = tallyReports(reports);
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
@@ -104,6 +112,28 @@ export default async function ConnectorGuidePage({ params }: { params: Promise<{
           description: g.description,
           dateModified: g.verifiedOn,
           step: g.setup[0].steps.map((s, i) => ({ "@type": "HowToStep", position: i + 1, text: s.text.replace(/`/g, "") })),
+        }}
+      />
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@type": "TechArticle",
+          headline: h1,
+          description: g.description,
+          url,
+          datePublished: g.publishedOn,
+          dateModified: g.verifiedOn,
+          author: { "@type": "Organization", name: "claudeai.directory", url: SITE_URL },
+          publisher: { "@type": "Organization", name: "claudeai.directory", url: SITE_URL },
+          about: [{ "@type": "SoftwareApplication", name: g.app }, { "@type": "SoftwareApplication", name: "Claude" }],
+          image: g.evidence.map((e) => `${SITE_URL}${e.src}`),
+          commentCount: reports.length,
+          comment: reports.slice(0, 20).map((r) => ({
+            "@type": "Comment",
+            text: r.body,
+            dateCreated: r.created_at,
+            author: { "@type": "Person", name: r.author },
+          })),
         }}
       />
       <JsonLd
@@ -138,16 +168,26 @@ export default async function ConnectorGuidePage({ params }: { params: Promise<{
               <span className="text-foreground">{g.app}</span>
             </nav>
             <h1 className="mt-5 text-[clamp(34px,4.6vw,52px)] font-normal leading-[1.05] text-foreground">{h1}</h1>
-            <p className="mt-3 text-[13px] text-muted-foreground">Last verified {fmtDate(g.verifiedOn)}</p>
+            <p className="mt-3 text-[13px] text-muted-foreground">
+              By the claudeai.directory team · Tested with {g.testedWith} · Last verified{" "}
+              <time dateTime={g.verifiedOn}>{fmtDate(g.verifiedOn)}</time>
+            </p>
 
             <div className="mt-8 rounded-xl border border-border bg-card p-5 md:p-6">
               <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground">Quick answer</p>
               <p className="mt-2 text-[16px] leading-relaxed text-foreground md:text-[17px]">{inline(g.quickAnswer)}</p>
             </div>
+
+            <h2 className="mt-10 font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground">Key facts</h2>
+            <ul className="mt-3 list-disc space-y-1.5 pl-5 text-[15px] leading-relaxed text-foreground marker:text-muted-foreground">
+              {g.keyFacts.map((f) => (
+                <li key={f}>{inline(f)}</li>
+              ))}
+            </ul>
           </section>
 
           <section className="mt-16" aria-labelledby="options">
-            <h2 id="options" className={`${heading} scroll-mt-24`}>Your options</h2>
+            <h2 id="options" className={`${heading} scroll-mt-24`}>Which way should you connect {g.app} to Claude?</h2>
             <p className={`mt-3 ${muted}`}>Every way to connect {g.app} to Claude that we could verify, official and community.</p>
             <div className="mt-5 overflow-x-auto rounded-lg border border-border">
               <table className="w-full min-w-[720px] text-left text-[14px]">
@@ -158,6 +198,7 @@ export default async function ConnectorGuidePage({ params }: { params: Promise<{
                     <th className="px-4 py-3 font-normal">Auth</th>
                     <th className="px-4 py-3 font-normal">Last update</th>
                     <th className="px-4 py-3 font-normal">Status</th>
+                    <th className="px-4 py-3 font-normal">Reader reports</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-border">
@@ -176,6 +217,11 @@ export default async function ConnectorGuidePage({ params }: { params: Promise<{
                       <td className="px-4 py-3 text-muted-foreground">{AUTH_LABEL[m.auth]}</td>
                       <td className="px-4 py-3 text-muted-foreground">{m.lastActivity ? fmtDate(m.lastActivity) : "n/a"}</td>
                       <td className="px-4 py-3"><StatusPill status={m.status} /></td>
+                      <td className="px-4 py-3 text-muted-foreground">
+                        <a href="#community" className="hover:text-foreground">
+                          {tally[m.name] ? `${tally[m.name].worked} worked, ${tally[m.name].failed} didn't` : "None yet"}
+                        </a>
+                      </td>
                     </tr>
                   ))}
                 </tbody>
@@ -226,6 +272,31 @@ export default async function ConnectorGuidePage({ params }: { params: Promise<{
                     </li>
                   ))}
                 </ol>
+                {bi === 0 && g.evidence.length > 0 && (
+                  <div className="mt-8">
+                    <h3 className="text-[18px] font-normal text-foreground">We tested it</h3>
+                    <p className={`mt-1 ${muted}`}>Real runs with {g.testedWith}. Screenshots are cropped, not edited.</p>
+                    <div className="mt-4 space-y-6">
+                      {g.evidence.map((e) => (
+                        <figure key={e.src}>
+                          <a href={e.src} target="_blank" rel="noopener" aria-label="Open full-size screenshot">
+                          <Image
+                            src={e.src}
+                            width={e.width}
+                            height={e.height}
+                            alt={e.alt}
+                            sizes="(max-width: 860px) 100vw, 860px"
+                            className="w-full rounded-lg border border-border"
+                          />
+                          </a>
+                          <figcaption className="mt-2 text-[13px] text-muted-foreground">
+                            {inline(e.caption)} Captured {fmtDate(e.capturedOn)}.
+                          </figcaption>
+                        </figure>
+                      ))}
+                    </div>
+                  </div>
+                )}
                 <p className="mt-4 text-[13px] text-muted-foreground">
                   Checked against{" "}
                   <a href={block.source.url} target="_blank" rel="noopener" className="underline underline-offset-4 hover:text-foreground">the source</a>{" "}
@@ -248,7 +319,7 @@ export default async function ConnectorGuidePage({ params }: { params: Promise<{
           </section>
 
           <section className="mt-16" aria-labelledby="prompts">
-            <h2 id="prompts" className={`${heading} scroll-mt-24`}>What you can do once connected</h2>
+            <h2 id="prompts" className={`${heading} scroll-mt-24`}>What can you do after connecting {g.app} to Claude?</h2>
             <ul className="mt-5 grid gap-3">
               {g.prompts.map((p) => (
                 <li key={p.prompt} className="rounded-lg border border-border bg-card p-4">
@@ -281,13 +352,17 @@ export default async function ConnectorGuidePage({ params }: { params: Promise<{
             <h2 id="faq" className={`${heading} scroll-mt-24`}>FAQ</h2>
             <div className="mt-5 divide-y divide-border border-y border-border">
               {g.faq.map((f) => (
-                <details key={f.q} className="group py-4">
-                  <summary className="cursor-pointer list-none text-[15px] text-foreground">{f.q}</summary>
+                <div key={f.q} className="py-4">
+                  <h3 className="text-[16px] text-foreground">{f.q}</h3>
                   <p className={`mt-2 ${muted}`}>{f.a}</p>
-                </details>
+                </div>
               ))}
             </div>
           </section>
+
+          <div className="mt-16 scroll-mt-24" id="community">
+            <GuideDiscussion slug={g.slug} app={g.app} methods={g.methods.map((m) => m.name)} initialReports={reports} />
+          </div>
 
           <section className="mt-16" aria-labelledby="related">
             <h2 id="related" className={`${heading} scroll-mt-24`}>Related</h2>
@@ -334,7 +409,7 @@ export default async function ConnectorGuidePage({ params }: { params: Promise<{
               href={`mailto:${CONTACT}?subject=${encodeURIComponent(`I maintain a ${g.app} connector`)}`}
               className="underline underline-offset-4 hover:text-foreground"
             >
-              Maintain a {g.app} integration? Tell us
+              Maintain an integration for {g.app}? Tell us
             </a>
           </footer>
         </article>

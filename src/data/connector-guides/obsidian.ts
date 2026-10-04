@@ -11,6 +11,32 @@ const obsidian: ConnectorGuide = {
     "Connect your Obsidian vault to Claude Code or Claude Desktop, by opening the vault folder directly or through the Local REST API plugin's built-in MCP server.",
   quickAnswer:
     "Obsidian has no official Claude connector. The quickest route is to start Claude Code inside your vault folder (`cd` into it and run `claude`): a vault is plain Markdown, so Claude can read, search and edit notes with no plugin. For Claude Desktop, use the Local REST API with MCP community plugin, which includes its own MCP server. Claude.ai in the browser can't reach a vault stored on your computer.",
+  keyFacts: [
+    "Obsidian has no official Claude connector or official MCP server (checked October 2026).",
+    "Claude Code can work on an Obsidian vault directly: start `claude` inside the vault folder. No plugin is needed.",
+    "For Claude Desktop, the Local REST API with MCP community plugin includes an MCP server at `https://127.0.0.1:27124/mcp/`.",
+    "Claude.ai in the browser can't connect to a vault stored on your computer.",
+    "Claude Code asks before it edits or creates a note, unless you change its permission mode.",
+  ],
+  testedWith: "Claude Code 2.1.289 on macOS, against a test vault of 8 notes",
+  evidence: [
+    {
+      src: "/connectors/obsidian/claude-code-tasks.png",
+      width: 1600,
+      height: 597,
+      alt: "Claude Code in a terminal listing 7 open tasks from an Obsidian test vault, grouped by note",
+      caption: "Claude Code started inside a test vault, asked to list open tasks. It found all 7 across 4 notes and skipped the one already checked off.",
+      capturedOn: CHECKED,
+    },
+    {
+      src: "/connectors/obsidian/claude-code-priya.png",
+      width: 1600,
+      height: 414,
+      alt: "Claude Code in a terminal finding the two notes that link to [[Priya]] and the open task owed to her",
+      caption: "Following backlinks: Claude Code found both notes linking to [[Priya]] and the one open task she's waiting on.",
+      capturedOn: CHECKED,
+    },
+  ],
   methods: [
     {
       kind: "no_mcp",
@@ -97,7 +123,7 @@ const obsidian: ConnectorGuide = {
   setup: [
     {
       method: 0,
-      title: "Set up: Claude Code in your vault",
+      title: "How to connect Obsidian to Claude Code (no plugin)",
       surface: "Claude Code",
       steps: [
         { text: "Install Claude Code if you don't have it yet, by following the quickstart at code.claude.com/docs." },
@@ -120,7 +146,7 @@ const obsidian: ConnectorGuide = {
     },
     {
       method: 1,
-      title: "Set up: Local REST API plugin's MCP server",
+      title: "How to connect Obsidian to Claude Desktop with MCP",
       surface: "Claude Code and Claude Desktop",
       steps: [
         { text: "In Obsidian, open Settings, then Community plugins. Browse for `Local REST API with MCP`, then install and enable it." },
@@ -255,6 +281,7 @@ const obsidian: ConnectorGuide = {
     },
   ],
   related: [],
+  publishedOn: CHECKED,
   verifiedOn: CHECKED,
   status: "published",
 };
