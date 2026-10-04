@@ -89,8 +89,6 @@ export interface ConnectorGuide {
   quickAnswer: string;
   /** Short, self-contained statements an answer engine can quote as-is. */
   keyFacts: string[];
-  /** What the tests ran on, e.g. "Claude Code 2.1.289 on macOS". */
-  testedWith: string;
   evidence: Evidence[];
   methods: Method[];
   setup: SetupBlock[];

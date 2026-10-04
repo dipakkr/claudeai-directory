@@ -18,7 +18,6 @@ const obsidian: ConnectorGuide = {
     "Claude.ai in the browser can't connect to a vault stored on your computer.",
     "Claude Code asks before it edits or creates a note, unless you change its permission mode.",
   ],
-  testedWith: "Claude Code 2.1.289 on macOS, against a test vault of 8 notes",
   evidence: [
     {
       src: "/connectors/obsidian/claude-code-tasks.png",

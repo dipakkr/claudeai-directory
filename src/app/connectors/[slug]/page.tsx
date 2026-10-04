@@ -169,7 +169,7 @@ export default async function ConnectorGuidePage({ params }: { params: Promise<{
             </nav>
             <h1 className="mt-5 text-[clamp(34px,4.6vw,52px)] font-normal leading-[1.05] text-foreground">{h1}</h1>
             <p className="mt-3 text-[13px] text-muted-foreground">
-              By the claudeai.directory team · Tested with {g.testedWith} · Last verified{" "}
+              By the claudeai.directory team · Last verified{" "}
               <time dateTime={g.verifiedOn}>{fmtDate(g.verifiedOn)}</time>
             </p>
 
