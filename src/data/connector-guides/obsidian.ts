@@ -42,7 +42,7 @@ const obsidian: ConnectorGuide = {
       worksIn: ["claude_code"],
       auth: "local",
       status: "active",
-      note: "Reads files directly, so Obsidian doesn't need to be open. Claude asks before editing a note unless you change the permission mode.",
+      note: "The simplest option. Claude Code reads your notes as ordinary files, so there is nothing to install and Obsidian can stay closed. Claude asks before it changes anything.",
       source: { url: "https://code.claude.com/docs/en/permissions#working-directories", verifiedOn: CHECKED },
     },
     {
@@ -56,7 +56,7 @@ const obsidian: ConnectorGuide = {
       needs: "Obsidian desktop running with the plugin enabled",
       lastActivity: "2026-10-03",
       status: "active",
-      note: "Version 4.0 added a built-in MCP server at `/mcp/`. Its README says separate Obsidian MCP servers are no longer necessary.",
+      note: "The best choice for Claude Desktop. Since version 4.0 the plugin includes its own MCP server, so you don't need a separate one. Obsidian has to stay open while you use it.",
       source: { url: PLUGIN_README, verifiedOn: CHECKED },
     },
     {
@@ -70,7 +70,7 @@ const obsidian: ConnectorGuide = {
       needs: "Node.js 22 or later",
       lastActivity: "2026-08-14",
       status: "active",
-      note: "Reads the Markdown files directly, so no plugin or API key is needed and Obsidian can stay closed.",
+      note: "Good if you'd rather not install a plugin. It works on your note files directly, with no API key, and Obsidian can stay closed.",
       source: { url: "https://github.com/StevenStavrakis/obsidian-mcp", verifiedOn: CHECKED },
     },
     {
@@ -84,7 +84,7 @@ const obsidian: ConnectorGuide = {
       needs: "Local REST API plugin 4.0+, Node.js 24+",
       lastActivity: "2026-09-23",
       status: "active",
-      note: "Lets you restrict Claude to certain folders, or to read-only access.",
+      note: "Good if you want limits. You can keep Claude to certain folders, or let it read but not write.",
       source: { url: "https://github.com/cyanheads/obsidian-mcp-server", verifiedOn: CHECKED },
     },
     {
@@ -98,7 +98,7 @@ const obsidian: ConnectorGuide = {
       needs: "Local REST API plugin, uv",
       lastActivity: "2026-08-31",
       status: "active",
-      note: "The most-starred Obsidian MCP server. With version 5 of the plugin, its patch tool fails (issue #158), so editing inside a note doesn't work. Reading, appending and rewriting whole notes still do.",
+      note: "The most popular Obsidian MCP server, but partly broken with the current plugin. Claude can read notes, add to them and rewrite them, but can't edit just part of a note (issue #158).",
       source: { url: "https://github.com/MarkusPfundstein/mcp-obsidian", verifiedOn: CHECKED },
     },
     {
@@ -111,7 +111,7 @@ const obsidian: ConnectorGuide = {
       auth: "none",
       lastActivity: "2026-09-15",
       status: "active",
-      note: "Skills that teach Claude Code Obsidian's own formats (Markdown, Bases, JSON Canvas) and the Obsidian CLI. Pairs well with the folder route. Steph Ango is Obsidian's CEO, but the skills come from his personal repo, not from Obsidian.",
+      note: "Not a connection by itself. Add it to Claude Code so Claude writes proper Obsidian links, properties, Bases and Canvas files. Made by Obsidian's CEO, Steph Ango, but published on his personal GitHub rather than by Obsidian.",
       source: { url: "https://github.com/kepano/obsidian-skills", verifiedOn: CHECKED },
     },
   ],
