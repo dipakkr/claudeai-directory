@@ -168,10 +168,17 @@ export default async function ConnectorGuidePage({ params }: { params: Promise<{
               <span className="text-foreground">{g.app}</span>
             </nav>
             <h1 className="mt-5 text-[clamp(34px,4.6vw,52px)] font-normal leading-[1.05] text-foreground">{h1}</h1>
-            <p className="mt-3 text-[13px] text-muted-foreground">
-              By the claudeai.directory team · Last verified{" "}
-              <time dateTime={g.verifiedOn}>{fmtDate(g.verifiedOn)}</time>
-            </p>
+            <div className="mt-5 flex items-center gap-3">
+              <Image src="/logo-mark-256.png" alt="" width={36} height={36} className="h-9 w-9 rounded-full border border-border" />
+              <div className="leading-tight">
+                <Link href="/about" className="text-[14px] text-foreground hover:underline underline-offset-4">
+                  claudeai.directory team
+                </Link>
+                <p className="mt-0.5 text-[13px] text-muted-foreground">
+                  Last verified <time dateTime={g.verifiedOn}>{fmtDate(g.verifiedOn)}</time>
+                </p>
+              </div>
+            </div>
 
             <div className="mt-8 rounded-xl border border-border bg-card p-5 md:p-6">
               <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground">Quick answer</p>
