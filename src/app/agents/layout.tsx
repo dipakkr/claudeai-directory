@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { DEFAULT_OG_IMAGE } from "@/lib/seo";
 
 const TITLE = "Claude Agents Directory: Browse Claude Code Agents";
 const DESCRIPTION =
@@ -8,7 +9,7 @@ export const metadata: Metadata = {
   title: { absolute: TITLE },
   description: DESCRIPTION,
   alternates: { canonical: "/agents" },
-  openGraph: { title: TITLE, description: DESCRIPTION, url: "/agents" },
+  openGraph: { images: [DEFAULT_OG_IMAGE], title: TITLE, description: DESCRIPTION, url: "/agents" },
 };
 
 export default function AgentsLayout({ children }: { children: React.ReactNode }) {

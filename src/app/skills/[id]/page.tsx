@@ -6,7 +6,7 @@ import { loadSkill, loadSkills } from "@/lib/server/skills";
 import { loadRegistryIndex } from "@/lib/server/registry";
 import { resolvePluginInstall } from "@/lib/install";
 import { skillSource } from "@/lib/resource-source";
-import { resourceTitle } from "@/lib/seo";
+import { resourceTitle, DEFAULT_OG_IMAGE } from "@/lib/seo";
 import SkillDetailClient from "./SkillDetailClient";
 import PartPage, { partMetadata } from "@/components/directory/PartPage";
 import { loadPluginPart } from "@/lib/server/plugin-parts";
@@ -47,13 +47,15 @@ export async function generateMetadata({
     description,
     alternates: { canonical: `${SITE_URL}/skills/${id}` },
     openGraph: {
+      images: [DEFAULT_OG_IMAGE],
       title,
       description,
       url: `${SITE_URL}/skills/${id}`,
       type: "website",
     },
     twitter: {
-      card: "summary",
+      images: [DEFAULT_OG_IMAGE.url],
+      card: "summary_large_image",
       title,
       description,
     },

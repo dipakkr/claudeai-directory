@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { DEFAULT_OG_IMAGE } from "@/lib/seo";
 
 const title = "LLM API Pricing: Compare Claude, GPT, Gemini and More";
 const description =
@@ -8,8 +9,8 @@ export const metadata: Metadata = {
   title: { absolute: title },
   description,
   alternates: { canonical: "/llm-api-pricing" },
-  openGraph: { title, description, url: "/llm-api-pricing" },
-  twitter: { card: "summary", title, description },
+  openGraph: { images: [DEFAULT_OG_IMAGE], title, description, url: "/llm-api-pricing" },
+  twitter: { images: [DEFAULT_OG_IMAGE.url], card: "summary_large_image", title, description },
 };
 
 export default function PricingLayout({ children }: { children: React.ReactNode }) {

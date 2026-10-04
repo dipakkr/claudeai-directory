@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { DEFAULT_OG_IMAGE } from "@/lib/seo";
 import { Geist, Geist_Mono, Source_Serif_4 } from "next/font/google";
 import "./globals.css";
 import Providers from "@/components/providers";
@@ -61,11 +62,13 @@ export const metadata: Metadata = {
     locale: "en_US",
     url: SITE_URL,
     siteName: "ClaudeAI Directory",
+    images: [DEFAULT_OG_IMAGE],
     title: DEFAULT_TITLE,
     description: DEFAULT_DESCRIPTION,
   },
   twitter: {
     card: "summary_large_image",
+    images: [DEFAULT_OG_IMAGE.url],
     title: DEFAULT_TITLE,
     description: DEFAULT_DESCRIPTION,
   },

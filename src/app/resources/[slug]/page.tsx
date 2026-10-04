@@ -13,6 +13,7 @@ import { Badge } from "@/components/ui/badge";
 import { BreadcrumbSchema } from "@/components/seo/JsonLd";
 import { serverFetch } from "@/lib/server/api";
 import type { Resource } from "@/types";
+import { DEFAULT_OG_IMAGE } from "@/lib/seo";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.claudeai.directory";
 
@@ -62,7 +63,7 @@ export async function generateMetadata({
             title: resource.title,
             description: resource.description,
             type: "article",
-            images: resource.cover_image ? [resource.cover_image] : undefined,
+            images: resource.cover_image ? [resource.cover_image] : [DEFAULT_OG_IMAGE],
         },
     };
 }

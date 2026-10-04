@@ -6,7 +6,7 @@ import { BreadcrumbSchema, SoftwareApplicationSchema } from "@/components/seo/Js
 import { fetchApi } from "@/lib/api-server";
 import { agentToItem, mcpToItem, pluginToItem, skillToItem, type DirectoryItem } from "@/lib/directory";
 import { pluginResolution } from "@/lib/plugin-install";
-import { resourceTitle } from "@/lib/seo";
+import { resourceTitle, DEFAULT_OG_IMAGE } from "@/lib/seo";
 import type { Agent, MCPServer, Plugin, Skill } from "@/types";
 import PluginDetail from "./PluginDetail";
 
@@ -22,8 +22,8 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     title: { absolute: title },
     description,
     alternates: { canonical: `${SITE_URL}/plugins/${slug}` },
-    openGraph: { title, description, url: `${SITE_URL}/plugins/${slug}`, type: "website" },
-    twitter: { card: "summary", title, description },
+    openGraph: { images: [DEFAULT_OG_IMAGE], title, description, url: `${SITE_URL}/plugins/${slug}`, type: "website" },
+    twitter: { images: [DEFAULT_OG_IMAGE.url], card: "summary_large_image", title, description },
   };
 }
 

@@ -66,3 +66,16 @@ export function plainText(value: string): string {
     .replace(/\s+/g, " ")
     .trim();
 }
+
+/**
+ * Share-card image used wherever a route has no opengraph-image of its own.
+ * A page that sets `openGraph` replaces the parent's, image included, so each
+ * one must list this explicitly. Rename the file when the image changes:
+ * social networks cache previews by URL.
+ */
+export const DEFAULT_OG_IMAGE = {
+  url: "/og/default-2026-10.jpg",
+  width: 1200,
+  height: 630,
+  alt: "claudeai.directory: discover the best resources for Claude",
+};

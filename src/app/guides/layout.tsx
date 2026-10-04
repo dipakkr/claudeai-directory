@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { DEFAULT_OG_IMAGE } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: "Guides: Step-by-Step Claude AI Tutorials",
@@ -6,6 +7,7 @@ export const metadata: Metadata = {
     "In-depth, step-by-step guides for building with Claude AI. Learn prompt engineering, MCP integration, and advanced techniques.",
   alternates: { canonical: "/guides" },
   openGraph: {
+    images: [DEFAULT_OG_IMAGE],
     title: "Guides: Step-by-Step Claude AI Tutorials",
     description:
       "In-depth, step-by-step guides for building with Claude AI.",

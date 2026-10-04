@@ -6,6 +6,7 @@ import PartDetail from "@/components/directory/PartDetail";
 import { pluginResolution } from "@/lib/plugin-install";
 import { KIND_LABEL, MIN_INDEXABLE_BODY } from "@/lib/plugin-parts";
 import type { Plugin, PluginPartDoc, PluginPartKind } from "@/types";
+import { DEFAULT_OG_IMAGE } from "@/lib/seo";
 
 const SITE_URL = "https://www.claudeai.directory";
 
@@ -24,8 +25,8 @@ export function partMetadata(part: PluginPartDoc, plugin: Plugin, kind: PluginPa
     description,
     alternates: { canonical: url },
     robots: (part.body?.length ?? 0) < MIN_INDEXABLE_BODY ? { index: false, follow: true } : undefined,
-    openGraph: { title, description, url, type: "website" },
-    twitter: { card: "summary", title, description },
+    openGraph: { images: [DEFAULT_OG_IMAGE], title, description, url, type: "website" },
+    twitter: { card: "summary_large_image", images: [DEFAULT_OG_IMAGE.url], title, description },
   };
 }
 

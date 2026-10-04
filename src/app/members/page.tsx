@@ -3,12 +3,14 @@ import { Suspense } from "react";
 import { serverFetch } from "@/lib/server/api";
 import MembersClient from "./MembersClient";
 import type { MembersResponse } from "@/hooks/use-members";
+import { DEFAULT_OG_IMAGE } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: "Claude Community Members",
   description:
     "Meet the Claude AI community: builders, researchers, and enthusiasts. Browse member profiles, find collaborators, and discover what people are building.",
   openGraph: {
+    images: [DEFAULT_OG_IMAGE],
     title: "Members: Claude Directory Community",
     description:
       "Meet the people building with Claude AI. Browse member profiles and connect with the community.",
@@ -17,6 +19,7 @@ export const metadata: Metadata = {
     type: "website",
   },
   twitter: {
+    images: [DEFAULT_OG_IMAGE.url],
     card: "summary_large_image",
     title: "Members: Claude Directory Community",
     description: "Meet the Claude AI community: builders, researchers, and enthusiasts.",

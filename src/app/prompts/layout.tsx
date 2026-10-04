@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { DEFAULT_OG_IMAGE } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: "AI Prompts: Copy-Ready AI Prompt Library",
@@ -6,6 +7,7 @@ export const metadata: Metadata = {
     "Curated, copy-ready prompts for Claude AI. Find prompts for coding, writing, analysis, business, and creative tasks.",
   alternates: { canonical: "/prompts" },
   openGraph: {
+    images: [DEFAULT_OG_IMAGE],
     title: "AI Prompts: Copy-Ready AI Prompt Library",
     description:
       "Curated, copy-ready prompts for Claude AI. Find prompts for coding, writing, analysis, business, and creative tasks.",

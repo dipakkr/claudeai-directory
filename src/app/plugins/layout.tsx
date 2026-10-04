@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { DEFAULT_OG_IMAGE } from "@/lib/seo";
 
 const TITLE = "Claude Plugins Marketplace: Browse and Install Plugins";
 const DESCRIPTION =
@@ -8,7 +9,7 @@ export const metadata: Metadata = {
   title: { absolute: TITLE },
   description: DESCRIPTION,
   alternates: { canonical: "/plugins" },
-  openGraph: { title: TITLE, description: DESCRIPTION, url: "/plugins" },
+  openGraph: { images: [DEFAULT_OG_IMAGE], title: TITLE, description: DESCRIPTION, url: "/plugins" },
 };
 
 export default function PluginsLayout({ children }: { children: React.ReactNode }) {

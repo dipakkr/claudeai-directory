@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { DEFAULT_OG_IMAGE } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: "Connectors: Claude AI Directory",
@@ -6,6 +7,7 @@ export const metadata: Metadata = {
     "Explore Claude connector workflows for tools like Gmail, Google Drive, Slack, Linear, Notion, and support team systems.",
   alternates: { canonical: "/connectors" },
   openGraph: {
+    images: [DEFAULT_OG_IMAGE],
     title: "Connectors: Claude AI Directory",
     description:
       "A guide to what people actually build with Claude connectors across inboxes, docs, CRM, design, and engineering tools.",

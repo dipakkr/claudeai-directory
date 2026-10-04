@@ -14,6 +14,7 @@ import {
   topCommands,
 } from "@/data/claude-code-commands-guide";
 import CommandsExplorer, { type ExplorerGroup } from "./CommandsExplorer";
+import { DEFAULT_OG_IMAGE } from "@/lib/seo";
 
 const SITE_URL = "https://www.claudeai.directory";
 const PATH = "/claude-code-commands";
@@ -24,8 +25,8 @@ export const metadata: Metadata = {
   title: { absolute: title },
   description,
   alternates: { canonical: PATH },
-  openGraph: { title, description, url: PATH, type: "article" },
-  twitter: { card: "summary", title, description },
+  openGraph: { images: [DEFAULT_OG_IMAGE], title, description, url: PATH, type: "article" },
+  twitter: { images: [DEFAULT_OG_IMAGE.url], card: "summary_large_image", title, description },
 };
 
 type DocCommand = (typeof docs.commands)[number];

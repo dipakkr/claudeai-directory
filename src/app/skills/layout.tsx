@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { DEFAULT_OG_IMAGE } from "@/lib/seo";
 
 const TITLE = "Claude Skills Directory: Browse Claude Code Skills";
 const DESCRIPTION =
@@ -8,7 +9,7 @@ export const metadata: Metadata = {
   title: { absolute: TITLE },
   description: DESCRIPTION,
   alternates: { canonical: "/skills" },
-  openGraph: { title: TITLE, description: DESCRIPTION, url: "/skills" },
+  openGraph: { images: [DEFAULT_OG_IMAGE], title: TITLE, description: DESCRIPTION, url: "/skills" },
 };
 
 export default function SkillsLayout({ children }: { children: React.ReactNode }) {

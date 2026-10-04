@@ -22,6 +22,7 @@ import { TagList } from "@/components/directory/detail";
 import { faviconFor } from "@/lib/directory";
 import { fetchApi } from "@/lib/api-server";
 import type { ShowcaseProject } from "@/types";
+import { DEFAULT_OG_IMAGE } from "@/lib/seo";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.claudeai.directory";
 
@@ -205,13 +206,15 @@ export async function generateMetadata({
       },
     },
     openGraph: {
+      images: [DEFAULT_OG_IMAGE],
       title,
       description,
       url: `${SITE_URL}/showcase/${slug}`,
       type: "website",
     },
     twitter: {
-      card: "summary",
+      images: [DEFAULT_OG_IMAGE.url],
+      card: "summary_large_image",
       title,
       description,
     },

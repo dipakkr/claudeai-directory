@@ -13,6 +13,7 @@ import type { PublicProfile, ShowcaseProject, Thread } from "@/types";
 import { FeedSidebar } from "@/components/feed/FeedSidebar";
 import { rankedLaunches } from "@/lib/home-community";
 import { FromX, type FromXParams } from "./FromX";
+import { DEFAULT_OG_IMAGE } from "@/lib/seo";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.claudeai.directory";
 const TITLE = "Claude Community Feed & Forum";
@@ -44,7 +45,7 @@ export async function generateMetadata({ searchParams }: { searchParams: Promise
     alternates: { canonical: "/feed" },
     // Only the default view is indexable. Tab, filter and page URLs are not.
     robots: filtered ? { index: false, follow: true } : undefined,
-    openGraph: { title: TITLE, description: DESCRIPTION, url: "/feed" },
+    openGraph: { images: [DEFAULT_OG_IMAGE], title: TITLE, description: DESCRIPTION, url: "/feed" },
   };
 }
 

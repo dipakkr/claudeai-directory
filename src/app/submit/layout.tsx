@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { DEFAULT_OG_IMAGE } from "@/lib/seo";
 
 const TITLE = "Submit a Skill, MCP or Agent";
 const DESCRIPTION =
@@ -8,7 +9,7 @@ export const metadata: Metadata = {
   title: TITLE,
   description: DESCRIPTION,
   alternates: { canonical: "/submit" },
-  openGraph: { title: TITLE, description: DESCRIPTION, url: "/submit" },
+  openGraph: { images: [DEFAULT_OG_IMAGE], title: TITLE, description: DESCRIPTION, url: "/submit" },
 };
 
 export default function SubmitLayout({ children }: { children: React.ReactNode }) {

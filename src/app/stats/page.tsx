@@ -6,6 +6,7 @@ import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import PageBreadcrumb from "@/components/layout/PageBreadcrumb";
 import { fetchApi } from "@/lib/api-server";
+import { DEFAULT_OG_IMAGE } from "@/lib/seo";
 
 const TITLE = "Open Stats: Claude AI Directory in Numbers";
 const DESCRIPTION =
@@ -15,7 +16,7 @@ export const metadata: Metadata = {
   title: { absolute: TITLE },
   description: DESCRIPTION,
   alternates: { canonical: "/stats" },
-  openGraph: { title: TITLE, description: DESCRIPTION, url: "/stats" },
+  openGraph: { images: [DEFAULT_OG_IMAGE], title: TITLE, description: DESCRIPTION, url: "/stats" },
 };
 
 interface Row {

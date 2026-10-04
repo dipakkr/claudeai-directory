@@ -7,7 +7,7 @@ import { fetchApi } from "@/lib/api-server";
 import { resolvePluginInstall } from "@/lib/install";
 import { agentSource } from "@/lib/resource-source";
 import { loadRegistryIndex } from "@/lib/server/registry";
-import { resourceTitle } from "@/lib/seo";
+import { resourceTitle, DEFAULT_OG_IMAGE } from "@/lib/seo";
 import type { Agent } from "@/types";
 import AgentDetail from "./AgentDetail";
 import PartPage, { partMetadata } from "@/components/directory/PartPage";
@@ -31,8 +31,8 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     title: { absolute: title },
     description,
     alternates: { canonical: `${SITE_URL}/agents/${slug}` },
-    openGraph: { title, description, url: `${SITE_URL}/agents/${slug}`, type: "website" },
-    twitter: { card: "summary", title, description },
+    openGraph: { images: [DEFAULT_OG_IMAGE], title, description, url: `${SITE_URL}/agents/${slug}`, type: "website" },
+    twitter: { images: [DEFAULT_OG_IMAGE.url], card: "summary_large_image", title, description },
   };
 }
 

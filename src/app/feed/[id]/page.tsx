@@ -4,7 +4,7 @@ import { fetchApi } from "@/lib/api-server";
 import type { PublicProfile, Thread, Reply } from "@/types";
 import ThreadDetail from "./ThreadDetailClient";
 import { BreadcrumbSchema, DiscussionForumPostingSchema } from "@/components/seo/JsonLd";
-import { pageTitle, plainText } from "@/lib/seo";
+import { pageTitle, plainText, DEFAULT_OG_IMAGE } from "@/lib/seo";
 import { isIndexable, postTitle as titleOf } from "@/lib/feed";
 import { ViewTracker } from "@/components/tracking/ViewTracker";
 
@@ -22,7 +22,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
     description,
     alternates: { canonical: `/feed/${id}` },
     robots: isIndexable(thread) ? undefined : { index: false, follow: true },
-    openGraph: { title, description, url: `/feed/${id}`, type: "article" },
+    openGraph: { images: [DEFAULT_OG_IMAGE], title, description, url: `/feed/${id}`, type: "article" },
   };
 }
 

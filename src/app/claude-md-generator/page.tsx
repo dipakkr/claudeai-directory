@@ -5,6 +5,7 @@ import Footer from "@/components/layout/Footer";
 import PageBreadcrumb from "@/components/layout/PageBreadcrumb";
 import { BreadcrumbSchema, SoftwareApplicationSchema } from "@/components/seo/JsonLd";
 import GeneratorClient, { GeneratorSkeleton } from "./GeneratorClient";
+import { DEFAULT_OG_IMAGE } from "@/lib/seo";
 
 const SITE_URL = "https://www.claudeai.directory";
 const PATH = "/claude-md-generator";
@@ -17,6 +18,7 @@ export const metadata: Metadata = {
   description: DESCRIPTION,
   alternates: { canonical: PATH },
   openGraph: {
+    images: [DEFAULT_OG_IMAGE],
     title: TITLE,
     description: DESCRIPTION,
     url: `${SITE_URL}${PATH}`,
@@ -24,6 +26,7 @@ export const metadata: Metadata = {
     type: "website",
   },
   twitter: {
+    images: [DEFAULT_OG_IMAGE.url],
     card: "summary_large_image",
     title: TITLE,
     description: DESCRIPTION,

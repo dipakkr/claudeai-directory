@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { fetchApi } from "@/lib/api-server";
 import type { Prompt } from "@/types";
 import PromptDetailClient from "./PromptDetailClient";
+import { DEFAULT_OG_IMAGE } from "@/lib/seo";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.claudeai.directory";
 
@@ -25,13 +26,15 @@ export async function generateMetadata({
     description,
     alternates: { canonical: `/prompts/${id}` },
     openGraph: {
+      images: [DEFAULT_OG_IMAGE],
       title,
       description,
       url: `/prompts/${id}`,
       type: "article",
     },
     twitter: {
-      card: "summary",
+      images: [DEFAULT_OG_IMAGE.url],
+      card: "summary_large_image",
       title,
       description,
     },

@@ -77,6 +77,11 @@ const nextConfig: NextConfig = {
   },
   async headers() {
     return [
+      // Share images are renamed when they change, so edges and crawlers can keep them forever.
+      {
+        source: "/og/:path*",
+        headers: [{ key: "Cache-Control", value: "public, max-age=31536000, immutable" }],
+      },
       {
         source: "/(.*)",
         headers: [

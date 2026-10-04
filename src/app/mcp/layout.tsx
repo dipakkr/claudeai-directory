@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { DEFAULT_OG_IMAGE } from "@/lib/seo";
 
 const TITLE = "Claude MCP Servers Directory: Browse & Install MCPs";
 const DESCRIPTION =
@@ -8,7 +9,7 @@ export const metadata: Metadata = {
   title: { absolute: TITLE },
   description: DESCRIPTION,
   alternates: { canonical: "/mcp" },
-  openGraph: { title: TITLE, description: DESCRIPTION, url: "/mcp" },
+  openGraph: { images: [DEFAULT_OG_IMAGE], title: TITLE, description: DESCRIPTION, url: "/mcp" },
 };
 
 export default function MCPLayout({ children }: { children: React.ReactNode }) {
