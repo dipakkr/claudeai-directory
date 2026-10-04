@@ -10,6 +10,8 @@ import { loadRegistryIndex } from "@/lib/server/registry";
 import { resourceTitle } from "@/lib/seo";
 import type { Agent } from "@/types";
 import AgentDetail from "./AgentDetail";
+import PartPage, { partMetadata } from "@/components/directory/PartPage";
+import { loadPluginPart } from "@/lib/server/plugin-parts";
 import { resourceGuides, reviewedAgents } from "@/data/resource-guides";
 
 const SITE_URL = "https://www.claudeai.directory";
@@ -17,7 +19,11 @@ const SITE_URL = "https://www.claudeai.directory";
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
   const agent = (await fetchApi<Agent>(`/agents/${slug}`)) ?? reviewedAgents.find(agent => agent.id === slug);
-  if (!agent) return { title: "Agent Not Found" };
+  if (!agent) {
+    // Agents that ship inside a plugin live at the same short URL.
+    const fromPlugin = await loadPluginPart("agents", slug);
+    return fromPlugin ? partMetadata(fromPlugin.part, fromPlugin.plugin, "agents") : { title: "Agent Not Found" };
+  }
   const guide = resourceGuides[`agent/${slug}`];
   const title = guide?.title || resourceTitle(agent.title || agent.name, agent.description);
   const description = guide?.metaDescription || agent.description?.slice(0, 160) || `${agent.title || agent.name} agent for Claude Code`;
@@ -38,7 +44,11 @@ export default async function AgentPage({ params }: { params: Promise<{ slug: st
     fetchApi<{ id: string }>(`/plugins/${slug}`),
   ]);
   const agent = record ?? reviewedAgents.find(agent => agent.id === slug);
-  if (!agent) notFound();
+  if (!agent) {
+    const fromPlugin = await loadPluginPart("agents", slug);
+    if (!fromPlugin) notFound();
+    return <PartPage part={fromPlugin.part} plugin={fromPlugin.plugin} kind="agents" />;
+  }
 
   const source = agentSource(agent);
   const resolution = resolvePluginInstall({

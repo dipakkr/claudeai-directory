@@ -60,6 +60,16 @@ export default function PluginDetail({
   // Older rows have counts only: fall back to the plain summary.
   const rows = parts ? [] : insideRows(plugin.contents);
   const repo = plugin.github_url?.match(/github\.com\/([^/]+\/[^/#?]+)/)?.[1];
+  // One page for everything the plugin brings: jump links to each group below.
+  const jumps = parts
+    ? [
+        totals?.skills ? { id: "skills", label: plural(totals.skills, "Skill") } : null,
+        parts.mcp_servers.length ? { id: "mcp", label: plural(parts.mcp_servers.length, "MCP server") } : null,
+        totals?.agents ? { id: "agents", label: plural(totals.agents, "Agent") } : null,
+        totals?.commands ? { id: "commands", label: plural(totals.commands, "Command") } : null,
+        ecosystem.length ? { id: "more", label: `More for ${name}` } : null,
+      ].filter((x): x is { id: string; label: string } => Boolean(x))
+    : [];
   const category = plugin.category ? plugin.category.charAt(0).toUpperCase() + plugin.category.slice(1) : "";
 
   return (
@@ -111,6 +121,20 @@ export default function PluginDetail({
       related={related}
       relatedTitle="Related plugins"
     >
+      {jumps.length > 1 && (
+        <nav aria-label={`What's in ${name}`} className="flex flex-wrap gap-2">
+          {jumps.map((j) => (
+            <a
+              key={j.id}
+              href={`#${j.id}`}
+              className="rounded-full border border-border px-3 py-1 text-[13px] text-foreground transition-colors hover:border-foreground/40"
+            >
+              {j.label}
+            </a>
+          ))}
+        </nav>
+      )}
+
       {mcpHref && (
         <p className="text-[13.5px] text-[var(--cad-desc)]">
           Only need the tools?{" "}
@@ -142,7 +166,7 @@ export default function PluginDetail({
       {parts && parts.skills.length > 0 && (
         <DetailSection id="skills" title={`Skills (${totals?.skills ?? parts.skills.length})`}>
           <p className="-mt-1 mb-3 text-[13.5px] text-muted-foreground">Claude uses these on its own when your request matches.</p>
-          <PluginPartList pluginId={plugin.id} kind="skills" parts={parts.skills} total={totals?.skills ?? parts.skills.length} icon={Sparkles} />
+          <PluginPartList kind="skills" parts={parts.skills} total={totals?.skills ?? parts.skills.length} icon={Sparkles} />
         </DetailSection>
       )}
 
@@ -150,24 +174,37 @@ export default function PluginDetail({
         <DetailSection id="mcp" title={parts.mcp_servers.length === 1 ? "MCP server" : `MCP servers (${parts.mcp_servers.length})`}>
           <p className="-mt-1 mb-3 text-[13.5px] text-muted-foreground">Added to Claude Code when you install the plugin. You sign in to {name} the first time it is used.</p>
           <ul className="divide-y divide-border overflow-hidden rounded-[12px] border border-border">
-            {parts.mcp_servers.map((server) => (
-              <li key={server.name} className="flex gap-4 px-5 py-4">
-                <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px] border border-border text-muted-foreground">
-                  <Plug className="h-4 w-4" />
-                </span>
-                <span className="min-w-0 flex-1">
-                  <span className="flex flex-wrap items-center gap-2">
-                    <span className="font-mono text-[14px] text-foreground">{server.name}</span>
-                    <span className="rounded border border-border px-1.5 py-px font-mono text-[10px] uppercase tracking-wide text-muted-foreground">
-                      {server.type === "stdio" ? "Local" : "Remote"}
-                    </span>
+            {parts.mcp_servers.map((server) => {
+              const row = (
+                <>
+                  <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px] border border-border text-muted-foreground">
+                    <Plug className="h-4 w-4" />
                   </span>
-                  {(server.url || server.command) && (
-                    <code className="mt-1 block truncate font-mono text-[12.5px] text-muted-foreground">{server.url || server.command}</code>
+                  <span className="min-w-0 flex-1">
+                    <span className="flex flex-wrap items-center gap-2">
+                      <span className="font-mono text-[14px] text-foreground group-hover:text-primary">{server.name}</span>
+                      <span className="rounded border border-border px-1.5 py-px font-mono text-[10px] uppercase tracking-wide text-muted-foreground">
+                        {server.type === "stdio" ? "Local" : "Remote"}
+                      </span>
+                    </span>
+                    {(server.url || server.command) && (
+                      <code className="mt-1 block truncate font-mono text-[12.5px] text-muted-foreground">{server.url || server.command}</code>
+                    )}
+                  </span>
+                </>
+              );
+              return (
+                <li key={server.name}>
+                  {server.mcp_slug ? (
+                    <Link href={`/mcp/${server.mcp_slug}`} className="group flex gap-4 px-5 py-4 transition-colors hover:bg-foreground/[0.04]">
+                      {row}
+                    </Link>
+                  ) : (
+                    <div className="flex gap-4 px-5 py-4">{row}</div>
                   )}
-                </span>
-              </li>
-            ))}
+                </li>
+              );
+            })}
           </ul>
         </DetailSection>
       )}
@@ -175,14 +212,14 @@ export default function PluginDetail({
       {parts && parts.agents.length > 0 && (
         <DetailSection id="agents" title={`Agents (${totals?.agents ?? parts.agents.length})`}>
           <p className="-mt-1 mb-3 text-[13.5px] text-muted-foreground">Specialized helpers Claude can hand work to.</p>
-          <PluginPartList pluginId={plugin.id} kind="agents" parts={parts.agents} total={totals?.agents ?? parts.agents.length} icon={Bot} />
+          <PluginPartList kind="agents" parts={parts.agents} total={totals?.agents ?? parts.agents.length} icon={Bot} />
         </DetailSection>
       )}
 
       {parts && parts.commands.length > 0 && (
         <DetailSection id="commands" title={`Commands (${totals?.commands ?? parts.commands.length})`}>
           <p className="-mt-1 mb-3 text-[13.5px] text-muted-foreground">Shortcuts you type in Claude Code.</p>
-          <PluginPartList pluginId={plugin.id} kind="commands" parts={parts.commands} total={totals?.commands ?? parts.commands.length} icon={SquareSlash} prefix="/" />
+          <PluginPartList kind="commands" parts={parts.commands} total={totals?.commands ?? parts.commands.length} icon={SquareSlash} prefix="/" />
         </DetailSection>
       )}
 

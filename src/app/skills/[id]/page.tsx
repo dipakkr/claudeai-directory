@@ -8,6 +8,8 @@ import { resolvePluginInstall } from "@/lib/install";
 import { skillSource } from "@/lib/resource-source";
 import { resourceTitle } from "@/lib/seo";
 import SkillDetailClient from "./SkillDetailClient";
+import PartPage, { partMetadata } from "@/components/directory/PartPage";
+import { loadPluginPart } from "@/lib/server/plugin-parts";
 import { SoftwareApplicationSchema, BreadcrumbSchema } from "@/components/seo/JsonLd";
 
 const SITE_URL = "https://www.claudeai.directory";
@@ -30,7 +32,9 @@ export async function generateMetadata({
   const skill = await loadSkill(id);
 
   if (!skill) {
-    return { title: "Skill Not Found" };
+    // Skills that ship inside a plugin live at the same short URL.
+    const fromPlugin = await loadPluginPart("skills", id);
+    return fromPlugin ? partMetadata(fromPlugin.part, fromPlugin.plugin, "skills") : { title: "Skill Not Found" };
   }
 
   const guide = resourceGuides[`skill/${id}`];
@@ -62,8 +66,13 @@ export default async function SkillDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const [skill, registry, plugin] = await Promise.all([loadSkill(id), loadRegistryIndex(3000), fetchApi<{ id: string }>(`/plugins/${id}`)]);
-  if (!skill) notFound();
+  const skill = await loadSkill(id);
+  if (!skill) {
+    const fromPlugin = await loadPluginPart("skills", id);
+    if (!fromPlugin) notFound();
+    return <PartPage part={fromPlugin.part} plugin={fromPlugin.plugin} kind="skills" />;
+  }
+  const [registry, plugin] = await Promise.all([loadRegistryIndex(3000), fetchApi<{ id: string }>(`/plugins/${id}`)]);
   const source = skill ? skillSource(skill) : null;
   const resolution = resolvePluginInstall({
     match: source ? registry.get(source.repo, source.path) : null,

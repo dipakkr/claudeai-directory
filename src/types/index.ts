@@ -379,13 +379,13 @@ export interface LinkPreview {
 
 export interface PluginPart {
   name: string;
-  /** Its page on the site: /plugins/{plugin}/{kind}/{slug}. Absent on rows read before parts had pages. */
+  /** Its page: /skills/{slug} or /agents/{slug}. Absent for commands and rows read before parts had pages. */
   slug?: string;
   description: string;
   url: string;
 }
 
-export type PluginPartKind = "skills" | "agents" | "commands";
+export type PluginPartKind = "skills" | "agents";
 
 /** A skill, agent or command shipped inside a plugin, with what list rows need from its plugin. */
 export interface PluginPartDoc extends PluginPart {
@@ -396,9 +396,9 @@ export interface PluginPartDoc extends PluginPart {
   /** The file's markdown after its frontmatter (detail endpoint only). */
   body?: string;
   body_len?: number;
-  /** Set when the same file is listed under another plugin: that page is the one to index. */
-  canonical?: string | null;
   plugin: { title: string; category: string; author: string; verified: boolean; installs: number };
+  /** Other plugins that ship this same file. */
+  also_in?: { id: string; title: string }[];
   created_at: string;
 }
 
@@ -406,7 +406,8 @@ export interface PluginComponents {
   skills: PluginPart[];
   agents: PluginPart[];
   commands: PluginPart[];
-  mcp_servers: { name: string; type: string; url?: string | null; command?: string | null }[];
+  /** mcp_slug: our /mcp/{slug} page for the same server, when there is one. */
+  mcp_servers: { name: string; type: string; url?: string | null; command?: string | null; mcp_slug?: string | null }[];
   hooks: boolean;
 }
 

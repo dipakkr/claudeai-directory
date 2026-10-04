@@ -1,18 +1,20 @@
 import Link from "next/link";
 import { ArrowUpRight, type LucideIcon } from "lucide-react";
-import type { PluginPart, PluginPartKind } from "@/types";
+import type { PluginPart } from "@/types";
+
+/** Descriptions come from frontmatter and sometimes carry markdown emphasis. */
+export const plainText = (text: string) => text.replace(/\*\*|__/g, "");
 
 /** Skills, agents or commands a plugin ships: name, what it does, its page here (or its file when it has none). */
 export function PluginPartList({
-  pluginId,
   kind,
   parts,
   total,
   icon: Icon,
   prefix = "",
 }: {
-  pluginId: string;
-  kind: PluginPartKind;
+  /** Where its pages live; commands have none and link to their file. */
+  kind: "skills" | "agents" | "commands";
   parts: PluginPart[];
   total: number;
   icon: LucideIcon;
@@ -29,7 +31,7 @@ export function PluginPartList({
           {part.name}
           {external && <ArrowUpRight className="h-3.5 w-3.5 opacity-0 transition-opacity group-hover:opacity-60" />}
         </span>
-        {part.description && <span className="mt-1 block text-[13.5px] leading-6 text-muted-foreground">{part.description}</span>}
+        {part.description && <span className="mt-1 block text-[13.5px] leading-6 text-muted-foreground">{plainText(part.description)}</span>}
       </span>
     </>
   );
@@ -39,8 +41,8 @@ export function PluginPartList({
       <ul className="divide-y divide-border overflow-hidden rounded-[12px] border border-border">
         {parts.map((part) => (
           <li key={part.slug || part.url || part.name}>
-            {part.slug ? (
-              <Link href={`/plugins/${pluginId}/${kind}/${part.slug}`} className={cls}>
+            {part.slug && kind !== "commands" ? (
+              <Link href={`/${kind}/${part.slug}`} className={cls}>
                 {row(part, false)}
               </Link>
             ) : (

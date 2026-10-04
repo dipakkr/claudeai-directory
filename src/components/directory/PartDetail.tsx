@@ -3,16 +3,16 @@
 import Link from "next/link";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import { Bot, Github, Package, Sparkles, SquareSlash } from "lucide-react";
+import { Bot, Github, Package, Sparkles } from "lucide-react";
 import { InstallActions, InstallPanel } from "@/components/directory/InstallPanel";
 import { DetailSection, ResourceDetail, scrollToInstall } from "@/components/directory/ResourceDetail";
-import { PluginPartList } from "@/components/directory/PluginPartList";
+import { PluginPartList, plainText } from "@/components/directory/PluginPartList";
 import { compactNumber, pluginIcon } from "@/lib/directory";
 import type { InstallResolution } from "@/lib/install";
 import { KIND_LABEL } from "@/lib/plugin-parts";
 import type { Plugin, PluginPartDoc, PluginPartKind } from "@/types";
 
-const ICONS = { skills: Sparkles, agents: Bot, commands: SquareSlash };
+const ICONS = { skills: Sparkles, agents: Bot };
 const MORE_SHOWN = 8;
 
 /** Relative links in a repo file point at its neighbours on GitHub, not at this site. Images load from raw. */
@@ -30,6 +30,7 @@ function githubUrl(fileUrl: string) {
 
 const plural = (n: number, word: string) => `${n} ${n === 1 ? word.replace(/s$/, "") : word}`;
 
+/** A skill or agent that ships inside a plugin, at /skills/{slug} or /agents/{slug}. */
 export default function PartDetail({
   part,
   kind,
@@ -45,27 +46,29 @@ export default function PartDetail({
   const Icon = ICONS[kind];
   const pluginName = plugin.title || plugin.name;
   const pluginHref = `/plugins/${plugin.id}`;
-  const displayName = kind === "commands" ? `/${part.name}` : part.name;
   const parts = plugin.components;
   const siblings = (parts?.[kind] ?? []).filter((p) => p.slug !== part.slug);
 
   // Everything else the plugin adds, so people see what comes with one install.
   const totals = plugin.contents;
+  const others = (n: number | undefined, word: string, same: boolean) => {
+    const count = (n ?? 0) - (same ? 1 : 0);
+    return count > 0 ? plural(count, same ? `other ${word}` : word) : null;
+  };
   const alsoAdds = [
-    totals?.skills ? plural(kind === "skills" ? totals.skills - 1 : totals.skills, kind === "skills" ? "other skills" : "skills") : null,
-    totals?.agents ? plural(kind === "agents" ? totals.agents - 1 : totals.agents, kind === "agents" ? "other agents" : "agents") : null,
-    totals?.commands ? plural(kind === "commands" ? totals.commands - 1 : totals.commands, kind === "commands" ? "other commands" : "commands") : null,
+    others(totals?.skills, "skills", kind === "skills"),
+    others(totals?.agents, "agents", kind === "agents"),
+    others(totals?.commands, "commands", false),
     parts?.mcp_servers.length ? plural(parts.mcp_servers.length, "MCP servers") : null,
     totals?.hooks ? "hooks" : null,
-  ].filter((x): x is string => Boolean(x) && !/^0 /.test(x as string));
+  ].filter((x): x is string => Boolean(x));
 
   return (
     <ResourceDetail
-      backHref="/plugins"
-      backLabel="Plugins"
-      parent={{ href: pluginHref, label: pluginName }}
+      backHref={`/${kind}`}
+      backLabel={kind === "skills" ? "Skills" : "Agents"}
       icon={<Icon className="h-6 w-6" />}
-      name={displayName}
+      name={part.name}
       verified={plugin.official?.anthropic_verified}
       meta={
         <>
@@ -89,10 +92,11 @@ export default function PartDetail({
       action={
         <InstallActions resolution={resolution} kind="plugin" resourceId={plugin.id} name={pluginName} href={pluginHref} onInstall={scrollToInstall} />
       }
-      tagline={part.description || null}
+      tagline={part.description ? plainText(part.description) : null}
       facts={[
         { label: "Type", value: label.one },
         { label: "Plugin", value: pluginName, href: pluginHref },
+        { label: "Also in", chips: (part.also_in ?? []).map((p) => p.title) },
         { label: "Made by", value: plugin.author?.name, href: plugin.author?.url || undefined },
         { label: "Anthropic verified", value: plugin.official?.anthropic_verified ? "Yes" : null },
         { label: "Plugin installs on Claude Marketplace", value: plugin.official?.installs ? compactNumber(plugin.official.installs) : null },
@@ -117,6 +121,20 @@ export default function PartDetail({
             {pluginName} plugin
           </Link>
           {alsoAdds.length > 0 ? <>, which also adds {alsoAdds.join(", ")}.</> : "."} Installing the plugin is how you get it.
+          {(part.also_in ?? []).length > 0 && (
+            <>
+              {" "}Also comes in{" "}
+              {part.also_in!.map((p, i) => (
+                <span key={p.id}>
+                  {i > 0 && ", "}
+                  <Link href={`/plugins/${p.id}`} className="text-foreground underline underline-offset-[3px] hover:text-primary">
+                    {p.title}
+                  </Link>
+                </span>
+              ))}
+              .
+            </>
+          )}
         </p>
       </div>
 
@@ -142,19 +160,10 @@ export default function PartDetail({
 
       {siblings.length > 0 && (
         <DetailSection id="more" title={`More ${label.many} in ${pluginName}`}>
-          <PluginPartList
-            pluginId={plugin.id}
-            kind={kind}
-            parts={siblings.slice(0, MORE_SHOWN)}
-            total={Math.min(siblings.length, MORE_SHOWN)}
-            icon={Icon}
-            prefix={kind === "commands" ? "/" : ""}
-          />
-          {siblings.length > MORE_SHOWN && (
-            <Link href={`${pluginHref}#${kind}`} className="mt-3 inline-block text-[13.5px] text-[var(--cad-link)] underline underline-offset-[3px]">
-              See all {siblings.length + 1} {label.many} in {pluginName}
-            </Link>
-          )}
+          <PluginPartList kind={kind} parts={siblings.slice(0, MORE_SHOWN)} total={Math.min(siblings.length, MORE_SHOWN)} icon={Icon} />
+          <Link href={pluginHref} className="mt-3 inline-block text-[13.5px] text-[var(--cad-link)] underline underline-offset-[3px]">
+            Everything in {pluginName}
+          </Link>
         </DetailSection>
       )}
     </ResourceDetail>

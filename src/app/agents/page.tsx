@@ -4,7 +4,6 @@ import { CollectionPageSchema } from "@/components/seo/JsonLd";
 import { fetchApi } from "@/lib/api-server";
 import { agentToItem, buildOrders, partsToItems } from "@/lib/directory";
 import { loadPluginParts } from "@/lib/server/plugin-parts";
-import { ownParts } from "@/lib/plugin-parts";
 import { loadOrders } from "@/lib/server/rankings";
 import { listingRobots } from "@/lib/seo";
 import type { Agent } from "@/types";
@@ -27,7 +26,7 @@ export default async function AgentsPage({ searchParams }: { searchParams: Listi
   const standalone = [...agents, ...reviewedAgents.filter(reviewed => !agents.some(agent => agent.id === reviewed.id))];
   const items = standalone.map(agentToItem);
   // Agents that ship inside plugins, each linking to its page under the plugin.
-  items.push(...partsToItems(ownParts(parts, standalone)));
+  items.push(...partsToItems(parts));
 
   return (
     <ListingPage

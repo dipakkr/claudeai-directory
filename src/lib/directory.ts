@@ -181,14 +181,15 @@ export function pluginToItem(p: Plugin): DirectoryItem {
 export function partToItem(p: PluginPartDoc, nth = 0): DirectoryItem {
   const type: DirectoryType = p.kind === "agents" ? "agent" : "skill";
   const installs = p.plugin.installs || 0;
-  // Lists carry every part (thousands), so rows stay small: short key, short description.
-  const description = p.description.length > 120 ? `${p.description.slice(0, 119).trimEnd()}…` : p.description;
+  // Lists carry every part (thousands), so rows stay small: short description.
+  const plain = p.description.replace(/\*\*|__/g, "");
+  const description = plain.length > 120 ? `${plain.slice(0, 119).trimEnd()}…` : plain;
   return {
-    key: itemKey(type, `${p.plugin_id}/${p.slug}`),
+    key: itemKey(type, p.slug),
     type,
     name: p.name,
     description,
-    href: `/plugins/${p.plugin_id}/${p.kind}/${p.slug}`,
+    href: `/${p.kind}/${p.slug}`,
     iconUrl: null,
     category: p.plugin.category || "",
     tags: [],
