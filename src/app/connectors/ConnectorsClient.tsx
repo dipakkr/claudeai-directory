@@ -209,7 +209,15 @@ function ConnectorShelf({
   );
 }
 
-export default function ConnectorsClient({ initialServers = [] }: { initialServers?: MCPServer[] }) {
+export type GuideLink = { slug: string; app: string; title: string; description: string };
+
+export default function ConnectorsClient({
+  initialServers = [],
+  guides = [],
+}: {
+  initialServers?: MCPServer[];
+  guides?: GuideLink[];
+}) {
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState("All");
   const [saved, setSaved] = useState<string[]>([]);
@@ -337,6 +345,24 @@ export default function ConnectorsClient({ initialServers = [] }: { initialServe
           </div>
         </section>
 
+        {guides.length > 0 && (
+          <section className="mx-auto flex max-w-[1180px] flex-col gap-5 px-6 pb-14 sm:px-8">
+            <h2 className="text-[clamp(24px,2.4vw,32px)] font-medium leading-tight">Setup guides</h2>
+            <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+              {guides.map((g) => (
+                <li key={g.slug}>
+                  <Link
+                    href={`/connectors/${g.slug}`}
+                    className="flex h-full flex-col rounded-[10px] border border-border bg-card p-5 transition-colors hover:border-foreground/30"
+                  >
+                    <span className="text-[16px] text-foreground">{g.title}</span>
+                    <span className="mt-2 line-clamp-2 text-[14px] text-muted-foreground">{g.description}</span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
         <div id="top-connectors" className="mx-auto flex max-w-[1180px] flex-col gap-14 px-6 pb-[88px] sm:px-8">
           {visibleShelves.map((shelf) => (
             <ConnectorShelf

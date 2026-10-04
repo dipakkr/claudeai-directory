@@ -5,6 +5,7 @@ import { reviewedAgents } from "@/data/resource-guides";
 import { publicLaunches } from "@/lib/home-community";
 import type { ShowcaseProject } from "@/types";
 import { MIN_INDEXABLE_BODY } from "@/lib/plugin-parts";
+import { liveGuides } from "@/data/connector-guides";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.claudeai.directory";
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api";
@@ -124,6 +125,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${SITE_URL}/claude-code-commands`, changeFrequency: "weekly", priority: 0.8 },
     { url: `${SITE_URL}/llm-api-pricing`, changeFrequency: "weekly", priority: 0.7 },
     { url: `${SITE_URL}/claude-md-generator`, changeFrequency: "monthly", priority: 0.6 },
+    { url: `${SITE_URL}/connectors`, changeFrequency: "weekly", priority: 0.7 },
+    ...liveGuides().map((g) => ({
+      url: `${SITE_URL}/connectors/${g.slug}`,
+      lastModified: new Date(`${g.verifiedOn}T00:00:00Z`),
+      changeFrequency: "monthly" as const,
+      priority: 0.7,
+    })),
   ];
 
   // Dynamic pages
