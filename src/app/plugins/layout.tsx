@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 
-const TITLE = "Claude Code Plugins: Browse and Install Plugins";
+const TITLE = "Claude Plugins Marketplace: Browse and Install Plugins";
 const DESCRIPTION =
-  "Find Claude Code plugins that bundle skills, agents, commands and MCP servers. Browse by category and copy the install command.";
+  "Browse Claude plugins and every skill, agent, command and MCP server inside them. See what each plugin adds, then copy the install command for Claude Code.";
 
 export const metadata: Metadata = {
   title: { absolute: TITLE },

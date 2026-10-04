@@ -5,17 +5,12 @@ import Footer from "@/components/layout/Footer";
 import { BreadcrumbSchema, SoftwareApplicationSchema } from "@/components/seo/JsonLd";
 import { fetchApi } from "@/lib/api-server";
 import { agentToItem, mcpToItem, pluginToItem, skillToItem, type DirectoryItem } from "@/lib/directory";
-import { resolvePluginInstall, type InstallResolution } from "@/lib/install";
+import { pluginResolution } from "@/lib/plugin-install";
 import { resourceTitle } from "@/lib/seo";
 import type { Agent, MCPServer, Plugin, Skill } from "@/types";
 import PluginDetail from "./PluginDetail";
 
 const SITE_URL = "https://www.claudeai.directory";
-/** Marketplaces Claude Code ships with, so users never need to add them. */
-const PREINSTALLED = new Set(["claude-plugins-official"]);
-/** Marketplaces whose own README says their plugins work in Claude Code. */
-const CLAUDE_CODE_OK = new Set(["claude-plugins-official", "knowledge-work-plugins"]);
-
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
   const plugin = await fetchApi<Plugin>(`/plugins/${slug}`);
@@ -54,32 +49,7 @@ export default async function PluginPage({ params }: { params: Promise<{ slug: s
     ...(agents?.data ?? []).filter((a) => named.test(a.name)).map(agentToItem),
   ].slice(0, 8);
 
-  const m = plugin.marketplace;
-  // Cowork-only on Claude Marketplace and no Claude Code support stated: link to Cowork, no CLI command.
-  const coworkOnly = !plugin.works_in?.claude_code && !CLAUDE_CODE_OK.has(m.name);
-  const resolution: InstallResolution = coworkOnly
-    ? {
-        method: "manual",
-        verified: false,
-        title: "Install in Claude (Cowork)",
-        reason: "This plugin is published for Claude Cowork. Its publisher doesn't list Claude Code support.",
-        setupUrl: plugin.works_in?.cowork_url || plugin.official?.url,
-        setupLabel: "Open in Claude",
-        sourceUrl: plugin.github_url || undefined,
-      }
-    : resolvePluginInstall({
-    match: {
-      marketplaceName: m.name,
-      marketplaceSource: m.source,
-      pluginName: m.plugin_name,
-      bundledWith: [],
-      ours: false,
-      preinstalled: PREINSTALLED.has(m.name),
-      publisher: m.source.startsWith("anthropics/") ? "Anthropic" : undefined,
-    },
-    setupUrl: plugin.official?.url,
-    sourceUrl: plugin.github_url,
-  });
+  const resolution = pluginResolution(plugin);
   const name = plugin.title || plugin.name;
 
   return (

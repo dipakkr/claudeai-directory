@@ -1,19 +1,22 @@
 import Link from "next/link";
 import ListingPage from "@/components/directory/ListingPage";
 import { CollectionPageSchema } from "@/components/seo/JsonLd";
-import { buildOrders, skillToItem, type Orders } from "@/lib/directory";
+import { buildOrders, skillToItem, type DirectoryItem, type Orders } from "@/lib/directory";
 import type { Skill } from "@/types";
 
 export default function SkillsClient({
   initialData,
   initialParams,
   ranked,
+  pluginSkills = [],
 }: {
   initialData: Skill[];
   initialParams: { category?: string; search?: string };
   ranked: Orders;
+  /** Skills that ship inside plugins, each linking to its page under the plugin. */
+  pluginSkills?: DirectoryItem[];
 }) {
-  const items = initialData.map(skillToItem);
+  const items = [...initialData.map(skillToItem), ...pluginSkills];
   return (
     <ListingPage
       title="Claude Skills Marketplace"

@@ -1,4 +1,4 @@
-import type { Agent, MCPServer, Prompt, Skill, Plugin } from "@/types";
+import type { Agent, MCPServer, Prompt, Skill, Plugin, PluginPartDoc } from "@/types";
 
 // One row in the ranked directory list. Every catalog type maps onto this, so
 // adding a new type (plugins, setups…) means a new mapper, not a new list.
@@ -23,6 +23,8 @@ export interface DirectoryItem {
   score: number;
   /** ISO date, used for the New ordering. */
   createdAt: string;
+  /** The plugin it ships in, for skills and agents that come inside a plugin. */
+  via?: string;
 }
 
 export type SortKey = "trending" | "top" | "new";
@@ -173,6 +175,41 @@ export function pluginToItem(p: Plugin): DirectoryItem {
     score: installs,
     createdAt: p.created_at,
   };
+}
+
+/** A skill or agent that ships inside a plugin. Ranked by its plugin's marketplace installs. */
+export function partToItem(p: PluginPartDoc, nth = 0): DirectoryItem {
+  const type: DirectoryType = p.kind === "agents" ? "agent" : "skill";
+  const installs = p.plugin.installs || 0;
+  // Lists carry every part (thousands), so rows stay small: short key, short description.
+  const description = p.description.length > 120 ? `${p.description.slice(0, 119).trimEnd()}…` : p.description;
+  return {
+    key: itemKey(type, `${p.plugin_id}/${p.slug}`),
+    type,
+    name: p.name,
+    description,
+    href: `/plugins/${p.plugin_id}/${p.kind}/${p.slug}`,
+    iconUrl: null,
+    category: p.plugin.category || "",
+    tags: [],
+    author: p.plugin.author || undefined,
+    verified: p.plugin.verified,
+    via: p.plugin.title,
+    metric: installs > 0 ? { value: compactNumber(installs), label: "plugin installs", icon: "download" } : null,
+    // Every part shares its plugin's count: damp the 2nd, 3rd… so one big plugin doesn't fill the top of the list.
+    score: installs / (nth + 1) ** 2,
+    createdAt: p.created_at,
+  };
+}
+
+/** Plugin parts as list rows, in the order given (most-installed plugin first). */
+export function partsToItems(parts: PluginPartDoc[]): DirectoryItem[] {
+  const seen = new Map<string, number>();
+  return parts.map((p) => {
+    const nth = seen.get(p.plugin_id) ?? 0;
+    seen.set(p.plugin_id, nth + 1);
+    return partToItem(p, nth);
+  });
 }
 
 export function agentToItem(a: Agent): DirectoryItem {

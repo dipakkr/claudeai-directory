@@ -379,8 +379,25 @@ export interface LinkPreview {
 
 export interface PluginPart {
   name: string;
+  /** Its page on the site: /plugins/{plugin}/{kind}/{slug}. Absent on rows read before parts had pages. */
+  slug?: string;
   description: string;
   url: string;
+}
+
+export type PluginPartKind = "skills" | "agents" | "commands";
+
+/** A skill, agent or command shipped inside a plugin, with what list rows need from its plugin. */
+export interface PluginPartDoc extends PluginPart {
+  id: string;
+  slug: string;
+  plugin_id: string;
+  kind: PluginPartKind;
+  /** The file's markdown after its frontmatter (detail endpoint only). */
+  body?: string;
+  body_len?: number;
+  plugin: { title: string; category: string; author: string; verified: boolean; installs: number };
+  created_at: string;
 }
 
 export interface PluginComponents {

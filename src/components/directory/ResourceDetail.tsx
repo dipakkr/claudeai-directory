@@ -22,6 +22,7 @@ export interface Fact {
 export function ResourceDetail({
   backHref,
   backLabel,
+  parent,
   iconSrc,
   icon,
   name,
@@ -37,6 +38,8 @@ export function ResourceDetail({
 }: {
   backHref: string;
   backLabel: string;
+  /** A level between the back link and this page, e.g. the plugin a skill ships in. */
+  parent?: { href: string; label: string };
   iconSrc?: string | null;
   /** Shown in the tile when there is no logo image. */
   icon?: ReactNode;
@@ -65,6 +68,14 @@ export function ResourceDetail({
             {backLabel}
           </Link>
           <span className="text-muted-foreground/60">/</span>
+          {parent && (
+            <>
+              <Link href={parent.href} className="truncate text-muted-foreground transition-colors hover:text-foreground">
+                {parent.label}
+              </Link>
+              <span className="text-muted-foreground/60">/</span>
+            </>
+          )}
           <span className="truncate text-foreground">{name}</span>
         </nav>
       </div>

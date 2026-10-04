@@ -4,6 +4,7 @@ import type { Thread } from "@/types";
 import { reviewedAgents } from "@/data/resource-guides";
 import { publicLaunches } from "@/lib/home-community";
 import type { ShowcaseProject } from "@/types";
+import { MIN_INDEXABLE_BODY } from "@/lib/plugin-parts";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.claudeai.directory";
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api";
@@ -23,6 +24,30 @@ async function fetchSlugs(endpoint: string, slugField = "id"): Promise<string[]>
   } catch {
     return [];
   }
+}
+
+/** Pages for skills, agents and commands inside plugins, only those with enough of their own text to index. */
+async function fetchPluginPartPaths(): Promise<string[]> {
+  const kinds = ["skills", "agents", "commands"] as const;
+  const lists = await Promise.all(
+    kinds.map(async (kind) => {
+      const paths: string[] = [];
+      try {
+        // Paged to stay under the fetch data cache's 2 MB per response.
+        for (let skip = 0; skip < 5000; skip += 800) {
+          const res = await fetch(`${API_BASE}/plugins/parts?kind=${kind}&skip=${skip}&limit=800`, { next: { revalidate: 3600 } });
+          if (!res.ok) break;
+          const parts = ((await res.json()).data ?? []) as { plugin_id: string; slug: string; body_len?: number }[];
+          for (const p of parts) if ((p.body_len ?? 0) >= MIN_INDEXABLE_BODY) paths.push(`/plugins/${p.plugin_id}/${kind}/${p.slug}`);
+          if (parts.length < 800) break;
+        }
+      } catch {
+        // Partial list is fine: the rest is picked up on the next revalidation.
+      }
+      return paths;
+    })
+  );
+  return lists.flat();
 }
 
 /** Feed posts with enough substance to index (see isIndexable). */
@@ -117,6 +142,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const launchSlugs = await fetchPublicLaunchSlugs();
   const agentSlugs = await fetchSlugs("/agents", "_id");
   const pluginSlugs = await fetchSlugs("/plugins", "_id");
+  const pluginPartPaths = await fetchPluginPartPaths();
   const lessonPaths = await fetchGuideLessonPaths(guideSlugs);
 
   const mcpPages: MetadataRoute.Sitemap = mcpSlugs.map((slug) => ({
@@ -135,6 +161,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     url: `${SITE_URL}/plugins/${slug}`,
     changeFrequency: "weekly",
     priority: 0.8,
+  }));
+
+  const pluginPartPages: MetadataRoute.Sitemap = pluginPartPaths.map((path) => ({
+    url: `${SITE_URL}${path}`,
+    changeFrequency: "weekly",
+    priority: 0.6,
   }));
 
   const skillPages: MetadataRoute.Sitemap = skillIds.map((id) => ({
@@ -189,6 +221,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...skillPages,
     ...agentPages,
     ...pluginPages,
+    ...pluginPartPages,
     ...promptPages,
     ...jobPages,
     ...lessonPages,

@@ -321,6 +321,9 @@ export function DirectoryRow({ item, rank, showType }: { item: DirectoryItem; ra
         <span className="min-w-0">
           <span className="flex items-center gap-2">
             <span className="truncate text-[15px] text-foreground transition-colors group-hover:text-primary">{item.name}</span>
+            {item.via && (
+              <span className="hidden shrink-0 truncate text-[12px] text-muted-foreground sm:inline">in {item.via}</span>
+            )}
             {showType && chip && (
               <span className="hidden shrink-0 rounded border border-border px-1.5 py-px font-mono text-[10px] uppercase tracking-wide text-muted-foreground sm:inline-block">
                 {chip}
@@ -342,7 +345,8 @@ export function DirectoryRow({ item, rank, showType }: { item: DirectoryItem; ra
           )}
         </span>
       </Link>
-      <FavoriteButton targetType={favoriteTargetType(item.type)} targetId={targetId} compact className="shrink-0" />
+      {/* Parts of a plugin have no record of their own to save; the plugin does. */}
+      {item.via ? <span aria-hidden /> : <FavoriteButton targetType={favoriteTargetType(item.type)} targetId={targetId} compact className="shrink-0" />}
     </li>
   );
 }

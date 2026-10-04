@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import ListingPage from "@/components/directory/ListingPage";
 import { CollectionPageSchema } from "@/components/seo/JsonLd";
 import { fetchApi } from "@/lib/api-server";
-import { agentToItem, buildOrders } from "@/lib/directory";
+import { agentToItem, buildOrders, partsToItems } from "@/lib/directory";
+import { loadPluginParts } from "@/lib/server/plugin-parts";
 import { loadOrders } from "@/lib/server/rankings";
 import { listingRobots } from "@/lib/seo";
 import type { Agent } from "@/types";
@@ -16,12 +17,15 @@ export async function generateMetadata({ searchParams }: { searchParams: Listing
 
 export default async function AgentsPage({ searchParams }: { searchParams: ListingParams }) {
   const params = await searchParams;
-  const [response, ranked] = await Promise.all([
+  const [response, ranked, parts] = await Promise.all([
     fetchApi<{ data: Agent[] }>("/agents?limit=200"),
     loadOrders("agent"),
+    loadPluginParts("agents"),
   ]);
   const agents = response?.data ?? [];
   const items = [...agents, ...reviewedAgents.filter(reviewed => !agents.some(agent => agent.id === reviewed.id))].map(agentToItem);
+  // Agents that ship inside plugins, each linking to its page under the plugin.
+  items.push(...partsToItems(parts));
 
   return (
     <ListingPage
