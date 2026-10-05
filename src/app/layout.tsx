@@ -5,7 +5,6 @@ import "./globals.css";
 import Providers from "@/components/providers";
 import Script from "next/script";
 import { OpenPanelComponent } from '@openpanel/nextjs';
-import SideAdBillboards from "@/components/layout/SideAdBillboards";
 import { ExternalLinkTracker } from "@/components/tracking/ExternalLinkTracker";
 import { VisitBeacon } from "@/components/tracking/VisitBeacon";
 import { ViewAsBanner } from "@/components/layout/ViewAsBanner";
@@ -100,7 +99,7 @@ export default function RootLayout({
         <Providers>
           {/* Discord announcement banner paused; the component stays in components/layout/AnnouncementBanner.tsx. */}
           <ViewAsBanner />
-          <SideAdBillboards />
+          {/* Side ad rails paused; the component stays in components/layout/SideAdBillboards.tsx. */}
           <ExternalLinkTracker />
           <VisitBeacon />
           <LaunchImpressions />
