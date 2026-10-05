@@ -28,7 +28,7 @@ export interface Method {
   needs?: string;
   /** YYYY-MM-DD of the last commit or release, when there is a repo. */
   lastActivity?: string;
-  status: "active" | "unmaintained" | "deprecated" | "unverified";
+  status: "active" | "broken" | "unmaintained" | "deprecated" | "unverified";
   /** Slug of this server's /mcp listing, when it has one. */
   mcpSlug?: string;
   note?: string;

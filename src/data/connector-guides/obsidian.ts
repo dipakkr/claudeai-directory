@@ -275,7 +275,7 @@ const obsidian: ConnectorGuide = {
       a: "If you want Obsidian-aware features such as search, tags and running commands, use the MCP server built into the Local REST API with MCP plugin. If you'd rather not install a plugin, obsidian-mcp works on the files directly. For Claude Code alone, you may not need an MCP server at all.",
     },
   ],
-  related: [],
+  related: ["wordpress", "home-assistant"],
   publishedOn: CHECKED,
   verifiedOn: CHECKED,
   status: "published",
