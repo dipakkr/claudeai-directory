@@ -44,7 +44,7 @@ const footerLinks = [
   {
     title: "Contribute",
     links: [
-      { label: "Submit a resource", href: "/submit" },
+      { label: "Submit to Claude Directory", href: "/submit" },
       { label: "Submit your app", href: "/launches/submit" },
       { label: "Advertise", href: "/?advertise=1" },
       { label: "Sign up", href: "/signup" },

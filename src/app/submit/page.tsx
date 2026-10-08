@@ -13,6 +13,7 @@ import type { ResourceInstall, ResourceKind as AnyKind } from "@/lib/install";
 // Plugins are listed from marketplaces, not submitted here.
 type ResourceKind = Exclude<AnyKind, "plugin">;
 import { SignInButton } from "@/components/auth/SignInDialog";
+import { SubmitGuide } from "./SubmitGuide";
 
 // CLAUDE.md "Submit" + INSTALL_REGISTRY.md "Skill Submission Flow":
 // GitHub URL + type, we detect what we can, the creator reviews, a human approves.
@@ -427,6 +428,7 @@ export default function SubmitPage() {
           </>
         )}
 
+        <SubmitGuide />
       </main>
       <Footer />
     </div>

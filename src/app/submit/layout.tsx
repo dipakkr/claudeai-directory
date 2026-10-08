@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { DEFAULT_OG_IMAGE } from "@/lib/seo";
 
-const TITLE = "Submit a Skill, MCP or Agent";
+const TITLE = "Submit to Claude Directory";
 const DESCRIPTION =
-  "Publish your Claude Skill, MCP server or Agent. Paste a GitHub URL and we turn verified setup metadata into a simple install experience.";
+  "Submit your Claude Skill, MCP server or Agent to Claude Directory. Paste a GitHub URL, check the details we detect, and get listed free with a working install command.";
 
 export const metadata: Metadata = {
   title: TITLE,

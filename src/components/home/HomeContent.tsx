@@ -61,7 +61,7 @@ export default function HomeContent({ items, orders, launches, community, member
         <p className="mt-5 text-sm text-muted-foreground">
           Built something for Claude?{" "}
           <Link href="/submit" className="inline-flex items-center gap-1 text-foreground hover:underline hover:underline-offset-4">
-            List it free <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+            Submit it to Claude Directory <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
           </Link>
         </p>
       </section>
@@ -112,7 +112,7 @@ export default function HomeContent({ items, orders, launches, community, member
             href="/submit"
             className="inline-flex h-10 shrink-0 items-center gap-1.5 rounded-full bg-foreground px-5 text-sm font-medium text-background transition-colors hover:bg-foreground/85"
           >
-            Submit a Resource
+            Submit to Claude Directory
             <ArrowRight className="h-3.5 w-3.5" />
           </Link>
         </div>

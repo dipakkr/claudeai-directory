@@ -109,7 +109,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${SITE_URL}/skills`, changeFrequency: "daily", priority: 0.9 },
     { url: `${SITE_URL}/agents`, changeFrequency: "daily", priority: 0.9 },
     { url: `${SITE_URL}/plugins`, changeFrequency: "daily", priority: 0.9 },
-    { url: `${SITE_URL}/submit`, changeFrequency: "monthly", priority: 0.5 },
+    { url: `${SITE_URL}/submit`, changeFrequency: "weekly", priority: 0.8 },
     { url: `${SITE_URL}/prompts`, changeFrequency: "daily", priority: 0.9 },
     { url: `${SITE_URL}/jobs`, changeFrequency: "daily", priority: 0.8 },
     { url: `${SITE_URL}/launches`, changeFrequency: "weekly", priority: 0.7 },
