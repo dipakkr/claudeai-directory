@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import ReactMarkdown from "react-markdown";
+import { repoUrlTransform } from "@/lib/markdown-links";
 import { Search } from "lucide-react";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
@@ -138,7 +139,7 @@ export default function MCPServerDetail({
           <div>
             {!guide && server.description && server.description !== server.one_liner ? (
               <div className="prose prose-sm max-w-none text-[14px] leading-[1.65] text-foreground dark:prose-invert prose-p:text-foreground prose-a:text-[var(--cad-link)] prose-strong:text-foreground prose-li:text-foreground">
-                <ReactMarkdown>
+                <ReactMarkdown urlTransform={repoUrlTransform(server.links?.repository ?? server.github_url)}>
                   {server.description.replace(/\s*•\s*/g, "\n- ").replace(/\*\*Note:\*\*/g, "\n\n**Note:**")}
                 </ReactMarkdown>
               </div>

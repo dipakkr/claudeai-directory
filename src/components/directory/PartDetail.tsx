@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import ReactMarkdown from "react-markdown";
+import { repoUrlTransform } from "@/lib/markdown-links";
 import remarkGfm from "remark-gfm";
 import { Bot, Github, Package, Sparkles } from "lucide-react";
 import { InstallActions, InstallPanel } from "@/components/directory/InstallPanel";
@@ -14,19 +15,6 @@ import type { Plugin, PluginPartDoc, PluginPartKind } from "@/types";
 
 const ICONS = { skills: Sparkles, agents: Bot };
 const MORE_SHOWN = 8;
-
-/** Relative links in a repo file point at its neighbours on GitHub, not at this site. Images load from raw. */
-function githubUrl(fileUrl: string) {
-  return (url: string, key: string) => {
-    if (!url || /^([a-z][a-z0-9+.-]*:|#|\/\/)/i.test(url)) return /^(https?:|mailto:|#)/i.test(url) ? url : "";
-    try {
-      const resolved = new URL(url, fileUrl).href;
-      return key === "src" ? resolved.replace("https://github.com/", "https://raw.githubusercontent.com/").replace("/blob/", "/") : resolved;
-    } catch {
-      return "";
-    }
-  };
-}
 
 const plural = (n: number, word: string) => `${n} ${n === 1 ? word.replace(/s$/, "") : word}`;
 
@@ -146,7 +134,7 @@ export default function PartDetail({
         <DetailSection title={label.body}>
           <div className="rounded-[11px] border border-border p-5 sm:p-6">
             <article className="guide-prose guide-prose-compact">
-              <ReactMarkdown remarkPlugins={[remarkGfm]} components={{ h1: "h2" }} urlTransform={githubUrl(part.url)}>
+              <ReactMarkdown remarkPlugins={[remarkGfm]} components={{ h1: "h2" }} urlTransform={repoUrlTransform(part.url)}>
                 {part.body}
               </ReactMarkdown>
             </article>

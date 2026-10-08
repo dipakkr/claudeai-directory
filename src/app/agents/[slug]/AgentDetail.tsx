@@ -3,6 +3,7 @@
 import { AlsoPlugin } from "@/components/directory/AlsoPlugin";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import { repoUrlTransform } from "@/lib/markdown-links";
 import { InstallActions, InstallPanel } from "@/components/directory/InstallPanel";
 import { DetailSection, ResourceDetail, scrollToInstall } from "@/components/directory/ResourceDetail";
 import { CategoryGlyph } from "@/components/directory/DiscoverListing";
@@ -64,7 +65,7 @@ export default function AgentDetail({
         <DetailSection title="Definition">
           <div className="rounded-[11px] border border-border p-5 sm:p-6">
             <article className="guide-prose guide-prose-compact">
-              <ReactMarkdown remarkPlugins={[remarkGfm]} components={{ h1: "h2" }}>{agent.content}</ReactMarkdown>
+              <ReactMarkdown remarkPlugins={[remarkGfm]} components={{ h1: "h2" }} urlTransform={repoUrlTransform(resolution.sourceUrl || agent.github_url)}>{agent.content}</ReactMarkdown>
             </article>
           </div>
         </DetailSection>

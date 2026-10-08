@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeSlug from "rehype-slug";
+import { repoUrlTransform } from "@/lib/markdown-links";
 import { ArrowUpRight } from "lucide-react";
 
 import Header from "@/components/layout/Header";
@@ -128,7 +129,7 @@ export default async function ResourcePage({
 
                         {resource.body ? (
                             <div className="prose prose-sm dark:prose-invert max-w-none prose-headings:font-semibold prose-headings:tracking-tight prose-a:text-primary prose-pre:border prose-pre:border-border">
-                                <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeSlug]}>
+                                <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeSlug]} urlTransform={repoUrlTransform(resource.url)}>
                                     {resource.body}
                                 </ReactMarkdown>
                             </div>

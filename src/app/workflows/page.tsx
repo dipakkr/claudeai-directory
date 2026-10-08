@@ -1,15 +1,14 @@
 import type { Metadata } from "next";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
-import Link from "next/link";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Workflow, Zap, FileText, Briefcase, Code2 } from "lucide-react";
+import { Zap, FileText, Briefcase, Code2 } from "lucide-react";
 
-// Orphan placeholder: its counts are not real and its category links 404.
-// Kept out of search until it is rebuilt or removed.
+// Orphan placeholder: its counts are not real and its category pages do not exist,
+// so the cards are not links. Kept out of search until it is rebuilt or removed.
 export const metadata: Metadata = {
   title: "Claude Workflows",
-  robots: { index: false, follow: true },
+  robots: { index: false, follow: false },
   alternates: { canonical: "/workflows" },
 };
 
@@ -18,28 +17,24 @@ const workflowCategories = [
         title: "Automation Workflows",
         description: "Automate repetitive tasks and boost efficiency",
         icon: Zap,
-        href: "/workflows/automation",
         count: "45 workflows",
     },
     {
         title: "Content Creation",
         description: "Streamline your content creation process",
         icon: FileText,
-        href: "/workflows/content",
         count: "32 workflows",
     },
     {
         title: "Development Workflows",
         description: "Enhance your development process with AI",
         icon: Code2,
-        href: "/workflows/development",
         count: "28 workflows",
     },
     {
         title: "Business Automation",
         description: "Automate business processes and operations",
         icon: Briefcase,
-        href: "/workflows/business",
         count: "22 workflows",
     },
 ];
@@ -66,8 +61,8 @@ const Workflows = () => {
                         {workflowCategories.map((category) => {
                             const Icon = category.icon;
                             return (
-                                <Link key={category.title} href={category.href}>
-                                    <Card className="h-full hover:bg-muted transition-colors">
+                                <div key={category.title}>
+                                    <Card className="h-full">
                                         <CardHeader>
                                             <div className="h-10 w-10 rounded-md bg-primary/10 flex items-center justify-center mb-3">
                                                 <Icon className="h-5 w-5 text-primary" />
@@ -79,7 +74,7 @@ const Workflows = () => {
                                             <p className="text-xs text-muted-foreground">{category.count}</p>
                                         </CardContent>
                                     </Card>
-                                </Link>
+                                </div>
                             );
                         })}
                     </div>

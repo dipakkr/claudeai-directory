@@ -4,6 +4,7 @@ import { AlsoPlugin } from "@/components/directory/AlsoPlugin";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeSlug from "rehype-slug";
+import { repoUrlTransform } from "@/lib/markdown-links";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import ResourceReplies from "@/components/shared/ResourceReplies";
@@ -92,7 +93,7 @@ function SkillBody({ skill, resolution, pluginHref }: { skill: Skill; resolution
         <DetailSection title="SKILL.md">
           <div className="rounded-[11px] border border-border p-5 sm:p-6">
             <article className="guide-prose guide-prose-compact">
-              <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeSlug]} components={{ h1: "h2" }}>
+              <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeSlug]} components={{ h1: "h2" }} urlTransform={repoUrlTransform(resolution.sourceUrl || skill.github_url)}>
                 {skill.content}
               </ReactMarkdown>
             </article>
