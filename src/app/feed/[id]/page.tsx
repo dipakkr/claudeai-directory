@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
 import { fetchApi } from "@/lib/api-server";
 import type { PublicProfile, Thread, Reply } from "@/types";
 import ThreadDetail from "./ThreadDetailClient";
+import OwnPostGate from "./OwnPostGate";
 import { BreadcrumbSchema, DiscussionForumPostingSchema } from "@/components/seo/JsonLd";
 import { pageTitle, plainText, DEFAULT_OG_IMAGE } from "@/lib/seo";
 import { isIndexable, postTitle as titleOf } from "@/lib/feed";
@@ -32,7 +32,8 @@ export default async function FeedPostPage({ params }: { params: Promise<{ id: s
     fetchApi<Thread>(`/community/threads/${id}`),
     fetchApi<Reply[]>(`/community/threads/${id}/replies`),
   ]);
-  if (!thread) notFound();
+  // Not visible to the public: let a signed-in author try with their own token before a 404.
+  if (!thread) return <OwnPostGate id={id} />;
 
   // Sidebar context: the author's public profile, and related posts that
   // share a tag (falling back to the newest posts).

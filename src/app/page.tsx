@@ -55,7 +55,7 @@ export default async function Home() {
     fetchApi<ListResponse<Agent>>("/agents?limit=200"),
     loadOrders(),
     fetchApi<ShowcaseProject[]>("/showcase?limit=100"),
-    fetchApi<Thread[]>("/community/threads?limit=30"),
+    fetchApi<Thread[]>("/community/threads?sort=mix&limit=30"),
     fetchApi<MembersResponse>("/users?per_page=8"),
   ]);
   // Live numbers and recent activity (the API caches this for a minute).

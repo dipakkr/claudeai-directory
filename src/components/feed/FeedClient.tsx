@@ -12,7 +12,7 @@ import { FEED_PAGE_SIZE } from "@/lib/feed";
 import type { Thread } from "@/types";
 
 /** Community posts: composer on top, cards below, "Load more" at the end. */
-export function FeedClient({ initialPosts, sort }: { initialPosts: Thread[]; sort: "latest" | "popular" }) {
+export function FeedClient({ initialPosts, sort }: { initialPosts: Thread[]; sort: "mix" | "latest" | "popular" }) {
   const { isAuthenticated } = useAuth();
   const [posts, setPosts] = useState(initialPosts);
   const [hasMore, setHasMore] = useState(initialPosts.length >= FEED_PAGE_SIZE);

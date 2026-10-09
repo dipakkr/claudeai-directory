@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { AtSign, BookOpen, Briefcase, Flame, Home, PenSquare, Rocket, Users } from "lucide-react";
+import { AtSign, BookOpen, Briefcase, Clock, Flame, Home, PenSquare, Rocket, Users } from "lucide-react";
 
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
@@ -21,19 +21,25 @@ const DESCRIPTION =
   "Posts, questions and discussions from people building with Claude, Claude Code and MCP. Share what you built, ask the community, and see the best tweets about Claude.";
 
 type Params = FromXParams & { tab?: string };
-type Tab = "latest" | "popular" | "x";
+type Tab = "home" | "latest" | "popular" | "x";
+type Sort = "mix" | "latest" | "popular";
 
+// Home mixes what people are reading with what is new, so the newest launch
+// post does not always sit on top. Latest is the plain timeline.
 const TABS: { id: Tab; label: string; href: string }[] = [
-  { id: "latest", label: "Latest", href: "/feed" },
+  { id: "home", label: "Home", href: "/feed" },
+  { id: "latest", label: "Latest", href: "/feed?tab=latest" },
   { id: "popular", label: "Popular", href: "/feed?tab=popular" },
   { id: "x", label: "From X", href: "/feed?tab=x" },
 ];
 
+const SORT_OF: Record<Tab, Sort> = { home: "mix", latest: "latest", popular: "popular", x: "mix" };
+
 function tabOf(params: Params): Tab {
-  if (params.tab === "popular" || params.tab === "x") return params.tab;
+  if (params.tab === "latest" || params.tab === "popular" || params.tab === "x") return params.tab;
   // Old tweet-feed links (?view=top, ?source=community) land on the X tab.
   if (params.view || params.source) return "x";
-  return "latest";
+  return "home";
 }
 
 export async function generateMetadata({ searchParams }: { searchParams: Promise<Params> }): Promise<Metadata> {
@@ -49,7 +55,7 @@ export async function generateMetadata({ searchParams }: { searchParams: Promise
   };
 }
 
-const TAB_ICONS: Record<Tab, typeof Home> = { latest: Home, popular: Flame, x: AtSign };
+const TAB_ICONS: Record<Tab, typeof Home> = { home: Home, latest: Clock, popular: Flame, x: AtSign };
 
 const MORE_LINKS = [
   { href: "/launches", label: "Launches", icon: Rocket },
@@ -102,7 +108,7 @@ function LeftNav({ tab }: { tab: Tab }) {
 export default async function FeedPage({ searchParams }: { searchParams: Promise<Params> }) {
   const params = await searchParams;
   const tab = tabOf(params);
-  const sort = tab === "popular" ? "popular" : "latest";
+  const sort = SORT_OF[tab];
   // Posts change often; the API caches in redis and clears on every write.
   const [postsData, showcase, membersData] = await Promise.all([
     tab === "x" ? Promise.resolve([]) : fetchApi<Thread[]>(`/community/threads?sort=${sort}&limit=${FEED_PAGE_SIZE}`, { revalidate: 0 }),
