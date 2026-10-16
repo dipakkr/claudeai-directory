@@ -66,6 +66,33 @@ export function faviconFor(url?: string | null, size = 64): string | null {
   }
 }
 
+/** Use the actual supplied logo, not the favicon of its image/CDN host. */
+export function mcpIcon(server: MCPServer): string | null {
+  const explicit = server.branding?.icon_url?.trim();
+  if (explicit) {
+    try {
+      const url = new URL(explicit);
+      if (url.protocol === "https:") return url.href;
+    } catch { /* fall through to the product website */ }
+  }
+  const known: Record<string, string> = {
+    github: "https://avatars.githubusercontent.com/github?s=128",
+    "playwright-mcp": "https://playwright.dev/img/playwright-logo.svg",
+    "chrome-devtools-mcp": "https://www.google.com/s2/favicons?domain=developer.chrome.com&sz=128",
+  };
+  const brand = known[server.slug || server.id];
+  if (brand) return brand;
+  for (const candidate of [server.links?.website, server.links?.documentation, server.documentation_url, server.connection?.url]) {
+    if (!candidate) continue;
+    try {
+      const host = new URL(candidate).hostname;
+      // Repository hosts identify the hosting platform, not the listed tool.
+      if (!/(^|\.)(github\.com|gitlab\.com|npmjs\.com|claude\.ai)$/.test(host)) return faviconFor(candidate);
+    } catch { /* try the next source */ }
+  }
+  return null;
+}
+
 function hasRemoteInstall(s: MCPServer): boolean {
   if (s.install) return s.install.status === "verified";
   const transport = (s.connection?.transport || "").toLowerCase();
@@ -92,7 +119,7 @@ export function mcpToItem(s: MCPServer): DirectoryItem {
     name: s.name,
     description: s.one_liner || s.description || "",
     href: `/mcp/${s.slug || s.id}`,
-    iconUrl: faviconFor(s.branding?.icon_url),
+    iconUrl: mcpIcon(s),
     category: s.category || "",
     tags: s.tags ?? [],
     metric:

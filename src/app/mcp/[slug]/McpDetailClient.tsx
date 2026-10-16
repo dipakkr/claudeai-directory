@@ -15,7 +15,7 @@ import { ResourceGuide } from "@/components/directory/ResourceGuide";
 import { resourceGuides } from "@/data/resource-guides";
 import type { InstallResolution } from "@/lib/install";
 import { useMCPServer, useMCPServers } from "@/hooks/use-mcp-servers";
-import { faviconFor, mcpToItem } from "@/lib/directory";
+import { mcpIcon, mcpToItem } from "@/lib/directory";
 import type { MCPServer } from "@/types";
 import marketplace from "@/data/claude-marketplace-connectors.json";
 
@@ -110,7 +110,7 @@ export default function MCPServerDetail({
         <ResourceDetail
           backHref="/mcp"
           backLabel="MCP servers"
-          iconSrc={faviconFor(server.branding?.icon_url)}
+          iconSrc={mcpIcon(server)}
           name={server.name}
           verified={server.official}
           tagline={summary}
