@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { Fragment, useEffect, useMemo, useRef, useState } from "react";
+import SponsorRails from "@/components/advertise/SponsorRails";
 import Link from "next/link";
 import { ArrowUp, Download, Search, Star, Wrench } from "lucide-react";
 import FavoriteButton, { favoriteTargetType } from "@/components/shared/FavoriteButton";
@@ -251,7 +252,10 @@ export default function DirectoryList({
         ) : shown.length > 0 ? (
           <ol className={orders || showTypes ? "" : "border-t border-border"}>
             {shown.map((item, index) => (
-              <DirectoryRow key={item.key} item={item} rank={index + 1} showType={showTypes && typeFilter === "all"} />
+              <Fragment key={item.key}>
+                <DirectoryRow item={item} rank={index + 1} showType={showTypes && typeFilter === "all"} />
+                {index === Math.min(2, shown.length - 1) && <li className="min-[1280px]:hidden"><SponsorRails inline /></li>}
+              </Fragment>
             ))}
           </ol>
         ) : (

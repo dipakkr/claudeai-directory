@@ -3,16 +3,11 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Info } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { api } from "@/lib/api";
+import { pulseEventAge, type PulseEvent, type PulseTickerEvent } from "@/lib/pulse-ticker";
 
-export interface PulseEvent {
-  type: "joined" | "launched" | "posted" | "upvoted" | "installed" | "viewed" | "browsing" | "copied";
-  who: string;
-  /** Where an anonymous visitor is, from the analytics (city may be missing). */
-  place?: { city: string | null; country: string | null } | null;
-  what: string | null;
-  href: string;
-  at: string;
-}
+export type { PulseEvent } from "@/lib/pulse-ticker";
 
 export interface Pulse {
   generated_at: string;
@@ -44,7 +39,7 @@ const VERB: Record<PulseEvent["type"], string> = {
 
 let countryNames: Intl.DisplayNames | null = null;
 /** "Someone in Toronto, Canada" / "Someone in Australia" / "Someone". */
-function whoWithPlace(e: PulseEvent) {
+function whoWithPlace(e: PulseTickerEvent) {
   const { city, country } = e.place ?? {};
   let name = country ?? "";
   try {
@@ -59,14 +54,6 @@ function whoWithPlace(e: PulseEvent) {
 
 const clean = (s: string) => s.replace(/\s+[—–]\s+/g, ": ");
 
-function ago(iso: string, now: number) {
-  const s = Math.max(0, (now - Date.parse(iso)) / 1000);
-  if (s < 60) return "just now";
-  if (s < 3600) return `${Math.floor(s / 60)}m ago`;
-  if (s < 86400) return `${Math.floor(s / 3600)}h ago`;
-  return `${Math.floor(s / 86400)}d ago`;
-}
-
 function Stat({ label, value, delta }: { label: string; value: number; delta?: string }) {
   return (
     <div className="bg-card px-4 py-3 text-left">
@@ -77,23 +64,31 @@ function Stat({ label, value, delta }: { label: string; value: number; delta?: s
   );
 }
 
-/** Live headline numbers and a ticker of real recent activity under the hero. */
+/** Real headline numbers and activity from the public pulse endpoint. */
 export function HomePulse({ pulse }: { pulse: Pulse }) {
-  const events = pulse.events;
+  const { data: latest } = useQuery({
+    queryKey: ["stats", "pulse"],
+    queryFn: () => api.get<Pulse>("/stats/pulse"),
+    initialData: pulse,
+    initialDataUpdatedAt: Date.parse(pulse.generated_at),
+    staleTime: 60_000,
+    refetchInterval: 60_000,
+  });
   const [index, setIndex] = useState(0);
   const [now, setNow] = useState(() => Date.parse(pulse.generated_at));
 
   useEffect(() => {
-    if (events.length < 2) return;
     const id = window.setInterval(() => {
-      setIndex((i) => (i + 1) % events.length);
+      setIndex((i) => i + 1);
       setNow(Date.now());
     }, 4000);
     return () => window.clearInterval(id);
-  }, [events.length]);
+  }, []);
 
-  const s = pulse.stats;
-  const e = events[index];
+  const s = latest.stats;
+  const event = latest.events[index % latest.events.length];
+  const e = event ? { ...event, source: "real" as const } : null;
+  const age = e ? pulseEventAge(e, now) : "";
   return (
     <div className="relative isolate mx-auto mt-8 max-w-[880px] overflow-hidden rounded-[10px] border border-border">
       {/* Motion over the whole card: a slow drifting glow, and a sweep on each new activity line. */}
@@ -125,7 +120,7 @@ export function HomePulse({ pulse }: { pulse: Pulse }) {
           <Link key={index} href={e.href} className="relative z-20 min-w-0 flex-1 truncate text-muted-foreground animate-fade-in hover:text-foreground">
             <span className="text-foreground">{whoWithPlace(e)}</span> {VERB[e.type]}
             {e.what && <span className="text-primary"> {clean(e.what)}</span>}
-            <span className="text-muted-foreground/60"> · {ago(e.at, now)}</span>
+            {age && <span className="text-muted-foreground/60"> · {age}</span>}
           </Link>
           <span className="h-3.5 w-1.5 shrink-0 animate-pulse bg-muted-foreground/70" aria-hidden />
         </div>

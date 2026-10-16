@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 
+import { Stat } from "@/components/stats/Stat";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import PageBreadcrumb from "@/components/layout/PageBreadcrumb";
@@ -69,36 +70,6 @@ function SectionLabel({ children, aside }: { children: React.ReactNode; aside?: 
       <h2 className="shrink-0 font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground">{children}</h2>
       <span className="h-px flex-1 bg-border" />
       {aside && <span className="shrink-0 text-xs text-muted-foreground">{aside}</span>}
-    </div>
-  );
-}
-
-/** "▲ 32%" green / "▼ 12%" red against the previous period; "new" when there was nothing before. */
-function Change({ now, prev }: { now: number; prev?: number }) {
-  if (prev === undefined) return null;
-  if (prev === 0) return now > 0 ? <span className="rounded-[4px] bg-green-500/10 px-1.5 py-0.5 font-mono text-[11px] text-green-600 dark:text-green-400">new</span> : null;
-  const pct = Math.round(((now - prev) / prev) * 100);
-  if (pct === 0) return <span className="font-mono text-[11px] text-muted-foreground">0%</span>;
-  const up = pct > 0;
-  return (
-    <span
-      className={`rounded-[4px] px-1.5 py-0.5 font-mono text-[11px] tabular-nums ${up ? "bg-green-500/10 text-green-600 dark:text-green-400" : "bg-red-500/10 text-red-600 dark:text-red-400"}`}
-      title={`${prev.toLocaleString("en-US")} in the previous period`}
-    >
-      {up ? "▲" : "▼"} {Math.abs(pct) > 999 ? "999+" : Math.abs(pct)}%
-    </span>
-  );
-}
-
-function Stat({ label, value, sub, now, prev }: { label: string; value: string; sub?: string; now?: number; prev?: number }) {
-  return (
-    <div className="bg-card p-4">
-      <div className="flex items-center justify-between gap-2">
-        <p className="font-mono text-[11px] text-muted-foreground">{label}</p>
-        {now !== undefined && <Change now={now} prev={prev} />}
-      </div>
-      <p className="mt-1.5 text-[22px] font-semibold tabular-nums leading-none text-foreground">{value}</p>
-      {sub && <p className="mt-1.5 font-mono text-[11px] text-muted-foreground">{sub}</p>}
     </div>
   );
 }
@@ -345,7 +316,7 @@ function Body({ data }: { data: OpenStats }) {
             <Link href="/?advertise=1" className="group block rounded-[6px] border border-border bg-card p-4 hover:border-[var(--cad-line-hover)]">
               <span className="block text-sm font-semibold text-foreground">Advertise</span>
               <span className="mt-1 block text-[13px] leading-6 text-muted-foreground">
-                Sidebar and launch-list spots next to {fmt(listings)} Skills, MCP servers, Agents and Plugins. Monthly, cancel anytime.
+                Rotating sponsor cards next to {fmt(listings)} Skills, MCP servers, Agents and Plugins. $40 for seven days, starting after admin approval. No automatic renewal.
               </span>
               <span className="mt-2 inline-flex items-center gap-1 text-[13px] font-medium text-primary">
                 See ad spots <ArrowRight className="h-3.5 w-3.5" />

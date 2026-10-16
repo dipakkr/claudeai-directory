@@ -1,3 +1,5 @@
+import { fetchApi } from "@/lib/api-server";
+import type { Reach } from "@/components/advertise/SponsorReach";
 import type { Metadata } from "next";
 import { DEFAULT_OG_IMAGE } from "@/lib/seo";
 import { Geist, Geist_Mono, Source_Serif_4 } from "next/font/google";
@@ -12,6 +14,7 @@ import { LaunchImpressions } from "@/components/tracking/LaunchImpressions";
 import { KeyClickTracker } from "@/components/tracking/KeyClickTracker";
 import { NavigationProgress } from "@/components/layout/NavigationProgress";
 import { Suspense } from "react";
+import SponsorRails from "@/components/advertise/SponsorRails";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -89,17 +92,18 @@ export const metadata: Metadata = {
   // own canonical at the homepage. Each route sets `alternates.canonical`.
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const initialReach = await fetchApi<Reach>("/stats/open?days=7", { revalidate: 600, timeoutMs: 2500 });
   return (
     <html lang="en" suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${sourceSerif.variable} ${geistMono.variable} antialiased overflow-x-hidden`}
       >
-        <Providers>
+        <Providers initialReach={initialReach}>
           {/* Discord announcement banner paused; the component stays in components/layout/AnnouncementBanner.tsx. */}
           <ViewAsBanner />
           {/* Side ad rails paused; the component stays in components/layout/SideAdBillboards.tsx. */}
@@ -111,8 +115,11 @@ export default function RootLayout({
             <NavigationProgress />
           </Suspense>
           {children}
+          <SponsorRails />
+          {process.env.NEXT_PUBLIC_LOCAL_PREVIEW === "true" && <div className="fixed bottom-0 left-0 z-50 bg-amber-200 px-3 py-1 text-xs text-black">Local preview · simulated payments · no public changes</div>}
         </Providers>
 
+        {process.env.NEXT_PUBLIC_LOCAL_PREVIEW !== "true" && <>
         {/* Google Analytics */}
         <Script
           strategy="afterInteractive"
@@ -133,6 +140,7 @@ export default function RootLayout({
           trackAttributes={true}
         />
         <KeyClickTracker />
+        </>}
       </body>
     </html>
   );

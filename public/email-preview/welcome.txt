@@ -1,0 +1,26 @@
+Hi Deepak,
+
+Welcome to a community of people discovering and building with Claude. Here are three things you can do next.
+
+1. Make yourself at home
+Add a photo and a short bio so other builders can get to know you.
+https://claudeai.directory/dashboard
+
+2. Find your next tool
+Explore community-built skills, MCP servers and agents for your workflow.
+https://claudeai.directory/launches
+
+3. Share what you’re building
+Built an app or tool for Claude? Create your listing and publish it for free.
+https://claudeai.directory/launches/submit
+
+Meet the community
+https://claudeai.directory/members
+
+Have a question? Reply to this email. We’d love to hear what you’re building.
+
+Cheers,
+Team ClaudeAI Directory
+
+You’re receiving this because you joined Claude AI Directory.
+Unsubscribe from discovery emails: http://localhost:3000/email-preview/unsubscribe.html

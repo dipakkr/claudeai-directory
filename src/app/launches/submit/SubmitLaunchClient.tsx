@@ -1,7 +1,7 @@
 "use client";
 
 import { DofollowBanner } from "../DofollowBanner";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import Link from "next/link";
 import { toast } from "sonner";
 import {
@@ -39,9 +39,6 @@ import type { ShowcaseProject } from "@/types";
 type Media = { logo: string[]; screenshot: string[]; video: string[] };
 
 const SITE_URL = "https://www.claudeai.directory";
-
-/** Real numbers only: site visitors (OpenPanel) and, once there is enough data, average launch impressions. */
-export type LaunchReach = { visitors_30d: number | null; avg_impressions_30d: number | null };
 
 import { CATEGORIES, TOPICS, hasDofollow, isLaunchLive } from "@/lib/launch-options";
 import { TopicSelect } from "@/components/launches/TopicSelect";
@@ -362,11 +359,9 @@ function MyLaunches({
 
 function BadgeStep({
   app,
-  reach,
   onVerified,
 }: {
   app: ShowcaseProject;
-  reach?: LaunchReach | null;
   onVerified: (app: ShowcaseProject) => void;
 }) {
   const verify = useVerifyShowcaseBadge();
@@ -378,7 +373,7 @@ function BadgeStep({
   const [publishing, setPublishing] = useState(false);
   // Already live without the badge: the only thing left is upgrading the link to dofollow.
   const live = isLaunchLive(app);
-  const [mode, setMode] = useState<"badge" | "paid" | "free">("paid");
+  const [mode, setMode] = useState<"badge" | "free">("badge");
   // Ask before checking: most failed checks are a badge that isn't on the page yet.
   const [confirmOpen, setConfirmOpen] = useState(false);
 
@@ -424,41 +419,23 @@ function BadgeStep({
     );
   };
 
-  // One offer at a time; the other two are text links under it.
-  const [paying, setPaying] = useState(false);
-  const payNow = () => {
-    setPaying(true);
-    api
-      .post<{ url: string }>("/sponsors/launch-listing", { slug: app.id })
-      .then(({ url }) => {
-        window.location.href = url;
-      })
-      .catch((error) => {
-        setPaying(false);
-        toast.error(errorDetail(error, "Could not start checkout. Try again in a minute."));
-      });
-  };
-
+  // One offer at a time; the other one is a text link under it.
   const OFFERS = {
     badge: {
       title: "Add our badge",
       price: "Free",
       perks: ["Dofollow link to your site", "Listed with badge launches, ranked by upvotes", "Live as soon as we find the badge"],
     },
-    paid: {
-      title: "Launch now",
-      price: "$19 one time",
-      perks: ["Dofollow link to your site", "Listed with badge launches, ranked by upvotes", live ? "Upgraded right after payment" : "Live right after payment", "No badge on your site"],
-    },
     free: {
       title: "List without badge",
       price: "Free",
-      perks: ["Live right away", "Nofollow link: passes no SEO value", "Listed below every launch with a badge or paid listing"],
+      perks: ["Live right away", "Nofollow link: passes no SEO value", "Listed below every launch with a badge"],
     },
   } as const;
   const offer = OFFERS[mode];
-  const others = (["paid", "badge"] as const).filter((m) => m !== mode);
-  const otherLabel = { badge: "Don't want to pay? Add our badge and go live free", paid: "Pay $19 instead (no badge on your site)" };
+  // A launch that is already live (nofollow) can only add the badge.
+  const others = (["badge", "free"] as const).filter((m) => m !== mode && !(live && m === "free"));
+  const otherLabel = { badge: "Add our badge and get a dofollow link, free", free: "No badge? Publish with a nofollow link" };
   const primaryBtn =
     "inline-flex h-12 w-full items-center justify-center gap-2 rounded-[12px] bg-primary text-[15px] font-medium text-primary-foreground transition-opacity hover:opacity-90 disabled:opacity-60";
 
@@ -488,42 +465,24 @@ function BadgeStep({
           ))}
         </ul>
 
-        {/* Expected reach, from real data: never a made-up number. */}
-        {mode !== "free" && (reach?.visitors_30d || reach?.avg_impressions_30d) ? (
-          <p className="mt-4 rounded-[8px] bg-foreground/[0.04] px-3 py-2 text-[13px] leading-5 text-muted-foreground">
-            {reach.avg_impressions_30d ? (
-              <>
-                Launches average <span className="font-medium text-foreground">{reach.avg_impressions_30d.toLocaleString("en-US")} impressions</span> in their
-                first 30 days.{" "}
-              </>
-            ) : null}
-            {reach.visitors_30d ? (
-              <>
-                Listed on the homepage and launches page. The site had{" "}
-                <span className="font-medium text-foreground">{reach.visitors_30d.toLocaleString("en-US")} visitors</span> in the last 30 days.{" "}
-              </>
-            ) : null}
-            <Link href="/stats" className="text-primary hover:underline">
-              Open stats
-            </Link>
-          </p>
+        {/* Forward-looking campaign estimate supplied by the site owner. */}
+        {mode !== "free" ? (
+          <div className="mt-4 flex flex-wrap items-center justify-between gap-x-4 gap-y-1 rounded-[8px] bg-foreground/[0.04] px-3 py-3">
+            <span className="text-[13px] text-muted-foreground">Expected reach</span>
+            <p className="flex items-baseline gap-1.5 whitespace-nowrap">
+              <span className="text-[20px] font-semibold tracking-tight tabular-nums text-foreground">5K–7.5K</span>
+              <span className="text-xs text-muted-foreground">impressions</span>
+            </p>
+          </div>
         ) : null}
 
-      {mode === "paid" ? (
-        <div className="mt-6">
-          <button type="button" onClick={payNow} disabled={paying} className={primaryBtn}>
-            {paying ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
-            {paying ? "Opening checkout..." : live ? "Pay $19 for a dofollow link" : "Pay $19 and go live"}
-          </button>
-          <p className="mt-2 text-center text-xs text-muted-foreground">Secure payment by Stripe. One time, no subscription.</p>
-        </div>
-      ) : mode === "free" ? (
+      {mode === "free" ? (
         <div className="mt-6">
           <button type="button" onClick={publishNow} disabled={publishing} className={primaryBtn}>
             {publishing ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
             {publishing ? "Publishing..." : "Publish with a nofollow link"}
           </button>
-          <p className="mt-2 text-center text-xs text-muted-foreground">You can add the badge or pay later to get a dofollow link.</p>
+          <p className="mt-2 text-center text-xs text-muted-foreground">You can add the badge later to get a dofollow link.</p>
         </div>
       ) : (
         <div className="mt-6 space-y-5">
@@ -715,10 +674,8 @@ function ShareStep({ app, onAnother }: { app: ShowcaseProject; onAnother: () => 
 
 export default function SubmitLaunchClient({
   finishSlug,
-  paidSlug,
-  reach,
   guide,
-}: { finishSlug?: string; paidSlug?: string; reach?: LaunchReach | null; guide?: React.ReactNode } = {}) {
+}: { finishSlug?: string; guide?: React.ReactNode } = {}) {
   const { isAuthenticated, isLoading, user } = useAuth();
   const submit = useSubmitShowcaseProject();
   const autofill = useLaunchAutofill();
@@ -727,26 +684,6 @@ export default function SubmitLaunchClient({
   const { data: myApps } = useMyShowcaseProjects({ enabled: !isLoading && isAuthenticated });
   // Opening a saved launch (?finish=): one loader until it is ready, not the intro and then the empty form.
   const openingSaved = Boolean(finishSlug) && (isLoading || (isAuthenticated && myApps === undefined));
-
-  // Back from Stripe: the webhook puts the launch live a few seconds after payment.
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const listing = params.get("listing");
-    if (!listing) return;
-    const launch = params.get("launch");
-    const timer = window.setTimeout(() => {
-      if (listing === "paid") {
-        toast.success("Payment received. Your launch goes live in a few seconds.", {
-          action: launch ? { label: "View", onClick: () => window.location.assign(`/launches/${launch}`) } : undefined,
-          duration: 10000,
-        });
-      } else if (listing === "cancelled") {
-        toast("Checkout cancelled. Your launch is still saved.");
-      }
-    }, 400);
-    window.history.replaceState(null, "", window.location.pathname);
-    return () => window.clearTimeout(timer);
-  }, []);
 
   const [form, setForm] = useState<Form>(EMPTY_FORM);
   const [step, setStep] = useState<Step>(0);
@@ -970,16 +907,6 @@ export default function SubmitLaunchClient({
             <ArrowLeft className="h-3.5 w-3.5" />
             App launches
           </Link>
-          {/* Back from Stripe: the webhook makes it live a few seconds later. */}
-          {paidSlug && (
-            <div className="mt-5 flex flex-col gap-2 rounded-[10px] border border-success/30 bg-success/10 px-4 py-3 text-[14px] sm:flex-row sm:items-center sm:justify-between">
-              <span className="text-foreground">Payment received. Your launch gets its dofollow link in a few seconds.</span>
-              <Link href={`/launches/${encodeURIComponent(paidSlug)}`} className="inline-flex shrink-0 items-center gap-1 font-medium text-primary hover:underline">
-                View your launch
-                <ArrowRight className="h-3.5 w-3.5" />
-              </Link>
-            </div>
-          )}
           {!isAuthenticated && !openingSaved && (
             <>
               <h1 className="mt-5 font-sans text-3xl font-semibold tracking-tight text-foreground md:text-[40px] md:leading-[1.1]">Launch your app built with Claude</h1>
@@ -1020,7 +947,6 @@ export default function SubmitLaunchClient({
                   {shownStep === 1 && shownApp ? (
                     <BadgeStep
                       app={shownApp}
-                      reach={reach}
                       onVerified={(updated) => {
                         setActiveApp(updated);
                         setStep(2);

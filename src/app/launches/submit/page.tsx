@@ -19,11 +19,11 @@ export const metadata: Metadata = {
   twitter: { images: [DEFAULT_OG_IMAGE.url], title: TITLE, description: DESCRIPTION },
 };
 
-export default async function SubmitLaunchPage({ searchParams }: { searchParams: Promise<{ finish?: string; listing?: string; launch?: string }> }) {
+export default async function SubmitLaunchPage({ searchParams }: { searchParams: Promise<{ finish?: string }> }) {
   // ?finish=<slug>: open straight on the "go live" step for a saved launch (from the dashboard).
-  const { finish, listing, launch } = await searchParams;
+  const { finish } = await searchParams;
   const all = await fetchApi<ShowcaseProject[]>("/showcase?limit=100", { revalidate: 600 });
   const launches = rankedLaunches(all ?? []);
   const recent = [...launches].sort((a, b) => Date.parse(b.listed_at || b.created_at) - Date.parse(a.listed_at || a.created_at)).slice(0, 5);
-  return <SubmitLaunchClient finishSlug={finish} paidSlug={listing === "paid" ? launch : undefined} guide={<LaunchGuide recent={recent} liveCount={launches.length} />} />;
+  return <SubmitLaunchClient finishSlug={finish} guide={<LaunchGuide recent={recent} liveCount={launches.length} />} />;
 }

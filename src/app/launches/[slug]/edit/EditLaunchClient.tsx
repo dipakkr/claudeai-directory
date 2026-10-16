@@ -525,7 +525,7 @@ export default function EditLaunchClient({ slug }: { slug: string }) {
       <Header />
       <main className="flex-1">
         <div className="mx-auto max-w-[680px] px-4 pt-8 md:px-8 md:pt-12">
-          <Link href="/dashboard?tab=launches" className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground">
+          <Link href="/dashboard?tab=submissions" className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground">
             <ArrowLeft className="h-3.5 w-3.5" />
             Your launches
           </Link>

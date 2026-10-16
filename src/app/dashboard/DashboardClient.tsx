@@ -3,134 +3,57 @@
 import { useEffect } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { ArrowRight, ArrowUpRight, MessageSquare, Package, Rocket } from "lucide-react";
-import type { ReactNode } from "react";
+import { ArrowUpRight } from "lucide-react";
 
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
-import {
-  DiscussionsPanel,
-  LaunchesPanel,
-  LaunchRows,
-  NotificationsPanel,
-  SavedPanel,
-  SubmissionsPanel,
-} from "@/components/dashboard/Panels";
+import { AnalyticsPanel, SubmissionsPanel } from "@/components/dashboard/Panels";
 import { SettingsPanel } from "@/components/dashboard/SettingsPanel";
 import { useAuth } from "@/lib/auth";
 import { countryName } from "@/lib/profile-options";
-import { useDashboardSummary, useMySubmissions, useSavedItems } from "@/hooks/use-dashboard";
+import { useDashboardSummary, useMySubmissions } from "@/hooks/use-dashboard";
 import { useMyShowcaseProjects } from "@/hooks/use-showcase";
-import { useMarkNotificationsRead, useNotifications } from "@/hooks/use-notifications";
 import type { User } from "@/types";
 
+// Three sections only: how your work is doing, what you submitted, who you are.
 const TABS = [
-  { id: "overview", label: "Overview" },
-  { id: "launches", label: "Launches" },
-  { id: "submissions", label: "Resources" },
-  { id: "discussions", label: "Posts" },
-  { id: "saved", label: "Saved" },
-  { id: "notifications", label: "Notifications" },
-  { id: "settings", label: "Settings" },
+  { id: "analytics", label: "Analytics" },
+  { id: "submissions", label: "Submissions" },
+  { id: "profile", label: "Profile" },
 ] as const;
 
 type TabId = (typeof TABS)[number]["id"];
+
+// Old links (?tab=launches, ?tab=settings, ...) land on the nearest section.
+const LEGACY_TABS: Record<string, TabId> = {
+  overview: "analytics",
+  notifications: "analytics",
+  launches: "submissions",
+  discussions: "submissions",
+  saved: "submissions",
+  settings: "profile",
+};
+
+function resolveTab(requested: string | null): TabId {
+  if (requested && TABS.some((t) => t.id === requested)) return requested as TabId;
+  return (requested && LEGACY_TABS[requested]) || "analytics";
+}
 
 function roleLabel(user: User) {
   if (user.profession === "Other" && user.profession_detail) return user.profession_detail;
   return user.profession;
 }
 
-/* ---------- overview pieces ---------- */
-
-/** Quiet mono label with a rule, like the launch pages. */
-function SectionLabel({ title, action }: { title: string; action?: ReactNode }) {
-  return (
-    <div className="mb-3 flex items-center gap-3">
-      <h2 className="shrink-0 font-mono text-[11px] font-medium uppercase tracking-[0.16em] text-foreground">{title}</h2>
-      <span className="h-px flex-1 bg-border" aria-hidden="true" />
-      {action}
-    </div>
-  );
-}
-
-/** A number and a plain label, no box. */
-function Stat({ label, value, href }: { label: string; value: number; href: string }) {
-  return (
-    <Link href={href} className="group">
-      <span className="block font-sans text-[26px] font-semibold tabular-nums leading-none text-foreground">{value.toLocaleString("en-US")}</span>
-      <span className="mt-1.5 block text-[13px] text-muted-foreground group-hover:text-foreground">{label}</span>
-    </Link>
-  );
-}
-
-function Attention({ items }: { items: { key: string; text: ReactNode; href: string; cta: string }[] }) {
-  if (!items.length) return null;
-  return (
-    <ul className="divide-y divide-primary/15 rounded-[10px] border border-primary/25 bg-primary/[0.05]">
-      {items.map((item) => (
-        <li key={item.key} className="flex items-center gap-3 px-4 py-3 text-sm">
-          <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true" />
-          <span className="min-w-0 flex-1 text-foreground/90">{item.text}</span>
-          <Link href={item.href} className="inline-flex shrink-0 items-center gap-1 font-medium text-primary hover:underline">
-            {item.cta}
-            <ArrowRight className="h-3.5 w-3.5" />
-          </Link>
-        </li>
-      ))}
-    </ul>
-  );
-}
-
-/** One line: what is missing from the profile, and a link to fix it. */
-function ProfileNudge({ user }: { user: User }) {
-  const checks = [
-    { done: !!user.avatar, label: "photo" },
-    { done: !!user.bio, label: "intro" },
-    { done: !!user.profession, label: "role" },
-    { done: !!user.country, label: "country" },
-    { done: !!(user.twitter || user.github || user.linkedin || user.website), label: "a link" },
-  ];
-  const missing = checks.filter((c) => !c.done).map((c) => c.label);
-  if (!missing.length) return null;
-  const percent = Math.round(((checks.length - missing.length) / checks.length) * 100);
-  return (
-    <Link
-      href="/dashboard?tab=settings"
-      className="group flex items-center gap-3 text-[13px] text-muted-foreground transition-colors hover:text-foreground"
-    >
-      <span className="relative h-1 w-12 shrink-0 overflow-hidden rounded-full bg-border">
-        <span className="absolute inset-y-0 left-0 rounded-full bg-primary" style={{ width: `${percent}%` }} />
-      </span>
-      <span className="min-w-0 truncate">
-        Profile {percent}% done. Add your {missing.join(", ")}.
-      </span>
-    </Link>
-  );
-}
-
-const QUICK_ACTIONS = [
-  { href: "/launches/submit", icon: Rocket, label: "Launch an app" },
-  { href: "/submit", icon: Package, label: "Submit a resource" },
-  { href: "/feed#compose", icon: MessageSquare, label: "Write a post" },
-] as const;
-
-/* ---------- page ---------- */
-
 export default function DashboardClient() {
   const { user, isAuthenticated, isLoading } = useAuth();
   const router = useRouter();
   const params = useSearchParams();
-  const requested = params.get("tab");
-  const tab: TabId = TABS.some((t) => t.id === requested) ? (requested as TabId) : "overview";
+  const tab = resolveTab(params.get("tab"));
 
   const enabled = !isLoading && isAuthenticated;
   const summary = useDashboardSummary(enabled);
   const launches = useMyShowcaseProjects({ enabled });
   const submissions = useMySubmissions(enabled && tab === "submissions");
-  const saved = useSavedItems(enabled && tab === "saved");
-  const notifications = useNotifications(enabled);
-  const markRead = useMarkNotificationsRead();
 
   useEffect(() => {
     if (!isLoading && !isAuthenticated) router.push("/login");
@@ -149,25 +72,12 @@ export default function DashboardClient() {
 
   const s = summary.data;
   const counts: Partial<Record<TabId, number>> = {
-    launches: s?.launches.total,
-    submissions: s?.submissions.total,
-    discussions: s?.discussions.threads,
-    saved: s?.saved,
-    notifications: notifications.data?.unread,
+    submissions: s ? s.launches.total + s.submissions.total : undefined,
   };
 
   const displayName = user.name || user.username;
   const role = roleLabel(user);
   const country = countryName(user.country);
-
-  const attention = [
-    ...(s && s.submissions.rejected
-      ? [{ key: "rejected", text: `${s.submissions.rejected} ${s.submissions.rejected === 1 ? "submission needs" : "submissions need"} changes`, href: "/dashboard?tab=submissions", cta: "See notes" }]
-      : []),
-    ...(notifications.data?.unread
-      ? [{ key: "unread", text: `${notifications.data.unread} unread ${notifications.data.unread === 1 ? "notification" : "notifications"}`, href: "/dashboard?tab=notifications", cta: "Open" }]
-      : []),
-  ];
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
@@ -196,12 +106,11 @@ export default function DashboardClient() {
               href={`/u/${user.username}`}
               className="inline-flex h-9 shrink-0 items-center gap-1 rounded-full border border-border px-4 text-sm text-foreground transition-colors hover:border-[var(--cad-line-hover)]"
             >
-              Profile
+              View profile
               <ArrowUpRight className="h-3.5 w-3.5 text-muted-foreground" />
             </Link>
           </header>
 
-          {/* Sections as tabs, same as the edit launch page. */}
           <nav aria-label="Dashboard sections" className="-mx-4 mt-8 overflow-x-auto px-4 md:mx-0 md:px-0">
             <ul className="flex gap-6 border-b border-border">
               {TABS.map(({ id, label }) => {
@@ -210,22 +119,14 @@ export default function DashboardClient() {
                 return (
                   <li key={id} className="shrink-0">
                     <Link
-                      href={id === "overview" ? "/dashboard" : `/dashboard?tab=${id}`}
+                      href={id === "analytics" ? "/dashboard" : `/dashboard?tab=${id}`}
                       aria-current={active ? "page" : undefined}
                       className={`-mb-px inline-flex items-center gap-1.5 whitespace-nowrap border-b-2 pb-3 text-sm transition-colors ${
                         active ? "border-foreground font-medium text-foreground" : "border-transparent text-muted-foreground hover:text-foreground"
                       }`}
                     >
                       {label}
-                      {!!count && (
-                        <span
-                          className={`rounded-full px-1.5 font-mono text-[10.5px] tabular-nums ${
-                            id === "notifications" ? "bg-primary text-primary-foreground" : "text-muted-foreground"
-                          }`}
-                        >
-                          {count}
-                        </span>
-                      )}
+                      {!!count && <span className="rounded-full px-1.5 font-mono text-[10.5px] tabular-nums text-muted-foreground">{count}</span>}
                     </Link>
                   </li>
                 );
@@ -234,69 +135,17 @@ export default function DashboardClient() {
           </nav>
 
           <div className="mt-8 min-w-0">
-            {tab === "overview" && (
-              <div className="space-y-10">
-                <Attention items={attention} />
-
-                {s && (s.launches.live > 0 || s.submissions.published > 0) && (
-                <section>
-                  <SectionLabel title="Your numbers" />
-                  <div className="flex flex-wrap gap-x-12 gap-y-5 pt-1">
-                    <Stat label={s.launches.live === 1 ? "live launch" : "live launches"} value={s.launches.live} href="/dashboard?tab=launches" />
-                    <Stat label={s.launches.upvotes === 1 ? "upvote" : "upvotes"} value={s.launches.upvotes} href="/dashboard?tab=launches" />
-                    <Stat label={s.launches.views === 1 ? "launch view" : "launch views"} value={s.launches.views ?? 0} href="/dashboard?tab=launches" />
-                    {s.submissions.published > 0 && (
-                      <Stat label={s.submissions.published === 1 ? "resource" : "resources"} value={s.submissions.published} href="/dashboard?tab=submissions" />
-                    )}
-                  </div>
-                </section>
-                )}
-
-                <section>
-                  <SectionLabel
-                    title="Your launches"
-                    action={
-                      (launches.data?.length ?? 0) > 3 ? (
-                        <Link href="/dashboard?tab=launches" className="shrink-0 text-xs text-muted-foreground hover:text-foreground">
-                          See all {launches.data?.length}
-                        </Link>
-                      ) : undefined
-                    }
-                  />
-                  <LaunchRows apps={(launches.data ?? []).slice(0, 3)} loading={launches.isLoading} />
-                </section>
-
-                {/* Quiet footer: what else you can do, and the profile reminder. */}
-                <div className="space-y-3 border-t border-border pt-6">
-                  <p className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm">
-                    {QUICK_ACTIONS.map(({ href, icon: Icon, label }) => (
-                      <Link key={href} href={href} className="inline-flex items-center gap-1.5 text-muted-foreground transition-colors hover:text-foreground">
-                        <Icon className="h-3.5 w-3.5 text-primary" />
-                        {label}
-                      </Link>
-                    ))}
-                  </p>
-                  <ProfileNudge user={user} />
-                </div>
-              </div>
+            {tab === "analytics" && (
+              <AnalyticsPanel summary={s} apps={launches.data ?? []} loading={summary.isLoading || launches.isLoading} />
             )}
-
-            {tab === "launches" && <LaunchesPanel apps={launches.data ?? []} loading={launches.isLoading} />}
-            {tab === "submissions" && <SubmissionsPanel items={submissions.data ?? []} loading={submissions.isLoading} />}
-            {tab === "discussions" && (
-              <DiscussionsPanel threads={s?.discussions.recent ?? []} replies={s?.discussions.replies ?? 0} loading={summary.isLoading} />
-            )}
-            {tab === "saved" && <SavedPanel items={saved.data?.items ?? []} loading={saved.isLoading} />}
-            {tab === "notifications" && (
-              <NotificationsPanel
-                items={notifications.data?.notifications ?? []}
-                unread={notifications.data?.unread ?? 0}
-                loading={notifications.isLoading}
-                onMarkAll={() => markRead.mutate(undefined)}
-                marking={markRead.isPending}
+            {tab === "submissions" && (
+              <SubmissionsPanel
+                apps={launches.data ?? []}
+                items={submissions.data ?? []}
+                loading={launches.isLoading || submissions.isLoading}
               />
             )}
-            {tab === "settings" && <SettingsPanel key={user.username} user={user} />}
+            {tab === "profile" && <SettingsPanel key={user.username} user={user} />}
           </div>
         </div>
       </main>

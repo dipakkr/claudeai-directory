@@ -10,3 +10,5 @@ scripts
 *.md
 deploy.sh
 docker-compose.yml
+
+public/email-preview

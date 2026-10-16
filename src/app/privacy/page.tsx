@@ -19,7 +19,7 @@ export default function PrivacyPage() {
             Privacy Policy
           </h1>
           <p className="text-sm text-muted-foreground mb-10">
-            Last updated: February 2026
+            Last updated: October 2026
           </p>
 
           <div className="prose prose-neutral dark:prose-invert max-w-none space-y-8 text-muted-foreground">
@@ -56,7 +56,7 @@ export default function PrivacyPage() {
                   posts
                 </li>
                 <li>
-                  Contact information when you reach out to us
+                  Contact information when you reach out to us, and optional role, goal and setup questions you share after subscribing
                 </li>
               </ul>
 
@@ -82,6 +82,8 @@ export default function PrivacyPage() {
               <ul className="space-y-1">
                 <li>To provide and maintain our service</li>
                 <li>To personalize your experience</li>
+                <li>To send the weekly digest when you subscribe. Optional role and goal answers help us understand reader interests.</li>
+                <li>To reply to setup questions when you explicitly request help. Newsletter emails include an unsubscribe link.</li>
                 <li>To communicate with you about updates or changes</li>
                 <li>To analyze usage and improve our platform</li>
                 <li>To prevent fraud and ensure security</li>

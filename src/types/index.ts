@@ -19,6 +19,8 @@ export interface User {
   role: string;
   plan: string;
   email_notifications?: boolean;
+  /** Weekly plain-text digest of launches, new resources and discussions. On unless false. */
+  weekly_digest?: boolean;
   created_at: string;
 }
 

@@ -15,12 +15,7 @@ export function FooterSubscribe() {
     try {
       // Our own list is the source of truth.
       await api.post("/newsletter/subscribe", { email, source: window.location.pathname });
-      // Also forward to the Substack; a failure there doesn't undo the signup.
-      void fetch("https://substackapi.com/api/subscribe", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, domain: "tooljunction.substack.com" }),
-      }).catch(() => undefined);
+      try { localStorage.setItem("cad_digest_subscribed", "1"); } catch { /* optional storage */ }
       toast.success("You're subscribed. The next digest lands in your inbox.");
       setEmail("");
     } catch (error) {

@@ -29,6 +29,7 @@ function initialForm(user: User) {
     github: user.github ?? "",
     linkedin: user.linkedin ?? "",
     email_notifications: user.email_notifications !== false,
+    weekly_digest: user.weekly_digest !== false,
   };
 }
 
@@ -107,6 +108,7 @@ export function SettingsPanel({ user }: { user: User }) {
         github: form.github.trim().replace(/^@/, ""),
         linkedin: withHttps(form.linkedin) ?? "",
         email_notifications: form.email_notifications,
+        weekly_digest: form.weekly_digest,
       });
       setAvailability("idle");
       toast.success("Profile saved");
@@ -122,7 +124,7 @@ export function SettingsPanel({ user }: { user: User }) {
 
   return (
     <section className="max-w-[680px]">
-      <PanelHeader title="Profile and settings" description="This is what builders see on your public profile." />
+      <PanelHeader title="Profile" description="What builders see on your public page, and which emails you get." />
       <div className="space-y-6">
         <Field label="Username" htmlFor="username" hint="claudeai.directory/u/username">
           <div className="relative">
@@ -213,6 +215,10 @@ export function SettingsPanel({ user }: { user: User }) {
           <label className="flex items-center justify-between gap-4 rounded-[8px] bg-foreground/[0.06] px-3 py-2.5">
             <span className="text-[14px] text-foreground">Email me when someone replies to my posts</span>
             <Switch checked={form.email_notifications} onCheckedChange={(value) => set("email_notifications", value)} />
+          </label>
+          <label className="mt-2 flex items-center justify-between gap-4 rounded-[8px] bg-foreground/[0.06] px-3 py-2.5">
+            <span className="text-[14px] text-foreground">Send me the weekly digest: launches, new resources and discussions</span>
+            <Switch checked={form.weekly_digest} onCheckedChange={(value) => set("weekly_digest", value)} />
           </label>
         </Field>
       </div>

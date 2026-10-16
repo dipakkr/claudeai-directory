@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { AtSign, BookOpen, Briefcase, Clock, Flame, Home, PenSquare, Rocket, Users } from "lucide-react";
+import { AtSign, BookOpen, Briefcase, Flame, Home, PenSquare, Rocket, Users } from "lucide-react";
 
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
@@ -24,19 +24,18 @@ type Params = FromXParams & { tab?: string };
 type Tab = "home" | "latest" | "popular" | "x";
 type Sort = "mix" | "latest" | "popular";
 
-// Home mixes what people are reading with what is new, so the newest launch
-// post does not always sit on top. Latest is the plain timeline.
+// The default feed is chronological. Engagement belongs in Trending.
 const TABS: { id: Tab; label: string; href: string }[] = [
-  { id: "home", label: "Home", href: "/feed" },
-  { id: "latest", label: "Latest", href: "/feed?tab=latest" },
-  { id: "popular", label: "Popular", href: "/feed?tab=popular" },
+  { id: "home", label: "Latest", href: "/feed" },
+  { id: "popular", label: "Trending", href: "/feed?tab=popular" },
   { id: "x", label: "From X", href: "/feed?tab=x" },
 ];
 
-const SORT_OF: Record<Tab, Sort> = { home: "mix", latest: "latest", popular: "popular", x: "mix" };
+const SORT_OF: Record<Tab, Sort> = { home: "latest", latest: "latest", popular: "popular", x: "mix" };
 
 function tabOf(params: Params): Tab {
-  if (params.tab === "latest" || params.tab === "popular" || params.tab === "x") return params.tab;
+  if (params.tab === "latest") return "home";
+  if (params.tab === "popular" || params.tab === "x") return params.tab;
   // Old tweet-feed links (?view=top, ?source=community) land on the X tab.
   if (params.view || params.source) return "x";
   return "home";
@@ -55,7 +54,7 @@ export async function generateMetadata({ searchParams }: { searchParams: Promise
   };
 }
 
-const TAB_ICONS: Record<Tab, typeof Home> = { home: Home, latest: Clock, popular: Flame, x: AtSign };
+const TAB_ICONS: Record<Tab, typeof Home> = { home: Home, latest: Home, popular: Flame, x: AtSign };
 
 const MORE_LINKS = [
   { href: "/launches", label: "Launches", icon: Rocket },

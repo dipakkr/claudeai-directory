@@ -16,7 +16,7 @@ import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
 import { rankedLaunches } from "@/lib/home-community";
-import { SPONSOR_LAUNCH_PRICE, openAdvertiseDialog } from "@/lib/advertise";
+import { SPONSOR_WEEKLY_PRICE, openAdvertiseDialog } from "@/lib/advertise";
 import { useShowcaseProjects } from "@/hooks/use-showcase";
 import type { ShowcaseProject } from "@/types";
 import { track } from "@/lib/analytics";
@@ -86,8 +86,8 @@ function SponsoredLaunchSlot() {
         <Megaphone aria-hidden="true" className="h-3.5 w-3.5" />
       </span>
       <span className="min-w-0 flex-1 truncate text-[14px]">
-        <span className="font-medium text-foreground">Your Claude product here</span>
-        <span className="text-muted-foreground"> · Sponsor this spot for ${SPONSOR_LAUNCH_PRICE}/month</span>
+        <span className="font-medium text-foreground">Advertise in the sidebar</span>
+        <span className="text-muted-foreground"> · Book a sidebar card for ${SPONSOR_WEEKLY_PRICE}/week</span>
       </span>
       <span className="shrink-0 rounded-[4px] border border-border px-1.5 py-0.5 font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
         Sponsored

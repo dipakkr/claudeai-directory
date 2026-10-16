@@ -40,6 +40,7 @@ export interface ProfileUpdate {
   profession_detail?: string;
   country?: string;
   email_notifications?: boolean;
+  weekly_digest?: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);

@@ -1,22 +1,10 @@
 import { sideAdCollections } from "@/data/sideAdPlacements";
 
-/** Monthly price for one sidebar sponsor slot, in USD. */
-export const SPONSOR_MONTHLY_PRICE = 249;
-
-/** Monthly price for the sponsored row in the launches list, in USD. */
-export const SPONSOR_LAUNCH_PRICE = 149;
+/** One seven-day sidebar placement, in USD. */
+export const SPONSOR_WEEKLY_PRICE = 40;
 
 /** "sidebar": a card in one category rail. "launch": the row in the launches list. */
 export type SponsorSlot = "sidebar" | "launch";
-
-/**
- * Hosted checkout for the sponsor subscription: a Stripe Payment Link
- * (https://buy.stripe.com/...) or a Lemon Squeezy checkout URL. Until it is
- * set, "Pay now" falls back to a prefilled email request.
- */
-export const SPONSOR_CHECKOUT_URL = process.env.NEXT_PUBLIC_SPONSOR_CHECKOUT_URL || "";
-
-export const SPONSOR_EMAIL = "claudeai.directory@gmail.com";
 
 export interface SponsorCategory {
   title: string;

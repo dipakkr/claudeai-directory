@@ -5,7 +5,7 @@ import { Fragment } from "react";
 import Link from "next/link";
 import { ArrowRight, Megaphone } from "lucide-react";
 import { LaunchLineRow } from "@/components/launches/LaunchListRow";
-import { SPONSOR_LAUNCH_PRICE, openAdvertiseDialog } from "@/lib/advertise";
+import { SPONSOR_WEEKLY_PRICE, openAdvertiseDialog } from "@/lib/advertise";
 import { track } from "@/lib/analytics";
 import type { ShowcaseProject } from "@/types";
 
@@ -29,8 +29,8 @@ function SponsorRow() {
           <Megaphone className="h-4 w-4" aria-hidden="true" />
         </span>
         <span className="min-w-0 flex-1 truncate text-[15px]">
-          <span className="text-foreground">Your MCP here</span>
-          <span className="text-muted-foreground"> · Reach people looking for MCP servers. ${SPONSOR_LAUNCH_PRICE}/mo</span>
+          <span className="text-foreground">Advertise in the sidebar</span>
+          <span className="text-muted-foreground"> · Reach people looking for MCP servers. ${SPONSOR_WEEKLY_PRICE}/week</span>
         </span>
         <span className="shrink-0 rounded-[6px] border border-border px-2 py-0.5 font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
           Sponsored
