@@ -6,6 +6,7 @@ import { publicLaunches } from "@/lib/home-community";
 import type { ShowcaseProject } from "@/types";
 import { MIN_INDEXABLE_BODY } from "@/lib/plugin-parts";
 import { liveGuides } from "@/data/connector-guides";
+import { isoDate } from "@/lib/blog";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.claudeai.directory";
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api";
@@ -35,7 +36,7 @@ async function fetchBlogPages(): Promise<MetadataRoute.Sitemap> {
     const json = await res.json();
     const posts = (Array.isArray(json) ? json : json.data ?? []) as { _id?: string; id?: string; updated_at?: string; published_at?: string; cover_image?: string; canonical_url?: string }[];
     return posts.filter((post) => (post._id || post.id) && !post.canonical_url).map((post) => {
-      const date = post.updated_at || post.published_at;
+      const date = isoDate(post.updated_at || post.published_at);
       return {
         url: `${SITE_URL}/blog/${post._id || post.id}`,
         ...(date && !Number.isNaN(Date.parse(date)) ? { lastModified: date } : {}),
