@@ -27,6 +27,28 @@ async function fetchSlugs(endpoint: string, slugField = "id"): Promise<string[]>
   }
 }
 
+/** Preserve real publication dates and editorial images in the blog sitemap. */
+async function fetchBlogPages(): Promise<MetadataRoute.Sitemap> {
+  try {
+    const res = await fetch(`${API_BASE}/blog?limit=500`, { next: { revalidate: 3600 } });
+    if (!res.ok) return [];
+    const json = await res.json();
+    const posts = (Array.isArray(json) ? json : json.data ?? []) as { _id?: string; id?: string; updated_at?: string; published_at?: string; cover_image?: string; canonical_url?: string }[];
+    return posts.filter((post) => (post._id || post.id) && !post.canonical_url).map((post) => {
+      const date = post.updated_at || post.published_at;
+      return {
+        url: `${SITE_URL}/blog/${post._id || post.id}`,
+        ...(date && !Number.isNaN(Date.parse(date)) ? { lastModified: date } : {}),
+        ...(post.cover_image ? { images: [post.cover_image] } : {}),
+        changeFrequency: "weekly" as const,
+        priority: 0.7,
+      };
+    });
+  } catch {
+    return [];
+  }
+}
+
 /** /skills and /agents pages for those that ship inside plugins, only with enough of their own text to index. */
 async function fetchPluginPartPaths(): Promise<string[]> {
   const kinds = ["skills", "agents"] as const;
@@ -135,13 +157,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   ];
 
   // Dynamic pages
-  const [mcpSlugs, skillIds, promptSlugs, jobSlugs, guideSlugs, blogSlugs, threadIds] = await Promise.all([
+  const [mcpSlugs, skillIds, promptSlugs, jobSlugs, guideSlugs, blogPages, threadIds] = await Promise.all([
     fetchSlugs("/mcp-servers", "slug"),
     fetchSlugs("/skills", "_id"),
     fetchSlugs("/prompts", "_id"),
     fetchSlugs("/jobs", "_id"),
     fetchSlugs("/guides", "_id"),
-    fetchSlugs("/blog", "_id"),
+    fetchBlogPages(),
     fetchIndexablePosts(),
   ]);
 
@@ -202,11 +224,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.6,
   }));
 
-  const blogPages: MetadataRoute.Sitemap = blogSlugs.map((slug) => ({
-    url: `${SITE_URL}/blog/${slug}`,
-    changeFrequency: "weekly",
-    priority: 0.7,
-  }));
 
   // Lesson pages carry the searchable content ("what is claude", "build an
   // mcp server"); without these only the guide index was discoverable.

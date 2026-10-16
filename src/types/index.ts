@@ -295,6 +295,8 @@ export interface BlogPost {
   author: string;
   author_avatar?: string;
   cover_image?: string;
+  cover_image_alt?: string;
+  cover_image_caption?: string;
   read_time: number;
   featured: boolean;
   seo_description?: string;

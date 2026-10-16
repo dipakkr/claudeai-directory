@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import { ArrowRight } from "lucide-react";
 import Header from "@/components/layout/Header";
@@ -56,8 +57,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       authors: [post.author],
       section: post.category,
       tags: post.tags,
+      ...(post.cover_image ? { images: [{ url: post.cover_image, alt: post.cover_image_alt || post.title }] } : {}),
     },
-    twitter: { card: "summary_large_image", title: post.title, description },
+    twitter: { card: "summary_large_image", title: post.title, description, ...(post.cover_image ? { images: [post.cover_image] } : {}) },
   };
 }
 
@@ -175,6 +177,12 @@ export default async function BlogPostPage({ params }: Props) {
                 </details>
               ) : null}
 
+              {post.cover_image ? (
+                <figure className="my-8">
+                  <Image src={post.cover_image} alt={post.cover_image_alt || post.title} width={1672} height={941} priority unoptimized className="h-auto w-full rounded-lg" />
+                  {post.cover_image_caption ? <figcaption className="mt-2 text-xs text-muted-foreground">{post.cover_image_caption}</figcaption> : null}
+                </figure>
+              ) : null}
               <BlogMarkdown content={body} community={community} />
 
               {post.tags.length > 0 ? (

@@ -10,6 +10,9 @@ export const contentType = "image/png";
 export default async function Image({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const post = await fetchApi<BlogPost>(`/blog/${slug}`);
+  // File-based OG metadata takes precedence over generateMetadata. Serve the
+  // editorial cover here too, so social crawlers receive the same artwork.
+  if (post?.cover_image) return Response.redirect(post.cover_image, 307);
 
   const title = post?.title || "Claude Directory blog";
   const meta = [post?.author ? `By ${post.author}` : null, formatDate(post?.published_at, "short"), post?.read_time ? `${post.read_time} min read` : null]
