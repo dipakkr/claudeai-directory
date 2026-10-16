@@ -39,7 +39,8 @@ async function fetchBlogPages(): Promise<MetadataRoute.Sitemap> {
       return {
         url: `${SITE_URL}/blog/${post._id || post.id}`,
         ...(date && !Number.isNaN(Date.parse(date)) ? { lastModified: date } : {}),
-        ...(post.cover_image ? { images: [post.cover_image] } : {}),
+        // Next's sitemap serializer interpolates image URLs without XML escaping.
+        ...(post.cover_image ? { images: [post.cover_image.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")] } : {}),
         changeFrequency: "weekly" as const,
         priority: 0.7,
       };
