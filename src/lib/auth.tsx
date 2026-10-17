@@ -10,6 +10,7 @@ import {
 
 import type { User } from "@/types";
 import { api } from "./api";
+import { VIEW_TOKEN_KEY, resolveAuthSession } from "./auth-session";
 import { clearUser, identifyUser, track } from "./analytics";
 
 interface AuthContextType {
@@ -47,7 +48,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 const TOKEN_KEY = "cc_token";
 /** Admin "view as" token: this tab only, never written to localStorage. */
-export const VIEW_TOKEN_KEY = "cad_view_token";
+export { VIEW_TOKEN_KEY } from "./auth-session";
 
 function readViewToken(): string | null {
   try {
@@ -65,38 +66,41 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [viewExpired, setViewExpired] = useState(false);
 
   useEffect(() => {
-    const viewToken = readViewToken();
-    if (viewToken) {
-      // Viewing as a member: never touch the admin's own session in localStorage.
-      api.setToken(viewToken);
-      api
-        .get<User>("/auth/me")
-        .then((me) => {
-          setUser(me);
-          setViewOnly(true);
-        })
-        .catch(() => {
-          sessionStorage.removeItem(VIEW_TOKEN_KEY);
-          api.setToken(null);
+    let cancelled = false;
+    const session = resolveAuthSession(window.location, sessionStorage, localStorage);
+    if (window.location.pathname === "/view-as") {
+      window.history.replaceState(null, "", window.location.pathname);
+    }
+    // Resolve the handoff before reading the ordinary sign-in session. Never
+    // fall back to the operator's identity when a view session cannot open.
+    api.setToken(session.token);
+    const load = async () => {
+      try {
+        if (!session.token) {
+          if (!cancelled && session.view) setViewExpired(true);
+          return;
+        }
+        const me = await api.get<User & { view_only?: boolean }>("/auth/me");
+        if (cancelled) return;
+        if (session.view && !me.view_only) throw new Error("Invalid member view");
+        setUser(me);
+        setViewOnly(session.view);
+      } catch {
+        if (cancelled) return;
+        if (session.view) {
+          // Keep the view marker until Exit: reopening must never silently
+          // display the operator's account instead of the requested member.
           setViewExpired(true);
-        })
-        .finally(() => setIsLoading(false));
-      return;
-    }
-    const token = localStorage.getItem(TOKEN_KEY);
-    if (token) {
-      api.setToken(token);
-      api
-        .get<User>("/auth/me")
-        .then(setUser)
-        .catch(() => {
+        } else {
           localStorage.removeItem(TOKEN_KEY);
-          api.setToken(null);
-        })
-        .finally(() => setIsLoading(false));
-    } else {
-      setIsLoading(false);
-    }
+        }
+        api.setToken(null);
+      } finally {
+        if (!cancelled) setIsLoading(false);
+      }
+    };
+    void load();
+    return () => { cancelled = true; };
   }, []);
 
   // Tie analytics to the member once we know who they are.

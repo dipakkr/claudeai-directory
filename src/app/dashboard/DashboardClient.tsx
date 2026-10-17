@@ -45,7 +45,7 @@ function roleLabel(user: User) {
 }
 
 export default function DashboardClient() {
-  const { user, isAuthenticated, isLoading } = useAuth();
+  const { user, isAuthenticated, isLoading, viewExpired } = useAuth();
   const router = useRouter();
   const params = useSearchParams();
   const tab = resolveTab(params.get("tab"));
@@ -56,15 +56,15 @@ export default function DashboardClient() {
   const submissions = useMySubmissions(enabled && tab === "submissions");
 
   useEffect(() => {
-    if (!isLoading && !isAuthenticated) router.push("/login");
-  }, [isLoading, isAuthenticated, router]);
+    if (!isLoading && !isAuthenticated && !viewExpired) router.push("/login");
+  }, [isLoading, isAuthenticated, viewExpired, router]);
 
   if (isLoading || !user) {
     return (
       <div className="flex min-h-screen flex-col bg-background">
         <Header />
         <main className="flex flex-1 items-center justify-center">
-          <p className="text-sm text-muted-foreground">Loading your dashboard...</p>
+          <p className="text-sm text-muted-foreground">{viewExpired ? "Open View as again from the admin to start a new session." : "Loading your dashboard..."}</p>
         </main>
       </div>
     );

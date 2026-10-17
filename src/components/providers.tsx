@@ -3,6 +3,7 @@
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { ViewAsBanner } from "@/components/layout/ViewAsBanner";
 import { AuthProvider } from "@/lib/auth";
 import { SignInProvider } from "@/components/auth/SignInDialog";
 import OnboardingModal from "@/components/onboarding/OnboardingModal";
@@ -28,6 +29,7 @@ export default function Providers({ children, initialReach }: { children: React.
         <QueryClientProvider client={queryClient}>
             <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
                 <AuthProvider>
+                    <ViewAsBanner />
                     <SignInProvider>
                         <TooltipProvider>
                             <CommandMenuProvider>

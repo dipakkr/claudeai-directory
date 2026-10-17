@@ -1,38 +1,21 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/lib/auth";
 
-import { VIEW_TOKEN_KEY } from "@/lib/auth";
-
-/**
- * Landing page for admin "view as" links (opened from tj-admin). The token is in
- * the URL fragment, which never reaches a server; it moves to this tab's
- * sessionStorage and the fragment is wiped from history before going on.
- */
+/** AuthProvider consumes the fragment before starting any identity request. */
 export default function ViewAsClient() {
-  const [failed, setFailed] = useState(false);
+  const { viewOnly, viewExpired } = useAuth();
+  const router = useRouter();
 
   useEffect(() => {
-    const token = new URLSearchParams(window.location.hash.slice(1)).get("t");
-    window.history.replaceState(null, "", window.location.pathname);
-    if (!token) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect -- one-time read of the URL fragment
-      setFailed(true);
-      return;
-    }
-    try {
-      sessionStorage.setItem(VIEW_TOKEN_KEY, token);
-    } catch {
-      setFailed(true);
-      return;
-    }
-    // Full load so the auth provider starts in view mode.
-    window.location.replace("/dashboard");
-  }, []);
+    if (viewOnly) router.replace("/dashboard");
+  }, [viewOnly, router]);
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4 text-center text-sm text-muted-foreground">
-      {failed ? "This view link is missing its key. Open it again from the admin." : "Opening the member's view..."}
+      {viewExpired ? "This view link could not be opened. Open View as again from the admin." : "Opening the member's view..."}
     </div>
   );
 }
