@@ -181,9 +181,11 @@ export function AnalyticsPanel({ summary, apps, loading }: { summary?: Dashboard
                   <ArrowRight className="h-3.5 w-3.5" />
                 </Link>
                 {!hasDofollow(app) && app.status !== "rejected" && (
-                  <div className="ml-14 flex w-[calc(100%-3.5rem)] flex-wrap items-center gap-x-3 gap-y-1 border-t border-border/60 pt-2 text-xs leading-5 text-muted-foreground">
-                    <span className="font-mono text-[10px]">nofollow</span>
-                    <span className="flex-1">Add our badge for free, or upgrade your link for $39.</span>
+                  <div className="flex w-full flex-col gap-2 rounded-[8px] border border-primary/25 bg-primary/[0.05] px-3 py-2.5 sm:ml-14 sm:w-[calc(100%-3.5rem)] sm:flex-row sm:items-center sm:gap-3">
+                    <span className="w-fit shrink-0 rounded-[4px] border border-border bg-background px-1.5 py-px font-mono text-[11px] text-muted-foreground">nofollow</span>
+                    <p className="min-w-0 flex-1 text-[13px] leading-5 text-muted-foreground">
+                      Your link is nofollow, and launches with our badge rank above yours. Add our badge for free, or upgrade your link for $39.
+                    </p>
                     <LinkUpgradeDialog app={app} />
                   </div>
                 )}

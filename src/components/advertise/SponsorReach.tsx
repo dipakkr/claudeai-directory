@@ -2,6 +2,7 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { ArrowUpRight } from "lucide-react";
+import { DOMAIN_RATING } from "@/lib/domain-rating";
 import { api } from "@/lib/api";
 import { Stat } from "@/components/stats/Stat";
 
@@ -19,8 +20,7 @@ function countryName(code: string) {
 function flag(code: string) {
   return /^[A-Z]{2}$/.test(code) ? String.fromCodePoint(...[...code].map(char => 0x1f1a5 + char.charCodeAt(0))) : "";
 }
-// Ahrefs score supplied by the site owner on 2026-10-17; not a live API response.
-const DOMAIN_RATING = 32;
+
 
 export function SponsorReach() {
   const { data, isPending } = useQuery({

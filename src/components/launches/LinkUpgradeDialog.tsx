@@ -7,6 +7,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { api, ApiError } from "@/lib/api";
 import { useAuth } from "@/lib/auth";
+import { DOMAIN_RATING } from "@/lib/domain-rating";
 import type { ShowcaseProject } from "@/types";
 
 export function LinkUpgradeDialog({ app, triggerLabel = "Get a do-follow link", triggerClassName }: {
@@ -45,12 +46,26 @@ export function LinkUpgradeDialog({ app, triggerLabel = "Get a do-follow link", 
       <button onClick={() => setOpen(true)} className={triggerClassName ?? "inline-flex shrink-0 items-center gap-1 text-[13px] font-medium text-primary hover:underline"}>
         {triggerLabel} <ArrowRight className="h-3.5 w-3.5" />
       </button>
-      <DialogContent className="w-[calc(100%-2rem)] max-w-[440px] gap-0 rounded-[8px] p-0 sm:rounded-[8px]">
+      <DialogContent className="w-[calc(100%-2rem)] max-w-[480px] max-h-[90dvh] overflow-y-auto gap-0 rounded-[8px] p-0 sm:rounded-[8px]">
         <div className="p-6 sm:p-7">
           <DialogHeader className="space-y-2 text-left">
             <DialogTitle className="font-serif text-[28px] font-normal leading-tight">Get a do-follow link</DialogTitle>
             <DialogDescription className="text-sm leading-6">A dofollow website link for <span className="font-medium text-foreground">{app.title}</span>, without adding our badge.</DialogDescription>
           </DialogHeader>
+          <div className="mt-5 rounded-[6px] border border-primary/25 bg-primary/[0.05] p-4">
+            <div className="flex items-center gap-3">
+              <svg viewBox="0 0 44 44" className="h-14 w-14 shrink-0 -rotate-90" aria-hidden="true">
+                <circle cx="22" cy="22" r="17" fill="none" stroke="currentColor" strokeWidth="6" className="text-border" />
+                <circle cx="22" cy="22" r="17" fill="none" stroke="currentColor" strokeWidth="6" pathLength="100" strokeDasharray={`${DOMAIN_RATING} ${100 - DOMAIN_RATING}`} className="text-primary" />
+              </svg>
+              <div>
+                <p className="text-xs text-muted-foreground">ClaudeAI Directory · Ahrefs Domain Rating</p>
+                <p className="mt-1 text-3xl font-semibold tabular-nums">{DOMAIN_RATING}<span className="ml-1 text-sm font-normal text-muted-foreground">/ 100</span></p>
+              </div>
+            </div>
+            <p className="mt-3 text-xs leading-5 text-muted-foreground">Get a link from claudeai.directory, rated DR {DOMAIN_RATING} by Ahrefs. Domain Rating measures the strength of a website’s backlink profile on a 100-point scale.</p>
+            <a href="https://ahrefs.com/seo/glossary/domain-rating" target="_blank" rel="noopener noreferrer" className="mt-2 inline-block text-xs text-primary hover:underline">About Domain Rating ↗</a>
+          </div>
           <div className="my-6 flex items-baseline gap-2">
             <span className="text-4xl font-semibold tracking-tight">$39</span>
             <span className="text-sm text-muted-foreground">USD · one-time</span>
