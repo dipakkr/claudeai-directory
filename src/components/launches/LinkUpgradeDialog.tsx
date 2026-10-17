@@ -46,15 +46,15 @@ export function LinkUpgradeDialog({ app, triggerLabel = "Get a do-follow link", 
       <button onClick={() => setOpen(true)} className={triggerClassName ?? "inline-flex shrink-0 items-center gap-1 text-[13px] font-medium text-primary hover:underline"}>
         {triggerLabel} <ArrowRight className="h-3.5 w-3.5" />
       </button>
-      <DialogContent className="w-[calc(100%-2rem)] max-w-[480px] max-h-[90dvh] overflow-y-auto gap-0 rounded-[8px] p-0 sm:rounded-[8px]">
-        <div className="p-6 sm:p-7">
+      <DialogContent className="w-[calc(100%-2rem)] max-w-[440px] max-h-[90dvh] overflow-y-auto gap-0 rounded-[8px] p-0 sm:rounded-[8px]">
+        <div className="p-5 sm:p-6">
           <DialogHeader className="space-y-2 text-left">
-            <DialogTitle className="font-serif text-[28px] font-normal leading-tight">Get a do-follow link</DialogTitle>
+            <DialogTitle className="font-serif text-[25px] font-normal leading-tight">Get a do-follow link</DialogTitle>
             <DialogDescription className="text-sm leading-6">A dofollow website link for <span className="font-medium text-foreground">{app.title}</span>, without adding our badge.</DialogDescription>
           </DialogHeader>
-          <div className="mt-5 rounded-[6px] border border-primary/25 bg-primary/[0.05] p-4">
+          <div className="mt-4 rounded-[6px] border border-primary/25 bg-primary/[0.05] p-3">
             <div className="flex items-center gap-3">
-              <svg viewBox="0 0 44 44" className="h-14 w-14 shrink-0 -rotate-90" aria-hidden="true">
+              <svg viewBox="0 0 44 44" className="h-12 w-12 shrink-0 -rotate-90" aria-hidden="true">
                 <circle cx="22" cy="22" r="17" fill="none" stroke="currentColor" strokeWidth="6" className="text-border" />
                 <circle cx="22" cy="22" r="17" fill="none" stroke="currentColor" strokeWidth="6" pathLength="100" strokeDasharray={`${DOMAIN_RATING} ${100 - DOMAIN_RATING}`} className="text-primary" />
               </svg>
@@ -63,28 +63,26 @@ export function LinkUpgradeDialog({ app, triggerLabel = "Get a do-follow link", 
                 <p className="mt-1 text-3xl font-semibold tabular-nums">{DOMAIN_RATING}<span className="ml-1 text-sm font-normal text-muted-foreground">/ 100</span></p>
               </div>
             </div>
-            <p className="mt-3 text-xs leading-5 text-muted-foreground">Get a link from claudeai.directory, rated DR {DOMAIN_RATING} by Ahrefs. Domain Rating measures the strength of a website’s backlink profile on a 100-point scale.</p>
-            <a href="https://ahrefs.com/seo/glossary/domain-rating" target="_blank" rel="noopener noreferrer" className="mt-2 inline-block text-xs text-primary hover:underline">About Domain Rating ↗</a>
           </div>
-          <div className="my-6 flex items-baseline gap-2">
+          <div className="my-4 flex items-baseline gap-2">
             <span className="text-4xl font-semibold tracking-tight">$39</span>
             <span className="text-sm text-muted-foreground">USD · one-time</span>
           </div>
-          <ul className="space-y-3 text-sm">
+          <ul className="space-y-2 text-sm">
             {["Dofollow link on your launch page", "No badge required on your website", "No subscription or recurring charge"].map((line) => (
               <li key={line} className="flex items-start gap-2.5"><Check className="mt-0.5 h-4 w-4 shrink-0 text-primary" />{line}</li>
             ))}
           </ul>
-          <p className="mt-5 text-xs leading-5 text-muted-foreground">Activates after payment is confirmed. Search rankings and traffic are not guaranteed.</p>
+          <p className="mt-3 text-xs leading-5 text-muted-foreground">Activates after payment is confirmed. Search rankings and traffic are not guaranteed.</p>
           {viewOnly && <p className="mt-4 rounded-[4px] border border-border p-3 text-xs text-muted-foreground">Checkout is disabled while viewing another member’s account.</p>}
           {error && <p role="alert" className="mt-4 text-sm text-destructive">{error}</p>}
           {!viewOnly && (config.isError || (config.data && !config.data.enabled)) && <p role="alert" className="mt-4 text-sm text-muted-foreground">Checkout is temporarily unavailable. Please try again later.</p>}
-          <button disabled={viewOnly || busy || !config.data?.enabled} onClick={checkout} className="mt-6 flex h-11 w-full items-center justify-center gap-2 rounded-[6px] bg-primary px-4 text-sm font-semibold text-primary-foreground disabled:cursor-not-allowed disabled:opacity-50">
+          <button disabled={viewOnly || busy || !config.data?.enabled} onClick={checkout} className="mt-4 flex h-11 w-full items-center justify-center gap-2 rounded-[6px] bg-primary px-4 text-sm font-semibold text-primary-foreground disabled:cursor-not-allowed disabled:opacity-50">
             {busy ? <><Loader2 className="h-4 w-4 animate-spin" />Opening checkout...</> : <>Continue to payment · $39 <ArrowRight className="h-4 w-4" /></>}
           </button>
           <p className="mt-3 text-center text-xs text-muted-foreground">Secure checkout with Stripe</p>
         </div>
-        <div className="border-t border-border px-6 py-4 text-center text-xs text-muted-foreground">
+        <div className="border-t border-border px-5 py-3 text-center text-xs text-muted-foreground">
           Prefer the free option? <Link href={`/launches/submit?finish=${encodeURIComponent(app.id)}`} className="text-foreground underline underline-offset-4">Add our badge</Link>
         </div>
       </DialogContent>
