@@ -19,8 +19,8 @@ function countryName(code: string) {
 function flag(code: string) {
   return /^[A-Z]{2}$/.test(code) ? String.fromCodePoint(...[...code].map(char => 0x1f1a5 + char.charCodeAt(0))) : "";
 }
-// Ahrefs score supplied by the site owner on 2026-10-16; not a live API response.
-const DOMAIN_RATING = 26;
+// Ahrefs score supplied by the site owner on 2026-10-17; not a live API response.
+const DOMAIN_RATING = 32;
 
 export function SponsorReach() {
   const { data, isPending } = useQuery({
