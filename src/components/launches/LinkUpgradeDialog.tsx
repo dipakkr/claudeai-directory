@@ -49,7 +49,7 @@ export function LinkUpgradeDialog({ app, triggerLabel = "Get a do-follow link", 
       <DialogContent className="w-[calc(100%-2rem)] max-w-[440px] max-h-[90dvh] overflow-y-auto gap-0 rounded-[8px] p-0 sm:rounded-[8px]">
         <div className="p-5 sm:p-6">
           <DialogHeader className="space-y-2 text-left">
-            <DialogTitle className="font-serif text-[25px] font-normal leading-tight">Get a do-follow link</DialogTitle>
+            <DialogTitle className="font-sans text-2xl font-medium leading-tight">Get a do-follow link</DialogTitle>
             <DialogDescription className="text-sm leading-6">A dofollow website link for <span className="font-medium text-foreground">{app.title}</span>, without adding our badge.</DialogDescription>
           </DialogHeader>
           <div className="mt-4 rounded-[6px] border border-primary/25 bg-primary/[0.05] p-3">
