@@ -324,7 +324,7 @@ export default function ThreadDetail({
                   <Byline author={thread.author} username={thread.author_username} headline={thread.author_headline || role} created={thread.created_at} edited={Boolean(thread.edited_at)} />
                   <span
                     className="ml-auto inline-flex shrink-0 items-center gap-1.5 rounded-full border border-border bg-card px-3 py-1 text-sm text-foreground"
-                    title="Times this post was opened"
+                    title="Views from the feed or post page, counted once per visitor per day"
                   >
                     <Eye className="h-4 w-4 text-muted-foreground" />
                     <span className="font-medium tabular-nums">{(thread.views ?? 0).toLocaleString()}</span>

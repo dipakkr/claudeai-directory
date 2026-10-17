@@ -263,7 +263,7 @@ export function PostCard({ post, voted, onDeleted }: { post: Thread; voted: bool
           Share
         </button>
         {(post.views ?? 0) > 0 && (
-          <span className="ml-auto inline-flex items-center gap-1 pr-2 text-xs text-muted-foreground" title="Views">
+          <span className="ml-auto inline-flex items-center gap-1 pr-2 text-xs text-muted-foreground" title="Views from the feed or post page, counted once per visitor per day">
             <Eye className="h-3.5 w-3.5" />
             {post.views.toLocaleString()}
           </span>
