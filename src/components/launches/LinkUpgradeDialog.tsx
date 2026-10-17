@@ -9,7 +9,11 @@ import { api, ApiError } from "@/lib/api";
 import { useAuth } from "@/lib/auth";
 import type { ShowcaseProject } from "@/types";
 
-export function LinkUpgradeDialog({ app }: { app: ShowcaseProject }) {
+export function LinkUpgradeDialog({ app, triggerLabel = "Get dofollow", triggerClassName }: {
+  app: Pick<ShowcaseProject, "id" | "title">;
+  triggerLabel?: string;
+  triggerClassName?: string;
+}) {
   const { viewOnly } = useAuth();
   const [open, setOpen] = useState(false);
   const [busy, setBusy] = useState(false);
@@ -38,8 +42,8 @@ export function LinkUpgradeDialog({ app }: { app: ShowcaseProject }) {
   }
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <button onClick={() => setOpen(true)} className="inline-flex shrink-0 items-center gap-1 text-[13px] font-medium text-primary hover:underline">
-        Get dofollow <ArrowRight className="h-3.5 w-3.5" />
+      <button onClick={() => setOpen(true)} className={triggerClassName ?? "inline-flex shrink-0 items-center gap-1 text-[13px] font-medium text-primary hover:underline"}>
+        {triggerLabel} <ArrowRight className="h-3.5 w-3.5" />
       </button>
       <DialogContent className="w-[calc(100%-2rem)] max-w-[440px] gap-0 rounded-[8px] p-0 sm:rounded-[8px]">
         <div className="p-6 sm:p-7">

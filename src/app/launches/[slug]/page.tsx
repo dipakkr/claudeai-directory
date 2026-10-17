@@ -290,7 +290,7 @@ export default async function LaunchDetailPage({
             <div className="mt-4">
               <UpvoteSummary slug={project.id} initialCount={upvotes} />
             </div>
-            {!hasDofollow(project) && <OwnerNofollowNotice slug={project.id} authorId={project.author_id} />}
+            {!hasDofollow(project) && <OwnerNofollowNotice slug={project.id} title={project.title} authorId={project.author_id} />}
           </header>
 
           <ViewTracker type="launch" id={project.id} />

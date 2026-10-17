@@ -1,12 +1,11 @@
 "use client";
 
-import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { LinkUpgradeDialog } from "./LinkUpgradeDialog";
 
 import { useAuth } from "@/lib/auth";
 
 /** Shown only to the maker of a launch without a dofollow link: what it means and how to fix it. */
-export function OwnerNofollowNotice({ slug, authorId }: { slug: string; authorId?: string }) {
+export function OwnerNofollowNotice({ slug, title, authorId }: { slug: string; title: string; authorId?: string }) {
   const { user } = useAuth();
   if (!user || user.id !== authorId) return null;
   return (
@@ -18,17 +17,14 @@ export function OwnerNofollowNotice({ slug, authorId }: { slug: string; authorId
             Your link is <span className="font-mono text-primary">nofollow</span>
           </p>
           <p className="mt-1 text-[13.5px] leading-6 text-muted-foreground">
-            It passes no SEO value to your site, and your launch is listed below launches with a dofollow link. Add our badge to your
-            site for free to fix both.
+            Add our badge to your site for free, or upgrade to a dofollow link for $39 with a one-time payment.
           </p>
         </div>
-        <Link
-          href={`/launches/submit?finish=${encodeURIComponent(slug)}`}
-          className="inline-flex h-10 shrink-0 items-center justify-center gap-1.5 rounded-full bg-primary px-5 text-sm font-medium text-primary-foreground hover:opacity-90"
-        >
-          Get the dofollow link
-          <ArrowRight className="h-3.5 w-3.5" />
-        </Link>
+        <LinkUpgradeDialog
+          app={{ id: slug, title }}
+          triggerLabel="Get the dofollow link"
+          triggerClassName="inline-flex h-10 shrink-0 items-center justify-center gap-1.5 rounded-full bg-primary px-5 text-sm font-medium text-primary-foreground hover:opacity-90"
+        />
       </div>
     </div>
   );
