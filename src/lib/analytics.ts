@@ -5,6 +5,7 @@
 // A copied command is install intent, never a confirmed install.
 
 export type InstallEvent =
+  | "thread_impression"
   | "resource_viewed"
   | "search_performed"
   | "install_clicked"
@@ -44,6 +45,7 @@ export interface EventProps {
 // Events the backend stores for rankings (see docs/INSTALL_API_CONTRACT.md).
 const BACKEND_EVENTS = new Set<AnalyticsEvent>([
   "resource_viewed",
+  "thread_impression",
   "search_performed",
   "install_clicked",
   "install_command_copied",

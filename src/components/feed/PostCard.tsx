@@ -17,6 +17,7 @@ import { useAuth } from "@/lib/auth";
 import { track } from "@/lib/analytics";
 import { formatPlainPost } from "@/lib/format-post";
 import { useCreateReply, useReplies } from "@/hooks/use-community";
+import { useThreadImpression } from "@/hooks/use-thread-impression";
 import type { Thread } from "@/types";
 
 const SITE_URL = "https://www.claudeai.directory";
@@ -176,6 +177,7 @@ function InlineComments({ post, onCount }: { post: Thread; onCount: (n: number) 
 }
 
 export function PostCard({ post, voted, onDeleted }: { post: Thread; voted: boolean; onDeleted?: (id: string) => void }) {
+  const impressionRef = useThreadImpression(post.id);
   const [expanded, setExpanded] = useState(false);
   const [commentsOpen, setCommentsOpen] = useState(false);
   const [replyCount, setReplyCount] = useState<number | null>(null);
@@ -194,7 +196,7 @@ export function PostCard({ post, voted, onDeleted }: { post: Thread; voted: bool
   };
 
   return (
-    <article className="overflow-hidden rounded-[6px] border border-border bg-card">
+    <article ref={impressionRef} className="overflow-hidden rounded-[6px] border border-border bg-card">
       <div className="px-4 pt-4 sm:px-5">
         <header className="flex items-start gap-3">
           <DiscussionAvatar src={post.author_avatar} name={post.author} />
