@@ -180,6 +180,13 @@ export function AnalyticsPanel({ summary, apps, loading }: { summary?: Dashboard
                   Details
                   <ArrowRight className="h-3.5 w-3.5" />
                 </Link>
+                {!hasDofollow(app) && app.status !== "rejected" && (
+                  <div className="ml-14 flex w-[calc(100%-3.5rem)] flex-wrap items-center gap-x-3 gap-y-1 border-t border-border/60 pt-2 text-xs leading-5 text-muted-foreground">
+                    <span className="font-mono text-[10px]">nofollow</span>
+                    <span className="flex-1">Add our badge for free, or upgrade your link for $39.</span>
+                    <LinkUpgradeDialog app={app} />
+                  </div>
+                )}
               </li>
             );
           })}
