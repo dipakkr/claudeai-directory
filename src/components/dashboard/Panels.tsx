@@ -7,6 +7,7 @@ import type { ReactNode } from "react";
 import { useQuery } from "@tanstack/react-query";
 
 import { api } from "@/lib/api";
+import { LinkUpgradeDialog } from "@/components/launches/LinkUpgradeDialog";
 
 import { faviconFor } from "@/lib/directory";
 import type { DashboardSummary, MySubmission } from "@/hooks/use-dashboard";
@@ -260,15 +261,9 @@ export function LaunchRows({ apps, loading }: { apps: ShowcaseProject[]; loading
               <div className="flex w-full flex-col gap-2 rounded-[8px] border border-primary/25 bg-primary/[0.05] px-3 py-2.5 sm:ml-14 sm:w-[calc(100%-3.5rem)] sm:flex-row sm:items-center sm:gap-3">
                 <span className="w-fit shrink-0 rounded-[4px] border border-border bg-background px-1.5 py-px font-mono text-[11px] text-muted-foreground">nofollow</span>
                 <p className="min-w-0 flex-1 text-[13px] leading-5 text-muted-foreground">
-                  Your link is nofollow, and launches with our badge rank above yours. Add our badge to your site for free to fix both.
+                  Your link is nofollow, and launches with our badge rank above yours. Add our badge for free, or upgrade your link for $39.
                 </p>
-                <Link
-                  href={`/launches/submit?finish=${encodeURIComponent(app.id)}`}
-                  className="inline-flex shrink-0 items-center gap-1 text-[13px] font-medium text-primary hover:underline"
-                >
-                  Get dofollow
-                  <ArrowRight className="h-3.5 w-3.5" />
-                </Link>
+                <LinkUpgradeDialog app={app} />
               </div>
             )}
           </li>

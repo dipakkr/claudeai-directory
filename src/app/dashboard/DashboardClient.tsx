@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { ArrowUpRight } from "lucide-react";
 
+import { LinkUpgradeResult } from "@/components/launches/LinkUpgradeResult";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { AnalyticsPanel, SubmissionsPanel } from "@/components/dashboard/Panels";
@@ -84,6 +85,7 @@ export default function DashboardClient() {
       <Header />
       <main className="flex-1 pb-16">
         <div className="mx-auto max-w-[880px] px-4 pt-8 md:px-8 md:pt-12">
+          <LinkUpgradeResult />
           {/* Who you are, in one line. */}
           <header className="flex items-center gap-4">
             {user.avatar ? (
