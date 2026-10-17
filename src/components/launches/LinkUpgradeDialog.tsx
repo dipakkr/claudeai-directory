@@ -9,7 +9,7 @@ import { api, ApiError } from "@/lib/api";
 import { useAuth } from "@/lib/auth";
 import type { ShowcaseProject } from "@/types";
 
-export function LinkUpgradeDialog({ app, triggerLabel = "Get dofollow", triggerClassName }: {
+export function LinkUpgradeDialog({ app, triggerLabel = "Get a do-follow link", triggerClassName }: {
   app: Pick<ShowcaseProject, "id" | "title">;
   triggerLabel?: string;
   triggerClassName?: string;
@@ -48,7 +48,7 @@ export function LinkUpgradeDialog({ app, triggerLabel = "Get dofollow", triggerC
       <DialogContent className="w-[calc(100%-2rem)] max-w-[440px] gap-0 rounded-[8px] p-0 sm:rounded-[8px]">
         <div className="p-6 sm:p-7">
           <DialogHeader className="space-y-2 text-left">
-            <DialogTitle className="font-serif text-[28px] font-normal leading-tight">Upgrade your link</DialogTitle>
+            <DialogTitle className="font-serif text-[28px] font-normal leading-tight">Get a do-follow link</DialogTitle>
             <DialogDescription className="text-sm leading-6">A dofollow website link for <span className="font-medium text-foreground">{app.title}</span>, without adding our badge.</DialogDescription>
           </DialogHeader>
           <div className="my-6 flex items-baseline gap-2">

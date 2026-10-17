@@ -22,7 +22,7 @@ export function OwnerNofollowNotice({ slug, title, authorId }: { slug: string; t
         </div>
         <LinkUpgradeDialog
           app={{ id: slug, title }}
-          triggerLabel="Get the dofollow link"
+          triggerLabel="Get a do-follow link"
           triggerClassName="inline-flex h-10 shrink-0 items-center justify-center gap-1.5 rounded-full bg-primary px-5 text-sm font-medium text-primary-foreground hover:opacity-90"
         />
       </div>
