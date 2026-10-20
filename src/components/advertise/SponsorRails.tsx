@@ -6,14 +6,12 @@ import { useQuery } from "@tanstack/react-query";
 import { api } from "@/lib/api";
 import { usePathname } from "next/navigation";
 import { ArrowUpRight, Plus } from "lucide-react";
-import { sideAdPlacements, type SideAdPlacement } from "@/data/sideAdPlacements";
 import { openAdvertiseDialog } from "@/lib/advertise";
 import { track } from "@/lib/analytics";
 import { useSponsorTracking } from "@/hooks/useSponsorTracking";
 
-type SponsorPlacement = SideAdPlacement & { logo_url?: string; banner_url?: string };
+type SponsorPlacement = { id: string; name: string; href: string; headline: string; logoDomain: string; logo_url?: string };
 type PaidPlacement = { campaign_id: string; position: number; product: string; website: string; tagline: string; logo_url?: string; banner_url?: string };
-const featured = sideAdPlacements.find(placement => placement.id === "firecrawl-mcp")!;
 const cardColors = ["bg-amber-50 dark:bg-amber-950/40", "bg-pink-50 dark:bg-pink-950/40", "bg-slate-100 dark:bg-slate-800/60", "bg-indigo-50 dark:bg-indigo-950/40"];
 const excluded = ["/dashboard", "/submit", "/launches/submit", "/login", "/signup"];
 
@@ -45,7 +43,7 @@ function OpenSlot() {
   );
 }
 
-/** One featured placement and nine bookable slots, with stable inventory positions. */
+/** Ten bookable slots, showing only approved active campaigns. */
 export default function SponsorRails({ inline = false }: { inline?: boolean }) {
   const pathname = usePathname();
   const [step, setStep] = useState(0);
@@ -55,18 +53,17 @@ export default function SponsorRails({ inline = false }: { inline?: boolean }) {
     refetchInterval: 30_000,
   });
   const cards: (SponsorPlacement | undefined)[] = Array.from({ length: 10 });
-  cards[0] = featured;
   for (const paid of data?.items ?? []) {
-    if (!paid.campaign_id || !Number.isInteger(paid.position) || paid.position < 1 || paid.position > 9) continue;
+    if (!paid.campaign_id || !Number.isInteger(paid.position) || paid.position < 0 || paid.position > 9) continue;
     let logoDomain: string;
     try {
       const url = new URL(paid.website);
       if (url.protocol !== "https:" && url.protocol !== "http:") continue;
       logoDomain = url.hostname;
     } catch { continue; }
-    cards[paid.position] = { ...featured, id: paid.campaign_id, name: paid.product,
+    cards[paid.position] = { id: paid.campaign_id, name: paid.product,
       href: paid.website, headline: paid.tagline, logoDomain,
-      logo_url: paid.logo_url, category: "sidebar" };
+      logo_url: paid.logo_url };
   }
   const enabled = !excluded.some(path => pathname === path || pathname.startsWith(`${path}/`));
   useEffect(() => {
@@ -91,7 +88,7 @@ export default function SponsorRails({ inline = false }: { inline?: boolean }) {
   if (inline) return (
     <aside aria-label="Sponsor placement" className="my-4 min-[1280px]:hidden">
       <p className="mb-2 font-mono text-[9px] uppercase tracking-wider text-muted-foreground">Sponsored</p>
-      <SponsorCard placement={mobile.card} position={mobile.position} surface="mobile" />
+      {mobile ? <SponsorCard placement={mobile.card} position={mobile.position} surface="mobile" /> : <OpenSlot />}
     </aside>
   );
 

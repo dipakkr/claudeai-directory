@@ -45,23 +45,6 @@ function trackedSideAdHref(id: string, href: string): string {
 
 export const sideAdPlacements: SideAdPlacement[] = [
   {
-    id: "firecrawl-mcp",
-    eyebrow: "Web data",
-    name: "Firecrawl MCP",
-    headline: "Turn websites into Claude-ready data.",
-    description: "Web research placement for Claude users collecting pages, docs and product data.",
-    href: trackedSideAdHref("firecrawl-mcp", "https://www.firecrawl.dev"),
-    logoDomain: "firecrawl.dev",
-    cta: "Open",
-    initial: "F",
-    label: "MCP Server",
-    tone: {
-      panel: "bg-[#1f2f22] text-white border-[#3f6b47]",
-      icon: "bg-[#a8f0b8] text-[#0c2111]",
-      badge: "bg-white/10 text-green-100",
-    },
-  },
-  {
     id: "exa-mcp",
     eyebrow: "AI search",
     name: "Exa MCP",
@@ -628,7 +611,7 @@ function categoryRail(title: string, anchorIds: string[]): SideAdRail {
 export const sideAdCollections: SideAdCollection[] = [
   {
     id: "web-research-and-integrations",
-    left: categoryRail("MCPs for web research", ["firecrawl-mcp", "exa-mcp"]),
+    left: categoryRail("MCPs for web research", ["exa-mcp"]),
     right: categoryRail("MCPs for integrations", ["composio-mcp"]),
   },
   {
