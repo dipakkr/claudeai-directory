@@ -9,18 +9,19 @@ import { ArrowUpRight, Plus } from "lucide-react";
 import { sideAdPlacements, type SideAdPlacement } from "@/data/sideAdPlacements";
 import { openAdvertiseDialog } from "@/lib/advertise";
 import { track } from "@/lib/analytics";
+import { useSponsorTracking } from "@/hooks/useSponsorTracking";
 
 type SponsorPlacement = SideAdPlacement & { logo_url?: string; banner_url?: string };
-type PaidPlacement = { position: number; product: string; website: string; tagline: string; logo_url?: string; banner_url?: string };
-const placements = [sideAdPlacements[0], sideAdPlacements[4]];
+type PaidPlacement = { campaign_id: string; position: number; product: string; website: string; tagline: string; logo_url?: string; banner_url?: string };
+const featured = sideAdPlacements.find(placement => placement.id === "firecrawl-mcp")!;
 const cardColors = ["bg-amber-50 dark:bg-amber-950/40", "bg-pink-50 dark:bg-pink-950/40", "bg-slate-100 dark:bg-slate-800/60", "bg-indigo-50 dark:bg-indigo-950/40"];
 const excluded = ["/dashboard", "/submit", "/launches/submit", "/login", "/signup"];
 
-function SponsorCard({ placement, position = 1 }: { placement: SponsorPlacement; position?: number }) {
+function SponsorCard({ placement, position, surface }: { placement: SponsorPlacement; position: number; surface: "desktop" | "mobile" }) {
+  const tracking = useSponsorTracking(placement.id, position, surface);
   return (
-    <a href={placement.href} target="_blank" rel="sponsored noopener noreferrer"
-      onClick={() => track("ad_clicked", { adId: placement.id, sponsor: placement.name, category: placement.category, position })}
-      className={`sponsor-card group flex min-h-[152px] flex-1 flex-col items-center justify-center gap-2 rounded-[6px] border border-foreground/10 px-3 py-4 text-center transition-[filter] hover:brightness-105 focus-visible:outline-2 focus-visible:outline-primary ${cardColors[(position - 1) % cardColors.length]}`}>
+    <a {...tracking} data-sponsor-slot={position + 1} href={placement.href} target="_blank" rel="sponsored noopener noreferrer"
+      className={`sponsor-card group flex min-h-[152px] flex-1 flex-col items-center justify-center gap-2 rounded-[6px] border border-foreground/10 px-3 py-4 text-center transition-[filter] hover:brightness-105 focus-visible:outline-2 focus-visible:outline-primary ${cardColors[position % cardColors.length]}`}>
       <span className="sponsor-logo flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-lg">
         <img src={placement.logo_url || `https://www.google.com/s2/favicons?domain=${placement.logoDomain}&sz=64`} width={28} height={28} alt="" />
       </span>
@@ -44,7 +45,7 @@ function OpenSlot() {
   );
 }
 
-/** Two featured placements and eight available sponsor slots. */
+/** One featured placement and nine bookable slots, with stable inventory positions. */
 export default function SponsorRails({ inline = false }: { inline?: boolean }) {
   const pathname = usePathname();
   const [step, setStep] = useState(0);
@@ -54,11 +55,17 @@ export default function SponsorRails({ inline = false }: { inline?: boolean }) {
     refetchInterval: 30_000,
   });
   const cards: (SponsorPlacement | undefined)[] = Array.from({ length: 10 });
-  cards[0] = placements[0]; cards[5] = placements[1];
+  cards[0] = featured;
   for (const paid of data?.items ?? []) {
-    if (paid.position < 0 || paid.position > 9) continue;
-    cards[paid.position] = { ...placements[0], id: `paid-${paid.position}`, name: paid.product,
-      href: paid.website, headline: paid.tagline, logoDomain: new URL(paid.website).hostname,
+    if (!paid.campaign_id || !Number.isInteger(paid.position) || paid.position < 1 || paid.position > 9) continue;
+    let logoDomain: string;
+    try {
+      const url = new URL(paid.website);
+      if (url.protocol !== "https:" && url.protocol !== "http:") continue;
+      logoDomain = url.hostname;
+    } catch { continue; }
+    cards[paid.position] = { ...featured, id: paid.campaign_id, name: paid.product,
+      href: paid.website, headline: paid.tagline, logoDomain,
       logo_url: paid.logo_url, category: "sidebar" };
   }
   const enabled = !excluded.some(path => pathname === path || pathname.startsWith(`${path}/`));
@@ -79,11 +86,12 @@ export default function SponsorRails({ inline = false }: { inline?: boolean }) {
   }, [enabled, inline]);
   if (!enabled) return null;
 
-  const mobileCards = cards.filter((card): card is SponsorPlacement => !!card);
+  const mobileCards = cards.flatMap((card, position) => card ? [{ card, position }] : []);
+  const mobile = mobileCards[step % mobileCards.length];
   if (inline) return (
     <aside aria-label="Sponsor placement" className="my-4 min-[1280px]:hidden">
       <p className="mb-2 font-mono text-[9px] uppercase tracking-wider text-muted-foreground">Sponsored</p>
-      <SponsorCard placement={mobileCards[step % mobileCards.length]} />
+      <SponsorCard placement={mobile.card} position={mobile.position} surface="mobile" />
     </aside>
   );
 
@@ -100,7 +108,7 @@ export default function SponsorRails({ inline = false }: { inline?: boolean }) {
             const position = (side === "left" ? 0 : 5) + index;
             const card = cards[position];
             return <div key={`${index}-${position}`} className="flex min-h-0">
-              {card ? <SponsorCard placement={card} position={index + 1} /> : <OpenSlot />}
+              {card ? <SponsorCard placement={card} position={position} surface="desktop" /> : <OpenSlot />}
             </div>;
           })}
           </div>

@@ -113,23 +113,6 @@ export const sideAdPlacements: SideAdPlacement[] = [
     },
   },
   {
-    id: "pipedream-mcp",
-    eyebrow: "Automation",
-    name: "Pipedream MCP",
-    headline: "Connect APIs and workflows.",
-    description: "Integration placement for builders connecting Claude to thousands of APIs.",
-    href: trackedSideAdHref("pipedream-mcp", "https://pipedream.com"),
-    logoDomain: "pipedream.com",
-    cta: "Open",
-    initial: "P",
-    label: "MCP Server",
-    tone: {
-      panel: "bg-[#132b38] text-white border-[#2f5d73]",
-      icon: "bg-[#9ee4ff] text-[#071923]",
-      badge: "bg-white/10 text-cyan-100",
-    },
-  },
-  {
     id: "stackone-mcp",
     eyebrow: "Enterprise",
     name: "StackOne MCP",
@@ -646,7 +629,7 @@ export const sideAdCollections: SideAdCollection[] = [
   {
     id: "web-research-and-integrations",
     left: categoryRail("MCPs for web research", ["firecrawl-mcp", "exa-mcp"]),
-    right: categoryRail("MCPs for integrations", ["composio-mcp", "pipedream-mcp"]),
+    right: categoryRail("MCPs for integrations", ["composio-mcp"]),
   },
   {
     id: "security-and-developers",
