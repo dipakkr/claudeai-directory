@@ -68,7 +68,7 @@ export function LaunchListRow({
           <div className="min-w-0 flex-1">
             <div className="flex min-w-0 items-center gap-1.5">
               <h3 className="truncate font-sans text-[16px] font-medium leading-tight text-foreground group-hover:underline">{project.title}</h3>
-              {project.badge_verified && <BadgeCheck className="h-4 w-4 shrink-0 fill-amber-400 text-background" aria-label="Badge verified" />}
+              {(project.badge_verified || project.admin_verified) && <BadgeCheck className="h-4 w-4 shrink-0 fill-amber-400 text-background" aria-label={project.admin_verified ? "Listing verified" : "Badge verified"} />}
               {project.promoted && (
                 <span className="shrink-0 rounded-[4px] border border-primary/40 px-1.5 py-0.5 font-mono text-[10px] uppercase tracking-[0.1em] text-primary">Promoted</span>
               )}

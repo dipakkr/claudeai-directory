@@ -129,7 +129,7 @@ export async function generateMetadata({
   const maker = project.author_name || project.author_username;
   const pitch = (project.tagline || project.description || "").trim().replace(/\s+/g, " ");
   const description = fitText(
-    [pitch.replace(/[.!]*$/, "."), maker ? `Built with Claude by ${maker}.` : "Built with Claude.", "See it, upvote it and share feedback."]
+    [pitch.replace(/[.!]*$/, "."), maker ? `Listed by ${maker}.` : "", "See it, upvote it and share feedback."]
       .filter((part) => part !== ".")
       .join(" "),
     160,
@@ -141,10 +141,10 @@ export async function generateMetadata({
     alternates: { canonical: `/launches/${slug}` },
     robots: {
       index: true,
-      follow: false,
+      follow: hasDofollow(project),
       googleBot: {
         index: true,
-        follow: false,
+        follow: hasDofollow(project),
         "max-video-preview": -1,
         "max-image-preview": "large",
         "max-snippet": -1,
@@ -182,15 +182,15 @@ export default async function LaunchDetailPage({
   if (project.id && project.id !== slug) permanentRedirect(`/launches/${project.id}`);
 
   const appUrl = project.app_url || project.demo_url;
-  // Verified badge = the maker links back to us, so the website link is dofollow.
-  // Paid-only listings are paid links, so they are marked sponsored (Google's rule for paid links).
-  // Dofollow is earned with the badge; launches published without it (or approved by hand) stay nofollow.
+  // Use the same entitlement for the website link and page-level robots directives.
   const websiteRel = hasDofollow(project) ? "noopener noreferrer" : "nofollow noopener noreferrer";
   const listedDate = formatDate(project.listed_at || project.created_at);
   const useCases = splitUseCases(project.use_cases);
   const publisherHost = hostFromUrl(appUrl);
   const builderName = project.author_name || project.author_username || "Claude AI community member";
-  const authorHref = project.author_username ? `/u/${project.author_username}` : null;
+  const authorHref = project.author_profile_url?.startsWith("https://")
+    ? project.author_profile_url
+    : project.author_username ? `/u/${project.author_username}` : null;
   const socials = project.creator_socials ?? {};
   const upvotes = project.upvotes ?? 0;
   const aboutBlocks = (project.description || "")
@@ -245,7 +245,7 @@ export default async function LaunchDetailPage({
               <div className="min-w-0 flex-1">
                 <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1">
                   <h1 className="text-balance text-[26px] font-semibold leading-tight text-foreground md:text-[32px]">{project.title}</h1>
-                  {project.badge_verified && <BadgeCheck className="h-5 w-5 shrink-0 fill-amber-400 text-background" aria-label="Badge verified" />}
+                  {(project.badge_verified || project.admin_verified) && <BadgeCheck className="h-5 w-5 shrink-0 fill-amber-400 text-background" aria-label={project.admin_verified ? "Listing verified" : "Badge verified"} />}
                 </div>
                 {project.tagline && <p className="mt-1.5 max-w-[640px] text-[15px] leading-7 text-muted-foreground md:text-base">{project.tagline}</p>}
               </div>

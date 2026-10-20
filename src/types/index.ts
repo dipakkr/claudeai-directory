@@ -250,10 +250,14 @@ export interface ShowcaseProject {
   author_id?: string;
   author_username?: string;
   author_name?: string;
+  /** Admin-supplied external attribution when the maker has no local account. */
+  author_profile_url?: string;
   upvotes: number;
   featured: boolean;
   status?: "pending_badge" | "listed" | "rejected" | string;
   badge_verified?: boolean;
+  /** Admin-reviewed listing with a tick and dofollow link, independent of payment/backlink checks. */
+  admin_verified?: boolean;
   /** Listed by paying the one-time fee instead of adding the badge. */
   paid_listing?: boolean;
   /** Paid perk: pinned to the top of launch lists until this time. */

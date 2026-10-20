@@ -25,8 +25,9 @@ export const TOPICS = [
 export const isLaunchLive = (p: { status?: string; badge_verified?: boolean; paid_listing?: boolean }) =>
   p.status === "listed" || Boolean(p.badge_verified) || Boolean(p.paid_listing);
 
-/** The website link is dofollow once the maker's badge is verified or a paid link upgrade is confirmed. */
-export const hasDofollow = (p: { badge_verified?: boolean; paid_listing?: boolean }) => Boolean(p.badge_verified) || Boolean(p.paid_listing);
+/** Admin-reviewed listings can also receive a dofollow link without a payment or backlink claim. */
+export const hasDofollow = (p: { badge_verified?: boolean; paid_listing?: boolean; admin_verified?: boolean }) =>
+  Boolean(p.badge_verified) || Boolean(p.paid_listing) || Boolean(p.admin_verified);
 
 /** A launch can have up to this many topics. */
 export const MAX_TOPICS = 3;
