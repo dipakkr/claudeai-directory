@@ -13,13 +13,17 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ThemeProvider } from "next-themes";
 import type { Reach } from "@/components/advertise/SponsorReach";
 import { useState } from "react";
+import type { SponsorPlacements } from "@/lib/sponsors";
 
-export default function Providers({ children, initialReach }: { children: React.ReactNode; initialReach?: Reach | null }) {
+export default function Providers({ children, initialReach, initialSponsors }: { children: React.ReactNode; initialReach?: Reach | null; initialSponsors?: SponsorPlacements | null }) {
     const [queryClient] = useState(() => {
         const client = new QueryClient();
         if (initialReach) {
             const updatedAt = Date.parse(initialReach.updated_at ?? "");
             client.setQueryData(["stats", "open", 7], initialReach, { updatedAt: Number.isFinite(updatedAt) ? updatedAt : 0 });
+        }
+        if (initialSponsors) {
+            client.setQueryData(["sponsors", "placements"], initialSponsors, { updatedAt: 0 });
         }
         return client;
     });

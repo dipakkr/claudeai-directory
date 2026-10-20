@@ -781,7 +781,7 @@ body:has([role="dialog"][data-state="open"], [role="alertdialog"][data-state="op
 /* Two continuous sponsor strips frame the page; individual cards sit inside. */
 .sponsor-rail { display: none; }
 @media (min-width: 1280px) {
-  body.sponsor-rails-active { padding-inline: 160px; }
+  body:has(.sponsor-rail) { padding-inline: 160px; }
   .sponsor-rail {
     display: block;
     position: fixed;
@@ -796,11 +796,11 @@ body:has([role="dialog"][data-state="open"], [role="alertdialog"][data-state="op
   .sponsor-right { right: 0; border-left: 1px solid hsl(var(--border)); }
 }
 @media (min-width: 1500px) {
-  body.sponsor-rails-active { padding-inline: 180px; }
+  body:has(.sponsor-rail) { padding-inline: 180px; }
   .sponsor-rail { width: 180px; }
 }
 @media (min-width: 1800px) {
-  body.sponsor-rails-active { padding-inline: 210px; }
+  body:has(.sponsor-rail) { padding-inline: 210px; }
   .sponsor-rail { width: 210px; }
 }
 

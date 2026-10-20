@@ -1,4 +1,5 @@
 import { fetchApi } from "@/lib/api-server";
+import type { SponsorPlacements } from "@/lib/sponsors";
 import type { Reach } from "@/components/advertise/SponsorReach";
 import type { Metadata } from "next";
 import { DEFAULT_OG_IMAGE } from "@/lib/seo";
@@ -97,13 +98,16 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const initialReach = await fetchApi<Reach>("/stats/open?days=7", { revalidate: 600, timeoutMs: 2500 });
+  const [initialReach, initialSponsors] = await Promise.all([
+    fetchApi<Reach>("/stats/open?days=7", { revalidate: 600, timeoutMs: 2500 }),
+    fetchApi<SponsorPlacements>("/sponsors/placements", { revalidate: 30, timeoutMs: 2500 }),
+  ]);
   return (
     <html lang="en" suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${sourceSerif.variable} ${geistMono.variable} antialiased overflow-x-hidden`}
       >
-        <Providers initialReach={initialReach}>
+        <Providers initialReach={initialReach} initialSponsors={initialSponsors}>
           {/* Discord announcement banner paused; the component stays in components/layout/AnnouncementBanner.tsx. */}
           <ViewAsBanner />
           {/* Side ad rails paused; the component stays in components/layout/SideAdBillboards.tsx. */}

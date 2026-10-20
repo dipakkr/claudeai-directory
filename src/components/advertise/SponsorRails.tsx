@@ -9,9 +9,9 @@ import { ArrowUpRight, Plus } from "lucide-react";
 import { openAdvertiseDialog } from "@/lib/advertise";
 import { track } from "@/lib/analytics";
 import { useSponsorTracking } from "@/hooks/useSponsorTracking";
+import type { SponsorPlacements } from "@/lib/sponsors";
 
 type SponsorPlacement = { id: string; name: string; href: string; headline: string; logoDomain: string; logo_url?: string };
-type PaidPlacement = { campaign_id: string; position: number; product: string; website: string; tagline: string; logo_url?: string; banner_url?: string };
 const cardColors = ["bg-amber-50 dark:bg-amber-950/40", "bg-pink-50 dark:bg-pink-950/40", "bg-slate-100 dark:bg-slate-800/60", "bg-indigo-50 dark:bg-indigo-950/40"];
 const excluded = ["/dashboard", "/submit", "/launches/submit", "/login", "/signup"];
 
@@ -29,6 +29,10 @@ function SponsorCard({ placement, position, surface }: { placement: SponsorPlace
   );
 }
 
+function LoadingSlot() {
+  return <div aria-label="Loading sponsor placement" className="min-h-[152px] flex-1 rounded-[6px] border border-foreground/10 bg-foreground/[0.025]" />;
+}
+
 function OpenSlot() {
   return (
     <button type="button" onClick={() => {
@@ -43,13 +47,13 @@ function OpenSlot() {
   );
 }
 
-/** Ten bookable slots, showing only approved active campaigns. */
+/** Server-seeded campaigns render immediately; background refresh keeps them current. */
 export default function SponsorRails({ inline = false }: { inline?: boolean }) {
   const pathname = usePathname();
   const [step, setStep] = useState(0);
   const { data } = useQuery({
     queryKey: ["sponsors", "placements"],
-    queryFn: () => api.get<{ items: PaidPlacement[] }>("/sponsors/placements"),
+    queryFn: () => api.get<SponsorPlacements>("/sponsors/placements"),
     refetchInterval: 30_000,
   });
   const cards: (SponsorPlacement | undefined)[] = Array.from({ length: 10 });
@@ -67,11 +71,6 @@ export default function SponsorRails({ inline = false }: { inline?: boolean }) {
   }
   const enabled = !excluded.some(path => pathname === path || pathname.startsWith(`${path}/`));
   useEffect(() => {
-    if (!enabled || inline) return;
-    document.body.classList.add("sponsor-rails-active");
-    return () => document.body.classList.remove("sponsor-rails-active");
-  }, [enabled, inline]);
-  useEffect(() => {
     if (!enabled || !inline) return;
     const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
     const timer = window.setInterval(() => {
@@ -88,7 +87,7 @@ export default function SponsorRails({ inline = false }: { inline?: boolean }) {
   if (inline) return (
     <aside aria-label="Sponsor placement" className="my-4 min-[1280px]:hidden">
       <p className="mb-2 font-mono text-[9px] uppercase tracking-wider text-muted-foreground">Sponsored</p>
-      {mobile ? <SponsorCard placement={mobile.card} position={mobile.position} surface="mobile" /> : <OpenSlot />}
+      {mobile ? <SponsorCard placement={mobile.card} position={mobile.position} surface="mobile" /> : data ? <OpenSlot /> : <LoadingSlot />}
     </aside>
   );
 
@@ -105,7 +104,7 @@ export default function SponsorRails({ inline = false }: { inline?: boolean }) {
             const position = (side === "left" ? 0 : 5) + index;
             const card = cards[position];
             return <div key={`${index}-${position}`} className="flex min-h-0">
-              {card ? <SponsorCard placement={card} position={position} surface="desktop" /> : <OpenSlot />}
+              {card ? <SponsorCard placement={card} position={position} surface="desktop" /> : data ? <OpenSlot /> : <LoadingSlot />}
             </div>;
           })}
           </div>
