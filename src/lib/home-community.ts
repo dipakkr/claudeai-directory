@@ -1,17 +1,18 @@
 import { hasDofollow } from "@/lib/launch-options";
 import type { ShowcaseProject, Thread } from "@/types";
 
-// Only member submissions are launch proof; legacy seeded demos are not.
+// Member submissions and admin-reviewed external makers are public; legacy demos are not.
 export function publicLaunches(projects: ShowcaseProject[]): ShowcaseProject[] {
   const seen = new Set<string>();
   const seenBuilders = new Set<string>();
   return [...projects].sort((a, b) => Date.parse(b.listed_at || b.created_at) - Date.parse(a.listed_at || a.created_at)).filter(project => {
-    if (project.status !== "listed" || !project.author_id) return false;
+    const maker = project.author_id || (project.admin_verified && project.author_profile_url?.startsWith("https://") ? project.author_profile_url : null);
+    if (project.status !== "listed" || !maker) return false;
     try {
       const url = new URL(project.app_url || project.demo_url || "");
       if (!['https:', 'http:'].includes(url.protocol) || /(^|\.)example\.(com|org|net)$/.test(url.hostname)) return false;
       const key = `${url.hostname.replace(/^www\./, "")}${url.pathname.replace(/\/+$/, "")}`;
-      const builderKey = `${project.author_id}:${project.title.trim().toLowerCase()}`;
+      const builderKey = `${maker}:${project.title.trim().toLowerCase()}`;
       if (seen.has(key) || seenBuilders.has(builderKey)) return false;
       seen.add(key);
       seenBuilders.add(builderKey);
