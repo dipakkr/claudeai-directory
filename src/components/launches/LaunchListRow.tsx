@@ -11,6 +11,10 @@ import type { ShowcaseProject } from "@/types";
 export const launchCategory = (p: ShowcaseProject) => p.category?.trim() || p.tech_stack?.[0]?.trim() || "Claude app";
 const pitch = (p: ShowcaseProject) => p.tagline?.trim() || p.description.trim();
 
+export function FeaturedTag() {
+  return <span className="shrink-0 rounded-[4px] border border-primary/40 px-1.5 py-0.5 font-mono text-[10px] uppercase tracking-[0.1em] text-primary">Featured</span>;
+}
+
 /** The launch's logo on a tile tinted with its theme colour (same colour as its share card). */
 export function LaunchLogo({ project, size = "md" }: { project: ShowcaseProject; size?: "sm" | "md" | "row" }) {
   const src = project.logo_url || faviconFor(project.app_url || project.demo_url) || project.images?.[0];
@@ -69,6 +73,7 @@ export function LaunchListRow({
             <div className="flex min-w-0 items-center gap-1.5">
               <h3 className="truncate font-sans text-[16px] font-medium leading-tight text-foreground group-hover:underline">{project.title}</h3>
               {(project.badge_verified || project.admin_verified) && <BadgeCheck className="h-4 w-4 shrink-0 fill-amber-400 text-background" aria-label={project.admin_verified ? "Listing verified" : "Badge verified"} />}
+              {project.featured && <FeaturedTag />}
               {project.promoted && (
                 <span className="shrink-0 rounded-[4px] border border-primary/40 px-1.5 py-0.5 font-mono text-[10px] uppercase tracking-[0.1em] text-primary">Promoted</span>
               )}
@@ -135,6 +140,7 @@ export function LaunchLineRow({
             <span className="text-foreground transition-colors group-hover:text-primary">{project.title}</span>
             <span className="text-muted-foreground"> · {pitch(project)}</span>
           </span>
+          {project.featured && <FeaturedTag />}
           {project.promoted && (
             <span className="shrink-0 rounded-[4px] border border-primary/40 px-1.5 py-px font-mono text-[10px] uppercase tracking-[0.1em] text-primary">Promoted</span>
           )}

@@ -36,6 +36,7 @@ import {
 import { trackAttrs } from "@/lib/track-attrs";
 import { ViewTracker } from "@/components/tracking/ViewTracker";
 import { MakerPhoto } from "@/components/launches/MakerPhoto";
+import { FeaturedTag } from "@/components/launches/LaunchListRow";
 import { OwnerNofollowNotice } from "@/components/launches/OwnerNofollowNotice";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.claudeai.directory";
@@ -188,9 +189,7 @@ export default async function LaunchDetailPage({
   const useCases = splitUseCases(project.use_cases);
   const publisherHost = hostFromUrl(appUrl);
   const builderName = project.author_name || project.author_username || "Claude AI community member";
-  const authorHref = project.author_profile_url?.startsWith("https://")
-    ? project.author_profile_url
-    : project.author_username ? `/u/${project.author_username}` : null;
+  const authorHref = project.author_id && project.author_username ? `/u/${project.author_username}` : null;
   const socials = project.creator_socials ?? {};
   const upvotes = project.upvotes ?? 0;
   const aboutBlocks = (project.description || "")
@@ -246,6 +245,7 @@ export default async function LaunchDetailPage({
                 <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1">
                   <h1 className="text-balance text-[26px] font-semibold leading-tight text-foreground md:text-[32px]">{project.title}</h1>
                   {(project.badge_verified || project.admin_verified) && <BadgeCheck className="h-5 w-5 shrink-0 fill-amber-400 text-background" aria-label={project.admin_verified ? "Listing verified" : "Badge verified"} />}
+                  {project.featured && <FeaturedTag />}
                 </div>
                 {project.tagline && <p className="mt-1.5 max-w-[640px] text-[15px] leading-7 text-muted-foreground md:text-base">{project.tagline}</p>}
               </div>

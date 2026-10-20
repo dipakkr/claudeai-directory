@@ -22,16 +22,16 @@ export function publicLaunches(projects: ShowcaseProject[]): ShowcaseProject[] {
 }
 
 /**
- * Launch ranking everywhere: paid launches still in their featured week first (marked `promoted`),
- * then most upvotes; ties keep publicLaunches' newest-first order.
+ * Admin-featured launches first, then current paid promotions, verified launches and upvotes.
+ * Ties keep publicLaunches' newest-first order.
  */
 export function rankedLaunches(projects: ShowcaseProject[], now = Date.now()): ShowcaseProject[] {
   const promoted = (p: ShowcaseProject) => Boolean(p.featured_until && Date.parse(p.featured_until) > now);
   return publicLaunches(projects)
     .map((p) => ({ ...p, promoted: promoted(p) }))
-    // Promoted first, then launches with our badge (dofollow), then the rest; upvotes within each group.
     .sort(
       (a, b) =>
+        Number(Boolean(b.featured)) - Number(Boolean(a.featured)) ||
         Number(b.promoted) - Number(a.promoted) ||
         Number(hasDofollow(b)) - Number(hasDofollow(a)) ||
         (b.upvotes ?? 0) - (a.upvotes ?? 0),
