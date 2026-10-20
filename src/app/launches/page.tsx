@@ -10,6 +10,7 @@ export default async function ShowcasePage({
 }) {
   const params = await searchParams;
   const qs = new URLSearchParams();
+  qs.set("limit", "100");
   if (params.search) qs.set("search", params.search);
 
   const qsStr = qs.toString();

@@ -116,7 +116,7 @@ export default function ShowcaseClient({
   };
   const [query, setQuery] = useState("");
 
-  const { data: projects } = useShowcaseProjects(undefined, { initialData });
+  const { data: projects } = useShowcaseProjects({ limit: 100 }, { initialData });
 
   const listedProjects = useMemo(() => {
     const seen = new Set<string>();
