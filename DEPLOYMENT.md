@@ -74,6 +74,25 @@ re-run, but they still run against prod by default.
 
 ## Caching
 
+Frontend builds now use a unique deployment ID (also the Next build ID). The
+standalone Docker artifact retains it automatically; `next start` reads the same
+ID from `.next/BUILD_ID`. An explicit `NEXT_DEPLOYMENT_ID` at build time is
+supported, but must identify the built artifact, not a reusable environment name.
+Do not override it when starting an existing artifact.
+
+The page proxy rejects client navigation from another deployment with a
+non-cacheable HTTP 409 before sending React component data. Next's router then
+loads a fresh document. A missing deployment header also triggers this fallback
+for tabs opened before the guard existed. Normal document loads and matching
+client navigation are unaffected. Keep HTML, RSC and these 409 responses out of
+CDN caches; immutable caching remains appropriate for hashed static assets.
+
+Verify a release with both matching and obsolete `x-deployment-id` values on
+requests with `RSC: 1`. Matching requests should return component data; obsolete
+or absent IDs should return 409, followed by a successful full document load.
+Also test an actual browser left open across deployment. Route errors offer a
+full-page reload without relying on the auth provider.
+
 The API caches most collections in Redis for 5–10 minutes. After a seed or a
 direct database change, the public API keeps serving stale data until the TTL
 expires. That is normal — do not assume the write failed.

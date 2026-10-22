@@ -1,4 +1,8 @@
 import type { NextConfig } from "next";
+import { PHASE_PRODUCTION_BUILD, PHASE_PRODUCTION_SERVER } from "next/constants";
+import { randomUUID } from "node:crypto";
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import courseRedirects from "./src/data/course-redirects.json";
 
 // Courses moved to /guides: every old lesson URL goes to the matching guide lesson.
@@ -99,4 +103,18 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+export default function config(phase: string): NextConfig {
+  // One identity per built artifact, including rebuilds of the same commit.
+  // Standalone stores this config; `next start` reads the same ID from disk.
+  const deploymentId = phase === PHASE_PRODUCTION_BUILD
+    ? process.env.NEXT_DEPLOYMENT_ID || randomUUID()
+    : phase === PHASE_PRODUCTION_SERVER
+      ? readFileSync(join(__dirname, ".next/BUILD_ID"), "utf8").trim()
+      : undefined;
+
+  return {
+    ...nextConfig,
+    deploymentId,
+    ...(deploymentId ? { generateBuildId: async () => deploymentId } : {}),
+  };
+}
