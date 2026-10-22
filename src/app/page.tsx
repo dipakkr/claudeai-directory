@@ -39,7 +39,7 @@ interface MembersResponse {
 }
 
 async function CommunityPreview({ threads, unavailable }: { threads: Thread[]; unavailable: boolean }) {
-  const replyEntries = await Promise.all(threads.filter(thread => thread.replies > 0).slice(0, 3).map(async thread => {
+  const replyEntries = await Promise.all(selectedDiscussions(threads).filter(thread => thread.replies > 0).slice(0, 3).map(async thread => {
     const replies = await fetchApi<Reply[]>(`/community/threads/${encodeURIComponent(thread.id)}/replies?limit=1`);
     return [thread.id, replies?.[0]] as const;
   }));
@@ -63,7 +63,7 @@ export default async function Home() {
 
   const launches = rankedLaunches(launchesData ?? []);
   const mcpLaunches = launches.filter(isMcpLaunch);
-  const threads = selectedDiscussions(threadsData ?? []);
+  const threads = threadsData ?? [];
 
   const items = [
     // Legacy download counters do not establish successful installations.
