@@ -1,0 +1,2161 @@
+[
+  {
+    "slug": "aws-marketplace",
+    "source_url": "https://www.google.com/s2/favicons?domain=aws.amazon.com&sz=128",
+    "file": "aws-marketplace.218088b686ac.png",
+    "bytes": 1734,
+    "size": [
+      128,
+      128
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://aws.amazon.com&size=128",
+    "sha256": "218088b686acff127255c0ace0113e5d40d985f77cb2b2c2a82b98ea5058adcf",
+    "local_path": "/logos/mcp/aws-marketplace.218088b686ac.png"
+  },
+  {
+    "slug": "activecampaign",
+    "source_url": "https://www.google.com/s2/favicons?domain=activecampaign.com&sz=128",
+    "file": "activecampaign.3459d6639fba.png",
+    "bytes": 1313,
+    "size": [
+      128,
+      128
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t3.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://activecampaign.com&size=128",
+    "sha256": "3459d6639fba330dcbe0f842fc321bff0bb3f2e44db9ae0665cc9bd02d110a87",
+    "local_path": "/logos/mcp/activecampaign.3459d6639fba.png"
+  },
+  {
+    "slug": "ahrefs",
+    "source_url": "https://www.google.com/s2/favicons?domain=ahrefs.com&sz=128",
+    "file": "ahrefs.f6944da74545.png",
+    "bytes": 977,
+    "size": [
+      128,
+      128
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://ahrefs.com&size=128",
+    "sha256": "f6944da745450ea2a6f0541fe385ac75b81ddd924e31a7a8cb8f86146a93b92b",
+    "local_path": "/logos/mcp/ahrefs.f6944da74545.png"
+  },
+  {
+    "slug": "aiera",
+    "source_url": "https://assets.claude.com/fdfd643597c51986382a35bb4d662d91ff5b4dd2.jpg?w=128&fit=max&auto=format",
+    "file": "aiera.1d8fd2e8474b.jpg",
+    "bytes": 3880,
+    "size": [
+      128,
+      128
+    ],
+    "content_type": "image/jpeg",
+    "final_url": "https://assets.claude.com/fdfd643597c51986382a35bb4d662d91ff5b4dd2.jpg?w=128&fit=max&auto=format",
+    "sha256": "1d8fd2e8474b0d6732bf5021ae206cb6630e407bea73eaf0d3fa24128963ab46",
+    "local_path": "/logos/mcp/aiera.1d8fd2e8474b.jpg"
+  },
+  {
+    "slug": "airops",
+    "source_url": "https://www.google.com/s2/favicons?domain=www.airops.com&sz=128",
+    "file": "airops.e3b5458bcd4a.png",
+    "bytes": 1634,
+    "size": [
+      128,
+      128
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t3.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://www.airops.com&size=128",
+    "sha256": "e3b5458bcd4af96c755d62c3e594db12a8fbdf9f6dab21e61886fb7c54dc8710",
+    "local_path": "/logos/mcp/airops.e3b5458bcd4a.png"
+  },
+  {
+    "slug": "airtable",
+    "source_url": "https://www.google.com/s2/favicons?domain=airtable.com&sz=128",
+    "file": "airtable.fea590e0aa24.png",
+    "bytes": 1312,
+    "size": [
+      48,
+      48
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t3.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://airtable.com&size=128",
+    "sha256": "fea590e0aa24228a83a6845a8bb8ebda1b24e4e24ce311a573a79983a5e5efee",
+    "local_path": "/logos/mcp/airtable.fea590e0aa24.png"
+  },
+  {
+    "slug": "amplitude",
+    "source_url": "https://www.google.com/s2/favicons?domain=amplitude.com&sz=128",
+    "file": "amplitude.826581cceeff.png",
+    "bytes": 1708,
+    "size": [
+      128,
+      128
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://amplitude.com&size=128",
+    "sha256": "826581cceeff1c4d5b8454bbf73bf1dcca26ffd4a0ebda8618746e239f2a630b",
+    "local_path": "/logos/mcp/amplitude.826581cceeff.png"
+  },
+  {
+    "slug": "asana",
+    "source_url": "https://www.google.com/s2/favicons?domain=asana.com&sz=128",
+    "file": "asana.5c497974a90a.png",
+    "bytes": 1950,
+    "size": [
+      48,
+      48
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t3.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://asana.com&size=128",
+    "sha256": "5c497974a90abb1cd3eaf92812a635043a2a26b9d2d36a8fc508673b98cea519",
+    "local_path": "/logos/mcp/asana.5c497974a90a.png"
+  },
+  {
+    "slug": "atlassian",
+    "source_url": "https://www.google.com/s2/favicons?domain=atlassian.com&sz=128",
+    "file": "atlassian.9f049b383d89.png",
+    "bytes": 988,
+    "size": [
+      48,
+      48
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://atlassian.com&size=128",
+    "sha256": "9f049b383d89575326e520ca432814561417fe7fecc196f2d15ff4acf2fb3857",
+    "local_path": "/logos/mcp/atlassian.9f049b383d89.png"
+  },
+  {
+    "slug": "aura",
+    "source_url": "https://www.google.com/s2/favicons?domain=auraintelligence.com&sz=128",
+    "file": "aura.ca65ced4a655.png",
+    "bytes": 4873,
+    "size": [
+      128,
+      128
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://auraintelligence.com&size=128",
+    "sha256": "ca65ced4a655dc992dd4183e97606cdded56a397e034c156991bc8a408cfe95f",
+    "local_path": "/logos/mcp/aura.ca65ced4a655.png"
+  },
+  {
+    "slug": "benchling",
+    "source_url": "https://www.google.com/s2/favicons?domain=benchling.com&sz=128",
+    "file": "benchling.1bba52736bdf.png",
+    "bytes": 2066,
+    "size": [
+      128,
+      128
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t3.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://benchling.com&size=128",
+    "sha256": "1bba52736bdf5f2368d24171559b0a0662c29fa93e8147bbd35d1d7f24a24160",
+    "local_path": "/logos/mcp/benchling.1bba52736bdf.png"
+  },
+  {
+    "slug": "benevity",
+    "source_url": "https://www.google.com/s2/favicons?domain=www.benevity.com&sz=128",
+    "file": "benevity.c2f325237483.png",
+    "bytes": 1789,
+    "size": [
+      128,
+      128
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://www.benevity.com&size=128",
+    "sha256": "c2f325237483080c9838fbf09d308b6e1ee57b77edf09dd01aa37330c45d89e5",
+    "local_path": "/logos/mcp/benevity.c2f325237483.png"
+  },
+  {
+    "slug": "bigdata",
+    "source_url": "https://www.google.com/s2/favicons?domain=bigdata.com&sz=128",
+    "file": "bigdata.d6a5da0cddaa.png",
+    "bytes": 1153,
+    "size": [
+      128,
+      128
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://bigdata.com&size=128",
+    "sha256": "d6a5da0cddaaf8c92031e7e36d40f0babf6c083853fc99cbb663dc5fb9823b07",
+    "local_path": "/logos/mcp/bigdata.d6a5da0cddaa.png"
+  },
+  {
+    "slug": "biorender",
+    "source_url": "https://www.google.com/s2/favicons?domain=biorender.com&sz=128",
+    "file": "biorender.fc06c1f1f8f4.png",
+    "bytes": 1572,
+    "size": [
+      128,
+      128
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://biorender.com&size=128",
+    "sha256": "fc06c1f1f8f4e725a904e77eadc9ac2a33a5e63cdc99acaf1da6d28f5cefc877",
+    "local_path": "/logos/mcp/biorender.fc06c1f1f8f4.png"
+  },
+  {
+    "slug": "bitly",
+    "source_url": "https://www.google.com/s2/favicons?domain=bitly.com&sz=128",
+    "file": "bitly.d54fcaae3873.png",
+    "bytes": 1419,
+    "size": [
+      32,
+      32
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://bitly.com&size=128",
+    "sha256": "d54fcaae3873f5f61099f8c684faee024936e47cf41f0457a188525806e07684",
+    "local_path": "/logos/mcp/bitly.d54fcaae3873.png"
+  },
+  {
+    "slug": "blockscout",
+    "source_url": "https://www.google.com/s2/favicons?domain=eth.blockscout.com&sz=128",
+    "file": "blockscout.b47145b9e600.png",
+    "bytes": 539,
+    "size": [
+      128,
+      128
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://eth.blockscout.com&size=128",
+    "sha256": "b47145b9e600c900cacef71d0190d9b7aba17b4d252095f18bda9c2965f208fb",
+    "local_path": "/logos/mcp/blockscout.b47145b9e600.png"
+  },
+  {
+    "slug": "box",
+    "source_url": "https://www.google.com/s2/favicons?domain=box.com&sz=128",
+    "file": "box.d25281c17f1c.png",
+    "bytes": 1366,
+    "size": [
+      128,
+      128
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://box.com&size=128",
+    "sha256": "d25281c17f1cff62e2586475cce4ad436a81ce19c976dcd09da112a1d1eb43f3",
+    "local_path": "/logos/mcp/box.d25281c17f1c.png"
+  },
+  {
+    "slug": "brave-search",
+    "source_url": "https://www.google.com/s2/favicons?domain=search.brave.com&sz=128",
+    "file": "brave-search.2897a2bf7464.png",
+    "bytes": 2600,
+    "size": [
+      128,
+      128
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://search.brave.com&size=128",
+    "sha256": "2897a2bf74646d4191168ea6ea12cb660f8ebf2fc7d944ef59267c4e94eef255",
+    "local_path": "/logos/mcp/brave-search.2897a2bf7464.png"
+  },
+  {
+    "slug": "cdata-connect-ai",
+    "source_url": "https://www.google.com/s2/favicons?domain=www.cdata.com&sz=128",
+    "file": "cdata-connect-ai.083cfb62d256.png",
+    "bytes": 584,
+    "size": [
+      128,
+      128
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://www.cdata.com&size=128",
+    "sha256": "083cfb62d2561564590626c2a213488aa4d64a3a3ae224dd23de7d9dfab35e71",
+    "local_path": "/logos/mcp/cdata-connect-ai.083cfb62d256.png"
+  },
+  {
+    "slug": "cms-coverage",
+    "source_url": "https://www.google.com/s2/favicons?domain=www.cms.gov&sz=128",
+    "file": "cms-coverage.ff4a586727fa.png",
+    "bytes": 5416,
+    "size": [
+      137,
+      31
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://www.cms.gov&size=128",
+    "sha256": "ff4a586727fa9fa9d6979d72fc1ef1b24966652ce7c4d2b3c9a014a63cc052fe",
+    "local_path": "/logos/mcp/cms-coverage.ff4a586727fa.png"
+  },
+  {
+    "slug": "candid",
+    "source_url": "https://cdn.candid.org/images/candid-logo/candid-icon.svg",
+    "file": "candid.8c87665aa3d2.svg",
+    "bytes": 942,
+    "size": null,
+    "content_type": "image/svg+xml",
+    "final_url": "https://cdn.candid.org/images/candid-logo/candid-icon.svg",
+    "sha256": "8c87665aa3d2236cb1b1100dc389bb3cb6ed6cecdbebf988f5b130c7f591bc71",
+    "local_path": "/logos/mcp/candid.8c87665aa3d2.svg"
+  },
+  {
+    "slug": "canva",
+    "source_url": "https://www.google.com/s2/favicons?domain=canva.com&sz=128",
+    "file": "canva.89e47d33adbb.jpg",
+    "bytes": 2801,
+    "size": [
+      128,
+      128
+    ],
+    "content_type": "image/jpeg",
+    "final_url": "https://t3.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://canva.com&size=128",
+    "sha256": "89e47d33adbb2f53253cfba659ef6d444bee1c49753fc63f13a33afa8ebfb089",
+    "local_path": "/logos/mcp/canva.89e47d33adbb.jpg"
+  },
+  {
+    "slug": "chembl",
+    "source_url": "https://www.google.com/s2/favicons?domain=www.ebi.ac.uk&sz=128",
+    "file": "chembl.4c6cb7024b24.png",
+    "bytes": 804,
+    "size": [
+      16,
+      16
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://www.ebi.ac.uk&size=128",
+    "sha256": "4c6cb7024b24f240162b29986266e7b78774f60d116fa4c9ee6af28542a1985c",
+    "local_path": "/logos/mcp/chembl.4c6cb7024b24.png"
+  },
+  {
+    "slug": "chrome-devtools-mcp",
+    "source_url": "https://www.google.com/s2/favicons?domain=developer.chrome.com&sz=128",
+    "file": "chrome-devtools-mcp.edbc82103640.png",
+    "bytes": 3246,
+    "size": [
+      128,
+      128
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://developer.chrome.com&size=128",
+    "sha256": "edbc821036400d39f03dd19a0755fd296536dcaab2393e066b8e141763392e51",
+    "local_path": "/logos/mcp/chrome-devtools-mcp.edbc82103640.png"
+  },
+  {
+    "slug": "chronograph",
+    "source_url": "https://www.google.com/s2/favicons?domain=www.chronograph.pe&sz=128",
+    "file": "chronograph.97d37be52601.png",
+    "bytes": 257,
+    "size": [
+      128,
+      128
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://www.chronograph.pe&size=128",
+    "sha256": "97d37be52601f127f9524422ed628c6822bec4dea0e6ffaf451050bd7ddedb7b",
+    "local_path": "/logos/mcp/chronograph.97d37be52601.png"
+  },
+  {
+    "slug": "circleback",
+    "source_url": "https://www.google.com/s2/favicons?domain=circleback.ai&sz=128",
+    "file": "circleback.5cfcb5169c16.png",
+    "bytes": 1306,
+    "size": [
+      128,
+      128
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://circleback.ai&size=128",
+    "sha256": "5cfcb5169c166e3f1e5ba31a9b36376c9c9c786459dc006eebd04f7f342cf55e",
+    "local_path": "/logos/mcp/circleback.5cfcb5169c16.png"
+  },
+  {
+    "slug": "clarify",
+    "source_url": "https://www.google.com/s2/favicons?domain=www.clarify.ai&sz=128",
+    "file": "clarify.fd02557b953e.png",
+    "bytes": 2876,
+    "size": [
+      64,
+      64
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://www.clarify.ai&size=128",
+    "sha256": "fd02557b953ed5234592ef131acde4cb8104396b2c25693e23ec8b22775d5237",
+    "local_path": "/logos/mcp/clarify.fd02557b953e.png"
+  },
+  {
+    "slug": "clay",
+    "source_url": "https://www.google.com/s2/favicons?domain=clay.com&sz=128",
+    "file": "clay.60d94ce858df.png",
+    "bytes": 4071,
+    "size": [
+      128,
+      128
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://clay.com&size=128",
+    "sha256": "60d94ce858df5e941bf0ee8a8c4b6b904845c8e066d452cfe30b9869baa572fc",
+    "local_path": "/logos/mcp/clay.60d94ce858df.png"
+  },
+  {
+    "slug": "clickup",
+    "source_url": "https://www.google.com/s2/favicons?domain=clickup.com&sz=128",
+    "file": "clickup.0f83361640c6.png",
+    "bytes": 2008,
+    "size": [
+      128,
+      128
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://clickup.com&size=128",
+    "sha256": "0f83361640c673a7e46987de1e6915fe9c1b2c070a8f098a9a8da02e1daf7d08",
+    "local_path": "/logos/mcp/clickup.0f83361640c6.png"
+  },
+  {
+    "slug": "clinical-trials",
+    "source_url": "https://www.google.com/s2/favicons?domain=clinicaltrials.gov&sz=128",
+    "file": "clinical-trials.254bc706b988.png",
+    "bytes": 1015,
+    "size": [
+      128,
+      128
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://clinicaltrials.gov&size=128",
+    "sha256": "254bc706b988ee4cd3acb4bd23e13f04c657e70216b90a0b9bbc4c0b3ed616e3",
+    "local_path": "/logos/mcp/clinical-trials.254bc706b988.png"
+  },
+  {
+    "slug": "cliptalk-mcp",
+    "source_url": "https://www.google.com/s2/favicons?domain=www.cliptalk.pro&sz=128",
+    "file": "cliptalk-mcp.c094baa2844b.png",
+    "bytes": 1253,
+    "size": [
+      48,
+      48
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://www.cliptalk.pro&size=128",
+    "sha256": "c094baa2844b150e1173eeddceb639a71a90e4e20c7fa038c665f8ff44c8e4fb",
+    "local_path": "/logos/mcp/cliptalk-mcp.c094baa2844b.png"
+  },
+  {
+    "slug": "clockwise",
+    "file": "clockwise.8aa6a46344dd.svg",
+    "source_url": "https://www.getclockwise.com/",
+    "source_note": "Unmodified inline navigation wordmark; service shutdown announced March 2026. Listing status requires separate review.",
+    "sha256": "8aa6a46344dddc57b259874add73bb69facede663a1197e9f5a18f63eaaca3d6",
+    "bytes": 9816,
+    "content_type": "image/svg+xml",
+    "local_path": "/logos/mcp/clockwise.8aa6a46344dd.svg"
+  },
+  {
+    "slug": "close",
+    "source_url": "https://www.google.com/s2/favicons?domain=close.com&sz=128",
+    "file": "close.ca440c0e5086.png",
+    "bytes": 2448,
+    "size": [
+      128,
+      128
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://close.com&size=128",
+    "sha256": "ca440c0e50866cdd7bbe9038c9a1ed652481d6abbe5db4f655052f0d258c23b4",
+    "local_path": "/logos/mcp/close.ca440c0e5086.png"
+  },
+  {
+    "slug": "cloudflare",
+    "source_url": "https://www.google.com/s2/favicons?domain=cloudflare.com&sz=128",
+    "file": "cloudflare.9cd748335f60.png",
+    "bytes": 2165,
+    "size": [
+      99,
+      96
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t3.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://cloudflare.com&size=128",
+    "sha256": "9cd748335f60c87cf5b70e53a76869162f908a906dc4043947516f063b27d2c3",
+    "local_path": "/logos/mcp/cloudflare.9cd748335f60.png"
+  },
+  {
+    "slug": "cloudinary",
+    "source_url": "https://www.google.com/s2/favicons?domain=cloudinary.com&sz=128",
+    "file": "cloudinary.745875019d4b.png",
+    "bytes": 1426,
+    "size": [
+      128,
+      128
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t3.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://cloudinary.com&size=128",
+    "sha256": "745875019d4b3d5dacc2e672cd596af4bcedb084424e2a623717f96014789a4a",
+    "local_path": "/logos/mcp/cloudinary.745875019d4b.png"
+  },
+  {
+    "slug": "consensus",
+    "source_url": "https://www.google.com/s2/favicons?domain=consensus.app&sz=128",
+    "file": "consensus.0c1898fd3ef9.png",
+    "bytes": 1084,
+    "size": [
+      128,
+      128
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://consensus.app&size=128",
+    "sha256": "0c1898fd3ef95158c50b924becfe78f6ecd2776cc5faa2b8fdefd68bb5d968d7",
+    "local_path": "/logos/mcp/consensus.0c1898fd3ef9.png"
+  },
+  {
+    "slug": "context7",
+    "source_url": "https://context7.com/context7-icon-green.png",
+    "file": "context7.1165942109f4.png",
+    "bytes": 9380,
+    "size": [
+      512,
+      512
+    ],
+    "content_type": "image/png",
+    "final_url": "https://context7.com/context7-icon-green.png",
+    "sha256": "1165942109f480ebab72741a84da4dba83e2d2a9872682bc1683d3bb12d51cc1",
+    "local_path": "/logos/mcp/context7.1165942109f4.png"
+  },
+  {
+    "slug": "coupler-io",
+    "source_url": "https://www.google.com/s2/favicons?domain=coupler.io&sz=128",
+    "file": "coupler-io.fccf540cf529.png",
+    "bytes": 1190,
+    "size": [
+      128,
+      128
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t3.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://coupler.io&size=128",
+    "sha256": "fccf540cf5290384d6e23ec533812b855fc769864b080db90f726e30ef613b76",
+    "local_path": "/logos/mcp/coupler-io.fccf540cf529.png"
+  },
+  {
+    "slug": "crossbeam",
+    "source_url": "https://www.google.com/s2/favicons?domain=crossbeam.com&sz=128",
+    "file": "crossbeam.c77cb5134395.png",
+    "bytes": 475,
+    "size": [
+      128,
+      128
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t3.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://crossbeam.com&size=128",
+    "sha256": "c77cb51343957bc73e74be25eaca1df1ac6c5ebb44743f8bd0217bcb3bdef477",
+    "local_path": "/logos/mcp/crossbeam.c77cb5134395.png"
+  },
+  {
+    "slug": "crypto-com",
+    "source_url": "https://www.google.com/s2/favicons?domain=crypto.com&sz=128",
+    "file": "crypto-com.118c39d05190.png",
+    "bytes": 2774,
+    "size": [
+      128,
+      128
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t3.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://crypto.com&size=128",
+    "sha256": "118c39d05190b79ab605ca606223606477f79f06ee761d2fcc9a40dca990bdd5",
+    "local_path": "/logos/mcp/crypto-com.118c39d05190.png"
+  },
+  {
+    "slug": "daloopa",
+    "source_url": "https://www.google.com/s2/favicons?domain=daloopa.com&sz=128",
+    "file": "daloopa.424e327c1fb7.png",
+    "bytes": 1389,
+    "size": [
+      128,
+      128
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://daloopa.com&size=128",
+    "sha256": "424e327c1fb71c3ce70891163fca94dfd1e1e234ed34e6c099ba51e013b489b4",
+    "local_path": "/logos/mcp/daloopa.424e327c1fb7.png"
+  },
+  {
+    "slug": "databricks",
+    "source_url": "https://www.google.com/s2/favicons?domain=docs.databricks.com&sz=128",
+    "file": "databricks.897cac27e0a7.png",
+    "bytes": 3568,
+    "size": [
+      64,
+      64
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t3.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://docs.databricks.com&size=128",
+    "sha256": "897cac27e0a768547f1bbd255da89c193a3b5ac3f7aacb6ec43b3f31ea87c0f4",
+    "local_path": "/logos/mcp/databricks.897cac27e0a7.png"
+  },
+  {
+    "slug": "day-ai",
+    "source_url": "https://www.google.com/s2/favicons?domain=day.ai&sz=128",
+    "file": "day-ai.545c37c383e7.png",
+    "bytes": 539,
+    "size": [
+      96,
+      96
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t3.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://day.ai&size=128",
+    "sha256": "545c37c383e773d46a5cbb60e1e6b3202b86c68cabc07f3d92c81fd90cda87c8",
+    "local_path": "/logos/mcp/day-ai.545c37c383e7.png"
+  },
+  {
+    "slug": "devrev",
+    "source_url": "https://www.google.com/s2/favicons?domain=devrev.ai&sz=128",
+    "file": "devrev.6d838301549d.png",
+    "bytes": 1584,
+    "size": [
+      128,
+      128
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://devrev.ai&size=128",
+    "sha256": "6d838301549d3c7da8e9b06b0c7dcf31b56dc780df1b9738b1cbc0a7539908d7",
+    "local_path": "/logos/mcp/devrev.6d838301549d.png"
+  },
+  {
+    "slug": "dice",
+    "source_url": "https://www.google.com/s2/favicons?domain=www.dice.com&sz=128",
+    "file": "dice.41b75fa694de.png",
+    "bytes": 1088,
+    "size": [
+      128,
+      128
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://www.dice.com&size=128",
+    "sha256": "41b75fa694debd63470e35247c6358d561a5e446e9e99847c5f97730fd75a50b",
+    "local_path": "/logos/mcp/dice.41b75fa694de.png"
+  },
+  {
+    "slug": "egnyte",
+    "source_url": "https://www.google.com/s2/favicons?domain=www.egnyte.com&sz=128",
+    "file": "egnyte.b460f53e7625.png",
+    "bytes": 879,
+    "size": [
+      128,
+      128
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://www.egnyte.com&size=128",
+    "sha256": "b460f53e7625fe5f72d1b1932926401aa215585abb3c4d8d4aee14e10e8cf7f9",
+    "local_path": "/logos/mcp/egnyte.b460f53e7625.png"
+  },
+  {
+    "slug": "england-works-watch-connector",
+    "source_url": "https://www.google.com/s2/favicons?domain=regevidencehub.com&sz=128",
+    "file": "england-works-watch-connector.ee3cd1cf657b.png",
+    "bytes": 313,
+    "size": [
+      64,
+      64
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://regevidencehub.com&size=128",
+    "sha256": "ee3cd1cf657b8869b30de29c22e1e94451c22b97cda685e47b8fefff1b4e9177",
+    "local_path": "/logos/mcp/england-works-watch-connector.ee3cd1cf657b.png"
+  },
+  {
+    "slug": "excalidraw-app-demo",
+    "source_url": "https://www.google.com/s2/favicons?domain=excalidraw.com&sz=128",
+    "file": "excalidraw-app-demo.91303866d25c.png",
+    "bytes": 2054,
+    "size": [
+      128,
+      128
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://excalidraw.com&size=128",
+    "sha256": "91303866d25ce643dd8dc01b85beaa03005b495f3ca95116ee63aab310410010",
+    "local_path": "/logos/mcp/excalidraw-app-demo.91303866d25c.png"
+  },
+  {
+    "slug": "factorytalk-import-preflight-connector",
+    "source_url": "https://www.google.com/s2/favicons?domain=regevidencehub.com&sz=128",
+    "file": "factorytalk-import-preflight-connector.ee3cd1cf657b.png",
+    "bytes": 313,
+    "size": [
+      64,
+      64
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://regevidencehub.com&size=128",
+    "sha256": "ee3cd1cf657b8869b30de29c22e1e94451c22b97cda685e47b8fefff1b4e9177",
+    "local_path": "/logos/mcp/england-works-watch-connector.ee3cd1cf657b.png"
+  },
+  {
+    "slug": "fellow-ai",
+    "source_url": "https://www.google.com/s2/favicons?domain=fellow.ai&sz=128",
+    "file": "fellow-ai.286f59c6967a.jpg",
+    "bytes": 2068,
+    "size": [
+      128,
+      128
+    ],
+    "content_type": "image/jpeg",
+    "final_url": "https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://fellow.ai&size=128",
+    "sha256": "286f59c6967a3d88816ac14d760f976bb2a89034f42bc78cd732420774e56329",
+    "local_path": "/logos/mcp/fellow-ai.286f59c6967a.jpg"
+  },
+  {
+    "slug": "figma",
+    "source_url": "https://www.google.com/s2/favicons?domain=www.figma.com&sz=128",
+    "file": "figma.f072e59a9c0f.png",
+    "bytes": 1002,
+    "size": [
+      128,
+      128
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t3.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://www.figma.com&size=128",
+    "sha256": "f072e59a9c0fc36b5005ed541c0eb7d2f94ad9f3ef8204f8fe62f55cd01eaa98",
+    "local_path": "/logos/mcp/figma.f072e59a9c0f.png"
+  },
+  {
+    "slug": "filesystem",
+    "source_url": "https://raw.githubusercontent.com/modelcontextprotocol/modelcontextprotocol/refs/heads/main/blog/static/favicon.svg",
+    "file": "filesystem.f6f33e24e958.svg",
+    "bytes": 1095,
+    "size": null,
+    "content_type": "image/svg+xml",
+    "final_url": "https://raw.githubusercontent.com/modelcontextprotocol/modelcontextprotocol/refs/heads/main/blog/static/favicon.svg",
+    "sha256": "f6f33e24e95846f9ae2582ab72c4eae7beec5ec52c13d767d9f342bf639dd3e6",
+    "local_path": "/logos/mcp/filesystem.f6f33e24e958.svg"
+  },
+  {
+    "slug": "fireflies",
+    "source_url": "https://www.google.com/s2/favicons?domain=fireflies.ai&sz=128",
+    "file": "fireflies.35d93a3f4bb2.png",
+    "bytes": 1422,
+    "size": [
+      128,
+      128
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://fireflies.ai&size=128",
+    "sha256": "35d93a3f4bb2a0882ea55a13099b2ce86e03e05f941c8b5be1fb2811c5049d57",
+    "local_path": "/logos/mcp/fireflies.35d93a3f4bb2.png"
+  },
+  {
+    "slug": "gamma",
+    "source_url": "https://www.google.com/s2/favicons?domain=gamma.app&sz=128",
+    "file": "gamma.bd9fcf0e7192.jpg",
+    "bytes": 2015,
+    "size": [
+      128,
+      128
+    ],
+    "content_type": "image/jpeg",
+    "final_url": "https://t3.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://gamma.app&size=128",
+    "sha256": "bd9fcf0e7192a3acfd5fd3183f74248d06b7855f416f1cc023bf425e0a5b95e2",
+    "local_path": "/logos/mcp/gamma.bd9fcf0e7192.jpg"
+  },
+  {
+    "slug": "github",
+    "source_url": "https://avatars.githubusercontent.com/github?s=128",
+    "file": "github.2ae73e12cb1e.png",
+    "bytes": 5065,
+    "size": [
+      420,
+      420
+    ],
+    "content_type": "image/png",
+    "final_url": "https://avatars.githubusercontent.com/github?s=128",
+    "sha256": "2ae73e12cb1e9989929920c4e9da0b02b6f6f8f0bd1944ac9ebfbf6b4dca746b",
+    "local_path": "/logos/mcp/github.2ae73e12cb1e.png"
+  },
+  {
+    "slug": "glean",
+    "source_url": "https://www.google.com/s2/favicons?domain=glean.com&sz=128",
+    "file": "glean.36a0d9f94466.png",
+    "bytes": 1388,
+    "size": [
+      128,
+      128
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://glean.com&size=128",
+    "sha256": "36a0d9f944665391c0379d5e6c02a7a8a644bc0681e78df33f948d2e711fafff",
+    "local_path": "/logos/mcp/glean.36a0d9f94466.png"
+  },
+  {
+    "slug": "godaddy",
+    "source_url": "https://www.google.com/s2/favicons?domain=www.godaddy.com&sz=128",
+    "file": "godaddy.ea24570dd774.png",
+    "bytes": 1965,
+    "size": [
+      128,
+      128
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t3.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://www.godaddy.com&size=128",
+    "sha256": "ea24570dd7740951432738e3db4477babeb01173f43f3f2d4e970aca1c3223bb",
+    "local_path": "/logos/mcp/godaddy.ea24570dd774.png"
+  },
+  {
+    "slug": "goodwatch-monorepo",
+    "source_url": "https://www.google.com/s2/favicons?domain=goodwatch.app&sz=128",
+    "file": "goodwatch-monorepo.959ad035873c.png",
+    "bytes": 2008,
+    "size": [
+      128,
+      128
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://goodwatch.app&size=128",
+    "sha256": "959ad035873c39d4d8e67ff9d606c47887c29bd211e4638ba0d3b5c33219efb4",
+    "local_path": "/logos/mcp/goodwatch-monorepo.959ad035873c.png"
+  },
+  {
+    "slug": "bigquery",
+    "source_url": "https://www.google.com/s2/favicons?domain=cloud.google.com&sz=128",
+    "file": "bigquery.e6786befba05.png",
+    "bytes": 2510,
+    "size": [
+      128,
+      128
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://cloud.google.com&size=128",
+    "sha256": "e6786befba0594198155098853e31442163d9577a35f8079f62953ed1b8d7f6e",
+    "local_path": "/logos/mcp/bigquery.e6786befba05.png"
+  },
+  {
+    "slug": "google-compute-engine",
+    "source_url": "https://www.google.com/s2/favicons?domain=cloud.google.com&sz=128",
+    "file": "google-compute-engine.e6786befba05.png",
+    "bytes": 2510,
+    "size": [
+      128,
+      128
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://cloud.google.com&size=128",
+    "sha256": "e6786befba0594198155098853e31442163d9577a35f8079f62953ed1b8d7f6e",
+    "local_path": "/logos/mcp/bigquery.e6786befba05.png"
+  },
+  {
+    "slug": "granola",
+    "source_url": "https://www.google.com/s2/favicons?domain=docs.granola.ai&sz=128",
+    "file": "granola.9e5481210c48.png",
+    "bytes": 1981,
+    "size": [
+      128,
+      128
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://docs.granola.ai&size=128",
+    "sha256": "9e5481210c483f848bbe846bbe3a2aaf80f72fbfeb4ab6040f271f5951bc68e5",
+    "local_path": "/logos/mcp/granola.9e5481210c48.png"
+  },
+  {
+    "slug": "guru",
+    "source_url": "https://www.google.com/s2/favicons?domain=www.getguru.com&sz=128",
+    "file": "guru.7e13c754a578.png",
+    "bytes": 1350,
+    "size": [
+      128,
+      128
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://www.getguru.com&size=128",
+    "sha256": "7e13c754a57882f74f5486f3aae9beb29c01ef1f804a32a180a6683a9e8f87a1",
+    "local_path": "/logos/mcp/guru.7e13c754a578.png"
+  },
+  {
+    "slug": "harmonic",
+    "source_url": "https://www.google.com/s2/favicons?domain=harmonic.ai&sz=128",
+    "file": "harmonic.b579c7289975.png",
+    "bytes": 775,
+    "size": [
+      128,
+      128
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://harmonic.ai&size=128",
+    "sha256": "b579c7289975f9379d489b826a6f942718e8e34e715d11bbecc4c6bc349e38ac",
+    "local_path": "/logos/mcp/harmonic.b579c7289975.png"
+  },
+  {
+    "slug": "hex",
+    "source_url": "https://www.google.com/s2/favicons?domain=hex.tech&sz=128",
+    "file": "hex.e94881af6ca1.png",
+    "bytes": 734,
+    "size": [
+      128,
+      128
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t3.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://hex.tech&size=128",
+    "sha256": "e94881af6ca18a0423bdc0285d0d02382ee3c1f214cc893d83f830de2fc59d41",
+    "local_path": "/logos/mcp/hex.e94881af6ca1.png"
+  },
+  {
+    "slug": "honeycomb",
+    "source_url": "https://www.google.com/s2/favicons?domain=www.honeycomb.io&sz=128",
+    "file": "honeycomb.e43e9ac16cd0.png",
+    "bytes": 1827,
+    "size": [
+      48,
+      48
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://www.honeycomb.io&size=128",
+    "sha256": "e43e9ac16cd0d0944fceba5e75ec8dd7e169877c896aec75d00fc65db96123b2",
+    "local_path": "/logos/mcp/honeycomb.e43e9ac16cd0.png"
+  },
+  {
+    "slug": "hubspot",
+    "source_url": "https://www.google.com/s2/favicons?domain=hubspot.com&sz=128",
+    "file": "hubspot.2c5b168e3a9b.png",
+    "bytes": 1518,
+    "size": [
+      128,
+      128
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t3.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://hubspot.com&size=128",
+    "sha256": "2c5b168e3a9b0a6f34f47a13ab6b3fce7491017f8fe0a09cdc4dc65db2516852",
+    "local_path": "/logos/mcp/hubspot.2c5b168e3a9b.png"
+  },
+  {
+    "slug": "hugging-face",
+    "source_url": "https://www.google.com/s2/favicons?domain=huggingface.co&sz=128",
+    "file": "hugging-face.37f5c02ffad6.png",
+    "bytes": 3405,
+    "size": [
+      128,
+      128
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://huggingface.co&size=128",
+    "sha256": "37f5c02ffad6619b064ee1e23fd50b7e591afff27310a2714fa0011a9eccf541",
+    "local_path": "/logos/mcp/hugging-face.37f5c02ffad6.png"
+  },
+  {
+    "slug": "icd-10-codes",
+    "source_url": "https://www.google.com/s2/favicons?domain=www.icd10data.com&sz=128",
+    "file": "icd-10-codes.b01fc0dda811.png",
+    "bytes": 2343,
+    "size": [
+      32,
+      32
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://www.icd10data.com&size=128",
+    "sha256": "b01fc0dda811eaf2314849b485f505519c6a45531e117334fe5e5f66509afcf4",
+    "local_path": "/logos/mcp/icd-10-codes.b01fc0dda811.png"
+  },
+  {
+    "slug": "inboxapp-ai-toolkit",
+    "source_url": "https://www.google.com/s2/favicons?domain=inboxapp.com&sz=128",
+    "file": "inboxapp-ai-toolkit.1f2f2f439775.png",
+    "bytes": 1487,
+    "size": [
+      128,
+      128
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t3.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://inboxapp.com&size=128",
+    "sha256": "1f2f2f439775400ffeb9ff9ea4f2db94b86b4f8282d6b2685eb607eb28eb2564",
+    "local_path": "/logos/mcp/inboxapp-ai-toolkit.1f2f2f439775.png"
+  },
+  {
+    "slug": "indeed",
+    "source_url": "https://www.google.com/s2/favicons?domain=indeed.com&sz=128",
+    "file": "indeed.3688f4929c56.png",
+    "bytes": 1025,
+    "size": [
+      128,
+      128
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t3.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://indeed.com&size=128",
+    "sha256": "3688f4929c56c1216e80cfe162edbe65da2b4e272f879438e8228e205e1c981b",
+    "local_path": "/logos/mcp/indeed.3688f4929c56.png"
+  },
+  {
+    "slug": "intercom",
+    "source_url": "https://www.google.com/s2/favicons?domain=intercom.com&sz=128",
+    "file": "intercom.3a929e73b0be.png",
+    "bytes": 2329,
+    "size": [
+      48,
+      48
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://intercom.com&size=128",
+    "sha256": "3a929e73b0be20a45cf3f522bf51b9339170ae6c02b4825eee683b34898715c7",
+    "local_path": "/logos/mcp/intercom.3a929e73b0be.png"
+  },
+  {
+    "slug": "jam",
+    "source_url": "https://www.google.com/s2/favicons?domain=jam.dev&sz=128",
+    "file": "jam.ab4334f29376.png",
+    "bytes": 1186,
+    "size": [
+      128,
+      128
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://jam.dev&size=128",
+    "sha256": "ab4334f29376605963a5982769448aed3229f3d8c6a3653db4fb2af3ca4dd2d7",
+    "local_path": "/logos/mcp/jam.ab4334f29376.png"
+  },
+  {
+    "slug": "jotform",
+    "source_url": "https://www.google.com/s2/favicons?domain=jotform.com&sz=128",
+    "file": "jotform.85be5a8928f9.png",
+    "bytes": 1376,
+    "size": [
+      128,
+      128
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://jotform.com&size=128",
+    "sha256": "85be5a8928f9bed9c4a56f2815ec68116a2bd215358df20efa7701845e87f5a6",
+    "local_path": "/logos/mcp/jotform.85be5a8928f9.png"
+  },
+  {
+    "slug": "kiwi-com",
+    "source_url": "https://www.google.com/s2/favicons?domain=kiwi.com&sz=128",
+    "file": "kiwi-com.ac7ce74ed231.png",
+    "bytes": 1469,
+    "size": [
+      128,
+      128
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t3.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://kiwi.com&size=128",
+    "sha256": "ac7ce74ed231930d43ea160060d8730753cb667a548de2c41bef7e0c9c88f334",
+    "local_path": "/logos/mcp/kiwi-com.ac7ce74ed231.png"
+  },
+  {
+    "slug": "klaviyo",
+    "source_url": "https://www.google.com/s2/favicons?domain=klaviyo.com&sz=128",
+    "file": "klaviyo.27ea05923a4f.png",
+    "bytes": 1531,
+    "size": [
+      128,
+      128
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://klaviyo.com&size=128",
+    "sha256": "27ea05923a4fd88a7bb2f0a249964ab15b8a5c6db88955319041c5ef286a641d",
+    "local_path": "/logos/mcp/klaviyo.27ea05923a4f.png"
+  },
+  {
+    "slug": "lilt",
+    "source_url": "https://www.google.com/s2/favicons?domain=lilt.com&sz=128",
+    "file": "lilt.60c3ec63b48d.png",
+    "bytes": 677,
+    "size": [
+      48,
+      48
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://lilt.com&size=128",
+    "sha256": "60c3ec63b48d6ddbedf4b11db1e8d9e711a91feafdbfbadaceced181c0c4798c",
+    "local_path": "/logos/mcp/lilt.60c3ec63b48d.png"
+  },
+  {
+    "slug": "learning-commons-knowledge-graph",
+    "source_url": "https://www.google.com/s2/favicons?domain=learningcommons.org&sz=128",
+    "file": "learning-commons-knowledge-graph.a834da332eb6.png",
+    "bytes": 889,
+    "size": [
+      128,
+      128
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://learningcommons.org&size=128",
+    "sha256": "a834da332eb6ad4ea804070fae605aafee290e0093e5be5d788be7956d0f8d47",
+    "local_path": "/logos/mcp/learning-commons-knowledge-graph.a834da332eb6.png"
+  },
+  {
+    "slug": "linear",
+    "source_url": "https://www.google.com/s2/favicons?domain=linear.app&sz=128",
+    "file": "linear.2cbe0688befe.jpg",
+    "bytes": 2648,
+    "size": [
+      128,
+      128
+    ],
+    "content_type": "image/jpeg",
+    "final_url": "https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://linear.app&size=128",
+    "sha256": "2cbe0688befec9bc7fddaf12db3bf78603be71da9cdd72964c733a4dcdc44f3f",
+    "local_path": "/logos/mcp/linear.2cbe0688befe.jpg"
+  },
+  {
+    "slug": "london-stock-exchange-group",
+    "source_url": "https://www.google.com/s2/favicons?domain=www.lseg.com&sz=128",
+    "file": "london-stock-exchange-group.072046ebbfbd.png",
+    "bytes": 401,
+    "size": [
+      48,
+      48
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://www.lseg.com&size=128",
+    "sha256": "072046ebbfbda50df4c9c8d78ce1b324367c93b8c1d96711026f32d4b5714302",
+    "local_path": "/logos/mcp/london-stock-exchange-group.072046ebbfbd.png"
+  },
+  {
+    "slug": "lumin",
+    "source_url": "https://www.google.com/s2/favicons?domain=www.luminpdf.com&sz=128",
+    "file": "lumin.925f6bbfa4f7.png",
+    "bytes": 1123,
+    "size": [
+      128,
+      128
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t3.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://www.luminpdf.com&size=128",
+    "sha256": "925f6bbfa4f7cd43cf6ececf2b4ef510778a5bef9d5a025137ad6cea61aa0de4",
+    "local_path": "/logos/mcp/lumin.925f6bbfa4f7.png"
+  },
+  {
+    "slug": "lunarcrush",
+    "source_url": "https://www.google.com/s2/favicons?domain=lunarcrush.com&sz=128",
+    "file": "lunarcrush.a4359adfaf64.png",
+    "bytes": 2225,
+    "size": [
+      128,
+      128
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://lunarcrush.com&size=128",
+    "sha256": "a4359adfaf64679f60f17a8ac667c9a7ff7acf66edcd6d45a254d270e7cfe403",
+    "local_path": "/logos/mcp/lunarcrush.a4359adfaf64.png"
+  },
+  {
+    "slug": "mcp-server",
+    "source_url": "https://www.google.com/s2/favicons?domain=maqami.co&sz=128",
+    "file": "mcp-server.5074886ba343.png",
+    "bytes": 2596,
+    "size": [
+      128,
+      128
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://maqami.co&size=128",
+    "sha256": "5074886ba343e7efca5c8fa51b3223e7e577eb9bb655db4313b6aaf38107c63a",
+    "local_path": "/logos/mcp/mcp-server.5074886ba343.png"
+  },
+  {
+    "slug": "mt-newswires",
+    "source_url": "https://www.google.com/s2/favicons?domain=www.mtnewswires.com&sz=128",
+    "file": "mt-newswires.d3b7575eae26.png",
+    "bytes": 977,
+    "size": [
+      128,
+      128
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t3.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://www.mtnewswires.com&size=128",
+    "sha256": "d3b7575eae26a0ee227975b9d9727bfe4d606f45eed770c8d32a0e72ff113cdf",
+    "local_path": "/logos/mcp/mt-newswires.d3b7575eae26.png"
+  },
+  {
+    "slug": "magic-patterns",
+    "source_url": "https://www.google.com/s2/favicons?domain=www.magicpatterns.com&sz=128",
+    "file": "magic-patterns.faf7ec0f3b93.png",
+    "bytes": 2383,
+    "size": [
+      48,
+      48
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t3.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://www.magicpatterns.com&size=128",
+    "sha256": "faf7ec0f3b93e9e266aaf9ce218c8289e83c23073dd78b6253455f4fc7324b39",
+    "local_path": "/logos/mcp/magic-patterns.faf7ec0f3b93.png"
+  },
+  {
+    "slug": "make",
+    "source_url": "https://www.google.com/s2/favicons?domain=www.make.com&sz=128",
+    "file": "make.b9c63852a208.png",
+    "bytes": 3334,
+    "size": [
+      128,
+      128
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://www.make.com&size=128",
+    "sha256": "b9c63852a2084b11a658babb941327589b59bb378560cc9f67f9dded4aa259bd",
+    "local_path": "/logos/mcp/make.b9c63852a208.png"
+  },
+  {
+    "slug": "medidata",
+    "source_url": "https://www.google.com/s2/favicons?domain=medidata.com&sz=128",
+    "file": "medidata.987aa829e7ed.png",
+    "bytes": 1428,
+    "size": [
+      128,
+      128
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://medidata.com&size=128",
+    "sha256": "987aa829e7ed2f391d0574809a7fb158180ee3b64bbf6b447b99126d6e7fefae",
+    "local_path": "/logos/mcp/medidata.987aa829e7ed.png"
+  },
+  {
+    "slug": "melon",
+    "source_url": "https://www.google.com/s2/favicons?domain=www.melon.com&sz=128",
+    "file": "melon.0ad9529a15a9.png",
+    "bytes": 327,
+    "size": [
+      16,
+      16
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t3.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://www.melon.com&size=128",
+    "sha256": "0ad9529a15a93d33a89930796c2899d95134c7d37065122156cdfdd972960ed9",
+    "local_path": "/logos/mcp/melon.0ad9529a15a9.png"
+  },
+  {
+    "slug": "mercury",
+    "source_url": "https://www.google.com/s2/favicons?domain=mercury.com&sz=128",
+    "file": "mercury.bc9293cf6f81.png",
+    "bytes": 5075,
+    "size": [
+      128,
+      128
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t3.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://mercury.com&size=128",
+    "sha256": "bc9293cf6f81dc24fdbd49ceaf75f7f2a2d11342588f04dbb4ba6210c0c1cd51",
+    "local_path": "/logos/mcp/mercury.bc9293cf6f81.png"
+  },
+  {
+    "slug": "mermaid-chart",
+    "source_url": "https://www.google.com/s2/favicons?domain=www.mermaidchart.com&sz=128",
+    "file": "mermaid-chart.19ff6748d595.png",
+    "bytes": 1235,
+    "size": [
+      48,
+      48
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t3.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://www.mermaidchart.com&size=128",
+    "sha256": "19ff6748d59585ec9a234eab94eaea2ca1411890d44b66798ea28dcf3e7703fe",
+    "local_path": "/logos/mcp/mermaid-chart.19ff6748d595.png"
+  },
+  {
+    "slug": "miro",
+    "source_url": "https://www.google.com/s2/favicons?domain=miro.com&sz=128",
+    "file": "miro.aa2aae9b68c1.png",
+    "bytes": 3214,
+    "size": [
+      128,
+      128
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t3.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://miro.com&size=128",
+    "sha256": "aa2aae9b68c10cfb9a4c11bde599b10501a78e1656907c2a93aecfafe2541f91",
+    "local_path": "/logos/mcp/miro.aa2aae9b68c1.png"
+  },
+  {
+    "slug": "moodys-analytics",
+    "source_url": "https://www.google.com/s2/favicons?domain=moodys.com&sz=128",
+    "file": "moodys-analytics.c905da8ef6bd.png",
+    "bytes": 957,
+    "size": [
+      48,
+      48
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t3.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://moodys.com&size=128",
+    "sha256": "c905da8ef6bd12afaa75e5b31a3bf355f2f1a905066fb4a07e93e78e56d9f1c7",
+    "local_path": "/logos/mcp/moodys-analytics.c905da8ef6bd.png"
+  },
+  {
+    "slug": "morningstar",
+    "source_url": "https://www.google.com/s2/favicons?domain=www.morningstar.com&sz=128",
+    "file": "morningstar.c22c22fcf5d1.png",
+    "bytes": 2058,
+    "size": [
+      128,
+      128
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://www.morningstar.com&size=128",
+    "sha256": "c22c22fcf5d1bbf62504eb49a6f69d37faa95362ee1432c859f78efcbbe76d41",
+    "local_path": "/logos/mcp/morningstar.c22c22fcf5d1.png"
+  },
+  {
+    "slug": "motherduck",
+    "source_url": "https://www.google.com/s2/favicons?domain=motherduck.com&sz=128",
+    "file": "motherduck.16f72839b67a.jpg",
+    "bytes": 1851,
+    "size": [
+      128,
+      128
+    ],
+    "content_type": "image/jpeg",
+    "final_url": "https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://motherduck.com&size=128",
+    "sha256": "16f72839b67a2df846ddaa8f81517c753b6831057c0d5ca1ad272a82ad44125f",
+    "local_path": "/logos/mcp/motherduck.16f72839b67a.jpg"
+  },
+  {
+    "slug": "npi-registry",
+    "source_url": "https://www.google.com/s2/favicons?domain=cms.gov&sz=128",
+    "file": "npi-registry.ff4a586727fa.png",
+    "bytes": 5416,
+    "size": [
+      137,
+      31
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://cms.gov&size=128",
+    "sha256": "ff4a586727fa9fa9d6979d72fc1ef1b24966652ce7c4d2b3c9a014a63cc052fe",
+    "local_path": "/logos/mcp/cms-coverage.ff4a586727fa.png"
+  },
+  {
+    "slug": "netsuite",
+    "source_url": "https://www.google.com/s2/favicons?domain=www.netsuite.com&sz=128",
+    "file": "netsuite.ede459f7b7ea.png",
+    "bytes": 2862,
+    "size": [
+      48,
+      48
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://www.netsuite.com&size=128",
+    "sha256": "ede459f7b7ea42e04df21674a8348b11cadc911589f8f730e1356e7e3b32c96c",
+    "local_path": "/logos/mcp/netsuite.ede459f7b7ea.png"
+  },
+  {
+    "slug": "netlify",
+    "source_url": "https://www.google.com/s2/favicons?domain=www.netlify.com&sz=128",
+    "file": "netlify.55a59beedeba.png",
+    "bytes": 566,
+    "size": [
+      128,
+      128
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://www.netlify.com&size=128",
+    "sha256": "55a59beedeba15bb7a823762a3ec884ed643f119ccfc1a02e715f11e2e831c2d",
+    "local_path": "/logos/mcp/netlify.55a59beedeba.png"
+  },
+  {
+    "slug": "notion",
+    "source_url": "https://www.notion.so/images/notion-logo-block-main.svg",
+    "file": "notion.59462b4c554e.svg",
+    "bytes": 2283,
+    "size": null,
+    "content_type": "image/svg+xml",
+    "final_url": "https://www.notion.so/images/notion-logo-block-main.svg",
+    "sha256": "59462b4c554e9fd24059ecaedf686b9952a39ad4b73681899d8bec7128c1300b",
+    "local_path": "/logos/mcp/notion.59462b4c554e.svg"
+  },
+  {
+    "slug": "opc-ua-nodeset-gate-connector",
+    "source_url": "https://www.google.com/s2/favicons?domain=regevidencehub.com&sz=128",
+    "file": "opc-ua-nodeset-gate-connector.ee3cd1cf657b.png",
+    "bytes": 313,
+    "size": [
+      64,
+      64
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://regevidencehub.com&size=128",
+    "sha256": "ee3cd1cf657b8869b30de29c22e1e94451c22b97cda685e47b8fefff1b4e9177",
+    "local_path": "/logos/mcp/england-works-watch-connector.ee3cd1cf657b.png"
+  },
+  {
+    "slug": "open-targets",
+    "source_url": "https://www.google.com/s2/favicons?domain=www.opentargets.org&sz=128",
+    "file": "open-targets.4d57bf18aa07.png",
+    "bytes": 235,
+    "size": [
+      16,
+      16
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://www.opentargets.org&size=128",
+    "sha256": "4d57bf18aa074e5ae4656a6410b2f882da2516c2496add7bef8cf371bc6cecdb",
+    "local_path": "/logos/mcp/open-targets.4d57bf18aa07.png"
+  },
+  {
+    "slug": "owkin",
+    "source_url": "https://www.google.com/s2/favicons?domain=www.owkin.com&sz=128",
+    "file": "owkin.7dea65b17757.png",
+    "bytes": 1777,
+    "size": [
+      128,
+      128
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t3.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://www.owkin.com&size=128",
+    "sha256": "7dea65b17757ba6ab50e9092599306ca5ce2be3c488f09e375136203cad225b4",
+    "local_path": "/logos/mcp/owkin.7dea65b17757.png"
+  },
+  {
+    "slug": "pdf-viewer",
+    "source_url": "https://raw.githubusercontent.com/modelcontextprotocol/modelcontextprotocol/refs/heads/main/blog/static/favicon.svg",
+    "file": "pdf-viewer.f6f33e24e958.svg",
+    "bytes": 1095,
+    "size": null,
+    "content_type": "image/svg+xml",
+    "final_url": "https://raw.githubusercontent.com/modelcontextprotocol/modelcontextprotocol/refs/heads/main/blog/static/favicon.svg",
+    "sha256": "f6f33e24e95846f9ae2582ab72c4eae7beec5ec52c13d767d9f342bf639dd3e6",
+    "local_path": "/logos/mcp/filesystem.f6f33e24e958.svg"
+  },
+  {
+    "slug": "paypal",
+    "source_url": "https://www.google.com/s2/favicons?domain=paypal.com&sz=128",
+    "file": "paypal.e3850303cebe.png",
+    "bytes": 1367,
+    "size": [
+      128,
+      128
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t3.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://paypal.com&size=128",
+    "sha256": "e3850303cebe7f8a89ae58c425ff67407eda65e58e157d0ef40109caa24caa60",
+    "local_path": "/logos/mcp/paypal.e3850303cebe.png"
+  },
+  {
+    "slug": "pendo",
+    "source_url": "https://www.google.com/s2/favicons?domain=www.pendo.io&sz=128",
+    "file": "pendo.86374371dd7e.png",
+    "bytes": 894,
+    "size": [
+      128,
+      128
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://www.pendo.io&size=128",
+    "sha256": "86374371dd7e96d7798ec9db07c7e721058bab5c0a02cc70be1fbbd32d41c12d",
+    "local_path": "/logos/mcp/pendo.86374371dd7e.png"
+  },
+  {
+    "slug": "pigment",
+    "source_url": "https://www.google.com/s2/favicons?domain=www.pigment.com&sz=128",
+    "file": "pigment.b0b2231ed7bc.png",
+    "bytes": 1175,
+    "size": [
+      128,
+      128
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://www.pigment.com&size=128",
+    "sha256": "b0b2231ed7bcb566cf89dd2b4e93181b3949497cf4072e2ed9b9ca6b44821a3e",
+    "local_path": "/logos/mcp/pigment.b0b2231ed7bc.png"
+  },
+  {
+    "slug": "pitchbook",
+    "source_url": "https://www.google.com/s2/favicons?domain=www.pitchbook.com&sz=128",
+    "file": "pitchbook.0b8b7c7cc042.png",
+    "bytes": 734,
+    "size": [
+      32,
+      32
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://www.pitchbook.com&size=128",
+    "sha256": "0b8b7c7cc04283976c5e3a1635008a5d73b912f69d4a81ffebceb95e5b926e96",
+    "local_path": "/logos/mcp/pitchbook.0b8b7c7cc042.png"
+  },
+  {
+    "slug": "plaid",
+    "source_url": "https://plaid.com/assets/img/favicons/apple-touch-icon.png",
+    "file": "plaid.f9a98e98c412.png",
+    "bytes": 15186,
+    "size": [
+      180,
+      180
+    ],
+    "content_type": "image/png",
+    "final_url": "https://plaid.com/assets/img/favicons/apple-touch-icon.png",
+    "sha256": "f9a98e98c41212eb89e1d92e9f2318349570001e497e1fb1cc32bc39eb2f1016",
+    "local_path": "/logos/mcp/plaid.f9a98e98c412.png"
+  },
+  {
+    "slug": "play-sheet-music",
+    "source_url": "https://raw.githubusercontent.com/modelcontextprotocol/modelcontextprotocol/refs/heads/main/blog/static/favicon.svg",
+    "file": "play-sheet-music.f6f33e24e958.svg",
+    "bytes": 1095,
+    "size": null,
+    "content_type": "image/svg+xml",
+    "final_url": "https://raw.githubusercontent.com/modelcontextprotocol/modelcontextprotocol/refs/heads/main/blog/static/favicon.svg",
+    "sha256": "f6f33e24e95846f9ae2582ab72c4eae7beec5ec52c13d767d9f342bf639dd3e6",
+    "local_path": "/logos/mcp/filesystem.f6f33e24e958.svg"
+  },
+  {
+    "slug": "playmcp",
+    "source_url": "https://www.google.com/s2/favicons?domain=www.kakaocorp.com&sz=128",
+    "file": "playmcp.7e9da62ddba9.png",
+    "bytes": 398,
+    "size": [
+      64,
+      64
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://www.kakaocorp.com&size=128",
+    "sha256": "7e9da62ddba915cd96ea88590aa0dd924d416591cf546e27a8d6cb3fe821608b",
+    "local_path": "/logos/mcp/playmcp.7e9da62ddba9.png"
+  },
+  {
+    "slug": "playwright-mcp",
+    "source_url": "https://playwright.dev/img/playwright-logo.svg",
+    "file": "playwright-mcp.6b0a4367bdea.svg",
+    "bytes": 5033,
+    "size": null,
+    "content_type": "image/svg+xml",
+    "final_url": "https://playwright.dev/img/playwright-logo.svg",
+    "sha256": "6b0a4367bdeab10995bc239278f04c68c10e48adbec15e799e01909a0d66dcb9",
+    "local_path": "/logos/mcp/playwright-mcp.6b0a4367bdea.svg"
+  },
+  {
+    "slug": "port-io",
+    "source_url": "https://www.google.com/s2/favicons?domain=www.port.io&sz=128",
+    "file": "port-io.b52a56841487.png",
+    "bytes": 522,
+    "size": [
+      128,
+      128
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://www.port.io&size=128",
+    "sha256": "b52a56841487d0a4af9ee0b3242d2ce0ba1b44236239fa9eea0b20d7a853f4b6",
+    "local_path": "/logos/mcp/port-io.b52a56841487.png"
+  },
+  {
+    "slug": "postgresql",
+    "source_url": "https://www.google.com/s2/favicons?domain=www.postgresql.org&sz=128",
+    "file": "postgresql.8cbe35841072.png",
+    "bytes": 1471,
+    "size": [
+      48,
+      48
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://www.postgresql.org&size=128",
+    "sha256": "8cbe35841072ecd008d87391b73af5a8f6289f686099728c83bbc880976e1b6b",
+    "local_path": "/logos/mcp/postgresql.8cbe35841072.png"
+  },
+  {
+    "slug": "pubmed",
+    "source_url": "https://www.google.com/s2/favicons?domain=pubmed.ncbi.nlm.nih.gov&sz=128",
+    "file": "pubmed.6de70fc4740c.png",
+    "bytes": 2538,
+    "size": [
+      128,
+      128
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t3.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://pubmed.ncbi.nlm.nih.gov&size=128",
+    "sha256": "6de70fc4740c19b65ec632f6c7c57f799c15338fc9c1f66159b5518140663f7b",
+    "local_path": "/logos/mcp/pubmed.6de70fc4740c.png"
+  },
+  {
+    "slug": "puppeteer",
+    "source_url": "https://www.google.com/s2/favicons?domain=pptr.dev&sz=128",
+    "file": "puppeteer.2cc43cf43860.png",
+    "bytes": 2066,
+    "size": [
+      48,
+      48
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://pptr.dev&size=128",
+    "sha256": "2cc43cf438603479719169919c39566b4edc90549b4e24c488f1f3bba3a21717",
+    "local_path": "/logos/mcp/puppeteer.2cc43cf43860.png"
+  },
+  {
+    "slug": "ramp",
+    "source_url": "https://www.google.com/s2/favicons?domain=ramp.com&sz=128",
+    "file": "ramp.3060b02234a6.png",
+    "bytes": 2659,
+    "size": [
+      128,
+      128
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://ramp.com&size=128",
+    "sha256": "3060b02234a681a4773d65f1f355b237f22ae33fe2474c402c59eda1ba1c47ab",
+    "local_path": "/logos/mcp/ramp.3060b02234a6.png"
+  },
+  {
+    "slug": "cqc-provider-mcp-connector",
+    "source_url": "https://www.google.com/s2/favicons?domain=regevidencehub.com&sz=128",
+    "file": "cqc-provider-mcp-connector.ee3cd1cf657b.png",
+    "bytes": 313,
+    "size": [
+      64,
+      64
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://regevidencehub.com&size=128",
+    "sha256": "ee3cd1cf657b8869b30de29c22e1e94451c22b97cda685e47b8fefff1b4e9177",
+    "local_path": "/logos/mcp/england-works-watch-connector.ee3cd1cf657b.png"
+  },
+  {
+    "slug": "cablecert-qa-connector",
+    "source_url": "https://www.google.com/s2/favicons?domain=regevidencehub.com&sz=128",
+    "file": "cablecert-qa-connector.ee3cd1cf657b.png",
+    "bytes": 313,
+    "size": [
+      64,
+      64
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://regevidencehub.com&size=128",
+    "sha256": "ee3cd1cf657b8869b30de29c22e1e94451c22b97cda685e47b8fefff1b4e9177",
+    "local_path": "/logos/mcp/england-works-watch-connector.ee3cd1cf657b.png"
+  },
+  {
+    "slug": "uk-waste-rule-mcp-connector",
+    "source_url": "https://www.google.com/s2/favicons?domain=regevidencehub.com&sz=128",
+    "file": "uk-waste-rule-mcp-connector.ee3cd1cf657b.png",
+    "bytes": 313,
+    "size": [
+      64,
+      64
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://regevidencehub.com&size=128",
+    "sha256": "ee3cd1cf657b8869b30de29c22e1e94451c22b97cda685e47b8fefff1b4e9177",
+    "local_path": "/logos/mcp/england-works-watch-connector.ee3cd1cf657b.png"
+  },
+  {
+    "slug": "s-p-global",
+    "source_url": "https://www.google.com/s2/favicons?domain=www.spglobal.com&sz=128",
+    "file": "s-p-global.eff37901aad3.png",
+    "bytes": 307,
+    "size": [
+      128,
+      128
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t3.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://www.spglobal.com&size=128",
+    "sha256": "eff37901aad35aa79aca00cb72076b28dc393f29ba795f00cb6a77db2cacca0c",
+    "local_path": "/logos/mcp/s-p-global.eff37901aad3.png"
+  },
+  {
+    "slug": "scholar-gateway",
+    "source_url": "https://www.google.com/s2/favicons?domain=scholargateway.ai&sz=128",
+    "file": "scholar-gateway.6c9d88df01f2.png",
+    "bytes": 2051,
+    "size": [
+      128,
+      128
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://scholargateway.ai&size=128",
+    "sha256": "6c9d88df01f24f23b45efa12fc88aad400fe826fb6e9bd125c5bebd07986795b",
+    "local_path": "/logos/mcp/scholar-gateway.6c9d88df01f2.png"
+  },
+  {
+    "slug": "sentry",
+    "source_url": "https://www.google.com/s2/favicons?domain=sentry.io&sz=128",
+    "file": "sentry.34860979d391.png",
+    "bytes": 3902,
+    "size": [
+      48,
+      48
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://sentry.io&size=128",
+    "sha256": "34860979d391b4091ac1ae4d01b26f89861a0d64be28e9980343673b621fac5b",
+    "local_path": "/logos/mcp/sentry.34860979d391.png"
+  },
+  {
+    "slug": "similarweb",
+    "source_url": "https://www.google.com/s2/favicons?domain=similarweb.com&sz=128",
+    "file": "similarweb.a4cc47fff1d2.png",
+    "bytes": 1698,
+    "size": [
+      128,
+      128
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t3.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://similarweb.com&size=128",
+    "sha256": "a4cc47fff1d29604114cbccb7254738011c08f420075f21370540715f9a7d89e",
+    "local_path": "/logos/mcp/similarweb.a4cc47fff1d2.png"
+  },
+  {
+    "slug": "slack",
+    "source_url": "https://www.google.com/s2/favicons?domain=slack.com&sz=128",
+    "file": "slack.9969989446ed.png",
+    "bytes": 823,
+    "size": [
+      35,
+      34
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t3.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://slack.com&size=128",
+    "sha256": "9969989446edc2d8136e1d518a9a1dca46b6777f4b3172ec0800cc8edcce5fe0",
+    "local_path": "/logos/mcp/slack.9969989446ed.png"
+  },
+  {
+    "slug": "smartsheet",
+    "source_url": "https://www.google.com/s2/favicons?domain=www.smartsheet.com&sz=128",
+    "file": "smartsheet.7e426cc11b65.png",
+    "bytes": 1063,
+    "size": [
+      128,
+      128
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://www.smartsheet.com&size=128",
+    "sha256": "7e426cc11b654496eff90571e0b08fa16fbf434a771181df895f6993534cb8c4",
+    "local_path": "/logos/mcp/smartsheet.7e426cc11b65.png"
+  },
+  {
+    "slug": "snowflake",
+    "source_url": "https://www.google.com/s2/favicons?domain=snowflake.com&sz=128",
+    "file": "snowflake.06bc457cfa7b.png",
+    "bytes": 1446,
+    "size": [
+      128,
+      128
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://snowflake.com&size=128",
+    "sha256": "06bc457cfa7bb0482ffc3b1ee8d128007667003e31c4315e032b5b8773895472",
+    "local_path": "/logos/mcp/snowflake.06bc457cfa7b.png"
+  },
+  {
+    "slug": "square",
+    "source_url": "https://www.google.com/s2/favicons?domain=squareup.com&sz=128",
+    "file": "square.02a8c9122bca.png",
+    "bytes": 441,
+    "size": [
+      32,
+      32
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://squareup.com&size=128",
+    "sha256": "02a8c9122bcac79df586a3790bb43dc8271eeb2579666fe801fa29c42cd83359",
+    "local_path": "/logos/mcp/square.02a8c9122bca.png"
+  },
+  {
+    "slug": "starburst",
+    "source_url": "https://www.google.com/s2/favicons?domain=www.starburst.io&sz=128",
+    "file": "starburst.3b9c709bf472.png",
+    "bytes": 2337,
+    "size": [
+      128,
+      128
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://www.starburst.io&size=128",
+    "sha256": "3b9c709bf472c5893834e1eabb5126c4d59ca93c20269342cf30f42ab8cc783f",
+    "local_path": "/logos/mcp/starburst.3b9c709bf472.png"
+  },
+  {
+    "slug": "stripe",
+    "source_url": "https://www.google.com/s2/favicons?domain=stripe.com&sz=128",
+    "file": "stripe.9bfd1838ae92.png",
+    "bytes": 580,
+    "size": [
+      128,
+      128
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t3.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://stripe.com&size=128",
+    "sha256": "9bfd1838ae9214d0f553ffb9bc703486529f747daaf8590f2741bc8ee76e8caa",
+    "local_path": "/logos/mcp/stripe.9bfd1838ae92.png"
+  },
+  {
+    "slug": "stytch",
+    "source_url": "https://www.google.com/s2/favicons?domain=stytch.com&sz=128",
+    "file": "stytch.bf25da4d67f2.png",
+    "bytes": 501,
+    "size": [
+      32,
+      32
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t3.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://stytch.com&size=128",
+    "sha256": "bf25da4d67f21be614cfa30c2c94af158af68ee74b23322152831f200b75f633",
+    "local_path": "/logos/mcp/stytch.bf25da4d67f2.png"
+  },
+  {
+    "slug": "supabase",
+    "source_url": "https://www.google.com/s2/favicons?domain=supabase.com&sz=128",
+    "file": "supabase.8e2b7a7fe845.png",
+    "bytes": 1140,
+    "size": [
+      128,
+      128
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://supabase.com&size=128",
+    "sha256": "8e2b7a7fe8457bb0c8c64ef48031bd503333b5270831fc006abba9467dc2a946",
+    "local_path": "/logos/mcp/supabase.8e2b7a7fe845.png"
+  },
+  {
+    "slug": "supermetrics",
+    "source_url": "https://www.google.com/s2/favicons?domain=supermetrics.com&sz=128",
+    "file": "supermetrics.d42b0d40c6a4.png",
+    "bytes": 884,
+    "size": [
+      128,
+      128
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://supermetrics.com&size=128",
+    "sha256": "d42b0d40c6a4cca5e4a5dc3d7d6792061bc5b502aae094cb4062e2653289da76",
+    "local_path": "/logos/mcp/supermetrics.d42b0d40c6a4.png"
+  },
+  {
+    "slug": "synapse-org",
+    "source_url": "https://www.google.com/s2/favicons?domain=sagebionetworks.org&sz=128",
+    "file": "synapse-org.2404a37c1e45.png",
+    "bytes": 2385,
+    "size": [
+      48,
+      48
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://sagebionetworks.org&size=128",
+    "sha256": "2404a37c1e45a873f50fada526693779dec4d4df966a5853b299f77a8f78a93f",
+    "local_path": "/logos/mcp/synapse-org.2404a37c1e45.png"
+  },
+  {
+    "slug": "threejs-3d-viewer",
+    "source_url": "https://raw.githubusercontent.com/modelcontextprotocol/modelcontextprotocol/refs/heads/main/blog/static/favicon.svg",
+    "file": "threejs-3d-viewer.f6f33e24e958.svg",
+    "bytes": 1095,
+    "size": null,
+    "content_type": "image/svg+xml",
+    "final_url": "https://raw.githubusercontent.com/modelcontextprotocol/modelcontextprotocol/refs/heads/main/blog/static/favicon.svg",
+    "sha256": "f6f33e24e95846f9ae2582ab72c4eae7beec5ec52c13d767d9f342bf639dd3e6",
+    "local_path": "/logos/mcp/filesystem.f6f33e24e958.svg"
+  },
+  {
+    "slug": "ticket-tailor",
+    "source_url": "https://www.google.com/s2/favicons?domain=www.tickettailor.com&sz=128",
+    "file": "ticket-tailor.f67f650e9773.png",
+    "bytes": 1243,
+    "size": [
+      128,
+      128
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t3.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://www.tickettailor.com&size=128",
+    "sha256": "f67f650e97734a31b606fa1953114595a04a4a07ffb92beca0bd8ab33d704570",
+    "local_path": "/logos/mcp/ticket-tailor.f67f650e9773.png"
+  },
+  {
+    "slug": "trivago",
+    "source_url": "https://www.google.com/s2/favicons?domain=www.trivago.com&sz=128",
+    "file": "trivago.adf360134b35.png",
+    "bytes": 1288,
+    "size": [
+      128,
+      128
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://www.trivago.com&size=128",
+    "sha256": "adf360134b352238a710262e5e95be010878ee122c5b84521aff91c6917e6c7f",
+    "local_path": "/logos/mcp/trivago.adf360134b35.png"
+  },
+  {
+    "slug": "twitterapi-io-mcp-server",
+    "source_url": "https://www.google.com/s2/favicons?domain=twitterapi.io&sz=128",
+    "file": "twitterapi-io-mcp-server.3bdb3fd90a7f.jpg",
+    "bytes": 2656,
+    "size": [
+      100,
+      100
+    ],
+    "content_type": "image/jpeg",
+    "final_url": "https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://twitterapi.io&size=128",
+    "sha256": "3bdb3fd90a7fbb0ed7635c66d9fc954c0b428e739e2b52df931fc0e36a2d198b",
+    "local_path": "/logos/mcp/twitterapi-io-mcp-server.3bdb3fd90a7f.jpg"
+  },
+  {
+    "slug": "uk-premises-licence-mcp-connector",
+    "source_url": "https://www.google.com/s2/favicons?domain=regevidencehub.com&sz=128",
+    "file": "uk-premises-licence-mcp-connector.ee3cd1cf657b.png",
+    "bytes": 313,
+    "size": [
+      64,
+      64
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://regevidencehub.com&size=128",
+    "sha256": "ee3cd1cf657b8869b30de29c22e1e94451c22b97cda685e47b8fefff1b4e9177",
+    "local_path": "/logos/mcp/england-works-watch-connector.ee3cd1cf657b.png"
+  },
+  {
+    "slug": "uk-taxi-phv-mcp-connector",
+    "source_url": "https://www.google.com/s2/favicons?domain=regevidencehub.com&sz=128",
+    "file": "uk-taxi-phv-mcp-connector.ee3cd1cf657b.png",
+    "bytes": 313,
+    "size": [
+      64,
+      64
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://regevidencehub.com&size=128",
+    "sha256": "ee3cd1cf657b8869b30de29c22e1e94451c22b97cda685e47b8fefff1b4e9177",
+    "local_path": "/logos/mcp/england-works-watch-connector.ee3cd1cf657b.png"
+  },
+  {
+    "slug": "udemy-business",
+    "source_url": "https://www.google.com/s2/favicons?domain=www.udemy.com&sz=128",
+    "file": "udemy-business.6588360147a1.png",
+    "bytes": 818,
+    "size": [
+      128,
+      128
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t3.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://www.udemy.com&size=128",
+    "sha256": "6588360147a197fc6b2733bea6df87ef7ad3444e4c58ef1994029dd4666e7f26",
+    "local_path": "/logos/mcp/udemy-business.6588360147a1.png"
+  },
+  {
+    "slug": "vercel",
+    "source_url": "https://www.google.com/s2/favicons?domain=vercel.com&sz=128",
+    "file": "vercel.454d6e2691d7.png",
+    "bytes": 629,
+    "size": [
+      128,
+      128
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://vercel.com&size=128",
+    "sha256": "454d6e2691d7c8ebde50872272960d1d430b5176b54610da64239a609e688a62",
+    "local_path": "/logos/mcp/vercel.454d6e2691d7.png"
+  },
+  {
+    "slug": "vibe-prospecting",
+    "source_url": "https://www.google.com/s2/favicons?domain=www.vibeprospecting.ai&sz=128",
+    "file": "vibe-prospecting.3d4e97b5acc6.png",
+    "bytes": 2232,
+    "size": [
+      48,
+      48
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://www.vibeprospecting.ai&size=128",
+    "sha256": "3d4e97b5acc6b51f55a8293fb55d9df463454cbfb129592bfd87df7bc31c70f6",
+    "local_path": "/logos/mcp/vibe-prospecting.3d4e97b5acc6.png"
+  },
+  {
+    "slug": "visier",
+    "source_url": "https://www.google.com/s2/favicons?domain=www.visier.com&sz=128",
+    "file": "visier.859978aa0e76.png",
+    "bytes": 2105,
+    "size": [
+      128,
+      128
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://www.visier.com&size=128",
+    "sha256": "859978aa0e7665ee0661e83ae7aad1524d7034f6f1a15b98fa61398e5d644509",
+    "local_path": "/logos/mcp/visier.859978aa0e76.png"
+  },
+  {
+    "slug": "webflow",
+    "source_url": "https://www.google.com/s2/favicons?domain=webflow.com&sz=128",
+    "file": "webflow.c3476cb9b7a3.png",
+    "bytes": 858,
+    "size": [
+      128,
+      128
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://webflow.com&size=128",
+    "sha256": "c3476cb9b7a3a2837f4c70a70d33faf3c62aa47d4b199145a5578bf903e004c2",
+    "local_path": "/logos/mcp/webflow.c3476cb9b7a3.png"
+  },
+  {
+    "slug": "windsor.ai",
+    "source_url": "https://www.google.com/s2/favicons?domain=windsor.ai&sz=128",
+    "file": "windsor.ai.9e53c1123563.png",
+    "bytes": 1709,
+    "size": [
+      128,
+      128
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://windsor.ai&size=128",
+    "sha256": "9e53c1123563fe6d9d420f0843f5c848982707e8d65ff1cd107a87af70628f62",
+    "local_path": "/logos/mcp/windsor.ai.9e53c1123563.png"
+  },
+  {
+    "slug": "wix",
+    "source_url": "https://www.google.com/s2/favicons?domain=www.wix.com&sz=128",
+    "file": "wix.5271f9e54cf1.png",
+    "bytes": 939,
+    "size": [
+      128,
+      128
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://www.wix.com&size=128",
+    "sha256": "5271f9e54cf1768d83ebab84f56e2a6b66e1aa3c9d13485d6b106da8eafa1c04",
+    "local_path": "/logos/mcp/wix.5271f9e54cf1.png"
+  },
+  {
+    "slug": "wordpress.com",
+    "source_url": "https://www.google.com/s2/favicons?domain=wordpress.com&sz=128",
+    "file": "wordpress.com.d96107a92706.png",
+    "bytes": 7061,
+    "size": [
+      114,
+      114
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://wordpress.com&size=128",
+    "sha256": "d96107a927067efeaac9417b9a16d020c8a3d750899c38ce8f225dd72ed6c2bc",
+    "local_path": "/logos/mcp/wordpress.com.d96107a92706.png"
+  },
+  {
+    "slug": "workato",
+    "source_url": "https://www.google.com/s2/favicons?domain=workato.com&sz=128",
+    "file": "workato.e8158ad86d18.png",
+    "bytes": 1156,
+    "size": [
+      32,
+      32
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://workato.com&size=128",
+    "sha256": "e8158ad86d18f55610fe38792baf781b90a68012e09b8c620dfc2ea592b7b531",
+    "local_path": "/logos/mcp/workato.e8158ad86d18.png"
+  },
+  {
+    "slug": "wyndham-hotels",
+    "source_url": "https://www.google.com/s2/favicons?domain=www.wyndhamhotels.com&sz=128",
+    "file": "wyndham-hotels.8345ba81391a.png",
+    "bytes": 359,
+    "size": [
+      33,
+      14
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t3.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://www.wyndhamhotels.com&size=128",
+    "sha256": "8345ba81391aaf691f5942c0cd8d71df3f0576120c77382e59b3e556d272b83a",
+    "local_path": "/logos/mcp/wyndham-hotels.8345ba81391a.png"
+  },
+  {
+    "slug": "yardi-virtuoso",
+    "source_url": "https://www.google.com/s2/favicons?domain=yardi.com&sz=128",
+    "file": "yardi-virtuoso.06be2a3a70ec.png",
+    "bytes": 741,
+    "size": [
+      128,
+      128
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://yardi.com&size=128",
+    "sha256": "06be2a3a70ece8b94a68a293eb22c34d97952db7b9d6082b810a430da8cf5298",
+    "local_path": "/logos/mcp/yardi-virtuoso.06be2a3a70ec.png"
+  },
+  {
+    "slug": "zapier",
+    "source_url": "https://www.google.com/s2/favicons?domain=zapier.com&sz=128",
+    "file": "zapier.23ae37879fbb.png",
+    "bytes": 1799,
+    "size": [
+      128,
+      128
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://zapier.com&size=128",
+    "sha256": "23ae37879fbb05bed51e55221e8d9e3cec501c63571c3631ef1f8d01137787c6",
+    "local_path": "/logos/mcp/zapier.23ae37879fbb.png"
+  },
+  {
+    "slug": "zoominfo",
+    "source_url": "https://www.google.com/s2/favicons?domain=www.zoominfo.com&sz=128",
+    "file": "zoominfo.e0edd8a8c3aa.png",
+    "bytes": 441,
+    "size": [
+      32,
+      32
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://www.zoominfo.com&size=128",
+    "sha256": "e0edd8a8c3aa62e76c9f90b565a3333568a71827b08141a75fc41122ed6fc126",
+    "local_path": "/logos/mcp/zoominfo.e0edd8a8c3aa.png"
+  },
+  {
+    "slug": "backengine-mcp",
+    "source_url": "https://www.google.com/s2/favicons?domain=backengine.com&sz=128",
+    "file": "backengine-mcp.04cdb214b814.png",
+    "bytes": 1145,
+    "size": [
+      128,
+      128
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://backengine.com&size=128",
+    "sha256": "04cdb214b81420d951bd8dc42d4edb598940244253d53f31210c2d6ab6b2ec95",
+    "local_path": "/logos/mcp/backengine-mcp.04cdb214b814.png"
+  },
+  {
+    "slug": "biorxiv",
+    "source_url": "https://www.google.com/s2/favicons?domain=www.biorxiv.org&sz=128",
+    "file": "biorxiv.231058443262.png",
+    "bytes": 353,
+    "size": [
+      16,
+      16
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t3.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://www.biorxiv.org&size=128",
+    "sha256": "231058443262707389cfeae866fe04e81da21743c8c194cf5f3ed888eda8ebed",
+    "local_path": "/logos/mcp/biorxiv.231058443262.png"
+  },
+  {
+    "slug": "lastminute.com",
+    "source_url": "https://www.google.com/s2/favicons?domain=www.lastminute.com&sz=128",
+    "file": "lastminute.com.e611b9f70d71.jpg",
+    "bytes": 2250,
+    "size": [
+      128,
+      128
+    ],
+    "content_type": "image/jpeg",
+    "final_url": "https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://www.lastminute.com&size=128",
+    "sha256": "e611b9f70d71811b767d3467acc406413d87d36899669e1c49c33a486e3d881b",
+    "local_path": "/logos/mcp/lastminute.com.e611b9f70d71.jpg"
+  },
+  {
+    "slug": "monday",
+    "source_url": "https://www.google.com/s2/favicons?domain=monday.com&sz=128",
+    "file": "monday.8ca03d4a0403.png",
+    "bytes": 1258,
+    "size": [
+      128,
+      128
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://monday.com&size=128",
+    "sha256": "8ca03d4a0403f8992654bc84d06c4ee44d678061fc0f2e1ee68357b2adeca29c",
+    "local_path": "/logos/mcp/monday.8ca03d4a0403.png"
+  },
+  {
+    "slug": "n8n",
+    "source_url": "https://www.google.com/s2/favicons?domain=n8n.io&sz=128",
+    "file": "n8n.41cce58725c9.png",
+    "bytes": 1378,
+    "size": [
+      48,
+      48
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://n8n.io&size=128",
+    "sha256": "41cce58725c9d9e1a433204c2dbd1452a1834eefab77e99d497ca7597195e8fd",
+    "local_path": "/logos/mcp/n8n.41cce58725c9.png"
+  },
+  {
+    "slug": "sociahive-mcp",
+    "source_url": "https://www.google.com/s2/favicons?domain=www.sociahive.com&sz=128",
+    "file": "sociahive-mcp.4d98f114a661.png",
+    "bytes": 903,
+    "size": [
+      128,
+      128
+    ],
+    "content_type": "image/png",
+    "final_url": "https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://www.sociahive.com&size=128",
+    "sha256": "4d98f114a661034f66ca46ceb89e9fff526f26e9228e6c0ec6bb3fc21dd482fb",
+    "local_path": "/logos/mcp/sociahive-mcp.4d98f114a661.png"
+  }
+]

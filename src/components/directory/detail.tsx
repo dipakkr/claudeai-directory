@@ -50,20 +50,20 @@ export function DetailHeader({
 }
 
 export function IconTile({ src, name, size = 44 }: { src?: string | null; name: string; size?: number }) {
-  const [failed, setFailed] = useState(false);
+  const [failedSrc, setFailedSrc] = useState<string | null>(null);
   return (
     <span
       className="flex shrink-0 items-center justify-center overflow-hidden rounded-xl bg-[var(--cad-tile)] font-sans text-muted-foreground"
-      style={{ width: size, height: size, fontSize: size * 0.36 }}
+      style={{ backgroundColor: src?.startsWith("/logos/mcp/") ? "#fff" : undefined, width: size, height: size, fontSize: size * 0.36 }}
     >
-      {src && !failed ? (
+      {src && failedSrc !== src ? (
         // eslint-disable-next-line @next/next/no-img-element
         <img
           src={src}
           alt=""
           className="object-contain"
           style={{ width: size * 0.55, height: size * 0.55 }}
-          onError={() => setFailed(true)}
+          onError={() => setFailedSrc(src)}
         />
       ) : (
         name[0]?.toUpperCase()

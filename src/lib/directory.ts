@@ -1,3 +1,4 @@
+import mcpLogos from "@/data/mcp-logos.json";
 import type { Agent, MCPServer, Prompt, Skill, Plugin, PluginPartDoc } from "@/types";
 
 // One row in the ranked directory list. Every catalog type maps onto this, so
@@ -66,28 +67,32 @@ export function faviconFor(url?: string | null, size = 64): string | null {
   }
 }
 
-/** Use the actual supplied logo, not the favicon of its image/CDN host. */
+/** Reviewed local assets keep catalog logos independent of third-party uptime. */
 export function mcpIcon(server: MCPServer): string | null {
+  const key = server.slug || server.id;
+  const local = (mcpLogos as Record<string, string>)[key];
+  if (typeof local === "string") return local;
+
   const explicit = server.branding?.icon_url?.trim();
   if (explicit) {
     try {
       const url = new URL(explicit);
-      if (url.protocol === "https:") return url.href;
-    } catch { /* fall through to the product website */ }
+      // Imports sometimes put a product page or MCP endpoint in icon_url.
+      // Only recognized image paths/services can be loaded directly as images.
+      if (url.protocol === "https:" && (
+        /\.(png|jpe?g|webp|gif|svg|ico|avif)$/i.test(url.pathname) ||
+        url.hostname === "avatars.githubusercontent.com" ||
+        (url.hostname === "www.google.com" && url.pathname === "/s2/favicons")
+      )) return url.href;
+    } catch { /* try the product website */ }
   }
-  const known: Record<string, string> = {
-    github: "https://avatars.githubusercontent.com/github?s=128",
-    "playwright-mcp": "https://playwright.dev/img/playwright-logo.svg",
-    "chrome-devtools-mcp": "https://www.google.com/s2/favicons?domain=developer.chrome.com&sz=128",
-  };
-  const brand = known[server.slug || server.id];
-  if (brand) return brand;
-  for (const candidate of [server.links?.website, server.links?.documentation, server.documentation_url, server.connection?.url]) {
+  for (const candidate of [server.links?.website, explicit, server.links?.documentation, server.documentation_url, server.connection?.url]) {
     if (!candidate) continue;
     try {
-      const host = new URL(candidate).hostname;
+      const url = new URL(candidate);
+      if (url.protocol !== "https:" && url.protocol !== "http:") continue;
       // Repository hosts identify the hosting platform, not the listed tool.
-      if (!/(^|\.)(github\.com|gitlab\.com|npmjs\.com|claude\.ai)$/.test(host)) return faviconFor(candidate);
+      if (!/(^|\.)(github\.com|gitlab\.com|npmjs\.com|claude\.ai|claude\.com)$/.test(url.hostname)) return faviconFor(candidate);
     } catch { /* try the next source */ }
   }
   return null;

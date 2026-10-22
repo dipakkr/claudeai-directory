@@ -212,17 +212,17 @@ const PAGE = 30;
 const TYPE_NOUN: Record<DirectoryType, string> = { skill: "Skill", mcp: "MCP server", agent: "Agent", plugin: "Plugin", prompt: "Prompt" };
 
 export function Tile({ item, size = 48 }: { item: DirectoryItem; size?: number }) {
-  const [failed, setFailed] = useState(false);
+  const [failedSrc, setFailedSrc] = useState<string | null>(null);
   const i = keywordIndex(item.name, item.tags);
   const Glyph = i >= 0 ? KEYWORD_ICONS[i][1] : CATEGORY_ICON[item.category.toLowerCase()] ?? TYPE_ICON[item.type];
   return (
     <span
       className="flex shrink-0 items-center justify-center rounded-lg border border-border bg-[var(--cad-tile)] text-foreground/80"
-      style={{ width: size, height: size }}
+      style={{ backgroundColor: item.iconUrl?.startsWith("/logos/mcp/") ? "#fff" : undefined, width: size, height: size }}
     >
-      {item.iconUrl && !failed ? (
+      {item.iconUrl && failedSrc !== item.iconUrl ? (
         // eslint-disable-next-line @next/next/no-img-element
-        <img src={item.iconUrl} alt="" className="rounded object-contain" style={{ width: size * 0.56, height: size * 0.56 }} onError={() => setFailed(true)} />
+        <img src={item.iconUrl} alt="" className="rounded object-contain" style={{ width: size * 0.56, height: size * 0.56 }} onError={() => setFailedSrc(item.iconUrl)} />
       ) : (
         <Glyph style={{ width: Math.round(size * 0.42), height: Math.round(size * 0.42) }} strokeWidth={1.5} aria-hidden="true" />
       )}

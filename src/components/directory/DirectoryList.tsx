@@ -356,10 +356,10 @@ export function DirectoryRow({ item, rank, showType }: { item: DirectoryItem; ra
 }
 
 function ItemIcon({ item }: { item: DirectoryItem }) {
-  const [failed, setFailed] = useState(false);
+  const [failedSrc, setFailedSrc] = useState<string | null>(null);
   return (
-    <span className="flex h-9 w-9 items-center justify-center overflow-hidden rounded-md border border-border bg-card font-mono text-[13px] text-muted-foreground">
-      {item.iconUrl && !failed ? (
+    <span style={{ backgroundColor: item.iconUrl?.startsWith("/logos/mcp/") ? "#fff" : undefined }} className="flex h-9 w-9 items-center justify-center overflow-hidden rounded-md border border-border bg-card font-mono text-[13px] text-muted-foreground">
+      {item.iconUrl && failedSrc !== item.iconUrl ? (
         // eslint-disable-next-line @next/next/no-img-element
         <img
           src={item.iconUrl}
@@ -368,7 +368,7 @@ function ItemIcon({ item }: { item: DirectoryItem }) {
           height={20}
           loading="lazy"
           className="h-5 w-5 object-contain"
-          onError={() => setFailed(true)}
+          onError={() => setFailedSrc(item.iconUrl)}
         />
       ) : (
         item.name[0]?.toUpperCase()
