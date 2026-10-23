@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-export function Logo({ muted = false }: { muted?: boolean }) {
+export function Logo({ muted = false, compactOnMobile = false }: { muted?: boolean; compactOnMobile?: boolean }) {
   return (
     <Link
       href="/"
@@ -10,7 +10,7 @@ export function Logo({ muted = false }: { muted?: boolean }) {
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img src="/logo-mark.svg" alt="" width={22} height={22} className="h-[22px] w-[22px]" />
       <span className="text-[15px] font-semibold tracking-tight text-foreground">
-        claudeai<span className="font-normal text-muted-foreground">.directory</span>
+        claudeai<span className={`font-normal text-muted-foreground ${compactOnMobile ? "max-[400px]:hidden" : ""}`}>.directory</span>
       </span>
     </Link>
   );

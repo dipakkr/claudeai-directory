@@ -18,16 +18,14 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import NotificationBell from "@/components/layout/NotificationBell";
 import { Logo } from "@/components/layout/Logo";
+import { OnlineChip } from "@/components/layout/OnlineChip";
 import { SignInButton, useSignIn } from "@/components/auth/SignInDialog";
 
-// CLAUDE.md "Navigation": Skills, MCP, Agents, Submit. Search and Jobs are
-// hidden from the header for now (⌘K still opens search). Everything else
-// stays reachable from the footer.
+// Keep the main row compact. Agents stays discoverable under More.
 const navLinks = [
   { href: "/launches", label: "Launches" },
   { href: "/skills", label: "Skills" },
   { href: "/mcp", label: "MCP" },
-  { href: "/agents", label: "Agents" },
   { href: "/plugins", label: "Plugins" },
   { href: "/feed", label: "Feed" },
   { href: "/members", label: "Members" },
@@ -35,6 +33,10 @@ const navLinks = [
 
 // Everything else worth finding, grouped under "More".
 const moreGroups = [
+  {
+    label: "Discover",
+    links: [{ href: "/agents", label: "Agents" }],
+  },
   {
     label: "Learn",
     links: [
@@ -79,11 +81,14 @@ const Header = () => {
 
   return (
     <header className="sticky top-0 z-50 w-full bg-[var(--cad-nav-bg)] backdrop-blur-md">
-      <div className="relative mx-auto flex h-16 max-w-[1180px] items-center gap-4 px-4 md:px-8">
-        <Logo />
+      <div className="relative mx-auto flex h-16 max-w-[1180px] items-center gap-2 px-4 sm:gap-4 md:px-8">
+        <div className="flex shrink-0 items-center gap-2">
+          <Logo compactOnMobile />
+          <OnlineChip />
+        </div>
 
-        {/* Desktop: nav centred on the bar, actions right */}
-        <nav className="absolute left-1/2 hidden -translate-x-1/2 items-center lg:flex">
+        {/* Flow layout keeps the logo, activity chip and navigation from overlapping. */}
+        <nav className="ml-auto hidden items-center min-[1440px]:flex">
           {navLinks.map((link) => (
             <Link
               key={link.href}
@@ -124,7 +129,7 @@ const Header = () => {
           </DropdownMenu>
         </nav>
 
-        <div className="ml-auto hidden items-center lg:flex">
+        <div className="hidden shrink-0 items-center min-[1440px]:flex">
           <Link href="/launches/submit" className={`${pill} bg-foreground text-background hover:bg-foreground/85`}>
             Submit app
           </Link>
@@ -142,10 +147,12 @@ const Header = () => {
         </div>
 
         {/* Mobile / tablet */}
-        <div className="ml-auto flex items-center gap-2 lg:hidden">
-          <Link href="/launches/submit" className={`${pill} hidden bg-foreground text-background sm:inline-flex`}>
-            Submit app
-          </Link>
+        <div className="ml-auto flex items-center gap-2 min-[1440px]:hidden">
+          <div className="hidden sm:block">
+            <Link href="/launches/submit" className={`${pill} bg-foreground text-background`}>
+              Submit app
+            </Link>
+          </div>
           <Button
             variant="ghost"
             size="icon"
@@ -160,7 +167,7 @@ const Header = () => {
       </div>
 
       {isMenuOpen && (
-        <div className="absolute left-0 right-0 top-16 max-h-[calc(100vh-4rem)] overflow-y-auto border-b border-border bg-background px-4 pb-6 pt-2 lg:hidden">
+        <div className="absolute left-0 right-0 top-16 max-h-[calc(100vh-4rem)] overflow-y-auto border-b border-border bg-background px-4 pb-6 pt-2 min-[1440px]:hidden">
           <nav className="flex flex-col">
             {navLinks.map((link) => (
               <Link
