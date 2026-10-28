@@ -35,7 +35,7 @@ const navLinks = [
 const moreGroups = [
   {
     label: "Discover",
-    links: [{ href: "/agents", label: "Agents" }],
+    links: [{ href: "/agents", label: "Agents" }, { href: "/studio", label: "Skills marketplace" }],
   },
   {
     label: "Learn",

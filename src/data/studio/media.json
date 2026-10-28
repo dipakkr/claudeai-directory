@@ -1,0 +1,264 @@
+{
+  "schemaVersion": 1,
+  "recipe": "studio-media-v1",
+  "assets": [
+    {
+      "id": "avatar-robot",
+      "kind": "image",
+      "skill": "bs-dot-avatar-maker",
+      "runId": "2026-10-28-avatar-browser",
+      "alt": "Coral clay robot with a smiling face, rendered with Dot Avatar Maker",
+      "sourceSha256": "c02812642dcaa8516d432850852f77c2cc869558fc69dda867be14a6ad544c6b",
+      "width": 2048,
+      "height": 2048,
+      "files": [
+        {
+          "url": "/studio/media/cfcfc256601331f1a882/480.webp",
+          "mime": "image/webp",
+          "bytes": 13234,
+          "sha256": "4b6646bc8f29d8528f86b02d8ed5fc8fcf7ac37ef989600232f4ade7207ad901",
+          "width": 480,
+          "height": 480
+        },
+        {
+          "url": "/studio/media/cfcfc256601331f1a882/960.webp",
+          "mime": "image/webp",
+          "bytes": 27164,
+          "sha256": "93187b9dc64b0a70783447b0f2f5a6638571f5f9a291ebdb87a6116ac78525b8",
+          "width": 960,
+          "height": 960
+        },
+        {
+          "url": "/studio/media/cfcfc256601331f1a882/1920.webp",
+          "mime": "image/webp",
+          "bytes": 60094,
+          "sha256": "982586baaa03b633b89604985e739edf2ff8ceccef6c91e59335a4b0492e5390",
+          "width": 1920,
+          "height": 1920
+        }
+      ]
+    },
+    {
+      "id": "avatar-bunny",
+      "kind": "image",
+      "skill": "bs-dot-avatar-maker",
+      "runId": "2026-10-28-avatar-browser",
+      "alt": "Pink plush bunny wearing an artist beret, rendered with Dot Avatar Maker",
+      "sourceSha256": "e908b6a29128bd83777a473bfc37d8a7a4c20dc506cfefb1f41adff778e4ccfc",
+      "width": 2048,
+      "height": 2048,
+      "files": [
+        {
+          "url": "/studio/media/ec40d586879b956b28c3/480.webp",
+          "mime": "image/webp",
+          "bytes": 54216,
+          "sha256": "41aeda236841d640585bc68d3aba9eaf81c05d25b03a03ccf926ad0c9b6712a0",
+          "width": 480,
+          "height": 480
+        },
+        {
+          "url": "/studio/media/ec40d586879b956b28c3/960.webp",
+          "mime": "image/webp",
+          "bytes": 193160,
+          "sha256": "28e71ed11dd0d19f07dac0581065ca1a5e93ecece8803d782a09e8f53ba36349",
+          "width": 960,
+          "height": 960
+        },
+        {
+          "url": "/studio/media/ec40d586879b956b28c3/1920.webp",
+          "mime": "image/webp",
+          "bytes": 694564,
+          "sha256": "e5ee764fe32f9960a1d23ef4069e76d0111bb613b905ef2efae636aed73484d0",
+          "width": 1920,
+          "height": 1920
+        }
+      ]
+    },
+    {
+      "id": "brand-story-01",
+      "kind": "image",
+      "skill": "bs-brand-story-deck",
+      "runId": "2026-10-28-brand-story",
+      "alt": "Claude Directory cover slide from the generated Claude Directory deck",
+      "sourceSha256": "c14e65e865fedbaeb203652e853456a23bf1926897e1e01fd514c88db83c3d19",
+      "width": 1920,
+      "height": 1080,
+      "files": [
+        {
+          "url": "/studio/media/b0a6922d2cce6c5ff7f9/480.webp",
+          "mime": "image/webp",
+          "bytes": 9140,
+          "sha256": "b2c0c6ce1cf8e35623ba73944b4d8b0afbf213a94f719db190c2bdf0e68eda50",
+          "width": 480,
+          "height": 270
+        },
+        {
+          "url": "/studio/media/b0a6922d2cce6c5ff7f9/960.webp",
+          "mime": "image/webp",
+          "bytes": 19290,
+          "sha256": "4cdf3c358df27be453539eb01945cd13e7c0e36f5398589645af59cd0aa4b38d",
+          "width": 960,
+          "height": 540
+        },
+        {
+          "url": "/studio/media/b0a6922d2cce6c5ff7f9/1920.webp",
+          "mime": "image/webp",
+          "bytes": 43762,
+          "sha256": "66717f10161ca0f7bcaeeb92bb9d3fc5fb17fcc934dbc7f72fe5a05a47a315b8",
+          "width": 1920,
+          "height": 1080
+        }
+      ]
+    },
+    {
+      "id": "brand-story-02",
+      "kind": "image",
+      "skill": "bs-brand-story-deck",
+      "runId": "2026-10-28-brand-story",
+      "alt": "Start with the result slide from the generated Claude Directory deck",
+      "sourceSha256": "601a08a297e049c24743b4bb46138696a1db9736d7e6ca3c785a019150bf1b5a",
+      "width": 1920,
+      "height": 1080,
+      "files": [
+        {
+          "url": "/studio/media/527004053cded5dfce89/480.webp",
+          "mime": "image/webp",
+          "bytes": 8082,
+          "sha256": "70525bba581a03af8db831c96faf34f732291ae9586ed110d1b93441e0793113",
+          "width": 480,
+          "height": 270
+        },
+        {
+          "url": "/studio/media/527004053cded5dfce89/960.webp",
+          "mime": "image/webp",
+          "bytes": 18912,
+          "sha256": "151af4aa9c06aab010afa7e288e8eef7284203a3837b0d14807db1d8c2ce196e",
+          "width": 960,
+          "height": 540
+        },
+        {
+          "url": "/studio/media/527004053cded5dfce89/1920.webp",
+          "mime": "image/webp",
+          "bytes": 44184,
+          "sha256": "0b714a73c7bad4a61ab4925b416fb6d18905dcaf5354e77098a004fe716e2728",
+          "width": 1920,
+          "height": 1080
+        }
+      ]
+    },
+    {
+      "id": "brand-story-03",
+      "kind": "image",
+      "skill": "bs-brand-story-deck",
+      "runId": "2026-10-28-brand-story",
+      "alt": "From brief to output slide from the generated Claude Directory deck",
+      "sourceSha256": "7beb5d45ca382541fe0840fb71dcfc67bb5fbbfa10ee27241f859655774dee85",
+      "width": 1920,
+      "height": 1080,
+      "files": [
+        {
+          "url": "/studio/media/b36d9bfb9fef649e699d/480.webp",
+          "mime": "image/webp",
+          "bytes": 13022,
+          "sha256": "2503a013d67d3f7f5ee3e9409013aa64c5a5cdaf80e3e247cd686d08ecece59b",
+          "width": 480,
+          "height": 270
+        },
+        {
+          "url": "/studio/media/b36d9bfb9fef649e699d/960.webp",
+          "mime": "image/webp",
+          "bytes": 31036,
+          "sha256": "d1e87caf1e5ef9aef126b8735da23566a7960cd0af7d7b4f8b998bc803368bed",
+          "width": 960,
+          "height": 540
+        },
+        {
+          "url": "/studio/media/b36d9bfb9fef649e699d/1920.webp",
+          "mime": "image/webp",
+          "bytes": 75256,
+          "sha256": "3ee7712055a02b3fd40c706e59a90949adef418c49e15ce829ba3f6ffd6a4d81",
+          "width": 1920,
+          "height": 1080
+        }
+      ]
+    },
+    {
+      "id": "brand-story-04",
+      "kind": "image",
+      "skill": "bs-brand-story-deck",
+      "runId": "2026-10-28-brand-story",
+      "alt": "The planned collection slide from the generated Claude Directory deck",
+      "sourceSha256": "360beff9bcdaa97f7a275056281508d5fd0222948dcad8cf186f4e8498529c05",
+      "width": 1920,
+      "height": 1080,
+      "files": [
+        {
+          "url": "/studio/media/b7e8c113d0888776f6b6/480.webp",
+          "mime": "image/webp",
+          "bytes": 9984,
+          "sha256": "409ffaf98cde3f3ce9f0527b3763152cbc1fbc51f2a8a5afbc36372ac877b101",
+          "width": 480,
+          "height": 270
+        },
+        {
+          "url": "/studio/media/b7e8c113d0888776f6b6/960.webp",
+          "mime": "image/webp",
+          "bytes": 23180,
+          "sha256": "ba1deffbf3875326470285c93964249df5bc8fae8743ff82b2e860bfee68c42b",
+          "width": 960,
+          "height": 540
+        },
+        {
+          "url": "/studio/media/b7e8c113d0888776f6b6/1920.webp",
+          "mime": "image/webp",
+          "bytes": 54594,
+          "sha256": "02b27d239b4d7f3d14ec63e8fbeff39b0c7710332f142aa07d95bf346fde4e83",
+          "width": 1920,
+          "height": 1080
+        }
+      ]
+    },
+    {
+      "id": "brand-story-loop",
+      "kind": "video",
+      "skill": "bs-brand-story-deck",
+      "runId": "2026-10-28-brand-story",
+      "alt": "Eight-second sequence of the four generated slides",
+      "sourceSha256": "a096356f897386b56bac20905d3eefb059140ac34ef811122c696adc3d7f2c40",
+      "width": 1920,
+      "height": 1080,
+      "duration": 8,
+      "files": [
+        {
+          "url": "/studio/media/5c4ba88866d9e207133f/loop.mp4",
+          "mime": "video/mp4",
+          "bytes": 132724,
+          "sha256": "973b6d2de061b71e7b88ea3494eaeef2fc536a979d7349887838b061f0f661c7",
+          "duration": 8
+        },
+        {
+          "url": "/studio/media/5c4ba88866d9e207133f/loop.webm",
+          "mime": "video/webm",
+          "bytes": 120420,
+          "sha256": "f29da7926f7dbde09e80e7707b9e078076b0934fa08a6b9649eef3a446ec8f24",
+          "duration": 8
+        },
+        {
+          "url": "/studio/media/5c4ba88866d9e207133f/loop.gif",
+          "mime": "image/gif",
+          "bytes": 151260,
+          "sha256": "1d0dda0935e3f1dc8df420ebc99b2f9918dd4cfd6a8c34c5229a3170c1a60096",
+          "duration": 8
+        },
+        {
+          "url": "/studio/media/5c4ba88866d9e207133f/poster.webp",
+          "mime": "image/webp",
+          "bytes": 49206,
+          "sha256": "158b8481b678b42bcfdd8464444a9df7ff31d31b407034bf76b3956f4b7d714b",
+          "width": 1920,
+          "height": 1080
+        }
+      ]
+    }
+  ]
+}

@@ -15,7 +15,6 @@ import { LaunchImpressions } from "@/components/tracking/LaunchImpressions";
 import { KeyClickTracker } from "@/components/tracking/KeyClickTracker";
 import { NavigationProgress } from "@/components/layout/NavigationProgress";
 import { Suspense } from "react";
-import SponsorRails from "@/components/advertise/SponsorRails";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -119,7 +118,6 @@ export default async function RootLayout({
             <NavigationProgress />
           </Suspense>
           {children}
-          <SponsorRails />
           {process.env.NEXT_PUBLIC_LOCAL_PREVIEW === "true" && <div className="fixed bottom-0 left-0 z-50 bg-amber-200 px-3 py-1 text-xs text-black">Local preview · simulated payments · no public changes</div>}
         </Providers>
 
