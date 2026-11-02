@@ -5,14 +5,12 @@ import DirectoryList from "@/components/directory/DirectoryList";
 import RecentlyViewed from "@/components/directory/RecentlyViewed";
 import type { DirectoryItem, SortKey } from "@/lib/directory";
 import { HeroJoin } from "@/components/home/HeroActions";
-import type { PublicProfile } from "@/types";
 
 interface HomeContentProps {
   items: DirectoryItem[];
   orders: Record<SortKey, string[]>;
   launches: ReactNode;
   community: ReactNode;
-  members: PublicProfile[];
   memberCount: number;
   pulse?: ReactNode;
   /** The "MCP launches" tab next to Trending / Top / New. */
@@ -43,7 +41,7 @@ const BROWSE = [
   },
 ];
 
-export default function HomeContent({ items, orders, launches, community, members, memberCount, pulse, mcpLaunches }: HomeContentProps) {
+export default function HomeContent({ items, orders, launches, community, memberCount, pulse, mcpLaunches }: HomeContentProps) {
   const count = (type: DirectoryItem["type"]) => items.filter((i) => i.type === type).length;
 
   return (
@@ -56,7 +54,7 @@ export default function HomeContent({ items, orders, launches, community, member
           Discover community-built Claude Skills, MCP servers and Agents. Find what is trending or publish something you
           built.
         </p>
-        <HeroJoin members={members} total={memberCount} />
+        <HeroJoin total={memberCount} />
         {pulse}
         <p className="mt-5 text-sm text-muted-foreground">
           Built something for Claude?{" "}

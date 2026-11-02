@@ -1,12 +1,10 @@
 "use client";
 
-import Link from "next/link";
-import { ArrowRight, Search } from "lucide-react";
+import { Search } from "lucide-react";
 
 import { useCommandMenu } from "@/components/layout/CommandMenu";
 import { useAuth } from "@/lib/auth";
 import { compactNumber } from "@/lib/directory";
-import type { PublicProfile } from "@/types";
 
 /** The hero's main action: a search field that opens the site search (⌘K). */
 export function HeroSearch() {
@@ -26,41 +24,17 @@ export function HeroSearch() {
   );
 }
 
-/** Member avatars linking to /members, where signed-out visitors can join. */
-export function HeroJoin({ members, total }: { members: PublicProfile[]; total: number }) {
+/** Non-interactive community text below the hero. */
+export function HeroJoin({ total }: { total: number }) {
   const { isAuthenticated } = useAuth();
-  const preview = members.slice(0, 8);
-  if (preview.length === 0) return null;
 
   // Product decision: show "1k+" until the real count passes it.
   const builders = total >= 1000 ? `${compactNumber(total)}+` : "1k+";
   const label = isAuthenticated ? "Meet the builders" : `Join ${builders} builders`;
 
   return (
-    <Link href="/members" className="group mx-auto mt-7 flex w-fit max-w-full cursor-pointer items-center justify-center">
-      <span className="flex -space-x-2">
-        {preview.map((member) => {
-          const name = member.name || member.username;
-          return (
-            <span
-              key={member.id}
-              title={name}
-              className="flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-full border border-background bg-muted text-[11px] font-medium text-muted-foreground ring-1 ring-border"
-            >
-              {member.avatar ? (
-                // eslint-disable-next-line @next/next/no-img-element -- member avatars are remote user-provided URLs
-                <img src={member.avatar} alt="" className="h-full w-full object-cover" loading="lazy" referrerPolicy="no-referrer" />
-              ) : (
-                name[0]?.toUpperCase()
-              )}
-            </span>
-          );
-        })}
-      </span>
-      <span className="ml-3 inline-flex shrink-0 items-center gap-1 text-sm text-foreground group-hover:underline group-hover:underline-offset-4">
-        {label}
-        <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
-      </span>
-    </Link>
+    <p className="mx-auto mt-7 w-fit max-w-full text-sm text-foreground">
+      {label}
+    </p>
   );
 }

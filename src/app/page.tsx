@@ -56,7 +56,7 @@ export default async function Home() {
     loadOrders(),
     fetchApi<ShowcaseProject[]>("/showcase?limit=100"),
     fetchApi<Thread[]>("/community/threads?sort=mix&limit=30"),
-    fetchApi<MembersResponse>("/users?per_page=8"),
+    fetchApi<MembersResponse>("/users?per_page=1"),
   ]);
   // Live numbers and recent activity (the API caches this for a minute).
   const pulse = await fetchApi<Pulse>("/stats/pulse", { revalidate: 60 });
@@ -79,7 +79,6 @@ export default async function Home() {
       <Header />
       <main>
         <HomeContent items={items} orders={buildOrders(items, ranked)}
-          members={membersData?.members ?? []}
           memberCount={membersData?.total ?? 0}
           launches={
             <HomeLaunches
