@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { DEFAULT_OG_IMAGE } from "@/lib/seo";
 import { Suspense } from "react";
+import GitHubBanner from "@/components/home/GitHubBanner";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import HomeContent from "@/components/home/HomeContent";
@@ -76,6 +77,7 @@ export default async function Home() {
     <div className="min-h-screen bg-background">
       <OrganizationSchema />
       <WebSiteSchema />
+      <GitHubBanner />
       <Header />
       <main>
         <HomeContent items={items} orders={buildOrders(items, ranked)}

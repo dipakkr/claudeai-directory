@@ -14,6 +14,7 @@ import {
   Linkedin,
 } from "lucide-react";
 
+import LaunchSidebar from "@/components/launches/LaunchSidebar";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import FavoriteButton from "@/components/shared/FavoriteButton";
@@ -222,7 +223,8 @@ export default async function LaunchDetailPage({
         className="pointer-events-none absolute inset-x-0 top-0 -z-0 hidden h-[420px] opacity-70 dark:block"
         style={{ background: `linear-gradient(180deg, ${theme.bottom} 0%, ${theme.top}99 45%, transparent 100%)` }}
       />
-      <main className="relative mx-auto max-w-[820px] px-4 pb-20 pt-8 md:px-8 md:pt-10">
+      <main className="relative mx-auto grid w-full max-w-[1180px] gap-10 px-4 pb-20 pt-8 md:px-8 md:pt-10 lg:grid-cols-[minmax(0,1fr)_272px] lg:gap-12">
+        <div className="min-w-0">
         <Link
           href="/launches"
           aria-label="Back to app launches"
@@ -466,6 +468,8 @@ export default async function LaunchDetailPage({
             </div>
           </div>
         </article>
+        </div>
+        <LaunchSidebar />
       </main>
       <Footer />
     </div>

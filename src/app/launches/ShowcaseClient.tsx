@@ -1,13 +1,11 @@
 "use client";
 
-import { Fragment, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { TOPICS, topicSlug } from "@/lib/launch-options";
 import Link from "next/link";
 import { LaunchListRow } from "@/components/launches/LaunchListRow";
 import { LaunchVoteButton } from "@/components/launches/LaunchVoteButton";
 import {
-  Megaphone,
-  ArrowRight,
   Rocket,
   Search,
 } from "lucide-react";
@@ -16,10 +14,9 @@ import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
 import { rankedLaunches } from "@/lib/home-community";
-import { SPONSOR_WEEKLY_PRICE, openAdvertiseDialog } from "@/lib/advertise";
+import LaunchSidebar from "@/components/launches/LaunchSidebar";
 import { useShowcaseProjects } from "@/hooks/use-showcase";
 import type { ShowcaseProject } from "@/types";
-import { track } from "@/lib/analytics";
 
 function authorLabel(project: ShowcaseProject) {
   return project.author_name || project.author_username || "Claude AI community";
@@ -69,30 +66,6 @@ function LaunchRow({ project, rank }: { project: ShowcaseProject; rank: number }
       surface="launches_list"
       right={<LaunchVoteButton project={project} placement="launches_list" />}
     />
-  );
-}
-
-function SponsoredLaunchSlot() {
-  return (
-    <button
-      type="button"
-      onClick={() => {
-        track("ad_slot_clicked", { slot: "launch_row" });
-        openAdvertiseDialog(undefined, "launch");
-      }}
-      className="flex w-full items-center gap-4 rounded-[8px] border border-primary/30 bg-primary/[0.04] px-4 py-3.5 text-left transition-colors hover:border-primary/50"
-    >
-      <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-[6px] border border-dashed border-primary/40 text-primary">
-        <Megaphone aria-hidden="true" className="h-3.5 w-3.5" />
-      </span>
-      <span className="min-w-0 flex-1 truncate text-[14px]">
-        <span className="font-medium text-foreground">Advertise in the sidebar</span>
-        <span className="text-muted-foreground"> · Book a sidebar card for ${SPONSOR_WEEKLY_PRICE}/week</span>
-      </span>
-      <span className="shrink-0 rounded-[4px] border border-border px-1.5 py-0.5 font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
-        Sponsored
-      </span>
-    </button>
   );
 }
 
@@ -167,8 +140,9 @@ export default function ShowcaseClient({
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <Header />
-      <main className="flex-1">
-        <section className="mx-auto max-w-[880px] px-4 pb-4 pt-10 md:px-8 md:pt-14">
+      <main className="mx-auto grid w-full max-w-[1180px] flex-1 gap-10 px-4 pb-16 pt-10 md:px-8 md:pt-14 lg:grid-cols-[minmax(0,1fr)_272px] lg:gap-12">
+        <div className="min-w-0">
+        <section className="pb-4">
           <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
             <div>
               <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-primary">Launches</p>
@@ -179,19 +153,8 @@ export default function ShowcaseClient({
             </div>
           </div>
 
-          {/* Free listing: the real badge and one line. */}
-          <div className="mt-6 flex flex-col gap-3 rounded-[10px] border border-border px-4 py-3 sm:flex-row sm:items-center sm:gap-4">
-            {/* eslint-disable-next-line @next/next/no-img-element -- our own SVG badge (the generic slug renders the same artwork) */}
-            <img src="/badge/your-app?theme=dark" alt="Listed on Claude AI Directory badge" width={156} height={38} className="h-[38px] w-[156px] shrink-0" />
-            <p className="min-w-0 flex-1 text-[13.5px] text-muted-foreground">Launch for free. Add the badge to your site and get a dofollow backlink.</p>
-            <Link href="/launches/submit" className="inline-flex shrink-0 items-center gap-1 text-sm font-medium text-primary hover:underline">
-              Launch your app
-              <ArrowRight className="h-3.5 w-3.5" />
-            </Link>
-          </div>
-
-          <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <div className="relative w-full sm:max-w-[300px]">
+          <div className="mt-8 flex flex-col gap-3">
+            <div className="relative w-full">
               <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <input
                 type="search"
@@ -249,18 +212,11 @@ export default function ShowcaseClient({
           </div>
         </section>
 
-        <section className="mx-auto max-w-[880px] px-4 md:px-8">
+        <section aria-label="Launch listings">
           <ol>
             {visibleProjects.length > 0 ? (
               visibleProjects.map((project, index) => (
-                <Fragment key={project.id}>
-                  <LaunchRow project={project} rank={index + 1} />
-                  {index === Math.min(2, visibleProjects.length - 1) ? (
-                    <li className="border-b border-border py-3">
-                      <SponsoredLaunchSlot />
-                    </li>
-                  ) : null}
-                </Fragment>
+                <LaunchRow key={project.id} project={project} rank={index + 1} />
               ))
             ) : (
               <li className="px-4 py-16 text-center md:px-6">
@@ -276,6 +232,8 @@ export default function ShowcaseClient({
             )}
           </ol>
         </section>
+        </div>
+        <LaunchSidebar />
       </main>
       <Footer />
     </div>
