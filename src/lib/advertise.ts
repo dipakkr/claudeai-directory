@@ -1,7 +1,7 @@
 import { sideAdCollections } from "@/data/sideAdPlacements";
 
 /** One seven-day sidebar placement, in USD. */
-export const SPONSOR_WEEKLY_PRICE = 40;
+export const SPONSOR_WEEKLY_PRICE = 59;
 
 /** "sidebar": a card in one category rail. "launch": the row in the launches list. */
 export type SponsorSlot = "sidebar" | "launch";

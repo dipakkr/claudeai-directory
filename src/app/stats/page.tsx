@@ -7,6 +7,7 @@ import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import PageBreadcrumb from "@/components/layout/PageBreadcrumb";
 import { fetchApi } from "@/lib/api-server";
+import { SPONSOR_WEEKLY_PRICE } from "@/lib/advertise";
 import { DEFAULT_OG_IMAGE } from "@/lib/seo";
 
 const TITLE = "Open Stats: Claude AI Directory in Numbers";
@@ -316,7 +317,7 @@ function Body({ data }: { data: OpenStats }) {
             <Link href="/?advertise=1" className="group block rounded-[6px] border border-border bg-card p-4 hover:border-[var(--cad-line-hover)]">
               <span className="block text-sm font-semibold text-foreground">Advertise</span>
               <span className="mt-1 block text-[13px] leading-6 text-muted-foreground">
-                Rotating sponsor cards next to {fmt(listings)} Skills, MCP servers, Agents and Plugins. $40 for seven days, starting after admin approval. No automatic renewal.
+                Rotating sponsor cards next to {fmt(listings)} Skills, MCP servers, Agents and Plugins. ${SPONSOR_WEEKLY_PRICE} for seven days, starting after admin approval. No automatic renewal.
               </span>
               <span className="mt-2 inline-flex items-center gap-1 text-[13px] font-medium text-primary">
                 See ad spots <ArrowRight className="h-3.5 w-3.5" />

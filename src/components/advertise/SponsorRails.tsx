@@ -6,7 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 import { api } from "@/lib/api";
 import { usePathname } from "next/navigation";
 import { ArrowUpRight, Plus } from "lucide-react";
-import { openAdvertiseDialog } from "@/lib/advertise";
+import { SPONSOR_WEEKLY_PRICE, openAdvertiseDialog } from "@/lib/advertise";
 import { track } from "@/lib/analytics";
 import { useSponsorTracking } from "@/hooks/useSponsorTracking";
 import type { SponsorPlacements } from "@/lib/sponsors";
@@ -42,7 +42,7 @@ function OpenSlot() {
       className="sponsor-card sponsor-open-slot group flex min-h-[152px] flex-1 flex-col items-center justify-center gap-2 rounded-[6px] border border-dashed border-foreground/15 bg-foreground/[0.025] px-3 py-3 text-center transition-colors hover:border-foreground/30 hover:bg-foreground/[0.06]">
       <Plus className="h-5 w-5 text-muted-foreground" aria-hidden="true" />
       <span className="text-[12px] font-medium text-muted-foreground">Available spot</span>
-      <span className="inline-flex items-center gap-1 text-[10px] text-muted-foreground">$40 / week <ArrowUpRight className="h-3 w-3" aria-hidden="true" /></span>
+      <span className="inline-flex items-center gap-1 text-[10px] text-muted-foreground">${SPONSOR_WEEKLY_PRICE} / week <ArrowUpRight className="h-3 w-3" aria-hidden="true" /></span>
     </button>
   );
 }

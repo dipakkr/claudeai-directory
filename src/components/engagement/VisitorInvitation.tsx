@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { X, ArrowRight } from "lucide-react";
 import { api } from "@/lib/api";
-import { OPEN_ADVERTISE_EVENT, openAdvertiseDialog } from "@/lib/advertise";
+import { SPONSOR_WEEKLY_PRICE, OPEN_ADVERTISE_EVENT, openAdvertiseDialog } from "@/lib/advertise";
 import { useAuth } from "@/lib/auth";
 import { track } from "@/lib/analytics";
 
@@ -75,7 +75,7 @@ export default function VisitorInvitation() {
     {mode === "advertise" && <>
       <p className="text-xs font-medium uppercase tracking-wider text-primary">For makers</p>
       <h2 className="mt-2 pr-5 text-xl font-semibold">Your product. In the sidebar.</h2>
-      <p className="mt-2 text-sm text-muted-foreground">Reach people exploring Claude tools. One sidebar card, seven days, <strong className="text-foreground">$40</strong>. No subscription.</p>
+      <p className="mt-2 text-sm text-muted-foreground">Reach people exploring Claude tools. One sidebar card, seven days, <strong className="text-foreground">${SPONSOR_WEEKLY_PRICE}</strong>. No subscription.</p>
       <button className="mt-4 flex h-10 w-full items-center justify-center gap-2 rounded-md bg-primary text-sm font-medium text-primary-foreground" onClick={() => { track("ad_slot_clicked", { slot: "visitor_invitation" }); openAdvertiseDialog(); }}>Preview your ad <ArrowRight className="h-4 w-4" /></button>
       <button onClick={() => setMode("newsletter")} className="mt-3 w-full text-xs text-muted-foreground underline underline-offset-4">Just exploring? Get the weekly Claude picks</button>
     </>}
