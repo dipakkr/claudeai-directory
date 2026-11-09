@@ -77,8 +77,10 @@ export default async function Home() {
     <div className="min-h-screen bg-background">
       <OrganizationSchema />
       <WebSiteSchema />
-      <GitHubBanner />
-      <Header />
+      <div className="sticky top-0 z-50">
+        <GitHubBanner />
+        <Header />
+      </div>
       <main>
         <HomeContent items={items} orders={buildOrders(items, ranked)}
           memberCount={membersData?.total ?? 0}
