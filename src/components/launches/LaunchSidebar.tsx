@@ -17,7 +17,7 @@ export default function LaunchSidebar() {
                 onClick={() => openAdvertiseDialog()}
                 className="w-full rounded px-2 py-1 text-center text-[11px] leading-5 text-muted-foreground underline decoration-border underline-offset-4 transition-colors hover:text-foreground hover:decoration-foreground/50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
               >
-                Want your app or MCP featured?
+                Feature your app or MCP
               </button>
             </div>
             <section className="rounded-xl border border-border bg-card/30 p-5">
