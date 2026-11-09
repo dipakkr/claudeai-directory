@@ -1,13 +1,25 @@
+"use client";
+
 import Link from "next/link";
 import LaunchSponsor from "./LaunchSponsor";
 import { ArrowRight, Rocket } from "lucide-react";
+import { openAdvertiseDialog } from "@/lib/advertise";
 
 /** Shared sidebar for launch discovery and individual launch pages. */
 export default function LaunchSidebar() {
   return (
     <aside aria-label="Sponsors and launch resources" className="min-w-0 lg:sticky lg:top-24 lg:self-start">
           <div className="space-y-5">
-            <LaunchSponsor />
+            <div className="space-y-2">
+              <LaunchSponsor />
+              <button
+                type="button"
+                onClick={() => openAdvertiseDialog()}
+                className="w-full rounded px-2 py-1 text-center text-[11px] leading-5 text-muted-foreground underline decoration-border underline-offset-4 transition-colors hover:text-foreground hover:decoration-foreground/50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+              >
+                Want your app or MCP featured?
+              </button>
+            </div>
             <section className="rounded-xl border border-border bg-card/30 p-5">
               <span className="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10 text-primary"><Rocket size={18} aria-hidden="true" /></span>
               <h2 className="mt-4 font-sans text-[18px] font-medium tracking-tight">Your next launch starts here.</h2>
