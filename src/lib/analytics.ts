@@ -18,6 +18,7 @@ export type InstallEvent =
 // Kept deliberately short: these dashboards may be shared publicly, so only
 // events that answer a real business question, and no names or emails.
 export type ProductEvent =
+  | "top_banner_click" // the open-source GitHub announcement
   | "ad_clicked" // a sponsor card in the sidebar
   | "ad_slot_clicked" // an open slot, "Advertise", or the sponsored launch banner
   | "website_clicked" // "Visit website" on a launch page
