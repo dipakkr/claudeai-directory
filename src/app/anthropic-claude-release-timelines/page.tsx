@@ -29,8 +29,8 @@ import {
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.claudeai.directory";
 const PAGE_URL = `${SITE_URL}${PAGE_PATH}`;
 
-const TITLE = "Claude Release Timeline: Every Claude Model, Dated";
-const DESCRIPTION = `Every Claude model from Claude 1 (March 2023) to ${STATS.last.title}, plus Claude Code, MCP, Skills and plugins. ${STATS.models} models, exact dates, official sources.`;
+const TITLE = "Claude Release Timeline: Models, Apps, API & Claude Code";
+const DESCRIPTION = `Every Claude model from Claude 1 (March 2023) to ${STATS.last.title}, plus the latest Claude app, API, SDK, Claude Code and ecosystem updates. ${STATS.models} models, exact dates, official sources.`;
 
 export const metadata: Metadata = {
   title: { absolute: TITLE },
@@ -112,7 +112,7 @@ function Entry({ e }: { e: TimelineEntry }) {
     : e.restricted
       ? "border border-primary bg-background"
       : "bg-primary";
-  const kindLabel = isModel ? FAMILY_LABELS[e.family!] : e.kind === "product" ? "Product" : "Milestone";
+  const kindLabel = isModel ? FAMILY_LABELS[e.family!] : e.channel ? GROUP_LABELS[e.channel] : e.kind === "product" ? "Product" : "Milestone";
   return (
     <li id={e.id} data-group={groupOf(e)} className="group relative scroll-mt-24 pb-7 pl-6 last:pb-0">
       <span className={`absolute left-0 top-[5px] h-[9px] w-[9px] rounded-full ${dot}`} aria-hidden />
@@ -203,6 +203,7 @@ function jsonLd() {
 
 export default function TimelinePage() {
   const s = STATS;
+  const latestCode = NEWEST.find((entry) => entry.channel === "code");
   const maxPerYear = Math.max(...s.perYear.map((y) => y.count));
   const filterOptions = [
     { value: "all", label: "All", count: ENTRIES.length },
@@ -219,18 +220,38 @@ export default function TimelinePage() {
         <div className="mx-auto max-w-[920px] px-4 pb-20 pt-8 md:px-8">
           <PageBreadcrumb items={[{ label: "Claude release timeline" }]} />
           <p className="mt-6 font-mono text-[11px] uppercase tracking-[0.16em] text-primary">Claude release timeline</p>
-          <h1 className="mt-2 text-[clamp(30px,4.5vw,44px)] font-semibold leading-tight tracking-tight text-foreground">Every Claude model, dated</h1>
+          <h1 className="mt-2 text-[clamp(30px,4.5vw,44px)] font-semibold leading-tight tracking-tight text-foreground">Claude releases, dated and tracked</h1>
           <p className="mt-3 max-w-[64ch] text-[15px] leading-7 text-muted-foreground">
             {s.models} generally available models in {Math.round(s.spanDays / 30.44)} months, from {s.first.title} on {formatDate(s.first.date)} to {s.last.title} on{" "}
-            {formatDate(s.last.date)}. Plus the products that changed how people use them: Claude Code, MCP, Skills and plugins. Every date links to
-            Anthropic&apos;s own announcement.
+            {formatDate(s.last.date)}. Plus Claude app, API, SDK, Claude Code, MCP and Skills updates. Each entry links to an official announcement or changelog.
           </p>
           <p className="mt-3 font-mono text-[11px] text-muted-foreground">
-            Last updated <time dateTime={LAST_UPDATED}>{formatDate(LAST_UPDATED)}</time> · {ENTRIES.length} entries · {s.products} product launches and milestones
+            Last reviewed <time dateTime={LAST_UPDATED}>{formatDate(LAST_UPDATED)}</time> · {ENTRIES.length} entries · {s.products} product updates and milestones
           </p>
           <div className="mt-5">
             <ShareBar />
           </div>
+
+          <section className="mt-8 rounded-[6px] border border-border bg-card p-4" aria-labelledby="official-feeds">
+            <h2 id="official-feeds" className="text-sm font-semibold text-foreground">Follow the official release feeds</h2>
+            <p className="mt-1 text-[13px] leading-6 text-muted-foreground">
+              Reviewed through {formatDate(LAST_UPDATED)}. Latest verified model release: {formatDate(s.last.date)}.
+              {latestCode && ` Latest Claude Code release: ${formatDate(latestCode.date)}.`}{" "}
+              This curated timeline highlights releases and material changes. The feeds include every patch and fix.
+            </p>
+            <div className="mt-3 flex flex-wrap gap-x-5 gap-y-2">
+              {[
+                ["Anthropic announcements", "https://www.anthropic.com/news"],
+                ["Claude app", "https://support.claude.com/en/articles/12138966-release-notes"],
+                ["API & SDKs", "https://platform.claude.com/docs/en/release-notes/overview"],
+                ["Claude Code", "https://code.claude.com/docs/en/changelog"],
+              ].map(([label, href]) => (
+                <a key={href} href={href} target="_blank" rel="noopener noreferrer" className={action}>
+                  {label} <ArrowUpRight className="h-3 w-3" />
+                </a>
+              ))}
+            </div>
+          </section>
 
           {/* By the numbers */}
           <section className="mt-12">
@@ -331,7 +352,7 @@ export default function TimelinePage() {
           </section>
 
           <p className="mt-6 max-w-[70ch] text-[12px] leading-5 text-muted-foreground">
-            Dates are US Pacific publication dates of Anthropic&apos;s announcements. Stats count generally available model releases only; the
+            Dates follow Anthropic&apos;s announcements and official changelogs. Stats count generally available model releases only; the
             restricted Mythos models are listed but not counted. Gaps are measured between distinct release days, so models launched together count once.
             Claude AI Directory is a community site and is not affiliated with Anthropic.
           </p>

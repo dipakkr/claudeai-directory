@@ -1,16 +1,16 @@
 // Curated, source-checked Claude release timeline. Every entry links to the
-// official Anthropic or Claude page that announced it. Dates are US Pacific
+// official Anthropic or Claude page that announced it. Dates follow official
 // publication dates. Keep this file free of "use client" so both server
 // components and the OG image can import it.
 
-export const LAST_UPDATED = "2026-10-03";
+export const LAST_UPDATED = "2026-11-12";
 export const PAGE_PATH = "/anthropic-claude-release-timelines";
 export const CORRECTIONS_EMAIL = "claudeai.directory@gmail.com";
 
 export type Kind = "model" | "product" | "milestone";
 export type Family = "opus" | "sonnet" | "haiku" | "fable" | "mythos" | "claude" | "instant";
 /** Filter groups shown on the page. Mythos rolls up into "fable", Claude 1/2 and Instant into "early". */
-export type Group = "opus" | "sonnet" | "haiku" | "fable" | "early" | "products";
+export type Group = "opus" | "sonnet" | "haiku" | "fable" | "early" | "products" | "api" | "code";
 
 export interface TimelineEntry {
   /** Anchor id, e.g. "claude-opus-4". Stable: people link to these. */
@@ -19,6 +19,7 @@ export interface TimelineEntry {
   date: string; // YYYY-MM-DD
   kind: Kind;
   family?: Family;
+  channel?: "api" | "code";
   description: string;
   sourceUrl: string;
   sourceLabel: string;
@@ -217,6 +218,7 @@ export const ENTRIES: TimelineEntry[] = [
   },
   {
     id: "claude-code-preview",
+    channel: "code",
     title: "Claude Code (research preview)",
     date: "2025-02-24",
     kind: "product",
@@ -251,6 +253,7 @@ export const ENTRIES: TimelineEntry[] = [
   },
   {
     id: "claude-code-ga",
+    channel: "code",
     title: "Claude Code generally available",
     date: "2025-05-22",
     kind: "product",
@@ -284,6 +287,7 @@ export const ENTRIES: TimelineEntry[] = [
   },
   {
     id: "claude-code-plugins",
+    channel: "code",
     title: "Claude Code plugins",
     date: "2025-10-09",
     kind: "product",
@@ -298,12 +302,11 @@ export const ENTRIES: TimelineEntry[] = [
     date: "2025-10-15",
     kind: "model",
     family: "haiku",
-    description: "Sonnet 4 level coding at a third of the cost and more than twice the speed. Still the current Haiku.",
+    description: "Sonnet 4 level coding at a third of the cost and more than twice the speed.",
     sourceUrl: `${NEWS}/claude-haiku-4-5`,
     sourceLabel: "Introducing Claude Haiku 4.5",
     modelId: "claude-haiku-4-5-20251001",
     context: "200K",
-    current: true,
   },
   {
     id: "agent-skills",
@@ -475,7 +478,6 @@ export const ENTRIES: TimelineEntry[] = [
     sourceLabel: "Introducing Claude Fable 5.1 and Claude Mythos 5.1",
     modelId: "claude-fable-5-1",
     context: "1M",
-    current: true,
   },
   {
     id: "claude-mythos-5-1",
@@ -525,6 +527,355 @@ export const ENTRIES: TimelineEntry[] = [
     context: "1M",
     current: true,
   },
+  // October–November 2026: reviewed against official release feeds on November 12.
+  {
+    "id": "claude-haiku-5-5",
+    "title": "Claude Haiku 5.5",
+    "date": "2026-10-07",
+    "kind": "model",
+    "description": "A new small model for fast, high-volume work, with adjustable effort and support for coding subagents.",
+    "sourceUrl": "https://www.anthropic.com/claude-haiku-5-5",
+    "sourceLabel": "Claude Haiku 5.5",
+    "family": "haiku",
+    "modelId": "claude-haiku-5-5",
+    "context": "1M",
+    "current": true
+  },
+  {
+    "id": "monthly-api-credits",
+    "title": "Monthly API credits and cheaper Sonnet caching",
+    "date": "2026-10-07",
+    "kind": "product",
+    "description": "Max, Ultra and Team plans gain monthly API credits. Sonnet 5.5 cache-read pricing is halved.",
+    "sourceUrl": "https://www.anthropic.com/claude-haiku-5-5",
+    "sourceLabel": "Monthly API credits and cheaper Sonnet caching",
+    "channel": "api"
+  },
+  {
+    "id": "models-api-thinking-support",
+    "title": "Models API: thinking support",
+    "date": "2026-10-05",
+    "kind": "product",
+    "description": "Model capabilities now report whether thinking can be disabled.",
+    "sourceUrl": "https://platform.claude.com/docs/en/release-notes/overview",
+    "sourceLabel": "Claude Platform release notes",
+    "channel": "api"
+  },
+  {
+    "id": "models-api-server-tools",
+    "title": "Models API: server tools",
+    "date": "2026-10-06",
+    "kind": "product",
+    "description": "Discover supported server tools through model capabilities.",
+    "sourceUrl": "https://platform.claude.com/docs/en/release-notes/overview",
+    "sourceLabel": "Claude Platform release notes",
+    "channel": "api"
+  },
+  {
+    "id": "compliance-unified-chats",
+    "title": "Compliance API expands",
+    "date": "2026-10-08",
+    "kind": "product",
+    "description": "Beta adds unified chats and Claude Docs exports.",
+    "sourceUrl": "https://platform.claude.com/docs/en/release-notes/overview",
+    "sourceLabel": "Claude Platform release notes",
+    "channel": "api"
+  },
+  {
+    "id": "managed-agents-dynamic-workflows",
+    "title": "Managed Agents: dynamic workflows",
+    "date": "2026-10-09",
+    "kind": "product",
+    "description": "Agents can orchestrate phased workflows across multiple agents, with background execution and progress events. Available in beta.",
+    "sourceUrl": "https://platform.claude.com/docs/en/managed-agents/multiagent-orchestration",
+    "sourceLabel": "Managed Agents: dynamic workflows",
+    "channel": "api"
+  },
+  {
+    "id": "api-opentelemetry",
+    "title": "OpenTelemetry export beta",
+    "date": "2026-10-14",
+    "kind": "product",
+    "description": "Trace API requests and Managed Agents sessions in external observability tools. SDK tracing covers seven languages.",
+    "sourceUrl": "https://platform.claude.com/docs/en/manage-claude/opentelemetry",
+    "sourceLabel": "OpenTelemetry export beta",
+    "channel": "api"
+  },
+  {
+    "id": "managed-agents-aws-schedules",
+    "title": "Managed Agents schedules on AWS",
+    "date": "2026-10-14",
+    "kind": "product",
+    "description": "Scheduled deployments reach Claude Platform on AWS.",
+    "sourceUrl": "https://platform.claude.com/docs/en/release-notes/overview",
+    "sourceLabel": "Claude Platform release notes",
+    "channel": "api"
+  },
+  {
+    "id": "opus-5-5-fast-mode-ga",
+    "title": "Opus 5.5 fast mode opens up",
+    "date": "2026-10-15",
+    "kind": "product",
+    "description": "Fast mode leaves research preview for Opus 5.5 and becomes available on Azure-hosted Microsoft Foundry deployments.",
+    "sourceUrl": "https://platform.claude.com/docs/en/build-with-claude/fast-mode",
+    "sourceLabel": "Opus 5.5 fast mode opens up",
+    "channel": "api"
+  },
+  {
+    "id": "api-october-15-capabilities",
+    "title": "Model and compliance capabilities",
+    "date": "2026-10-15",
+    "kind": "product",
+    "description": "Adds between-tools thinking discovery and saved user instructions.",
+    "sourceUrl": "https://platform.claude.com/docs/en/release-notes/overview",
+    "sourceLabel": "Claude Platform release notes",
+    "channel": "api"
+  },
+  {
+    "id": "enterprise-inference-hooks",
+    "title": "Enterprise inference hooks and user profiles",
+    "date": "2026-10-20",
+    "kind": "product",
+    "description": "Hooks graduate; user profiles, beta webhooks and web-fetch controls arrive.",
+    "sourceUrl": "https://platform.claude.com/docs/en/release-notes/overview",
+    "sourceLabel": "Claude Platform release notes",
+    "channel": "api"
+  },
+  {
+    "id": "api-version-2026-10-21",
+    "title": "New API version and major SDK releases",
+    "date": "2026-10-21",
+    "kind": "product",
+    "description": "API version 2026-10-21 ships with new major SDK and CLI versions. Review the migration guide for breaking changes.",
+    "sourceUrl": "https://platform.claude.com/docs/en/api/migration-2026-10-21",
+    "sourceLabel": "New API version and major SDK releases",
+    "channel": "api"
+  },
+  {
+    "id": "claude-duet-preview",
+    "title": "Claude Duet research preview",
+    "date": "2026-10-21",
+    "kind": "product",
+    "description": "A proactive Claude app enters research preview for Pro and Max subscribers.",
+    "sourceUrl": "https://support.claude.com/en/articles/12138966-release-notes",
+    "sourceLabel": "Claude release notes"
+  },
+  {
+    "id": "agent-skills-aaif",
+    "title": "Agent Skills joins the Agentic AI Foundation",
+    "date": "2026-10-22",
+    "kind": "milestone",
+    "description": "Anthropic donates the open Agent Skills standard to the AAIF under the Linux Foundation.",
+    "sourceUrl": "https://www.anthropic.com/news/donating-agent-skills-to-the-agentic-ai-foundation",
+    "sourceLabel": "Agent Skills joins the Agentic AI Foundation",
+    "related": {
+      "href": "/skills",
+      "label": "Browse skills"
+    }
+  },
+  {
+    "id": "anthropic-managed-google-cloud",
+    "title": "Anthropic-managed Claude on Google Cloud",
+    "date": "2026-10-22",
+    "kind": "product",
+    "description": "Google IAM authentication and Marketplace billing; Opus 5.5 fast mode.",
+    "sourceUrl": "https://platform.claude.com/docs/en/release-notes/overview",
+    "sourceLabel": "Claude Platform release notes",
+    "channel": "api"
+  },
+  {
+    "id": "claude-tag-api",
+    "title": "Claude Tag API beta",
+    "date": "2026-10-23",
+    "kind": "product",
+    "description": "Enterprise admins can manage Slack settings and access bundles.",
+    "sourceUrl": "https://platform.claude.com/docs/en/release-notes/overview",
+    "sourceLabel": "Claude Platform release notes",
+    "channel": "api"
+  },
+  {
+    "id": "api-request-size-128mb",
+    "title": "API request size increases",
+    "date": "2026-10-28",
+    "kind": "product",
+    "description": "First-party Messages and Token Counting requests now accept 128 MB.",
+    "sourceUrl": "https://platform.claude.com/docs/en/release-notes/overview",
+    "sourceLabel": "Claude Platform release notes",
+    "channel": "api"
+  },
+  {
+    "id": "usage-cost-analytics-api",
+    "title": "Usage and Cost Analytics API beta",
+    "date": "2026-10-29",
+    "kind": "product",
+    "description": "New usage and cost endpoints add flexible filtering and grouping. Older reporting APIs remain supported.",
+    "sourceUrl": "https://platform.claude.com/docs/en/manage-claude/usage-cost-analytics-api",
+    "sourceLabel": "Usage and Cost Analytics API beta",
+    "channel": "api"
+  },
+  {
+    "id": "opus-4-8-fast-mode-deprecation",
+    "title": "Opus 4.8 fast mode deprecated",
+    "date": "2026-10-30",
+    "kind": "milestone",
+    "description": "Removal is scheduled for November 30. Migrate fast-mode requests to Opus 5.5.",
+    "sourceUrl": "https://platform.claude.com/docs/en/build-with-claude/fast-mode",
+    "sourceLabel": "Opus 4.8 fast mode deprecated",
+    "channel": "api"
+  },
+  {
+    "id": "message-threads-beta",
+    "title": "Message threads beta",
+    "date": "2026-11-02",
+    "kind": "product",
+    "description": "Server-held conversation state lets subsequent API requests send only new messages, reducing upload size and time to first token. Threads expire after five idle minutes.",
+    "sourceUrl": "https://platform.claude.com/docs/en/build-with-claude/message-threads",
+    "sourceLabel": "Message threads beta",
+    "channel": "api"
+  },
+  {
+    "id": "text-watermark-expansion",
+    "title": "Text watermark coverage expands",
+    "date": "2026-11-03",
+    "kind": "product",
+    "description": "Adds Mythos 5, Opus 4.7 and eligible Sonnet 4.6 output.",
+    "sourceUrl": "https://platform.claude.com/docs/en/release-notes/overview",
+    "sourceLabel": "Claude Platform release notes",
+    "channel": "api"
+  },
+  {
+    "id": "enterprise-security-controls",
+    "title": "Enterprise security and admin controls",
+    "date": "2026-11-05",
+    "kind": "product",
+    "description": "A security center, inference hooks, centralized management and additional access controls arrive, with several features in beta.",
+    "sourceUrl": "https://support.claude.com/en/articles/12138966-release-notes",
+    "sourceLabel": "Claude release notes"
+  },
+  {
+    "id": "personal-finance-beta",
+    "title": "Personal Finance in Claude",
+    "date": "2026-11-05",
+    "kind": "product",
+    "description": "US users on Pro, Max and Ultra can connect financial accounts and ask about their finances. Available in beta.",
+    "sourceUrl": "https://support.claude.com/en/articles/12138966-release-notes",
+    "sourceLabel": "Claude release notes"
+  },
+  {
+    "id": "api-security-controls",
+    "title": "API security controls beta",
+    "date": "2026-11-05",
+    "kind": "product",
+    "description": "Adds security-posture data, IP allowlists and organization-member sign-out.",
+    "sourceUrl": "https://platform.claude.com/docs/en/release-notes/overview",
+    "sourceLabel": "Claude Platform release notes",
+    "channel": "api"
+  },
+  {
+    "id": "enterprise-project-tags",
+    "title": "Enterprise project tags beta",
+    "date": "2026-11-06",
+    "kind": "product",
+    "description": "Eligible organizations can attribute project spending to existing cost codes or client-matter numbers.",
+    "sourceUrl": "https://support.claude.com/en/articles/12138966-release-notes",
+    "sourceLabel": "Claude release notes"
+  },
+  {
+    "id": "claude-fable-5-2",
+    "title": "Claude Fable 5.2",
+    "date": "2026-11-09",
+    "kind": "model",
+    "description": "A new frontier model for demanding reasoning, coding and extended agent work. Standard API pricing is $8 per million input tokens and $40 per million output tokens.",
+    "sourceUrl": "https://www.anthropic.com/claude-fable-and-mythos-5-2",
+    "sourceLabel": "Claude Fable 5.2",
+    "family": "fable",
+    "modelId": "claude-fable-5-2",
+    "context": "1M",
+    "current": true
+  },
+  {
+    "id": "claude-mythos-5-2",
+    "title": "Claude Mythos 5.2",
+    "date": "2026-11-09",
+    "kind": "model",
+    "description": "The corresponding model for organizations approved through Anthropic verification programs. Access remains restricted.",
+    "sourceUrl": "https://www.anthropic.com/claude-fable-and-mythos-5-2",
+    "sourceLabel": "Claude Mythos 5.2",
+    "family": "mythos",
+    "modelId": "claude-mythos-5-2",
+    "context": "1M",
+    "restricted": true
+  },
+  {
+    "id": "fable-5-2-api-migration",
+    "title": "Fable 5.2 API and migration changes",
+    "date": "2026-11-09",
+    "kind": "product",
+    "description": "Always-on adaptive thinking, stricter conversation-prefix checks and updated computer-use requirements. Check compatibility before switching an existing integration.",
+    "sourceUrl": "https://platform.claude.com/docs/en/models/fable-5-2/whats-new-fable-5-2",
+    "sourceLabel": "Fable 5.2 API and migration changes",
+    "channel": "api"
+  },
+  {
+    "id": "fable-5-2-fast-mode",
+    "title": "Fable 5.2 fast mode",
+    "date": "2026-11-09",
+    "kind": "product",
+    "description": "Claude API fast mode offers up to 2.5× output speed at $16/$80 per million input/output tokens, without a beta header.",
+    "sourceUrl": "https://platform.claude.com/docs/en/build-with-claude/fast-mode",
+    "sourceLabel": "Fable 5.2 fast mode",
+    "channel": "api"
+  },
+  {
+    "id": "claude-code-2-1-317",
+    "title": "Claude Code 2.1.317",
+    "date": "2026-11-03",
+    "kind": "product",
+    "description": "Adds blocking failure behavior for Agent SDK hooks, alongside permission and organization-policy improvements.",
+    "sourceUrl": "https://code.claude.com/docs/en/changelog",
+    "sourceLabel": "Claude Code changelog",
+    "channel": "code"
+  },
+  {
+    "id": "claude-code-2-1-318",
+    "title": "Claude Code 2.1.318",
+    "date": "2026-11-04",
+    "kind": "product",
+    "description": "Adds mod activation consent records and better visibility into authentication expiration.",
+    "sourceUrl": "https://code.claude.com/docs/en/changelog",
+    "sourceLabel": "Claude Code changelog",
+    "channel": "code"
+  },
+  {
+    "id": "claude-code-2-1-319",
+    "title": "Claude Code 2.1.319",
+    "date": "2026-11-06",
+    "kind": "product",
+    "description": "Adds background MCP tasks, latency optimization guidance and additional permission controls.",
+    "sourceUrl": "https://code.claude.com/docs/en/changelog",
+    "sourceLabel": "Claude Code changelog",
+    "channel": "code"
+  },
+  {
+    "id": "claude-code-2-1-321",
+    "title": "Claude Code 2.1.321",
+    "date": "2026-11-09",
+    "kind": "product",
+    "description": "Makes Fable 5.2 the default Fable model and adds settings-file support for Remote Control.",
+    "sourceUrl": "https://code.claude.com/docs/en/changelog",
+    "sourceLabel": "Claude Code changelog",
+    "channel": "code"
+  },
+  {
+    "id": "claude-code-2-1-322",
+    "title": "Claude Code 2.1.322",
+    "date": "2026-11-10",
+    "kind": "product",
+    "description": "Adds Vertex fast mode in global, US and EU regions, with standard-speed fallback.",
+    "sourceUrl": "https://code.claude.com/docs/en/changelog",
+    "sourceLabel": "Claude Code changelog",
+    "channel": "code"
+  },
 ];
 
 export const FAMILY_LABELS: Record<Family, string> = {
@@ -543,13 +894,15 @@ export const GROUP_LABELS: Record<Group, string> = {
   haiku: "Haiku",
   fable: "Fable & Mythos",
   early: "Claude 1 & 2",
-  products: "Products",
+  products: "Apps & ecosystem",
+  api: "API & SDKs",
+  code: "Claude Code",
 };
 
 export const GROUPS = Object.keys(GROUP_LABELS) as Group[];
 
 export function groupOf(e: TimelineEntry): Group {
-  if (e.kind !== "model") return "products";
+  if (e.kind !== "model") return e.channel ?? "products";
   switch (e.family) {
     case "opus":
     case "sonnet":
