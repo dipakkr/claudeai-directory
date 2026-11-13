@@ -58,7 +58,7 @@ export function SponsorReach() {
   const hasTraffic = data && (days === 1 || data.summary.visitors.source === "openpanel" || Boolean(data.tracking_since));
   const rankedCountries = [...(data?.countries ?? [])].sort((a, b) => b.share - a.share);
   const topCountries = rankedCountries.slice(0, 5);
-  const moreEuCountries = rankedCountries.filter(country => EU_COUNTRIES.has(country.code) && !topCountries.some(top => top.code === country.code)).slice(0, 3);
+  const moreEuCountries = rankedCountries.filter(country => EU_COUNTRIES.has(country.code) && !topCountries.some(top => top.code === country.code)).slice(0, 2);
   return <section aria-label="Audience reach" className="flex flex-1 flex-col">
     <div className="flex items-baseline justify-between gap-2"><h3 className="text-[13px] font-medium">Audience reach</h3><span className="text-[10px] text-muted-foreground">{days === 1 ? "Last 24 hours" : `Last ${days} days`}</span></div>
     <div role="group" aria-label="Audience date range" className="mt-3 inline-flex self-start gap-1 rounded-md bg-foreground/[0.06] p-1">
@@ -77,12 +77,8 @@ export function SponsorReach() {
       </div>
       <h4 className="mb-3 mt-6 text-[11px] font-medium">Top visitor countries</h4>
       {data.countries.length ? <ul className="space-y-2">
-        {topCountries.map(country => <CountryRow key={country.code} country={country} />)}
+        {[...topCountries, ...moreEuCountries].map(country => <CountryRow key={country.code} country={country} />)}
       </ul> : <p className="text-[11px] text-muted-foreground">{days === 1 ? "Country breakdown is available for 7d, 14d and 30d." : "Country data is not available yet."}</p>}
-      {moreEuCountries.length > 0 && <>
-        <h4 className="mb-3 mt-5 text-[11px] font-medium">More EU markets</h4>
-        <ul className="space-y-2">{moreEuCountries.map(country => <CountryRow key={country.code} country={country} />)}</ul>
-      </>}
     </> : <p role="status" className="py-5 text-xs leading-5 text-muted-foreground">{isPending ? "Loading audience statistics…" : "Audience statistics are temporarily unavailable."}</p>}
     <div className="mt-5 flex min-h-24 flex-1 items-center justify-center gap-3 border-t border-border py-4" aria-label={`Ahrefs Domain Rating: ${DOMAIN_RATING} out of 100`}>
       <svg viewBox="0 0 44 44" className="h-14 w-14 shrink-0 -rotate-90" aria-hidden="true">

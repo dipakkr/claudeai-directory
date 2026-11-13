@@ -34,10 +34,10 @@ requests its own cached statistics and country distribution. View full stats
 preserves the selected range. Domain Rating is owner-supplied and independent
 of the selected traffic window (44/100 as of November 13, 2026).
 
-The audience country list shows the actual top five by traffic, followed by up
-to three additional EU countries from the selected range under “More EU markets.”
-Already displayed countries are excluded; percentages are never renormalized or
-hardcoded. The section is absent when the API provides no additional EU markets.
+The audience country list shows the actual top five by traffic plus up to two
+additional EU countries from the selected range, in one continuous list without
+a separate EU heading. Already displayed countries are excluded; percentages
+are never renormalized or hardcoded.
 
 SILO's official mark is copied unchanged from https://siloslabs.com/favicon.svg
 into public/brands/silos-logo.svg. The embedded SVG supports light/dark colors;
