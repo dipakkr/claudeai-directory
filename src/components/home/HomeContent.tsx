@@ -4,6 +4,7 @@ import { ArrowRight, Bot, Server, Sparkles } from "lucide-react";
 import DirectoryList from "@/components/directory/DirectoryList";
 import RecentlyViewed from "@/components/directory/RecentlyViewed";
 import type { DirectoryItem, SortKey } from "@/lib/directory";
+import HomeSponsor from "@/components/home/HomeSponsor";
 import { HeroJoin } from "@/components/home/HeroActions";
 
 interface HomeContentProps {
@@ -63,6 +64,10 @@ export default function HomeContent({ items, orders, launches, community, member
           </Link>
         </p>
       </section>
+
+      <div className="mx-auto mb-10 max-w-[1000px] px-4 md:px-8">
+        <HomeSponsor />
+      </div>
 
       <section className="mx-auto max-w-[1000px] px-4 md:px-8">
         <DirectoryList items={items} orders={orders} showTypeFilter hideSearch feedId="trending" pageSize={25}
