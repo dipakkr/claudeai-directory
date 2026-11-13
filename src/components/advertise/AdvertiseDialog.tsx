@@ -9,6 +9,7 @@ import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/compone
 import {
   OPEN_ADVERTISE_EVENT,
   SPONSOR_WEEKLY_PRICE,
+  SPONSOR_PACKAGES,
 } from "@/lib/advertise";
 import { SponsorReach } from "@/components/advertise/SponsorReach";
 import { api, ApiError } from "@/lib/api";
@@ -97,14 +98,16 @@ export default function AdvertiseDialog() {
   // Server checkout (Stripe secret key on the backend) wins when it is set up.
   const { data: checkout, isPending: checkoutLoading, isError: checkoutFailed, refetch: retryCheckout } = useQuery({
     queryKey: ["sponsors", "config"],
-    queryFn: () => api.get<{ enabled: boolean; amount: number; interval?: string; mode?: string; preview?: boolean }>("/sponsors/config"),
+    queryFn: () => api.get<{ enabled: boolean; amount: number; week_totals?: Record<string, number>; interval?: string; mode?: string; preview?: boolean }>("/sponsors/config"),
     enabled: open,
     staleTime: 5 * 60_000,
     retry: 2,
     retryDelay: 1000,
   });
   const price = SPONSOR_WEEKLY_PRICE;
-  const canPay = !!checkout?.enabled && checkout.amount === price * 100 && checkout.interval === "week" && checkout.mode === "payment";
+  const total = SPONSOR_PACKAGES.find(plan => plan.weeks === weeks)!.total;
+  const savings = price * weeks - total;
+  const canPay = !!checkout?.enabled && checkout.amount === price * 100 && checkout.week_totals?.[String(weeks)] === total * 100 && checkout.interval === "week" && checkout.mode === "payment";
 
   // Open from sidebar buttons (custom event) or from old /advertise links (?advertise=1).
   useEffect(() => {
@@ -163,6 +166,7 @@ export default function AdvertiseDialog() {
         .post<{ url: string }>("/sponsors/checkout", {
           slot: "sidebar",
           weeks,
+          quoted_amount: total * 100,
           product: product.trim(),
           website: site,
           tagline: tagline.trim(),
@@ -201,6 +205,11 @@ export default function AdvertiseDialog() {
               <span className="text-[13px] text-muted-foreground">/ week · homepage + sidebars</span>
             </div>
 
+            <button type="button" onClick={() => setWeeks(4)} className="mt-3 rounded-md border border-primary/25 bg-primary/5 px-3 py-2 text-left text-[12px] text-foreground hover:bg-primary/10 focus-visible:outline-2 focus-visible:outline-primary">
+              <span className="font-medium">4 weeks for $219</span>
+              <span className="ml-2 text-primary">Best value · Save $57</span>
+            </button>
+
             <div className="mt-6 space-y-3">
               <div className="grid gap-3 sm:grid-cols-2">
                 <label className="block">
@@ -235,14 +244,15 @@ export default function AdvertiseDialog() {
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent className="rounded-md border-border bg-background p-1 shadow-xl" sideOffset={4}>
-                    {[1, 2, 3, 4].map((count) => (
+                    {SPONSOR_PACKAGES.map(({ weeks: count, total: packageTotal }) => (
                       <SelectItem key={count} value={String(count)} className="my-0.5 cursor-pointer rounded-[4px] py-1.5 text-[12px] focus:bg-primary/10 data-[state=checked]:bg-primary/10 data-[state=checked]:text-foreground [&>span:last-child]:flex [&>span:last-child]:flex-1 [&>span:last-child]:justify-between [&>span:last-child]:gap-4">
                         <span>{count} {count === 1 ? "week" : "weeks"}</span>
-                        <span className="text-muted-foreground tabular-nums">${price * count} total</span>
+                        <span className="text-muted-foreground tabular-nums">${packageTotal} total</span>
                       </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
+                {savings > 0 && <p className="mt-1.5 text-[11px] text-primary" aria-live="polite">{weeks === 4 ? "Best value · " : ""}Save ${savings} compared with weekly bookings</p>}
               </div>
               </div>
             </div>
@@ -268,7 +278,7 @@ export default function AdvertiseDialog() {
               disabled={!ready || !canPay || paying}
               className="mt-6 inline-flex h-10 w-full items-center justify-center gap-2 rounded-lg bg-primary px-5 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90 disabled:opacity-40"
             >
-              {paying ? "Opening checkout..." : checkoutLoading ? "Loading checkout..." : canPay ? `${checkout?.preview ? "Preview payment" : "Continue to payment"} · $${price * weeks} total` : "Checkout unavailable"}
+              {paying ? "Opening checkout..." : checkoutLoading ? "Loading checkout..." : canPay ? `${checkout?.preview ? "Preview payment" : "Continue to payment"} · $${total} total` : "Checkout unavailable"}
               {!paying && <ArrowRight className="h-4 w-4" aria-hidden="true" />}
             </button>
             {checkoutFailed && (

@@ -6,6 +6,7 @@ import { ArrowUpRight } from "lucide-react";
 import { DOMAIN_RATING } from "@/lib/domain-rating";
 import { api } from "@/lib/api";
 import { Stat } from "@/components/stats/Stat";
+import type { Pulse } from "@/components/home/HomePulse";
 
 type Metric = { range: number; prev?: number; source?: string };
 export interface Reach {
@@ -24,21 +25,36 @@ function flag(code: string) {
 
 
 export function SponsorReach() {
-  const [days, setDays] = useState<7 | 14 | 30>(7);
-  const { data, isPending } = useQuery({
+  const [days, setDays] = useState<1 | 7 | 14 | 30>(7);
+  const multiDay = useQuery({
     queryKey: ["stats", "open", days],
     queryFn: () => api.get<Reach>(`/stats/open?days=${days}`),
+    enabled: days !== 1,
     staleTime: 600_000, gcTime: 86_400_000, retry: false,
   });
-  const hasTraffic = data && (data.summary.visitors.source === "openpanel" || Boolean(data.tracking_since));
+  const pulse = useQuery({
+    queryKey: ["stats", "pulse"],
+    queryFn: () => api.get<Pulse>("/stats/pulse"),
+    enabled: days === 1,
+    staleTime: 60_000, refetchInterval: days === 1 ? 60_000 : false, retry: false,
+  });
+  const recent = pulse.data?.stats;
+  const dayData: Reach | undefined = recent && typeof recent.visitors_24h === "number" && typeof recent.page_views_24h === "number" ? {
+    tracking_since: null,
+    summary: { visitors: { range: recent.visitors_24h }, page_views: { range: recent.page_views_24h } },
+    countries: [],
+  } : undefined;
+  const data = days === 1 ? dayData : multiDay.data;
+  const isPending = days === 1 ? pulse.isPending : multiDay.isPending;
+  const hasTraffic = data && (days === 1 || data.summary.visitors.source === "openpanel" || Boolean(data.tracking_since));
   return <section aria-label="Audience reach" className="flex flex-1 flex-col">
-    <div className="flex items-baseline justify-between gap-2"><h3 className="text-[13px] font-medium">Audience reach</h3><span className="text-[10px] text-muted-foreground">Last {days} days</span></div>
+    <div className="flex items-baseline justify-between gap-2"><h3 className="text-[13px] font-medium">Audience reach</h3><span className="text-[10px] text-muted-foreground">{days === 1 ? "Last 24 hours" : `Last ${days} days`}</span></div>
     <div role="group" aria-label="Audience date range" className="mt-3 inline-flex self-start gap-1 rounded-md bg-foreground/[0.06] p-1">
-      {([7, 14, 30] as const).map(range => (
-        <button key={range} type="button" aria-label={`Last ${range} days`} aria-pressed={days === range}
+      {([1, 7, 14, 30] as const).map(range => (
+        <button key={range} type="button" aria-label={range === 1 ? "Last 24 hours" : `Last ${range} days`} aria-pressed={days === range}
           onClick={() => setDays(range)}
           className={`min-h-7 min-w-10 rounded px-2 text-[11px] font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary ${days === range ? "bg-background text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"}`}>
-          {range}d
+          {range === 1 ? "24h" : `${range}d`}
         </button>
       ))}
     </div>
@@ -53,7 +69,7 @@ export function SponsorReach() {
           <div className="flex items-center justify-between gap-2 text-[11px]"><span className="flex min-w-0 items-center gap-2"><span aria-hidden="true">{flag(country.code)}</span><span className="truncate">{countryName(country.code)}</span></span><span className="text-[10px] tabular-nums text-muted-foreground">{(country.share * 100).toFixed(1)}%</span></div>
           <div aria-hidden="true" className="mt-1.5 h-1 overflow-hidden rounded-[2px] bg-foreground/5"><div className="h-full bg-primary/50" style={{width: `${Math.min(100, Math.max(0, country.share * 100))}%`}} /></div>
         </li>)}
-      </ul> : <p className="text-[11px] text-muted-foreground">Country data is not available yet.</p>}
+      </ul> : <p className="text-[11px] text-muted-foreground">{days === 1 ? "Country breakdown is available for 7d, 14d and 30d." : "Country data is not available yet."}</p>}
     </> : <p role="status" className="py-5 text-xs leading-5 text-muted-foreground">{isPending ? "Loading audience statistics…" : "Audience statistics are temporarily unavailable."}</p>}
     <div className="mt-5 flex min-h-24 flex-1 items-center justify-center gap-3 border-t border-border py-4" aria-label={`Ahrefs Domain Rating: ${DOMAIN_RATING} out of 100`}>
       <svg viewBox="0 0 44 44" className="h-14 w-14 shrink-0 -rotate-90" aria-hidden="true">
@@ -65,6 +81,6 @@ export function SponsorReach() {
         <p className="mt-1 text-[28px] font-medium leading-none tabular-nums">{DOMAIN_RATING}<span className="ml-1 text-[10px] font-normal text-muted-foreground">/ 100</span></p>
       </div>
     </div>
-    <a href={days === 7 ? "/stats" : `/stats?range=${days}d`} target="_blank" rel="noopener noreferrer" className="inline-flex self-center items-center justify-center gap-1 text-[11px] text-muted-foreground hover:text-foreground">View full stats<ArrowUpRight className="h-3 w-3" /><span className="sr-only"> (opens in a new tab)</span></a>
+    <a href={days === 1 ? "/stats#live" : days === 7 ? "/stats" : `/stats?range=${days}d`} target="_blank" rel="noopener noreferrer" className="inline-flex self-center items-center justify-center gap-1 text-[11px] text-muted-foreground hover:text-foreground">View full stats<ArrowUpRight className="h-3 w-3" /><span className="sr-only"> (opens in a new tab)</span></a>
   </section>;
 }
