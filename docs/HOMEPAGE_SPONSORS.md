@@ -1,11 +1,16 @@
 # Homepage sponsor grid
 
 Restored independently from the unfinished homepage redesign on November 13, 2026.
-Ten cells: ToolJunction first, up to nine eligible campaigns, then enquiry buttons.
+Ten cells: ToolJunction first, up to nine eligible campaigns, then booking buttons.
 Five columns on desktop; two columns below 768px. Uses existing campaign data and
 impression/click tracking. Retired Pipedream, duplicates and expired campaigns are
-excluded. Homepage placement enquiries show audience reach and contact details;
-they do not purchase the separate $59/week sidebar product.
+excluded. Homepage booking buttons open the shared $59/week Stripe checkout, with one to
+four weeks available. Paid campaigns appear in the homepage grid and sponsor
+sidebars after payment verification and admin approval. The existing sidebar
+slot identifier is retained for payment/webhook and admin compatibility.
+Homepage impressions and clicks use the same immutable campaign ID as sidebar
+delivery and roll up into that campaign’s private report. An impression requires
+at least 50% visibility for one second in a visible browser tab.
 
 Brand assets retrieved from the sponsors' own websites on November 13, 2026:
 

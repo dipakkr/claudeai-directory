@@ -194,11 +194,11 @@ export default function AdvertiseDialog() {
               Advertise with us
             </DialogTitle>
             <DialogDescription className="mt-1.5 text-[13px] leading-relaxed text-[var(--cad-desc)]">
-              A community of builders, founders and marketers building with Claude.
+              Feature your product in the homepage sponsor grid and rotating sponsor sidebars. Reach builders, founders and marketers using Claude.
             </DialogDescription>
             <div className="mt-5 flex items-baseline gap-1.5">
               <span className="text-[28px] font-light leading-none text-foreground">${price}</span>
-              <span className="text-[13px] text-muted-foreground">/ week · sidebar placement</span>
+              <span className="text-[13px] text-muted-foreground">/ week · homepage + sidebars</span>
             </div>
 
             <div className="mt-6 space-y-3">
@@ -277,7 +277,7 @@ export default function AdvertiseDialog() {
               </p>
             )}
             <p className="mt-3 text-center text-[11.5px] text-muted-foreground">
-              One payment, no automatic renewal.
+              One payment, no automatic renewal. Your ad goes live after payment verification and admin approval.
             </p>
           </form>
         </div>
