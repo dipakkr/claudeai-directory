@@ -16,3 +16,8 @@ Brand assets retrieved from the sponsors' own websites on November 13, 2026:
 Contactzilla supplies a black monochrome wordmark; CSS inverts it on the dark theme.
 InviziPoll's supplied shield keeps its original colours. Campaign-provided logo URLs
 are preferred; known sponsor assets are served locally when those URLs are empty.
+
+The audience panel supports 7, 14 and 30 days, defaulting to 7. Each selection
+requests its own cached statistics and country distribution. View full stats
+preserves the selected range. Domain Rating is owner-supplied and independent
+of the selected traffic window (44/100 as of November 13, 2026).

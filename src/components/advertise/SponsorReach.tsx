@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowUpRight } from "lucide-react";
 import { DOMAIN_RATING } from "@/lib/domain-rating";
@@ -23,14 +24,24 @@ function flag(code: string) {
 
 
 export function SponsorReach() {
+  const [days, setDays] = useState<7 | 14 | 30>(7);
   const { data, isPending } = useQuery({
-    queryKey: ["stats", "open", 7],
-    queryFn: () => api.get<Reach>("/stats/open?days=7"),
+    queryKey: ["stats", "open", days],
+    queryFn: () => api.get<Reach>(`/stats/open?days=${days}`),
     staleTime: 600_000, gcTime: 86_400_000, retry: false,
   });
   const hasTraffic = data && (data.summary.visitors.source === "openpanel" || Boolean(data.tracking_since));
   return <section aria-label="Audience reach" className="flex flex-1 flex-col">
-    <div className="flex items-baseline justify-between gap-2"><h3 className="text-[13px] font-medium">Audience reach</h3><span className="text-[10px] text-muted-foreground">Last 7 days</span></div>
+    <div className="flex items-baseline justify-between gap-2"><h3 className="text-[13px] font-medium">Audience reach</h3><span className="text-[10px] text-muted-foreground">Last {days} days</span></div>
+    <div role="group" aria-label="Audience date range" className="mt-3 inline-flex self-start gap-1 rounded-md bg-foreground/[0.06] p-1">
+      {([7, 14, 30] as const).map(range => (
+        <button key={range} type="button" aria-label={`Last ${range} days`} aria-pressed={days === range}
+          onClick={() => setDays(range)}
+          className={`min-h-7 min-w-10 rounded px-2 text-[11px] font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary ${days === range ? "bg-background text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"}`}>
+          {range}d
+        </button>
+      ))}
+    </div>
     {data ? <>
       <div className="mt-4 grid grid-cols-2 gap-px overflow-hidden rounded-[4px] border border-border bg-border [&>div]:bg-background [&>div]:p-3 [&>div>div]:flex-col [&>div>div]:items-start [&>div>div]:gap-1 [&>div>div>p]:whitespace-nowrap [&_span]:whitespace-nowrap [&>div>p]:text-[18px] [&_span]:text-[9px] [&_p.font-mono]:text-[10px]">
         <Stat label="Visitors" value={hasTraffic ? data.summary.visitors.range.toLocaleString("en-US") : "—"} now={hasTraffic ? data.summary.visitors.range : undefined} prev={data.summary.visitors.prev} />
@@ -54,6 +65,6 @@ export function SponsorReach() {
         <p className="mt-1 text-[28px] font-medium leading-none tabular-nums">{DOMAIN_RATING}<span className="ml-1 text-[10px] font-normal text-muted-foreground">/ 100</span></p>
       </div>
     </div>
-    <a href="/stats" target="_blank" rel="noopener noreferrer" className="inline-flex self-center items-center justify-center gap-1 text-[11px] text-muted-foreground hover:text-foreground">View full stats<ArrowUpRight className="h-3 w-3" /><span className="sr-only"> (opens in a new tab)</span></a>
+    <a href={days === 7 ? "/stats" : `/stats?range=${days}d`} target="_blank" rel="noopener noreferrer" className="inline-flex self-center items-center justify-center gap-1 text-[11px] text-muted-foreground hover:text-foreground">View full stats<ArrowUpRight className="h-3 w-3" /><span className="sr-only"> (opens in a new tab)</span></a>
   </section>;
 }

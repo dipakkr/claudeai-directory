@@ -179,8 +179,9 @@ function LiveAnalytics() {
 }
 
 export default async function StatsPage({ searchParams }: { searchParams: Promise<{ range?: string }> }) {
-  // Last 7 days by default; ?range=30d for the month.
-  const days = (await searchParams).range === "30d" ? 30 : 7;
+  // Match the sponsor audience selector; unknown ranges use seven days.
+  const range = (await searchParams).range;
+  const days = range === "30d" ? 30 : range === "14d" ? 14 : 7;
   const data = await fetchApi<OpenStats>(`/stats/open?days=${days}`, { revalidate: 600 });
 
   return (
@@ -222,14 +223,14 @@ export default async function StatsPage({ searchParams }: { searchParams: Promis
   );
 }
 
-/** 7d / 30d: plain links, so each range is its own server-rendered view. */
+/** 7d / 14d / 30d: plain links, so each range is its own server-rendered view. */
 function RangeSwitch({ days }: { days: number }) {
   return (
     <span className="inline-flex items-center gap-0.5 rounded-[6px] bg-foreground/[0.06] p-0.5 font-mono text-[11px]">
-      {[7, 30].map((d) => (
+      {[7, 14, 30].map((d) => (
         <Link
           key={d}
-          href={d === 7 ? "/stats" : "/stats?range=30d"}
+          href={d === 7 ? "/stats" : `/stats?range=${d}d`}
           scroll={false}
           aria-current={days === d ? "true" : undefined}
           className={`rounded-[4px] px-2 py-0.5 transition-colors ${days === d ? "bg-background text-foreground" : "text-muted-foreground hover:text-foreground"}`}
