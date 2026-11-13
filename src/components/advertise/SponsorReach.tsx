@@ -15,6 +15,8 @@ export interface Reach {
   summary: { visitors: Metric; page_views: Metric };
   countries: { code: string; share: number }[];
 }
+const EU_COUNTRIES = new Set(["AT", "BE", "BG", "HR", "CY", "CZ", "DK", "EE", "FI", "FR", "DE", "GR", "HU", "IE", "IT", "LV", "LT", "LU", "MT", "NL", "PL", "PT", "RO", "SK", "SI", "ES", "SE"]);
+
 function countryName(code: string) {
   try { return new Intl.DisplayNames(["en"], { type: "region" }).of(code) ?? code; }
   catch { return code; }
@@ -23,6 +25,13 @@ function flag(code: string) {
   return /^[A-Z]{2}$/.test(code) ? String.fromCodePoint(...[...code].map(char => 0x1f1a5 + char.charCodeAt(0))) : "";
 }
 
+
+function CountryRow({ country }: { country: Reach["countries"][number] }) {
+  return <li>
+          <div className="flex items-center justify-between gap-2 text-[11px]"><span className="flex min-w-0 items-center gap-2"><span aria-hidden="true">{flag(country.code)}</span><span className="truncate">{countryName(country.code)}</span></span><span className="text-[10px] tabular-nums text-muted-foreground">{(country.share * 100).toFixed(1)}%</span></div>
+          <div aria-hidden="true" className="mt-1.5 h-1 overflow-hidden rounded-[2px] bg-foreground/5"><div className="h-full bg-primary/50" style={{width: `${Math.min(100, Math.max(0, country.share * 100))}%`}} /></div>
+        </li>;
+}
 
 export function SponsorReach() {
   const [days, setDays] = useState<1 | 7 | 14 | 30>(7);
@@ -47,6 +56,9 @@ export function SponsorReach() {
   const data = days === 1 ? dayData : multiDay.data;
   const isPending = days === 1 ? pulse.isPending : multiDay.isPending;
   const hasTraffic = data && (days === 1 || data.summary.visitors.source === "openpanel" || Boolean(data.tracking_since));
+  const rankedCountries = [...(data?.countries ?? [])].sort((a, b) => b.share - a.share);
+  const topCountries = rankedCountries.slice(0, 5);
+  const moreEuCountries = rankedCountries.filter(country => EU_COUNTRIES.has(country.code) && !topCountries.some(top => top.code === country.code)).slice(0, 3);
   return <section aria-label="Audience reach" className="flex flex-1 flex-col">
     <div className="flex items-baseline justify-between gap-2"><h3 className="text-[13px] font-medium">Audience reach</h3><span className="text-[10px] text-muted-foreground">{days === 1 ? "Last 24 hours" : `Last ${days} days`}</span></div>
     <div role="group" aria-label="Audience date range" className="mt-3 inline-flex self-start gap-1 rounded-md bg-foreground/[0.06] p-1">
@@ -65,11 +77,12 @@ export function SponsorReach() {
       </div>
       <h4 className="mb-3 mt-6 text-[11px] font-medium">Top visitor countries</h4>
       {data.countries.length ? <ul className="space-y-2">
-        {[...data.countries].sort((a, b) => b.share - a.share).slice(0, 5).map(country => <li key={country.code}>
-          <div className="flex items-center justify-between gap-2 text-[11px]"><span className="flex min-w-0 items-center gap-2"><span aria-hidden="true">{flag(country.code)}</span><span className="truncate">{countryName(country.code)}</span></span><span className="text-[10px] tabular-nums text-muted-foreground">{(country.share * 100).toFixed(1)}%</span></div>
-          <div aria-hidden="true" className="mt-1.5 h-1 overflow-hidden rounded-[2px] bg-foreground/5"><div className="h-full bg-primary/50" style={{width: `${Math.min(100, Math.max(0, country.share * 100))}%`}} /></div>
-        </li>)}
+        {topCountries.map(country => <CountryRow key={country.code} country={country} />)}
       </ul> : <p className="text-[11px] text-muted-foreground">{days === 1 ? "Country breakdown is available for 7d, 14d and 30d." : "Country data is not available yet."}</p>}
+      {moreEuCountries.length > 0 && <>
+        <h4 className="mb-3 mt-5 text-[11px] font-medium">More EU markets</h4>
+        <ul className="space-y-2">{moreEuCountries.map(country => <CountryRow key={country.code} country={country} />)}</ul>
+      </>}
     </> : <p role="status" className="py-5 text-xs leading-5 text-muted-foreground">{isPending ? "Loading audience statistics…" : "Audience statistics are temporarily unavailable."}</p>}
     <div className="mt-5 flex min-h-24 flex-1 items-center justify-center gap-3 border-t border-border py-4" aria-label={`Ahrefs Domain Rating: ${DOMAIN_RATING} out of 100`}>
       <svg viewBox="0 0 44 44" className="h-14 w-14 shrink-0 -rotate-90" aria-hidden="true">

@@ -846,3 +846,7 @@ body:has([role="dialog"][data-state="open"], [role="alertdialog"][data-state="op
   .sponsor-rail .sponsor-description { font-size: clamp(9px, 1.4vh, 11px); line-height: 1.3; }
   .sponsor-rail .sponsor-open-slot > svg { width: 16px; height: 16px; }
 }
+
+/* Preserve SILO's official adaptive SVG and match its colors to the site theme. */
+img[src$="/brands/silos-logo.svg"] { color-scheme: light; }
+.dark img[src$="/brands/silos-logo.svg"] { color-scheme: dark; }
