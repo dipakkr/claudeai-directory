@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="1000" height="1000" viewBox="0 0 1000 1000">
+  <title>InviziPoll</title>
+  <defs>
+    <linearGradient id="iBody" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1a1a5e"/>
+      <stop offset="1" stop-color="#06062a"/>
+    </linearGradient>
+  </defs>
+  <g transform="translate(49.429,-38.333) scale(1.80952)">
+  <g id="iDesign" transform="translate(19.658,22.105) scale(0.92105)">
+  <g id="iShield">
+    <path d="M 249,10 C 334,11 426,27 468,50 C 479,56 486,122 484,200 C 483,272 430,452 249,588 C 68,452 15,272 14,200 C 12,122 19,56 30,50 C 72,27 164,11 249,10 Z" fill="url(#iBody)" stroke="#ffffff"
+          stroke-width="22" stroke-linejoin="round"/>
+  </g>
+
+  <g id="iBars" fill="#ffffff">
+      <rect x="82.5" y="107" width="333.0" height="54" rx="3"/>
+      <rect x="82.9" y="189" width="332.1" height="54" rx="3"/>
+  </g>
+
+  <g id="iField">
+    <rect x="109.6" y="277" width="278.7"
+          height="86" rx="5"
+          fill="none" stroke="#ffffff"
+          stroke-width="18"/>
+  </g>
+
+  <g id="iCheck">
+    <path d="M 141.97,347.48 L 244.00,443.00 L 416.90,228.43" fill="none" stroke="#12124c" stroke-width="98" stroke-linejoin="miter" stroke-miterlimit="10"/>
+    <path d="M 150.00,355.00 L 244.00,443.00 L 410.00,237.00" fill="none" stroke="#17c895" stroke-width="76" stroke-linejoin="miter" stroke-miterlimit="10"/>
+  </g>
+  </g>
+  </g>
+</svg>

@@ -10,7 +10,10 @@
 .partnerGrid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:1px;overflow:hidden;border:1px solid hsl(var(--border));border-radius:9px;background:hsl(var(--border))}
 .partner{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;min-width:0;min-height:78px;padding:12px 8px;background:hsl(var(--background));text-align:center;transition:background .15s}
 .partner:hover{background:hsl(var(--card))}
-.monogram{display:grid;place-items:center;width:24px;height:24px;border:1px solid hsl(var(--primary)/.25);border-radius:6px;background:hsl(var(--primary)/.1);color:hsl(var(--primary));font-size:14px;font-weight:600}
+.brandRow{display:flex;align-items:center;justify-content:center;gap:8px;min-height:32px;width:100%;min-width:0}
+.sponsorIcon{display:block;width:32px;height:32px;flex-shrink:0;object-fit:contain}
+.contactzillaLogo{display:block;width:145px;max-width:90%;height:32px;object-fit:contain}
+:global(.dark) .contactzillaLogo{filter:invert(1)}
 .product{display:block;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:11px;font-weight:500;color:hsl(var(--foreground))}
 .brandLogo{display:block;width:145px;max-width:90%;height:auto;object-fit:contain}
 .tagline{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;max-width:220px;font-size:10px;line-height:1.5;font-weight:400;color:hsl(var(--muted-foreground))}

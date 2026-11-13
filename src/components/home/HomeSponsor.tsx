@@ -20,12 +20,25 @@ function subscribeViewport(onChange: () => void) {
   return () => query.removeEventListener("change", onChange);
 }
 
+function sponsorLogo(campaign: SponsorCampaign) {
+  if (campaign.logo_url && /^(https?:\/\/|\/(?!\/))/i.test(campaign.logo_url)) return campaign.logo_url;
+  if (/^https?:\/\/(?:www\.)?contactzilla\.com(?:[/?#]|$)/i.test(campaign.website)) return "/brands/contactzilla-logo.svg";
+  if (/^https?:\/\/(?:www\.)?invizipoll\.com(?:[/?#]|$)/i.test(campaign.website)) return "/brands/invizipoll-logo.svg";
+  try { return `https://www.google.com/s2/favicons?domain=${encodeURIComponent(new URL(campaign.website).hostname)}&sz=128`; }
+  catch { return undefined; }
+}
+
 function FeaturedSponsor({ campaign }: { campaign: SponsorCampaign }) {
   const desktop = useSyncExternalStore(subscribeViewport, () => window.matchMedia("(min-width: 1024px)").matches, () => true);
   const tracking = useSponsorTracking(campaign.campaign_id, campaign.position, desktop ? "desktop" : "mobile");
+  const logo = sponsorLogo(campaign);
+  const wordmark = logo === "/brands/contactzilla-logo.svg";
   return <a {...tracking} href={campaign.website} target="_blank" rel="sponsored noopener noreferrer" className={styles.partner} title={`${campaign.product}: ${campaign.tagline}`}>
-    <span className={styles.monogram} aria-hidden="true">{campaign.product.slice(0, 1)}</span>
-    <span className={styles.product}>{campaign.product}</span>
+    <span className={styles.brandRow}>
+      {/* eslint-disable-next-line @next/next/no-img-element -- sponsor brand assets, including official local SVGs */}
+      {logo && <img src={logo} alt={wordmark ? campaign.product : ""} width={wordmark ? 221 : 32} height={32} className={wordmark ? styles.contactzillaLogo : styles.sponsorIcon} />}
+      {!wordmark && <span className={styles.product}>{campaign.product}</span>}
+    </span>
     <span className={styles.tagline}>{campaign.tagline}</span>
   </a>;
 }
