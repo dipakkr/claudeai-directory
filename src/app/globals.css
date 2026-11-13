@@ -848,5 +848,5 @@ body:has([role="dialog"][data-state="open"], [role="alertdialog"][data-state="op
 }
 
 /* Preserve SILO's official adaptive SVG and match its colors to the site theme. */
-img[src$="/brands/silos-logo.svg"] { color-scheme: light; }
-.dark img[src$="/brands/silos-logo.svg"] { color-scheme: dark; }
+img[src$="/brands/silos-logo.svg"] { color-scheme: light; filter: brightness(0); }
+.dark img[src$="/brands/silos-logo.svg"] { color-scheme: dark; filter: brightness(0) invert(1); }
