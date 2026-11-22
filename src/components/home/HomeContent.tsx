@@ -65,8 +65,6 @@ export default function HomeContent({ items, orders, launches, community, member
         </p>
       </section>
 
-      <div className="mb-12">{launches}</div>
-
       <div className="mx-auto mb-10 max-w-[1000px] px-4 md:px-8">
         <HomeSponsor />
       </div>
@@ -76,6 +74,8 @@ export default function HomeContent({ items, orders, launches, community, member
           extraTab={mcpLaunches ? { label: "MCP launches", count: mcpLaunches.count, content: mcpLaunches.content } : undefined}
         />
       </section>
+
+      <div className="mt-16">{launches}</div>
 
       {community}
 
