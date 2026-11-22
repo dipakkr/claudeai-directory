@@ -3,6 +3,7 @@ import { LaunchVoteButton } from "@/components/launches/LaunchVoteButton";
 import { ArrowRight, Rocket } from "lucide-react";
 import { LaunchListRow } from "@/components/launches/LaunchListRow";
 import type { ShowcaseProject } from "@/types";
+import { publicLaunches } from "@/lib/home-community";
 
 export default function HomeLaunches({
   projects,
@@ -13,19 +14,21 @@ export default function HomeLaunches({
   unavailable: boolean;
   upvotesToday?: Record<string, number>;
 }) {
-  // Every live launch, so each maker gets homepage traffic (ranked: promoted, then upvotes).
-  const shownProjects = projects;
+  const shownProjects = publicLaunches(projects).slice(0, 10);
 
   return (
     <section id="launches" aria-labelledby="launches-heading" className="mx-auto max-w-[1000px] scroll-mt-24 px-4 md:px-8">
-      {/* DevHunt-style: quiet label with a rule, then plain rows. */}
-      <div className="flex items-center gap-3">
-        <h2 id="launches-heading" className="shrink-0 font-mono text-[11px] font-medium uppercase tracking-[0.16em] text-foreground">
-          Built with Claude
-          {projects.length > 0 && <span className="ml-2 text-muted-foreground">{projects.length}</span>}
-        </h2>
-        <span className="h-px flex-1 bg-border" aria-hidden="true" />
-        <span className="shrink-0 text-xs text-muted-foreground">Upvote your favorite</span>
+      <div className="flex flex-wrap items-end justify-between gap-3 border-b border-border pb-4">
+        <div>
+          <h2 id="launches-heading" className="text-[24px] font-medium tracking-tight text-foreground">
+            Latest launches
+          </h2>
+          <p className="mt-1 text-[13px] text-muted-foreground">Discover what builders are launching with Claude. Newest first.</p>
+        </div>
+        <Link href="/launches/submit" className="inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline">
+          <Rocket className="h-3.5 w-3.5" aria-hidden="true" />
+          Launch your app
+        </Link>
       </div>
 
       <ol className="mt-2">
@@ -40,7 +43,7 @@ export default function HomeLaunches({
           />
         ))}
       </ol>
-      {!projects.length && (
+      {!shownProjects.length && (
         <p className="py-6 text-sm text-muted-foreground">
           {unavailable ? "Launches are temporarily unavailable." : "Member launches will appear here once listed. Submit your app to get started."}
         </p>
@@ -49,10 +52,7 @@ export default function HomeLaunches({
         <Link href="/launches" className="inline-flex items-center gap-1 text-muted-foreground hover:text-foreground">
           All launches <ArrowRight className="h-3.5 w-3.5" />
         </Link>
-        <Link href="/launches/submit" className="inline-flex items-center gap-1.5 font-medium text-foreground hover:underline">
-          <Rocket className="h-3.5 w-3.5" />
-          Launch your app (free)
-        </Link>
+        <span className="text-xs text-muted-foreground">Upvote your favorite products</span>
       </div>
     </section>
   );
