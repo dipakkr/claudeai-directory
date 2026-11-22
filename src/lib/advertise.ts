@@ -1,13 +1,13 @@
 import { sideAdCollections } from "@/data/sideAdPlacements";
 
 /** One seven-day sponsor campaign across the homepage and sidebars, in USD. */
-export const SPONSOR_WEEKLY_PRICE = 69;
+export const SPONSOR_WEEKLY_PRICE = 40;
 
 export const SPONSOR_PACKAGES = [
-  { weeks: 1, total: 69 },
-  { weeks: 2, total: 129 },
-  { weeks: 3, total: 179 },
-  { weeks: 4, total: 219 },
+  { weeks: 1, total: 40 },
+  { weeks: 2, total: 80 },
+  { weeks: 3, total: 120 },
+  { weeks: 4, total: 160 },
 ] as const;
 
 /** "sidebar": a card in one category rail. "launch": the row in the launches list. */

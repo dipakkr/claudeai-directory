@@ -106,7 +106,6 @@ export default function AdvertiseDialog() {
   });
   const price = SPONSOR_WEEKLY_PRICE;
   const total = SPONSOR_PACKAGES.find(plan => plan.weeks === weeks)!.total;
-  const savings = price * weeks - total;
   const canPay = !!checkout?.enabled && checkout.amount === price * 100 && checkout.week_totals?.[String(weeks)] === total * 100 && checkout.interval === "week" && checkout.mode === "payment";
 
   // Open from sidebar buttons (custom event) or from old /advertise links (?advertise=1).
@@ -206,8 +205,8 @@ export default function AdvertiseDialog() {
             </div>
 
             <button type="button" onClick={() => setWeeks(4)} className="mt-3 rounded-md border border-primary/25 bg-primary/5 px-3 py-2 text-left text-[12px] text-foreground hover:bg-primary/10 focus-visible:outline-2 focus-visible:outline-primary">
-              <span className="font-medium">4 weeks for $219</span>
-              <span className="ml-2 text-primary">Best value · Save $57</span>
+              <span className="font-medium">4 weeks for ${SPONSOR_PACKAGES[3].total}</span>
+              <span className="ml-2 text-primary">28 days of placement</span>
             </button>
 
             <div className="mt-6 space-y-3">
@@ -252,7 +251,6 @@ export default function AdvertiseDialog() {
                     ))}
                   </SelectContent>
                 </Select>
-                {savings > 0 && <p className="mt-1.5 text-[11px] text-primary" aria-live="polite">{weeks === 4 ? "Best value · " : ""}Save ${savings} compared with weekly bookings</p>}
               </div>
               </div>
             </div>
