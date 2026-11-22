@@ -50,7 +50,7 @@ async function CommunityPreview({ threads, unavailable }: { threads: Thread[]; u
 }
 
 export default async function Home() {
-  const [skillsData, mcpData, agentsData, ranked, launchesData, threadsData, membersData] = await Promise.all([
+  const [skillsData, mcpData, agentsData, ranked, launchesData, threadsData, membersData, latestLaunchesData] = await Promise.all([
     fetchApi<ListResponse<Skill>>("/skills?limit=100"),
     fetchApi<ListResponse<MCPServer>>("/mcp-servers?limit=200"),
     fetchApi<ListResponse<Agent>>("/agents?limit=200"),
@@ -58,6 +58,7 @@ export default async function Home() {
     fetchApi<ShowcaseProject[]>("/showcase?limit=100"),
     fetchApi<Thread[]>("/community/threads?sort=mix&limit=30"),
     fetchApi<MembersResponse>("/users?per_page=1"),
+    fetchApi<ShowcaseProject[]>("/showcase?sort=latest&limit=100"),
   ]);
   // Live numbers and recent activity (the API caches this for a minute).
   const pulse = await fetchApi<Pulse>("/stats/pulse", { revalidate: 60 });
@@ -86,8 +87,8 @@ export default async function Home() {
           memberCount={membersData?.total ?? 0}
           launches={
             <HomeLaunches
-              projects={launches}
-              unavailable={launchesData === null}
+              projects={rankedLaunches(latestLaunchesData ?? [])}
+              unavailable={latestLaunchesData === null}
               upvotesToday={pulse?.upvotes_today}
             />
           }
