@@ -516,9 +516,9 @@ function EditForm({ app }: { app: ShowcaseProject }) {
 }
 
 export default function EditLaunchClient({ slug }: { slug: string }) {
-  const { isAuthenticated, isLoading } = useAuth();
-  const { data: myApps, isLoading: appsLoading } = useMyShowcaseProjects({ enabled: !isLoading && isAuthenticated });
-  const app = myApps?.find((a) => a.id === slug);
+  const { user, isAuthenticated, isLoading, viewOnly } = useAuth();
+  const { data: myApps, isLoading: appsLoading } = useMyShowcaseProjects({ enabled: !isLoading && isAuthenticated && !viewOnly });
+  const app = myApps?.find((a) => a.id === slug && Boolean(user?.id) && a.author_id === user?.id);
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
@@ -552,6 +552,8 @@ export default function EditLaunchClient({ slug }: { slug: string }) {
             <p className="text-sm text-muted-foreground">
               <SignInButton reason="edit your launch" className="cursor-pointer underline underline-offset-4">Sign in</SignInButton> to edit your launch.
             </p>
+          ) : viewOnly ? (
+            <p className="text-sm text-muted-foreground">This account is open in read-only mode. Editing is disabled.</p>
           ) : !app ? (
             <p className="text-sm text-muted-foreground">This launch was not found in your account. You can only edit launches you submitted.</p>
           ) : (
