@@ -17,7 +17,7 @@ export function OwnerNofollowNotice({ slug, title, authorId }: { slug: string; t
             Your link is <span className="font-mono text-primary">nofollow</span>
           </p>
           <p className="mt-1 text-[13.5px] leading-6 text-muted-foreground">
-            Add our badge to your site for free, or upgrade to a dofollow link for $39 with a one-time payment.
+            Add our badge to your site for free, or upgrade to a dofollow link for $40 with a one-time payment.
           </p>
         </div>
         <LinkUpgradeDialog

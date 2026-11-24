@@ -65,7 +65,7 @@ export function LinkUpgradeDialog({ app, triggerLabel = "Get a do-follow link", 
             </div>
           </div>
           <div className="my-4 flex items-baseline gap-2">
-            <span className="text-4xl font-semibold tracking-tight">$39</span>
+            <span className="text-4xl font-semibold tracking-tight">$40</span>
             <span className="text-sm text-muted-foreground">USD · one-time</span>
           </div>
           <ul className="space-y-2 text-sm">
@@ -78,7 +78,7 @@ export function LinkUpgradeDialog({ app, triggerLabel = "Get a do-follow link", 
           {error && <p role="alert" className="mt-4 text-sm text-destructive">{error}</p>}
           {!viewOnly && (config.isError || (config.data && !config.data.enabled)) && <p role="alert" className="mt-4 text-sm text-muted-foreground">Checkout is temporarily unavailable. Please try again later.</p>}
           <button disabled={viewOnly || busy || !config.data?.enabled} onClick={checkout} className="mt-4 flex h-11 w-full items-center justify-center gap-2 rounded-[6px] bg-primary px-4 text-sm font-semibold text-primary-foreground disabled:cursor-not-allowed disabled:opacity-50">
-            {busy ? <><Loader2 className="h-4 w-4 animate-spin" />Opening checkout...</> : <>Continue to payment · $39 <ArrowRight className="h-4 w-4" /></>}
+            {busy ? <><Loader2 className="h-4 w-4 animate-spin" />Opening checkout...</> : <>Continue to payment · $40 <ArrowRight className="h-4 w-4" /></>}
           </button>
           <p className="mt-3 text-center text-xs text-muted-foreground">Secure checkout with Stripe</p>
         </div>
