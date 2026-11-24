@@ -52,8 +52,8 @@ export default function DashboardClient() {
   const tab = resolveTab(params.get("tab"));
 
   const enabled = !isLoading && isAuthenticated;
-  const summary = useDashboardSummary(enabled);
-  const launches = useMyShowcaseProjects({ enabled });
+  const summary = useDashboardSummary(enabled && tab === "submissions");
+  const launches = useMyShowcaseProjects({ enabled: enabled && tab === "submissions" });
   const submissions = useMySubmissions(enabled && tab === "submissions");
 
   useEffect(() => {
@@ -137,9 +137,7 @@ export default function DashboardClient() {
           </nav>
 
           <div className="mt-8 min-w-0">
-            {tab === "analytics" && (
-              <AnalyticsPanel summary={s} apps={launches.data ?? []} loading={summary.isLoading || launches.isLoading} />
-            )}
+            {tab === "analytics" && <AnalyticsPanel />}
             {tab === "submissions" && (
               <SubmissionsPanel
                 apps={launches.data ?? []}

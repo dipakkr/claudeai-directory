@@ -4,13 +4,11 @@ import { hasDofollow, isLaunchLive } from "@/lib/launch-options";
 import Link from "next/link";
 import { ArrowRight, BarChart3, Package, Pencil, Rocket } from "lucide-react";
 import type { ReactNode } from "react";
-import { useQuery } from "@tanstack/react-query";
 
-import { api } from "@/lib/api";
 import { LinkUpgradeDialog } from "@/components/launches/LinkUpgradeDialog";
 
 import { faviconFor } from "@/lib/directory";
-import type { DashboardSummary, MySubmission } from "@/hooks/use-dashboard";
+import type { MySubmission } from "@/hooks/use-dashboard";
 import type { ShowcaseProject } from "@/types";
 
 /* ---------- shared ---------- */
@@ -103,96 +101,17 @@ function StatusPill({ tone, children }: { tone: "live" | "wait" | "bad" | "muted
 
 const listClass = "divide-y divide-border overflow-hidden rounded-[10px] border border-border bg-card";
 
-const plural = (n: number | undefined, word: string) => `${(n ?? 0).toLocaleString("en-US")} ${n === 1 ? word : `${word}s`}`;
-
-type LaunchMetrics = Record<string, { impressions: number; clicks: number }>;
-
-/** All-time impressions and website clicks per launch of the signed-in maker. */
-function useMyLaunchMetrics(enabled: boolean) {
-  return useQuery({
-    queryKey: ["launch-metrics", "mine"],
-    queryFn: () => api.get<LaunchMetrics>("/metrics/my-launches"),
-    enabled,
-    staleTime: 60_000,
-  });
-}
-
 /* ---------- analytics ---------- */
 
-/** A number and a plain label, no box. */
-function Stat({ label, value }: { label: string; value: number }) {
+export function AnalyticsPanel() {
   return (
-    <div>
-      <span className="block font-sans text-[26px] font-semibold tabular-nums leading-none text-foreground">{value.toLocaleString("en-US")}</span>
-      <span className="mt-1.5 block text-[13px] text-muted-foreground">{label}</span>
-    </div>
-  );
-}
-
-/** How your launches are doing: the totals, then one row per live launch. */
-export function AnalyticsPanel({ summary, apps, loading }: { summary?: DashboardSummary; apps: ShowcaseProject[]; loading: boolean }) {
-  const live = apps.filter(isLaunchLive);
-  const { data: metrics } = useMyLaunchMetrics(live.length > 0);
-  if (loading) return <SkeletonRows />;
-  if (live.length === 0) {
-    return (
-      <section>
-        <PanelHeader title="Analytics" description="Upvotes, page views and website clicks for your launches." />
-        <EmptyState
-          icon={BarChart3}
-          title="Nothing to measure yet"
-          body="Launch what you built with Claude and the numbers show up here."
-          action={<PrimaryAction href="/launches/submit">Launch an app</PrimaryAction>}
-        />
-      </section>
-    );
-  }
-  const sum = (pick: (app: ShowcaseProject) => number | undefined) => live.reduce((n, app) => n + (pick(app) ?? 0), 0);
-  const upvotes = summary?.launches.upvotes ?? sum((a) => a.upvotes);
-  const views = summary?.launches.views ?? sum((a) => a.views);
-  const clicks = live.reduce((n, app) => n + (metrics?.[app.id]?.clicks ?? 0), 0);
-  const impressions = live.reduce((n, app) => n + (metrics?.[app.id]?.impressions ?? 0), 0);
-  return (
-    <section className="space-y-8">
-      <PanelHeader title="Analytics" description="All time, across your live launches." />
-      <div className="flex flex-wrap gap-x-12 gap-y-5">
-        <Stat label={live.length === 1 ? "live launch" : "live launches"} value={live.length} />
-        <Stat label={upvotes === 1 ? "upvote" : "upvotes"} value={upvotes} />
-        <Stat label={views === 1 ? "page view" : "page views"} value={views} />
-        <Stat label={clicks === 1 ? "website click" : "website clicks"} value={clicks} />
-        <Stat label="impressions" value={impressions} />
-      </div>
-      <div>
-        <SectionLabel title="By launch" />
-        <ul className={listClass}>
-          {live.map((app) => {
-            const m = metrics?.[app.id];
-            return (
-              <li key={app.id} className="flex flex-wrap items-center gap-x-4 gap-y-2 px-4 py-3.5">
-                <LaunchLogo app={app} />
-                <Link href={`/launches/${app.id}`} className="min-w-0 flex-1 truncate font-sans text-[15px] font-medium text-foreground hover:underline">
-                  {app.title}
-                </Link>
-                <p className="w-full pl-14 text-[13px] tabular-nums text-muted-foreground sm:w-auto sm:pl-0">
-                  {plural(app.upvotes, "upvote")} · {plural(app.views, "view")} · {plural(m?.clicks, "click")}
-                </p>
-                <Link href={`/launches/${app.id}/analytics`} className="inline-flex items-center gap-1 pl-14 text-sm font-medium text-foreground hover:text-primary sm:pl-0">
-                  Details
-                  <ArrowRight className="h-3.5 w-3.5" />
-                </Link>
-                {!hasDofollow(app) && app.status !== "rejected" && (
-                  <div className="flex w-full flex-col gap-2 rounded-[8px] border border-primary/25 bg-primary/[0.05] px-3 py-2.5 sm:ml-14 sm:w-[calc(100%-3.5rem)] sm:flex-row sm:items-center sm:gap-3">
-                    <span className="w-fit shrink-0 rounded-[4px] border border-border bg-background px-1.5 py-px font-mono text-[11px] text-muted-foreground">nofollow</span>
-                    <p className="min-w-0 flex-1 text-[13px] leading-5 text-muted-foreground">
-                      Your link is nofollow, and launches with our badge rank above yours. Add our badge for free, or upgrade your link for $39.
-                    </p>
-                    <LinkUpgradeDialog app={app} />
-                  </div>
-                )}
-              </li>
-            );
-          })}
-        </ul>
+    <section>
+      <PanelHeader title="Analytics" />
+      <div role="status" className="flex flex-col items-center rounded-[10px] border border-dashed border-border px-6 py-14 text-center">
+        <span className="flex h-11 w-11 items-center justify-center rounded-full bg-primary/10 text-primary">
+          <BarChart3 className="h-5 w-5" aria-hidden="true" />
+        </span>
+        <p className="mt-4 text-sm font-medium text-foreground">Analytics not available</p>
       </div>
     </section>
   );
